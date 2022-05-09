@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Weapon8Direction : MonoBehaviour
+public class PlayerMove : MonoBehaviour
 {
     public float moveSpeed = 5f;
     private Vector2 movement;
@@ -25,7 +25,7 @@ public class Weapon8Direction : MonoBehaviour
         animator.SetFloat("Vertical", movement.y);
         animator.SetFloat("Speed", movement.magnitude);
     }
-
+    
     private void FixedUpdate()
     {
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
