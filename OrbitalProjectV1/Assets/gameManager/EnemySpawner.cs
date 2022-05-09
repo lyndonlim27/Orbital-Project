@@ -7,5 +7,5 @@ public abstract class EnemySpawner : MonoBehaviour
     private int quantity;
     private WeaponBox weaponBox;
     private EnemyBox enemyBox;
-    private void generate() { }
+    private void Generate() { }
 }
