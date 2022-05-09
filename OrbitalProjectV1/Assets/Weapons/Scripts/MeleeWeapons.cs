@@ -17,4 +17,9 @@ public class MeleeWeapons : MonoBehaviour, IWeapon
     {
         
     }
+
+    public void Shoot()
+    {
+
+    }
 }
