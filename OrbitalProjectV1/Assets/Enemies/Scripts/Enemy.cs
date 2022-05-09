@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class Enemy : MonoBehaviour, IEnemy
 {
     // Start is called before the first frame update
-    private Weapon weapon;
+    private IWeapon weapon;
     private Vector3 aggroRadius;
     private enum State {
         Idle,
