@@ -24,44 +24,9 @@ public abstract class Enemy : MonoBehaviour, IEnemy
     private bool armed;
     private GameObject target;
 
-    void attack(GameObject target)
-    {
-
-    }
-
-    void start()
-    {
-
-    }
-
-    void update()
-    {
-
-    }
-
-    void exit()
-
-    {
-
-    }
-
-    void IEnemy.attack(GameObject target)
+    void IEnemy.Attack(GameObject target)
     {
         throw new System.NotImplementedException();
     }
 
-    void IEnemy.start()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    void IEnemy.update()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    void IEnemy.exit()
-    {
-        throw new System.NotImplementedException();
-    }
 }
