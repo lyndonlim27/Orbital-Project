@@ -6,8 +6,7 @@ using Pathfinding;
 
 public abstract class Enemy : MonoBehaviour
 {
-    protected float reachedPosDistance = 10f;
-    // Start is called before the first frame update
+    protected float nextWaypointDistance = 1f;
     [SerializeField]
     private IWeapon weapon;
     [SerializeField]
@@ -25,27 +24,29 @@ public abstract class Enemy : MonoBehaviour
     protected Vector3 startingPos;
     protected Vector3 roamPosition;
     private Pathfinding.Seeker seeker;
-    private int currentWaypoint = 0;
-    private bool reached = false;
-    private float nextWaypointDistance = 3f;
+    //private int currentWaypoint = 0;
+    //private bool reached = false;
     private Pathfinding.Path path;
     protected State state;
+    protected bool canMove;
+    protected bool reached;
 
 
     public abstract void Attack(GameObject target);
 
-    private void Start()
+    protected void Start()
     {
         startingPos = transform.position;
-        roamPosition = GetRoamingPosition();
-        seeker = GetComponent<Seeker>();
+        seeker = GetComponent<Pathfinding.Seeker>();
         rb = GetComponent<Rigidbody2D>();
         target = GameObject.FindGameObjectWithTag("Player");
+        reached = false;
+        animator = GetComponent<Animator>();
     }
 
     protected Vector3 GetRoamingPosition()
     {
-        return (startingPos + UtilsClass.GetRandomDir() * Random.Range(10f, 70f));
+        return (startingPos + UtilsClass.GetRandomDir() * Random.Range(5f, 5f));
     }
 
     protected void FindTarget()
@@ -56,47 +57,47 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-
     /// <summary>
     /// Pathfinding method using A* package
     /// </summary>
     /// <param name="pos"></param>
     protected void moveToPosition(Vector3 pos)
     {
-        Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - (Vector2)pos).normalized;
+        //seeker.StartPath(rb.position, pos, OnPathComplete);
+        Vector2 direction = ((Vector2)pos - (Vector2)rb.position).normalized;
         Vector2 force = direction * speed * Time.fixedDeltaTime;
 
         this.rb.AddForce(force);
-        float distance = Vector2.Distance(rb.position, path.vectorPath[currentWaypoint]);
+        float distance = Vector2.Distance(rb.position, pos);
+        animator.SetBool("isWalking", true);
 
-        if (distance < nextWaypointDistance)
-        {
-            currentWaypoint++;
-        }
+        //handling of character orientation.
+        //this.spriteRenderer.flipX = rb.velocity.x < 0;
 
         if (rb.velocity.x >= 0.01f)
         {
-            this.transform.localScale = new Vector3(1f, 1f, 1f);
+            this.transform.localScale = new Vector3(2.5f, 3f, 1f);
         }
         else if (rb.velocity.x <= -0.01f)
         {
-            this.transform.localScale = new Vector3(-1f, 1f, 1f);
+            this.transform.localScale = new Vector3(-2.5f, 3f, 1f);
         }
 
     }
 
-    protected void OnPathComplete(Pathfinding.Path p)
-    {
-        if (!p.error)
-        {
-            path = p;
-            currentWaypoint = 0;
-        }
-    }
+    //protected void OnPathComplete(Pathfinding.Path p)
+    //{
+    //    if (!p.error)
+    //    {
+    //        path = p;
+    //        currentWaypoint = 0;
+    //    }
+    //}
 
     protected void StopMoving()
     {
         this.reached = true;
+        this.animator.SetBool("isWalking", false);
     }
 
 
@@ -113,4 +114,17 @@ public abstract class Enemy : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+    /// <summary>
+    /// Animation movement control, maybe i will switch to this to control animation of enemy instead of states. 
+    /// </summary>
+    //public void LockMovement()
+    //{
+    //    canMove = false;
+    //}
+
+    //public void UnlockMovement()
+    //{
+    //    canMove = true;
+    //}
 }

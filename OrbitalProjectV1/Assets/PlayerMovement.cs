@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public float collisionOffset = 0.05f;
     public ContactFilter2D movementFilter;
     public SwordAttack swordAttack;
+    public float health = 50f;
     Vector2 movementInput;
     Rigidbody2D rb;
     List<RaycastHit2D> castCollisions = new List<RaycastHit2D>();
@@ -119,8 +120,8 @@ public class PlayerMovement : MonoBehaviour
         movementInput = movementVal.Get<Vector2>();
     }
 
-    void OnFire()
-    {
-        animator.SetTrigger("swordAttack");
-    }
+    //void OnFire()
+    //{
+    //    animator.SetTrigger("swordAttack");
+    //}
 }
