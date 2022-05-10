@@ -46,7 +46,7 @@ public abstract class Enemy : MonoBehaviour
 
     protected Vector3 GetRoamingPosition()
     {
-        return (startingPos + UtilsClass.GetRandomDir() * Random.Range(5f, 5f));
+        return (startingPos + UtilsClass.GetRandomDir() * Random.Range(10f, 10f));
     }
 
     protected void FindTarget()

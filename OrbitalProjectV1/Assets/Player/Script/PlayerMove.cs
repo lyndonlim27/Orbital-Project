@@ -9,6 +9,8 @@ public class PlayerMove : MonoBehaviour
     private Vector2 movement;
     public Rigidbody2D rb;
     public Animator animator;
+    [SerializeField]
+    private float health = 100;
     // Start is called before the first frame update
     void Start()
     {

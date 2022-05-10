@@ -5,7 +5,7 @@ using UnityEngine;
 public class Fodder : Enemy 
 {
 
-    private float atkRange = 1f;
+    private float atkRange = 1.5f;
     private float nextAttackTime;
     public customWeapon customWeapon;
 
@@ -31,8 +31,8 @@ public class Fodder : Enemy
             customWeapon.AttackLeft();
         }
 
-        animator.SetBool("isWalking",false);
-        animator.SetBool("Attacking",true);
+        
+        state = State.Chase;
         
         
     }
@@ -55,26 +55,31 @@ public class Fodder : Enemy
             case State.Chase:
                 moveToPosition(target.transform.position);
                 //for ranged Enemies have to tweak abit.
-                if (Vector3.Distance(transform.position, target.transform.position) < atkRange)
+                float dist = Vector3.Distance(transform.position, target.transform.position);
+                if (dist < atkRange)
                 {
                     if (Time.time > nextAttackTime)
                     {
                         state = State.Attack;
+                        Attack(target); // stop moving when attacking.
+                        float fireRate = .03f; //can use the animation time instead;
+                        nextAttackTime = Time.time + fireRate;
                         
-                    }
+                        
+                    } 
+                       
                 }
-                float stopChaseDistance = 10f;
-                if (Vector3.Distance(transform.position, target.transform.position) > stopChaseDistance)
+                float stopChaseDistance = 3f;
+                if (dist > stopChaseDistance)
                 {
                     //go back to current position;
                     state = State.Stop;
                 }
+                animator.SetBool("isWalking", dist > atkRange);
+                animator.SetBool("Attacking", dist < atkRange);
                 break;
             case State.Attack:
                 //while attacking, do nothing;
-                Attack(target); // stop moving when attacking.
-                float fireRate = .03f; //can use the animation time instead;
-                nextAttackTime = Time.time + fireRate;
                 break;
 
             case State.Stop:
