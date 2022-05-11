@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerMove : MonoBehaviour
 {
     public float moveSpeed = 5f;
-    private Vector2 movement;
+    public Vector2 movement;
     public Rigidbody2D rb;
     public Animator animator;
     [SerializeField]
@@ -22,14 +22,14 @@ public class PlayerMove : MonoBehaviour
     {
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
-
         animator.SetFloat("Horizontal", movement.x);
         animator.SetFloat("Vertical", movement.y);
         animator.SetFloat("Speed", movement.magnitude);
     }
-    
+
     private void FixedUpdate()
     {
+
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
     }
 }
