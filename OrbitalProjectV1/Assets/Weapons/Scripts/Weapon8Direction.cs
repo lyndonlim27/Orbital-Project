@@ -5,11 +5,13 @@ using UnityEngine.InputSystem;
 
 public class Weapon8Direction : MonoBehaviour
 {
-    public float moveSpeed = 5f;
+    [SerializeField]
+    private float _moveSpeed = 5f;
     private Vector2 movement;
-    public Rigidbody2D rb;
+    private Rigidbody2D rb;
     public Animator animator;
-    public Bullet bulletPrefab;
+    [SerializeField]
+    private Bullet _bulletPrefab;
 
 
 
@@ -31,7 +33,7 @@ public class Weapon8Direction : MonoBehaviour
         animator.SetFloat("Speed", movement.magnitude);
 
 
-        if (Input.GetButtonDown("Shoot"))
+        if (Input.GetButtonDown("Shoot") || Input.GetMouseButtonDown(0))
         {
             Shoot();
         }
@@ -40,14 +42,18 @@ public class Weapon8Direction : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + movement * _moveSpeed * Time.fixedDeltaTime);
     }
 
     private void Shoot()
     {
+        if (movement.y == 0 && movement.x == 0)
+        {
+            movement.y = -1;
+        }
         Quaternion angle = Quaternion.Euler(0, 0, Mathf.Atan2(movement.y, movement.x)
                 * Mathf.Rad2Deg);
-        Bullet bullet = Instantiate(this.bulletPrefab, this.transform.position, angle );
+        Bullet bullet = Instantiate(_bulletPrefab, this.transform.position, angle );
         bullet.Shoot(movement);
     }
 
