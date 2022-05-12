@@ -22,6 +22,9 @@ public abstract class Enemy : MonoBehaviour
     private int health;
     [SerializeField]
     private float speed;
+<<<<<<< HEAD
+>>>>>>> parent of 232f1837 (committing undone files)
+=======
 >>>>>>> parent of 232f1837 (committing undone files)
     protected Rigidbody2D rb;
     protected Collider2D collider2d;
@@ -29,10 +32,13 @@ public abstract class Enemy : MonoBehaviour
     protected Animator animator;
     protected bool armed;
 <<<<<<< HEAD
+<<<<<<< HEAD
     protected Vector3 startingPos;
     protected Vector3 roamPosition;
     protected Transform target;
 =======
+=======
+>>>>>>> parent of 232f1837 (committing undone files)
     protected GameObject target;
     protected Vector3 startingPos;
     protected Vector3 roamPosition;
@@ -53,9 +59,15 @@ public abstract class Enemy : MonoBehaviour
         startingPos = transform.position;
         rb = GetComponent<Rigidbody2D>();
 <<<<<<< HEAD
+<<<<<<< HEAD
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         this.animator.SetBool("isWalking", true);
+=======
+        target = GameObject.FindGameObjectWithTag("Player");
+        reached = false;
+        animator = GetComponent<Animator>();
+>>>>>>> parent of 232f1837 (committing undone files)
 =======
         target = GameObject.FindGameObjectWithTag("Player");
         reached = false;
@@ -105,7 +117,10 @@ public abstract class Enemy : MonoBehaviour
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of 232f1837 (committing undone files)
     //protected void OnPathComplete(Pathfinding.Path p)
     //{
     //    if (!p.error)
