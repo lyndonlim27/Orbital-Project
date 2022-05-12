@@ -42,7 +42,7 @@ public class Weapon8Direction : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.MovePosition(rb.position + movement * _moveSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + movement.normalized * _moveSpeed * Time.fixedDeltaTime);
     }
 
     private void Shoot()
@@ -53,8 +53,7 @@ public class Weapon8Direction : MonoBehaviour
         }
         Quaternion angle = Quaternion.Euler(0, 0, Mathf.Atan2(movement.y, movement.x)
                 * Mathf.Rad2Deg);
-        Bullet bullet = Instantiate(_bulletPrefab, this.transform.position, angle );
-        bullet.Shoot(movement);
+        Bullet bullet = Instantiate(_bulletPrefab, this.transform.position, angle);
     }
 
 }
