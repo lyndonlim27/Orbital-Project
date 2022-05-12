@@ -15,8 +15,7 @@ GameObject:
   - component: {fileID: 3652122665396400004}
   - component: {fileID: 3652122665396400005}
   - component: {fileID: 3652122665396400006}
-  - component: {fileID: 2137737619}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Enemy 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -82,7 +81,7 @@ SpriteRenderer:
   m_SortingOrder: 1
   m_Sprite: {fileID: -750047184722822154, guid: 1914d95466e3d4341a618c35a56d5f82, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1.4, y: 0.93}
@@ -125,7 +124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aggroRange: 3
   health: 100
-  speed: 2
+  speed: 100
   customWeapon: {fileID: 3652122665418345160}
 --- !u!114 &3652122665396400004
 MonoBehaviour:
@@ -192,22 +191,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.21252976, y: 0.5472058}
   m_Direction: 0
---- !u!58 &2137737619
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3652122665396400028}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 1
 --- !u!1 &3652122665418345162
 GameObject:
   m_ObjectHideFlags: 0
@@ -219,7 +202,7 @@ GameObject:
   - component: {fileID: 3652122665418345161}
   - component: {fileID: 3652122665418345015}
   - component: {fileID: 3652122665418345160}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: customWeapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -234,8 +217,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3652122665418345162}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalPosition: {x: 0.31, y: 0.13, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3652122665396400027}
@@ -248,14 +231,14 @@ CapsuleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3652122665418345162}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 1}
+  m_Offset: {x: 0.10438366, y: -0.20647329}
+  m_Size: {x: 0.29123268, y: 0.587054}
   m_Direction: 0
 --- !u!114 &3652122665418345160
 MonoBehaviour:

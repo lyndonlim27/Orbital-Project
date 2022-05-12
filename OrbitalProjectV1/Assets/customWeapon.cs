@@ -4,35 +4,31 @@ using UnityEngine;
 
 public class customWeapon : MonoBehaviour
 {
-    Vector2 leftAttackOffset;
+    Vector2 rightAttackOffset;
     public CapsuleCollider2D swordCollider;
     public float damage = 3;
+<<<<<<< HEAD
     private float force = 5f;
     private Rigidbody2D rb;
+=======
+>>>>>>> parent of 232f1837 (committing undone files)
 
     private void Start()
     {
-        leftAttackOffset = transform.localPosition;
-        rb = GetComponent<Rigidbody2D>();
+        rightAttackOffset = transform.position;
     }
 
     public void AttackRight()
     {
         swordCollider.enabled = true;
-        transform.localPosition = new Vector3(leftAttackOffset.x * -1, leftAttackOffset.y);
+        transform.localPosition = rightAttackOffset;
 
     }
 
     public void AttackLeft()
     {
         swordCollider.enabled = true;
-        transform.localPosition = leftAttackOffset;
-        
-    }
-
-    public void SwordAttack()
-    {
-        // use transform position of enemy to attack ?? hmm
+        transform.localPosition = new Vector3(rightAttackOffset.x * -1, rightAttackOffset.y);
     }
 
     public void StopAttack()
@@ -46,10 +42,11 @@ public class customWeapon : MonoBehaviour
         {
             //deal damage to enemy;
             //i need player script.
-            PlayerMove player = other.GetComponent<PlayerMove>();
+            PlayerMovement player = other.GetComponent<PlayerMovement>();
 
             if (player != null)
             {
+<<<<<<< HEAD
                 float dist = Vector2.Distance(player.transform.position,transform.position);
                 float atkRange = transform.localScale.x + 1f;
                 if (dist < atkRange)
@@ -59,6 +56,9 @@ public class customWeapon : MonoBehaviour
                 Vector2 direction = (player.transform.position - transform.position).normalized;
                 player.rb.AddForce(direction * force, ForceMode2D.Impulse);
                 player.TakeDamage(damage);
+=======
+                player.health -= damage;
+>>>>>>> parent of 232f1837 (committing undone files)
             }
         }
     }

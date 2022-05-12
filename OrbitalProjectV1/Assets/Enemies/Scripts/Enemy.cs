@@ -12,27 +12,55 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] private int health;
     [SerializeField] protected float speed;
     protected float nextWaypointDistance = 1f;
+<<<<<<< HEAD
+=======
+    [SerializeField]
+    private IWeapon weapon;
+    [SerializeField]
+    private float aggroRange;
+    [SerializeField]
+    private int health;
+    [SerializeField]
+    private float speed;
+>>>>>>> parent of 232f1837 (committing undone files)
     protected Rigidbody2D rb;
     protected Collider2D collider2d;
     protected SpriteRenderer spriteRenderer;
     protected Animator animator;
     protected bool armed;
+<<<<<<< HEAD
     protected Vector3 startingPos;
     protected Vector3 roamPosition;
     protected Transform target;
+=======
+    protected GameObject target;
+    protected Vector3 startingPos;
+    protected Vector3 roamPosition;
+    private Pathfinding.Seeker seeker;
+    //private int currentWaypoint = 0;
+    //private bool reached = false;
+    private Pathfinding.Path path;
+>>>>>>> parent of 232f1837 (committing undone files)
     protected State state;
     protected bool canMove;
     protected bool reached;
 
-    public abstract void Attack(Vector2 dir);
+
+    public abstract void Attack(GameObject target);
 
     protected void Start()
     {
         startingPos = transform.position;
         rb = GetComponent<Rigidbody2D>();
+<<<<<<< HEAD
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         this.animator.SetBool("isWalking", true);
+=======
+        target = GameObject.FindGameObjectWithTag("Player");
+        reached = false;
+        animator = GetComponent<Animator>();
+>>>>>>> parent of 232f1837 (committing undone files)
     }
 
     protected Vector3 GetRoamingPosition()
@@ -40,32 +68,61 @@ public abstract class Enemy : MonoBehaviour
         return (startingPos + UtilsClass.GetRandomDir() * Random.Range(10f, 10f));
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    protected void FindTarget()
     {
-        if (other.gameObject.tag == "Player")
-        {
-            target = other.transform;
+        if (Vector3.Distance(this.transform.position, target.transform.position) < aggroRange) {
+            //player within aggro range;
+            this.state = State.Chase;
         }
     }
 
-
-    private void OnTriggerExit2D(Collider2D other)
+    /// <summary>
+    /// Pathfinding method using A* package
+    /// </summary>
+    /// <param name="pos"></param>
+    protected void moveToPosition(Vector3 pos)
     {
-        if (other.gameObject.tag == "Player")
+        //seeker.StartPath(rb.position, pos, OnPathComplete);
+        Vector2 direction = ((Vector2)pos - (Vector2)rb.position).normalized;
+        Vector2 force = direction * speed * Time.fixedDeltaTime;
+
+        this.rb.AddForce(force);
+        float distance = Vector2.Distance(rb.position, pos);
+        animator.SetBool("isWalking", true);
+
+        //handling of character orientation.
+        //this.spriteRenderer.flipX = rb.velocity.x < 0;
+
+        if (rb.velocity.x >= 0.01f)
         {
-            target = null;
+            this.transform.localScale = new Vector3(2.5f, 3f, 1f);
         }
+        else if (rb.velocity.x <= -0.01f)
+        {
+            this.transform.localScale = new Vector3(-2.5f, 3f, 1f);
+        }
+
+    }
+
+<<<<<<< HEAD
+=======
+    //protected void OnPathComplete(Pathfinding.Path p)
+    //{
+    //    if (!p.error)
+    //    {
+    //        path = p;
+    //        currentWaypoint = 0;
+    //    }
+    //}
+
+    protected void StopMoving()
+    {
+        this.reached = true;
+        this.animator.SetBool("isWalking", false);
     }
 
 
-    protected void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Obstacles")
-        {
-            this.roamPosition = GetRoamingPosition();
-        }
-    }
-
+>>>>>>> parent of 232f1837 (committing undone files)
     /// <summary>
     /// Death Animations. 
     /// </summary>

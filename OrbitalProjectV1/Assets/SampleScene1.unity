@@ -5409,7 +5409,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 0.965, y: 1}
+    m_SensorSize: {x: 0.2585752, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -5539,18 +5539,6 @@ PrefabInstance:
     - target: {fileID: 4775776755131148221, guid: 93028c554625549a1ac0bbb39c5d2087, type: 3}
       propertyPath: moveSpeed
       value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4775776755131148222, guid: 93028c554625549a1ac0bbb39c5d2087, type: 3}
-      propertyPath: m_Mass
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4775776755131148222, guid: 93028c554625549a1ac0bbb39c5d2087, type: 3}
-      propertyPath: m_Interpolate
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4775776755131148222, guid: 93028c554625549a1ac0bbb39c5d2087, type: 3}
-      propertyPath: m_CollisionDetection
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93028c554625549a1ac0bbb39c5d2087, type: 3}
@@ -5682,7 +5670,7 @@ GameObject:
   - component: {fileID: 2001695367}
   m_Layer: 6
   m_Name: CollisionObjects
-  m_TagString: Obstacles
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7600,14 +7588,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3652122665396400007, guid: 8859b17d46a504ea982416e61d2c8184, type: 3}
-      propertyPath: spell
-      value: 
-      objectReference: {fileID: 4497722109257349858, guid: 20869abbf58a0466d92fe871cbe8c198, type: 3}
-    - target: {fileID: 3652122665396400007, guid: 8859b17d46a504ea982416e61d2c8184, type: 3}
-      propertyPath: spellprefab
-      value: 
-      objectReference: {fileID: 4497722109257349858, guid: 20869abbf58a0466d92fe871cbe8c198, type: 3}
+    - target: {fileID: 3652122665396400024, guid: 8859b17d46a504ea982416e61d2c8184, type: 3}
+      propertyPath: m_FlipX
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3652122665396400027, guid: 8859b17d46a504ea982416e61d2c8184, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -7656,9 +7640,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
-    - target: {fileID: 3652122665418345015, guid: 8859b17d46a504ea982416e61d2c8184, type: 3}
-      propertyPath: m_Enabled
-      value: 0
+    - target: {fileID: 3652122665396400028, guid: 8859b17d46a504ea982416e61d2c8184, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8859b17d46a504ea982416e61d2c8184, type: 3}

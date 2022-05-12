@@ -25,23 +25,11 @@ public class PlayerMove : MonoBehaviour
         animator.SetFloat("Horizontal", movement.x);
         animator.SetFloat("Vertical", movement.y);
         animator.SetFloat("Speed", movement.magnitude);
-
-        //moveplayer here using transform ohh i forgot your current position yes try run
-        transform.position += new Vector3(movement.x, movement.y, 0) * moveSpeed * Time.deltaTime;
-
-        if (Input.GetKeyDown(KeyCode.Space))
-            rb.AddForce(new Vector2(300, 0));
     }
 
     private void FixedUpdate()
     {
 
-        //rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
-    }
-
-    public void TakeDamage(float damage)
-    {
-        this.health -= damage;
-        
+        rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
     }
 }
