@@ -4,37 +4,35 @@ using UnityEngine;
 
 public class customWeapon : MonoBehaviour
 {
-    Vector2 rightAttackOffset;
+    Vector2 leftAttackOffset;
     public CapsuleCollider2D swordCollider;
     public float damage = 3;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    private float force = 5f;
+    private float force = 1f;
     private Rigidbody2D rb;
-=======
->>>>>>> parent of 232f1837 (committing undone files)
-=======
->>>>>>> parent of 232f1837 (committing undone files)
-=======
->>>>>>> parent of 232f1837 (committing undone files)
 
     private void Start()
     {
-        rightAttackOffset = transform.position;
+        leftAttackOffset = transform.localPosition;
+        rb = GetComponent<Rigidbody2D>();
     }
 
     public void AttackRight()
     {
         swordCollider.enabled = true;
-        transform.localPosition = rightAttackOffset;
+        transform.localPosition = new Vector3(leftAttackOffset.x * -1, leftAttackOffset.y);
 
     }
 
     public void AttackLeft()
     {
         swordCollider.enabled = true;
-        transform.localPosition = new Vector3(rightAttackOffset.x * -1, rightAttackOffset.y);
+        transform.localPosition = leftAttackOffset;
+
+    }
+
+    public void SwordAttack()
+    {
+        // use transform position of enemy to attack ?? hmm
     }
 
     public void StopAttack()
@@ -48,31 +46,13 @@ public class customWeapon : MonoBehaviour
         {
             //deal damage to enemy;
             //i need player script.
-            PlayerMovement player = other.GetComponent<PlayerMovement>();
+            PlayerMove player = other.GetComponent<PlayerMove>();
 
             if (player != null)
             {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-                float dist = Vector2.Distance(player.transform.position,transform.position);
-                float atkRange = transform.localScale.x + 1f;
-                if (dist < atkRange)
-                {
-                    this.GetComponentInParent<Animator>().SetTrigger("Melee");
-                }
-                Vector2 direction = (player.transform.position - transform.position).normalized;
-                player.rb.AddForce(direction * force, ForceMode2D.Impulse);
+                Vector2 direction = ((Vector2)player.transform.position - (Vector2)transform.position).normalized;
+                //player.rb.AddForce(direction * force, ForceMode2D.Impulse);
                 player.TakeDamage(damage);
-=======
-                player.health -= damage;
->>>>>>> parent of 232f1837 (committing undone files)
-=======
-                player.health -= damage;
->>>>>>> parent of 232f1837 (committing undone files)
-=======
-                player.health -= damage;
->>>>>>> parent of 232f1837 (committing undone files)
             }
         }
     }
