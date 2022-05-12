@@ -13,7 +13,7 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private float rotateSpeed = 50.0f;
     [SerializeField]
-    private Animator animatior;
+    private Animator _animator;
     
 
     // Start is called before the first frame update
@@ -33,6 +33,12 @@ public class Bullet : MonoBehaviour
 
     void FixedUpdate()
     {
+        if(_animator.GetBool("Collision") == true)
+        {
+            _rb.angularVelocity = 0;
+            _rb.velocity = Vector2.zero;
+            return;
+        }
         Vector2 point2Target = (Vector2)transform.position - (Vector2)_target.transform.position;
         point2Target.Normalize();
         float value = Vector3.Cross(point2Target, transform.right).z;
@@ -42,8 +48,6 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        animatior.Play("BulletExplode");
-        Destroy(this.gameObject,2);
-
+        _animator.SetBool("Collision", true);
     }
 }
