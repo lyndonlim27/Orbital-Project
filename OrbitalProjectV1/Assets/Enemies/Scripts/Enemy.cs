@@ -6,28 +6,20 @@ using Pathfinding;
 
 public abstract class Enemy : MonoBehaviour
 {
+    [Header("Enemy Stats")]
+    [SerializeField] private IWeapon weapon;
+    [SerializeField] private float aggroRange;
+    [SerializeField] private int health;
+    [SerializeField] protected float speed;
     protected float nextWaypointDistance = 1f;
-    [SerializeField]
-    private IWeapon weapon;
-    [SerializeField]
-    private float aggroRange;
-    [SerializeField]
-    private int health;
-    [SerializeField]
-    protected float speed;
     protected Rigidbody2D rb;
     protected Collider2D collider2d;
     protected SpriteRenderer spriteRenderer;
     protected Animator animator;
     protected bool armed;
-    //protected GameObject target;
     protected Vector3 startingPos;
     protected Vector3 roamPosition;
-    private Pathfinding.Seeker seeker;
-    //private int currentWaypoint = 0;
-    //private bool reached = false;
     protected Transform target;
-    private Pathfinding.Path path;
     protected State state;
     protected bool canMove;
     protected bool reached;
@@ -37,12 +29,10 @@ public abstract class Enemy : MonoBehaviour
     protected void Start()
     {
         startingPos = transform.position;
-        seeker = GetComponent<Pathfinding.Seeker>();
         rb = GetComponent<Rigidbody2D>();
-        //target = GameObject.FindGameObjectWithTag("Player");
-        reached = false;
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        this.animator.SetBool("isWalking", true);
     }
 
     protected Vector3 GetRoamingPosition()
@@ -76,13 +66,6 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    protected void StopMoving()
-    {
-        this.reached = true;
-        this.animator.SetBool("isWalking", false);
-    }
-
-
     /// <summary>
     /// Death Animations. 
     /// </summary>
@@ -97,16 +80,9 @@ public abstract class Enemy : MonoBehaviour
         Destroy(gameObject);
     }
 
-    /// <summary>
-    /// Animation movement control, maybe i will switch to this to control animation of enemy instead of states. 
-    /// </summary>
-    //public void LockMovement()
-    //{
-    //    canMove = false;
-    //}
+    protected float Rand()
+    {
+        return Random.Range(1f, 600f);
 
-    //public void UnlockMovement()
-    //{
-    //    canMove = true;
-    //}
+    }
 }

@@ -7,7 +7,7 @@ public class customWeapon : MonoBehaviour
     Vector2 leftAttackOffset;
     public CapsuleCollider2D swordCollider;
     public float damage = 3;
-    private float force = 1f;
+    private float force = 5f;
     private Rigidbody2D rb;
 
     private void Start()
@@ -50,8 +50,14 @@ public class customWeapon : MonoBehaviour
 
             if (player != null)
             {
-                Vector2 direction = ((Vector2)player.transform.position - (Vector2)transform.position).normalized;
-                //player.rb.AddForce(direction * force, ForceMode2D.Impulse);
+                float dist = Vector2.Distance(player.transform.position,transform.position);
+                float atkRange = transform.localScale.x + 1f;
+                if (dist < atkRange)
+                {
+                    this.GetComponentInParent<Animator>().SetTrigger("Melee");
+                }
+                Vector2 direction = (player.transform.position - transform.position).normalized;
+                player.rb.AddForce(direction * force, ForceMode2D.Impulse);
                 player.TakeDamage(damage);
             }
         }
