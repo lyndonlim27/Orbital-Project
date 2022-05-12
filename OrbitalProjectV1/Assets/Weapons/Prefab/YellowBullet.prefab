@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8865184935559831009}
   - component: {fileID: 6680173292253962702}
   - component: {fileID: 3227264268927990365}
+  - component: {fileID: -9148514678406649288}
   m_Layer: 7
   m_Name: YellowBullet
   m_TagString: Untagged
@@ -149,3 +150,24 @@ MonoBehaviour:
   speed: 5
   lifeTime: 10
   rotateSpeed: 200
+  animatior: {fileID: -9148514678406649288}
+--- !u!95 &-9148514678406649288
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8822428816426563189}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cd350c40bca754150afe80e7df68e1ed, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

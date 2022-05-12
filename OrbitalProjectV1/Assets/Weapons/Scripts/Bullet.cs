@@ -12,12 +12,14 @@ public class Bullet : MonoBehaviour
     private Transform _target;
     [SerializeField]
     private float rotateSpeed = 50.0f;
-    private Vector2 _movement;
+    [SerializeField]
+    private Animator animatior;
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        _rb.velocity = new Vector2(1, 0);
+       // _rb.velocity = new Vector2(1, 0);
         _target = GameObject.FindGameObjectWithTag("Enemy").transform;
     }
 
@@ -40,6 +42,8 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Destroy(this.gameObject);
+        animatior.Play("BulletExplode");
+        Destroy(this.gameObject,2);
+
     }
 }
