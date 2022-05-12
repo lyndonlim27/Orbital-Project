@@ -14,34 +14,35 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField]
     private int health;
     [SerializeField]
-    private float speed;
+    protected float speed;
     protected Rigidbody2D rb;
     protected Collider2D collider2d;
     protected SpriteRenderer spriteRenderer;
     protected Animator animator;
     protected bool armed;
-    protected GameObject target;
+    //protected GameObject target;
     protected Vector3 startingPos;
     protected Vector3 roamPosition;
     private Pathfinding.Seeker seeker;
     //private int currentWaypoint = 0;
     //private bool reached = false;
+    protected Transform target;
     private Pathfinding.Path path;
     protected State state;
     protected bool canMove;
     protected bool reached;
 
-
-    public abstract void Attack(GameObject target);
+    public abstract void Attack(Vector2 dir);
 
     protected void Start()
     {
         startingPos = transform.position;
         seeker = GetComponent<Pathfinding.Seeker>();
         rb = GetComponent<Rigidbody2D>();
-        target = GameObject.FindGameObjectWithTag("Player");
+        //target = GameObject.FindGameObjectWithTag("Player");
         reached = false;
         animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     protected Vector3 GetRoamingPosition()
@@ -49,50 +50,31 @@ public abstract class Enemy : MonoBehaviour
         return (startingPos + UtilsClass.GetRandomDir() * Random.Range(10f, 10f));
     }
 
-    protected void FindTarget()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (Vector3.Distance(this.transform.position, target.transform.position) < aggroRange) {
-            //player within aggro range;
-            this.state = State.Chase;
+        if (other.gameObject.tag == "Player")
+        {
+            target = other.transform;
         }
     }
 
-    /// <summary>
-    /// Pathfinding method using A* package
-    /// </summary>
-    /// <param name="pos"></param>
-    protected void moveToPosition(Vector3 pos)
+
+    private void OnTriggerExit2D(Collider2D other)
     {
-        //seeker.StartPath(rb.position, pos, OnPathComplete);
-        Vector2 direction = ((Vector2)pos - (Vector2)rb.position).normalized;
-        Vector2 force = direction * speed * Time.fixedDeltaTime;
-
-        this.rb.AddForce(force);
-        float distance = Vector2.Distance(rb.position, pos);
-        animator.SetBool("isWalking", true);
-
-        //handling of character orientation.
-        //this.spriteRenderer.flipX = rb.velocity.x < 0;
-
-        if (rb.velocity.x >= 0.01f)
+        if (other.gameObject.tag == "Player")
         {
-            this.transform.localScale = new Vector3(2.5f, 3f, 1f);
+            target = null;
         }
-        else if (rb.velocity.x <= -0.01f)
-        {
-            this.transform.localScale = new Vector3(-2.5f, 3f, 1f);
-        }
-
     }
 
-    //protected void OnPathComplete(Pathfinding.Path p)
-    //{
-    //    if (!p.error)
-    //    {
-    //        path = p;
-    //        currentWaypoint = 0;
-    //    }
-    //}
+
+    protected void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Obstacles")
+        {
+            this.roamPosition = GetRoamingPosition();
+        }
+    }
 
     protected void StopMoving()
     {

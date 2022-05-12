@@ -4,26 +4,35 @@ using UnityEngine;
 
 public class customWeapon : MonoBehaviour
 {
-    Vector2 rightAttackOffset;
+    Vector2 leftAttackOffset;
     public CapsuleCollider2D swordCollider;
     public float damage = 3;
+    private float force = 1f;
+    private Rigidbody2D rb;
 
     private void Start()
     {
-        rightAttackOffset = transform.position;
+        leftAttackOffset = transform.localPosition;
+        rb = GetComponent<Rigidbody2D>();
     }
 
     public void AttackRight()
     {
         swordCollider.enabled = true;
-        transform.localPosition = rightAttackOffset;
+        transform.localPosition = new Vector3(leftAttackOffset.x * -1, leftAttackOffset.y);
 
     }
 
     public void AttackLeft()
     {
         swordCollider.enabled = true;
-        transform.localPosition = new Vector3(rightAttackOffset.x * -1, rightAttackOffset.y);
+        transform.localPosition = leftAttackOffset;
+        
+    }
+
+    public void SwordAttack()
+    {
+        // use transform position of enemy to attack ?? hmm
     }
 
     public void StopAttack()
@@ -37,11 +46,13 @@ public class customWeapon : MonoBehaviour
         {
             //deal damage to enemy;
             //i need player script.
-            PlayerMovement player = other.GetComponent<PlayerMovement>();
+            PlayerMove player = other.GetComponent<PlayerMove>();
 
             if (player != null)
             {
-                player.health -= damage;
+                Vector2 direction = ((Vector2)player.transform.position - (Vector2)transform.position).normalized;
+                //player.rb.AddForce(direction * force, ForceMode2D.Impulse);
+                player.TakeDamage(damage);
             }
         }
     }
