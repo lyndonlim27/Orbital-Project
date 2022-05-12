@@ -5409,7 +5409,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 3.4672132, y: 1}
+    m_SensorSize: {x: 2.307377, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -5441,6 +5441,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4775776754299762262, guid: 93028c554625549a1ac0bbb39c5d2087, type: 3}
+      propertyPath: _animator
+      value: 
+      objectReference: {fileID: 1754969828}
     - target: {fileID: 4775776754299762262, guid: 93028c554625549a1ac0bbb39c5d2087, type: 3}
       propertyPath: moveSpeed
       value: 5
@@ -5548,6 +5552,11 @@ CapsuleCollider2D:
 --- !u!95 &1583751960 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 4775776755131148098, guid: 93028c554625549a1ac0bbb39c5d2087, type: 3}
+  m_PrefabInstance: {fileID: 1545096943}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1754969828 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4775776754299762263, guid: 93028c554625549a1ac0bbb39c5d2087, type: 3}
   m_PrefabInstance: {fileID: 1545096943}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1942168120
