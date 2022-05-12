@@ -9,8 +9,11 @@ public class customWeapon : MonoBehaviour
     public float damage = 3;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     private float force = 5f;
     private Rigidbody2D rb;
+=======
+>>>>>>> parent of 232f1837 (committing undone files)
 =======
 >>>>>>> parent of 232f1837 (committing undone files)
 =======
@@ -51,6 +54,7 @@ public class customWeapon : MonoBehaviour
             {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 float dist = Vector2.Distance(player.transform.position,transform.position);
                 float atkRange = transform.localScale.x + 1f;
                 if (dist < atkRange)
@@ -60,6 +64,9 @@ public class customWeapon : MonoBehaviour
                 Vector2 direction = (player.transform.position - transform.position).normalized;
                 player.rb.AddForce(direction * force, ForceMode2D.Impulse);
                 player.TakeDamage(damage);
+=======
+                player.health -= damage;
+>>>>>>> parent of 232f1837 (committing undone files)
 =======
                 player.health -= damage;
 >>>>>>> parent of 232f1837 (committing undone files)
