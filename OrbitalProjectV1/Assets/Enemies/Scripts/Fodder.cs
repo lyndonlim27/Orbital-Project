@@ -9,6 +9,7 @@ public class Fodder : Enemy
     public EnemySpell spellprefab;
     private float castTrigger;
     private float castCounter;
+    private float atkRange = 1.5f;
 
 
     private void Awake()
@@ -16,15 +17,14 @@ public class Fodder : Enemy
         this.state = State.Roaming;
         this.castTrigger = Random.Range(1f, 600f);
         this.castCounter = 0;
+        this.magicRange = 5f;
+        
     }
-    // Start is called before the first frame update
-    //public void Attack(GameObject target)
-    // can remove if below fixedupdate works.
     override
 
-        public void Attack(Vector2 dir)
+        public void Attack()
     {
-        if (dir.x > 0)
+        if (spriteRenderer.flipX == true)
         {
             customWeapon.AttackRight();
         }
@@ -36,43 +36,45 @@ public class Fodder : Enemy
 
     }
 
+    public void StopAttack()
+    {
+        customWeapon.StopAttack();
+    }
+
     private float Rand()
     {
-        return Random.Range(1f, 600f);
+        return Random.Range(1f, 1800f);
 
     }
 
-
-    private void FixedUpdate()
+    private void Update()
     {
-        float steps = speed * Time.fixedDeltaTime;
+        float steps = speed * Time.deltaTime;
         float dist;
         Vector2 direction;
+
+        Debug.Log(target);
+
         if (target != null)
         {
             dist = Vector3.Distance(transform.position, target.position);
-            float atkRange = customWeapon.swordCollider.transform.localScale.x + 1f;
+            
             animator.SetBool("isWalking", dist > atkRange);
-            animator.SetBool("Attacking", dist < atkRange);
+            animator.SetBool("Attacking", dist <= atkRange && castCounter < castTrigger);
             direction = ((Vector2)target.transform.position - (Vector2)rb.position).normalized;
-
-            Debug.Log("This is castcounter: " + castCounter);
-            Debug.Log("This is cast trigger: " + castTrigger);
-
-
             if (castCounter >= castTrigger)
             {
-                animator.Play("Cast");
-                EnemySpell enemySpell = Instantiate(this.spellprefab, target.position + new Vector3(0, 1.5f, 0), Quaternion.identity);
-                castTrigger = Rand();
-                castCounter = 0;
+                this.animator.Play("Cast");
+                this.castCounter = 0;
+                this.castTrigger = Rand();
+                EnemySpell enemySpell = Instantiate(this.spellprefab, target.position + new Vector3(0,2f,0) , Quaternion.identity);
             }
             else
             {
                 castCounter++;
             }
 
-            if (animator.GetBool("Attacking") == true && dist < atkRange)
+            if (animator.GetBool("Attacking") || animator.GetBool("Casting"))
             {
                 //do nothing when attacking
 
@@ -80,8 +82,7 @@ public class Fodder : Enemy
             else
             {
                 transform.position = Vector2.MoveTowards(transform.position, target.position, steps);
-                Attack(direction);
-
+ 
             }
 
 
@@ -104,4 +105,10 @@ public class Fodder : Enemy
         spriteRenderer.flipX = direction.x > 0;
 
     }
+
+    public void ResetCounter()
+    {
+        
+    }
 }
+

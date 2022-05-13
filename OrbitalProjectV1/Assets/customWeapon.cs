@@ -7,8 +7,9 @@ public class customWeapon : MonoBehaviour
     Vector2 leftAttackOffset;
     public CapsuleCollider2D swordCollider;
     public float damage = 3;
-    private float force = 1f;
+    private float force = 3f;
     private Rigidbody2D rb;
+    private float knockbackTime = 3f;
 
     private void Start()
     {
@@ -30,11 +31,6 @@ public class customWeapon : MonoBehaviour
         
     }
 
-    public void SwordAttack()
-    {
-        // use transform position of enemy to attack ?? hmm
-    }
-
     public void StopAttack()
     {
         swordCollider.enabled = false;
@@ -49,11 +45,40 @@ public class customWeapon : MonoBehaviour
             PlayerMove player = other.GetComponent<PlayerMove>();
 
             if (player != null)
-            {
+            { 
                 Vector2 direction = ((Vector2)player.transform.position - (Vector2)transform.position).normalized;
-                //player.rb.AddForce(direction * force, ForceMode2D.Impulse);
+                player.rb.AddForce(direction * force, ForceMode2D.Impulse);
                 player.TakeDamage(damage);
+                StartCoroutine(KnockBackCo(player.rb));
             }
         }
     }
+
+    void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.tag == "Player")
+        {
+            //deal damage to enemy;
+            //i need player script.
+            PlayerMove player = other.GetComponent<PlayerMove>();
+
+            if (player != null)
+            {
+                Vector2 direction = ((Vector2)player.transform.position - (Vector2)transform.position).normalized;
+                player.rb.AddForce(direction * force, ForceMode2D.Impulse);
+                player.TakeDamage(damage);
+                StartCoroutine(KnockBackCo(player.rb));
+            }
+        }
+    }
+
+    private IEnumerator KnockBackCo(Rigidbody2D rb)
+    {
+        if (rb != null)
+        {
+            yield return new WaitForSeconds(knockbackTime);
+            rb.velocity = Vector2.zero;
+        }
+    }
+
 }

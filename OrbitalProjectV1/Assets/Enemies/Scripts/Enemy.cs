@@ -6,41 +6,29 @@ using Pathfinding;
 
 public abstract class Enemy : MonoBehaviour
 {
-    protected float nextWaypointDistance = 1f;
-    [SerializeField]
-    private IWeapon weapon;
-    [SerializeField]
-    private float aggroRange;
-    [SerializeField]
-    private int health;
-    [SerializeField]
-    protected float speed;
+    [Header("Enemy Stats")]
+    
+    [SerializeField] protected IWeapon weapon;
+    [SerializeField] protected float magicRange;
+    [SerializeField] protected float health;
+    [SerializeField] protected float speed;
     protected Rigidbody2D rb;
     protected Collider2D collider2d;
     protected SpriteRenderer spriteRenderer;
     protected Animator animator;
     protected bool armed;
-    //protected GameObject target;
+    protected float nextWaypointDistance = 1f;
     protected Vector3 startingPos;
     protected Vector3 roamPosition;
-    private Pathfinding.Seeker seeker;
-    //private int currentWaypoint = 0;
-    //private bool reached = false;
     protected Transform target;
-    private Pathfinding.Path path;
     protected State state;
-    protected bool canMove;
-    protected bool reached;
 
-    public abstract void Attack(Vector2 dir);
+    public abstract void Attack();
 
-    protected void Start()
+    private void Start()
     {
         startingPos = transform.position;
-        seeker = GetComponent<Pathfinding.Seeker>();
         rb = GetComponent<Rigidbody2D>();
-        //target = GameObject.FindGameObjectWithTag("Player");
-        reached = false;
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
@@ -51,6 +39,14 @@ public abstract class Enemy : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            target = other.transform;
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D other)
     {
         if (other.gameObject.tag == "Player")
         {
@@ -76,16 +72,19 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    protected void StopMoving()
-    {
-        this.reached = true;
-        this.animator.SetBool("isWalking", false);
-    }
-
-
     /// <summary>
     /// Death Animations. 
     /// </summary>
+    ///
+
+    private void TakeDamage(float damage)
+    {
+        health -= damage;
+        if (health < 0)
+        {
+            Defeated();
+        } 
+    }
 
     private void Defeated()
     {
@@ -97,16 +96,4 @@ public abstract class Enemy : MonoBehaviour
         Destroy(gameObject);
     }
 
-    /// <summary>
-    /// Animation movement control, maybe i will switch to this to control animation of enemy instead of states. 
-    /// </summary>
-    //public void LockMovement()
-    //{
-    //    canMove = false;
-    //}
-
-    //public void UnlockMovement()
-    //{
-    //    canMove = true;
-    //}
 }

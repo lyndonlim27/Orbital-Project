@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3652122665396400024}
   - component: {fileID: 3652122665396400025}
   - component: {fileID: 3652122665396400007}
-  - component: {fileID: 3652122665396400004}
   - component: {fileID: 3652122665396400005}
   - component: {fileID: 3652122665396400006}
   - component: {fileID: 2137737619}
@@ -123,38 +122,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a4192ad6cf8846aeb553773ea2b0ce0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aggroRange: 3
+  magicRange: 0
   health: 100
   speed: 2
   customWeapon: {fileID: 3652122665418345160}
---- !u!114 &3652122665396400004
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3652122665396400028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 1
-  drawGizmos: 1
-  detailedGizmos: 0
-  startEndModifier:
-    addPoints: 0
-    exactStartPoint: 3
-    exactEndPoint: 3
-    useRaycasting: 0
-    mask:
-      serializedVersion: 2
-      m_Bits: 4294967295
-    useGraphRaycasting: 0
-  traversableTags: -1
-  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  graphMask:
-    value: -1
+  spellprefab: {fileID: 0}
 --- !u!50 &3652122665396400005
 Rigidbody2D:
   serializedVersion: 4
@@ -254,9 +226,9 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 1}
-  m_Direction: 0
+  m_Offset: {x: 0.30000007, y: 0.16224079}
+  m_Size: {x: 2.6489732, y: 1.4}
+  m_Direction: 1
 --- !u!114 &3652122665418345160
 MonoBehaviour:
   m_ObjectHideFlags: 0

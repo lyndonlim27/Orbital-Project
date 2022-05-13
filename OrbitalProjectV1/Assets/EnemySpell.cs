@@ -6,7 +6,7 @@ public class EnemySpell : MonoBehaviour
 {
     public Animator animator;
     public Collider2D col;
-    private float force = 1f;
+    private float force = 3f;
 
     private void Start()
     {
@@ -14,7 +14,7 @@ public class EnemySpell : MonoBehaviour
         col = GetComponent<Collider2D>();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
         {
@@ -28,6 +28,13 @@ public class EnemySpell : MonoBehaviour
     {
         this.col.enabled = true;
     }
+
+    public void Disable()
+    {
+        this.col.enabled = false;
+    }
+
+
 
     public void OnDestroy()
     {
