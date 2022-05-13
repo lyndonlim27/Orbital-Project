@@ -10,7 +10,7 @@ public class Bullet : MonoBehaviour
 
     [Header("Bullet properties")]
     [SerializeField] private float speed = 500.0f;
-    [SerializeField] private float lifeTime = 10.0f;
+    //[SerializeField] private float lifeTime = 10.0f;
 
     [Header("Movement")]
     [SerializeField] private float rotateSpeed = 50.0f;

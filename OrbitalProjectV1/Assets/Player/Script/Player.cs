@@ -9,8 +9,13 @@ public class Player : MonoBehaviour
     private Rigidbody2D _rb;
     private Animator _animator;
     private Transform _target;
+    private int currHealth;
+
     [Header("Player properties")]
-    [SerializeField] private float health = 100;
+    [SerializeField] private int maxHealth = 100;
+    [SerializeField] private HealthBar healthBar;
+    [SerializeField] private int selfDamage = 10;
+
 
     [Header("Movement")]
     [SerializeField] private float _moveSpeed = 5f;
@@ -21,6 +26,8 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        currHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _target = GameObject.FindGameObjectWithTag("Enemy").transform;
@@ -32,9 +39,13 @@ public class Player : MonoBehaviour
 
         if (Input.GetButtonDown("Shoot") || Input.GetMouseButtonDown(0))
         {
-
             Shoot();
 
+        }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            TakeDamage(selfDamage);
         }
         if (count < 1)
         {
@@ -54,6 +65,12 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         _rb.MovePosition(_rb.position + _movement.normalized * _moveSpeed * Time.fixedDeltaTime);
+    }
+
+    private void TakeDamage(int damageTaken)
+    {
+        currHealth -= damageTaken;
+        healthBar.SetHealth(currHealth);
     }
 
     private void Shoot()
