@@ -28,7 +28,7 @@ public class customWeapon : MonoBehaviour
     {
         swordCollider.enabled = true;
         transform.localPosition = leftAttackOffset;
-        
+
     }
 
     public void StopAttack()
@@ -45,24 +45,6 @@ public class customWeapon : MonoBehaviour
             PlayerMove player = other.GetComponent<PlayerMove>();
 
             if (player != null)
-            { 
-                Vector2 direction = ((Vector2)player.transform.position - (Vector2)transform.position).normalized;
-                player.rb.AddForce(direction * force, ForceMode2D.Impulse);
-                player.TakeDamage(damage);
-                StartCoroutine(KnockBackCo(player.rb));
-            }
-        }
-    }
-
-    void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.tag == "Player")
-        {
-            //deal damage to enemy;
-            //i need player script.
-            PlayerMove player = other.GetComponent<PlayerMove>();
-
-            if (player != null)
             {
                 Vector2 direction = ((Vector2)player.transform.position - (Vector2)transform.position).normalized;
                 player.rb.AddForce(direction * force, ForceMode2D.Impulse);
@@ -70,6 +52,7 @@ public class customWeapon : MonoBehaviour
                 StartCoroutine(KnockBackCo(player.rb));
             }
         }
+    
     }
 
     private IEnumerator KnockBackCo(Rigidbody2D rb)

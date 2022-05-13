@@ -18,6 +18,7 @@ public class Fodder : Enemy
         this.castTrigger = Random.Range(1f, 600f);
         this.castCounter = 0;
         this.magicRange = 5f;
+        this.nextAttackTime = 2f;
         
     }
     override
@@ -61,13 +62,17 @@ public class Fodder : Enemy
             
             animator.SetBool("isWalking", dist > atkRange);
             animator.SetBool("Attacking", dist <= atkRange && castCounter < castTrigger);
+            animator.SetBool("Casting", castCounter >= castTrigger);
             direction = ((Vector2)target.transform.position - (Vector2)rb.position).normalized;
             if (castCounter >= castTrigger)
             {
-                this.animator.Play("Cast");
-                this.castCounter = 0;
-                this.castTrigger = Rand();
-                EnemySpell enemySpell = Instantiate(this.spellprefab, target.position + new Vector3(0,2f,0) , Quaternion.identity);
+                if (Time.time > nextAttackTime)
+                {
+                    
+                    this.castCounter = 0;
+                    this.castTrigger = Rand();
+                    EnemySpell enemySpell = Instantiate(this.spellprefab, target.position + new Vector3(0, 2f, 0), Quaternion.identity);
+                }
             }
             else
             {

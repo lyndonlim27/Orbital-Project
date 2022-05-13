@@ -34,8 +34,6 @@ public class EnemySpell : MonoBehaviour
         this.col.enabled = false;
     }
 
-
-
     public void OnDestroy()
     {
 
