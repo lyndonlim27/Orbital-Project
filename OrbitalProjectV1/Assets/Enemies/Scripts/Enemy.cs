@@ -63,7 +63,7 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-
+    //1. this one not working also
     protected void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Obstacles")

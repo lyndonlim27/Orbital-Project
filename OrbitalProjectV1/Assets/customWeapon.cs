@@ -36,6 +36,26 @@ public class customWeapon : MonoBehaviour
         swordCollider.enabled = false;
     }
 
+    void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.tag == "Player")
+        {
+            //deal damage to enemy;
+            //i need player script.
+            PlayerMove player = other.GetComponent<PlayerMove>();
+
+            if (player != null)
+            {
+                Vector2 direction = ((Vector2)player.transform.position - (Vector2)transform.position).normalized;
+                player.rb.AddForce(direction * force, ForceMode2D.Impulse);
+                player.TakeDamage(damage);
+                StartCoroutine(KnockBackCo(player.rb));
+            }
+        }
+
+    }
+
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player")

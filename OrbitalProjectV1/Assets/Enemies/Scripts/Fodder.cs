@@ -66,12 +66,12 @@ public class Fodder : Enemy
             direction = ((Vector2)target.transform.position - (Vector2)rb.position).normalized;
             if (castCounter >= castTrigger)
             {
+                EnemySpell enemySpell = Instantiate(this.spellprefab, target.position + new Vector3(0, 2f, 0), Quaternion.identity);
                 if (Time.time > nextAttackTime)
-                {
-                    
+                { 
                     this.castCounter = 0;
                     this.castTrigger = Rand();
-                    EnemySpell enemySpell = Instantiate(this.spellprefab, target.position + new Vector3(0, 2f, 0), Quaternion.identity);
+                    
                 }
             }
             else
