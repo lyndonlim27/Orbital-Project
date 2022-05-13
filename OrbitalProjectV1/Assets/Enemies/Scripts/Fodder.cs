@@ -11,6 +11,11 @@ public class Fodder : Enemy
     private float castCounter;
     private float atkRange = 1.5f;
 
+    [Header("Roaming positions")]
+    [SerializeField] Vector2 roamMinArea = new Vector2(-18f,-8f);
+    [SerializeField] Vector2 roamMaxArea = new Vector2(1,6);
+
+
 
     private void Awake()
     {
@@ -18,8 +23,7 @@ public class Fodder : Enemy
         this.castTrigger = Random.Range(1f, 600f);
         this.castCounter = 0;
         this.magicRange = 5f;
-        this.nextAttackTime = 2f;
-        
+
     }
     override
 
@@ -42,12 +46,6 @@ public class Fodder : Enemy
         customWeapon.StopAttack();
     }
 
-    private float Rand()
-    {
-        return Random.Range(1f, 1800f);
-
-    }
-
     private void Update()
     {
         float steps = speed * Time.deltaTime;
@@ -59,35 +57,24 @@ public class Fodder : Enemy
         if (target != null)
         {
             dist = Vector3.Distance(transform.position, target.position);
-            
-            animator.SetBool("isWalking", dist > atkRange);
-            animator.SetBool("Attacking", dist <= atkRange && castCounter < castTrigger);
-            animator.SetBool("Casting", castCounter >= castTrigger);
             direction = ((Vector2)target.transform.position - (Vector2)rb.position).normalized;
             if (castCounter >= castTrigger)
             {
-                EnemySpell enemySpell = Instantiate(this.spellprefab, target.position + new Vector3(0, 2f, 0), Quaternion.identity);
-                if (Time.time > nextAttackTime)
-                { 
-                    this.castCounter = 0;
-                    this.castTrigger = Rand();
-                    
-                }
+
+                animator.SetTrigger("Cast");
+                EnemySpell enemySpell = Instantiate(this.spellprefab, target.position, Quaternion.identity);
+                StartCoroutine(Wait());
+                this.castCounter = 0;
+                this.castTrigger = Rand();
+
             }
-            else
+            else if (dist < atkRange)
             {
                 castCounter++;
-            }
-
-            if (animator.GetBool("Attacking") || animator.GetBool("Casting"))
-            {
-                //do nothing when attacking
-
-            }
-            else
+                animator.SetTrigger("Attack");
+            } else
             {
                 transform.position = Vector2.MoveTowards(transform.position, target.position, steps);
- 
             }
 
 
@@ -102,18 +89,16 @@ public class Fodder : Enemy
             }
             transform.position = Vector2.MoveTowards(transform.position, roamPosition, steps);
             direction = ((Vector2)roamPosition - (Vector2)transform.position).normalized;
-            animator.SetBool("isWalking", true);
-            animator.SetBool("Attacking", false);
-
         }
 
         spriteRenderer.flipX = direction.x > 0;
 
     }
 
-    public void ResetCounter()
+    private IEnumerator Wait()
     {
-        
+        yield return new WaitForSeconds(1.5f);
+
     }
 }
 

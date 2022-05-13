@@ -7,6 +7,8 @@ public class EnemySpell : MonoBehaviour
     public Animator animator;
     public Collider2D col;
     private float force = 3f;
+    private float damage = 5f;
+    private float knockbackTime = 3f;
 
     private void Start()
     {
@@ -18,8 +20,11 @@ public class EnemySpell : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            Vector2 dir = (Vector2)(collision.gameObject.transform.position - transform.position).normalized;
-            collision.gameObject.GetComponent<Rigidbody2D>().AddForce(dir * force, ForceMode2D.Impulse);
+            PlayerMove player = collision.GetComponent<PlayerMove>();
+            Vector2 direction = ((Vector2)player.transform.position - (Vector2)transform.position).normalized;
+            collision.gameObject.GetComponent<Rigidbody2D>().AddForce(direction * force, ForceMode2D.Impulse);
+            player.TakeDamage(damage);
+            //StartCoroutine(KnockBackCo(player.rb));
         }
         
     }
@@ -38,5 +43,14 @@ public class EnemySpell : MonoBehaviour
     {
 
         Destroy(this.gameObject, .5f);
+    }
+
+    private IEnumerator KnockBackCo(Rigidbody2D rb)
+    {
+        if (rb != null)
+        {
+            yield return new WaitForSeconds(knockbackTime);
+            rb.velocity = Vector2.zero;
+        }
     }
 }

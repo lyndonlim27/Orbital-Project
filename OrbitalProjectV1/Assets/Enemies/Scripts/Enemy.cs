@@ -35,7 +35,7 @@ public abstract class Enemy : MonoBehaviour
 
     protected Vector3 GetRoamingPosition()
     {
-        return (startingPos + UtilsClass.GetRandomDir() * Random.Range(10f, 10f));
+        return (startingPos + UtilsClass.GetRandomDir() * Random.Range(1f, 10f));
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -96,4 +96,9 @@ public abstract class Enemy : MonoBehaviour
         Destroy(gameObject);
     }
 
+    protected float Rand()
+    {
+        return Random.Range(1f, 1800f);
+
+    }
 }
