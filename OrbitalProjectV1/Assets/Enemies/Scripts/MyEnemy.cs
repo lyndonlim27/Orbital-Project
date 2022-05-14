@@ -80,10 +80,7 @@ public class MyEnemy : MonoBehaviour
     /// <summary>
     /// Called in Animation "Cast"
     /// </summary>
-    public void ResetCounter()
-    {
 
-    }
 
     public void AnimationTrigger(ANIMATION_CODE code)
     {
