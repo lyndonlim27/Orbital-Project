@@ -9,18 +9,17 @@ public class Bullet : MonoBehaviour
     private Animator _animator;
 
     [Header("Bullet properties")]
-    [SerializeField] private float speed = 500.0f;
+    [SerializeField] private float speed = 6.0f;
     //[SerializeField] private float lifeTime = 10.0f;
 
     [Header("Movement")]
-    [SerializeField] private float rotateSpeed = 50.0f;
+    [SerializeField] private float rotateSpeed = 200.0f;
 
     
 
     // Start is called before the first frame update
     void Start()
     {
-       // _rb.velocity = new Vector2(1, 0);
         _target = GameObject.FindGameObjectWithTag("Enemy").transform;
         _animator = GetComponent<Animator>();
     }

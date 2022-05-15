@@ -34,7 +34,7 @@ public class Player : MonoBehaviour
         _animator = GetComponent<Animator>();
         _target = GameObject.FindGameObjectWithTag("Enemy").transform;
         weaponManager = this.gameObject.transform.GetChild(0).gameObject.GetComponent<WeaponPickup>();
-       // currWeapon = weaponManager.transform.GetChild(0).gameObject.GetComponent<Weapon>();
+        currWeapon = weaponManager.ActiveWeapon().GetComponent<Weapon>();
     }
 
     // Update is called once per frame
@@ -45,7 +45,8 @@ public class Player : MonoBehaviour
             Death();
         }
         */
-       // currWeapon = weaponManager.transform.GetChild(0).gameObject.GetComponent<Weapon>();
+
+        currWeapon = weaponManager.ActiveWeapon().GetComponent<Weapon>();
 
         if (Input.GetButtonDown("Shoot") || Input.GetMouseButtonDown(0))
         {
@@ -67,7 +68,7 @@ public class Player : MonoBehaviour
             _animator.SetFloat("Horizontal", _movement.x);
             _animator.SetFloat("Vertical", _movement.y);
             _animator.SetFloat("Speed", _movement.magnitude);
-            //currWeapon.TurnWeapon(_movement);
+            currWeapon.TurnWeapon(_movement);
         }
         count--;
 
@@ -92,7 +93,7 @@ public class Player : MonoBehaviour
         Vector2 point2Target = (Vector2)transform.position - (Vector2)_target.transform.position;
         point2Target.Normalize();
         point2Target = -point2Target;
-        //currWeapon.Shoot(point2Target);
+        currWeapon.Shoot(point2Target);
         _animator.SetFloat("Horizontal", Mathf.RoundToInt(point2Target.x));
         _animator.SetFloat("Vertical", Mathf.RoundToInt(point2Target.y));
         _animator.SetFloat("Speed", point2Target.magnitude);
@@ -101,19 +102,11 @@ public class Player : MonoBehaviour
     public void PickupItem(Weapon weapon)
     {   
         weaponManager.Swap(weapon);
-        Destroy(currWeapon);
-     
-       // Instantiate(currWeapon, this.transform.position, this.transform.rotation);
-        //this.gameObject.transform.GetChild(0).SetParent(null);
-        //weapon.transform.SetParent(this.transform);
-        //currWeapon.GetComponent<WeaponPickup>().Swap(weapon);
     }
     
 
 
     private void Death()
     {
-
-
     }
 }

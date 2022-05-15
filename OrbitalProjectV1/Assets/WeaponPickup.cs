@@ -13,22 +13,30 @@ public class WeaponPickup : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {   /*
-        transform.GetChild(0).gameObject.transform.position = Vector3.zero;
-        transform.GetChild(0).gameObject.transform.localScale = Vector3.one;
-        transform.GetChild(0).gameObject.GetComponent<Collider2D>().enabled = false;
-        */
+    {
+
     }
 
     public void Swap(Weapon weapon)
     {
-        Destroy(this.gameObject.transform.GetChild(0).gameObject);
-        weapon.transform.SetParent(this.transform);
-        // Weapon weap = Instantiate(weapon, this.transform.position, this.transform.rotation);
-        //  weap.transform.SetParent(this.gameObject.transform);
-        // Destroy(weapon);
-        weapon.SetPosition(this.transform);
-        //Debug.Log("goody");
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).gameObject.SetActive(false);
+        }
+        transform.Find(weapon.WeaponName).gameObject.SetActive(true);
+        Destroy(weapon);
+    }
+
+    public GameObject ActiveWeapon()
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            if (transform.GetChild(i).gameObject.activeInHierarchy)
+            {
+                return transform.GetChild(i).gameObject;
+            }
+        }
+        return null;
     }
     
 }
