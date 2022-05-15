@@ -4,35 +4,56 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public float speed = 500.0f;
-    public float lifeTime = 10.0f;
-    private Rigidbody2D rb;
+    private Rigidbody2D _rb;
+    private Transform _target;
+    private Animator _animator;
+
+    [Header("Bullet properties")]
+    [SerializeField] private float speed = 6.0f;
+    //[SerializeField] private float lifeTime = 10.0f;
+
+    [Header("Movement")]
+    [SerializeField] private float rotateSpeed = 200.0f;
+
+    
+
     // Start is called before the first frame update
     void Start()
     {
-
+        _target = GameObject.FindGameObjectWithTag("Enemy").transform;
+        _animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
 
-    }
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
+        _rb = GetComponent<Rigidbody2D>();
     }
 
-    public void Shoot(Vector2 direction)
+    
+    void FixedUpdate()
     {
-        Debug.Log(this.transform.localEulerAngles.z);
-        rb.AddForce(direction * this.speed);
-        Destroy(this.gameObject, this.lifeTime);
+        //When the bullet collide with the enemy, stop the movement of the bullet
+        if(_animator.GetBool("Collision") == true)
+        {
+            _rb.angularVelocity = 0;
+            _rb.velocity = Vector2.zero;
+            return;
+        }
+        //The bullet will follow the target
+        Vector2 point2Target = (Vector2)transform.position - (Vector2)_target.transform.position;
+        point2Target.Normalize();
+        float value = Vector3.Cross(point2Target, transform.right).z;
+        _rb.angularVelocity = rotateSpeed * value;
+        _rb.velocity = transform.right * speed;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Destroy(this.gameObject);
+        //Setting collision to true so that it will trigger the next state
+        //for bullet and thus play the explosion animation
+        _animator.SetBool("Collision", true);
     }
+
 }
