@@ -7,7 +7,7 @@ public class EnemySpell : MonoBehaviour
     public Animator animator;
     public Collider2D col;
     private float force = 3f;
-    private float damage = 5f;
+    private int damage = 5;
     private float knockbackTime = 3f;
 
     private void Start()
@@ -20,7 +20,7 @@ public class EnemySpell : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            PlayerMove player = collision.GetComponent<PlayerMove>();
+            Player player = collision.GetComponent<Player>();
             Vector2 direction = ((Vector2)player.transform.position - (Vector2)transform.position).normalized;
             collision.gameObject.GetComponent<Rigidbody2D>().AddForce(direction * force, ForceMode2D.Impulse);
             player.TakeDamage(damage);

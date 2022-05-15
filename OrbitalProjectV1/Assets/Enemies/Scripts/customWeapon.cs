@@ -6,7 +6,7 @@ public class customWeapon : MonoBehaviour
 {
     Vector2 leftAttackOffset;
     public CapsuleCollider2D swordCollider;
-    public float damage = 3;
+    public int damage = 3;
     private float force = 3f;
     private Rigidbody2D rb;
     private float knockbackTime = 3f;
@@ -42,12 +42,12 @@ public class customWeapon : MonoBehaviour
         {
             //deal damage to enemy;
             //i need player script.
-            PlayerMove player = other.GetComponent<PlayerMove>();
+            Player player = other.GetComponent<Player>();
 
             if (player != null)
             {
                 Vector2 direction = ((Vector2)player.transform.position - (Vector2)transform.position).normalized;
-                player.rb.AddForce(direction * force, ForceMode2D.Impulse);
+                player.GetComponent<Rigidbody2D>().AddForce(direction * force, ForceMode2D.Impulse);
                 player.TakeDamage(damage);
                 //StartCoroutine(KnockBackCo(player.rb));
             }

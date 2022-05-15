@@ -58,13 +58,13 @@ public class MyEnemy : MonoBehaviour
         if (weap.playerDetected == null)
             return;
 
-        PlayerMove player = weap.playerDetected.GetComponent<PlayerMove>();
+        Player player = weap.playerDetected.GetComponent<Player>();
         float force = weap.force;
-        float damage = weap.damage;
+        int damage = weap.damage;
         if (player != null)
         {
             Vector2 direction = ((Vector2)player.transform.position - (Vector2)transform.position).normalized;
-            player.rb.AddForce(direction * force, ForceMode2D.Impulse);
+            player.GetComponent<Rigidbody2D>().AddForce(direction * force, ForceMode2D.Impulse);
             player.TakeDamage(damage);
             //StartCoroutine(KnockBackCo(player.rb));
         }
@@ -102,7 +102,7 @@ public class MyEnemy : MonoBehaviour
 
 public class WeaponScript : MonoBehaviour
 {
-    public float damage = 3.0f;
+    public int damage = 3;
     public float force = 3.0f;
     public GameObject playerDetected = null;
     public void FaceLeft()
