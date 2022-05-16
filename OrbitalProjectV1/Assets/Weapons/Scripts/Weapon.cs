@@ -36,8 +36,9 @@ public class Weapon : MonoBehaviour
         Player player = collision.GetComponent<Player>();
         if(player)
         {
-        player.PickupItem(this);
+        player.PickupItem(this.gameObject.name);
         }
+        Destroy(this.gameObject);
     }
     
 
@@ -71,6 +72,11 @@ public class Weapon : MonoBehaviour
         Bullet bullet = Instantiate(_bulletPrefab, this.transform.position, angle);
 
 
+    }
+
+    public void SetPosition()
+    {
+        this.transform.localPosition = Vector3.zero;
     }
 
 }

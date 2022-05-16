@@ -110,7 +110,7 @@ public class Player : MonoBehaviour
         _animator.SetFloat("Speed", point2Target.magnitude);
     }
     
-    public void PickupItem(Weapon weapon)
+    public void PickupItem(string weapon)
     {   
         _weaponManager.Swap(weapon);
     }
