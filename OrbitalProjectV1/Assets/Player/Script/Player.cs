@@ -29,8 +29,6 @@ public class Player : MonoBehaviour
     [SerializeField] private GameOver _gameOver;
     [SerializeField] private HealthBar healthBar;
 
-    int count = 0;
-
 
     // Start is called before the first frame update
     void Start()
@@ -54,14 +52,13 @@ public class Player : MonoBehaviour
         {
             Death();
         }
-   
 
         _currWeapon = _weaponManager.ActiveWeapon().GetComponent<Weapon>();
 
         if (Input.GetButtonDown("Shoot") || Input.GetMouseButtonDown(0))
-        {
+        {   
             Shoot();
-            _timeDelay = 0.5f;
+            _timeDelay = 0.5f; //When player shoots, pauses direction for 0.5 seconds
             
         }
 
@@ -72,13 +69,11 @@ public class Player : MonoBehaviour
                 TakeDamage(selfDamage);
             }
         }
-       // if (count < 1)
+
        if(_time >= _timeDelay)
         {
             _movement.x = Input.GetAxisRaw("Horizontal");
             _movement.y = Input.GetAxisRaw("Vertical");
-
-
             _animator.SetFloat("Horizontal", _movement.x);
             _animator.SetFloat("Vertical", _movement.y);
             _animator.SetFloat("Speed", _movement.magnitude);
@@ -86,17 +81,16 @@ public class Player : MonoBehaviour
             _time = 0;
             _timeDelay = 0;
         }
-       // count--;
-
-
     }
 
     private void FixedUpdate()
     {
+        //Move player's position
         _rb.MovePosition(_rb.position + _movement.normalized * _moveSpeed * Time.fixedDeltaTime);
     }
 
 
+    //When player takes damage, reduce current health and flicker sprite
     private void TakeDamage(int damageTaken)
     {
         _currHealth -= damageTaken;
@@ -104,9 +98,9 @@ public class Player : MonoBehaviour
         _flicker.Flicker();
     }
 
+    //When player shoot, player direction faces the target enemy
     private void Shoot()
     {
-        count = 50;
         Vector2 point2Target = (Vector2)transform.position - (Vector2)_target.transform.position;
         point2Target.Normalize();
         point2Target = -point2Target;
@@ -121,6 +115,8 @@ public class Player : MonoBehaviour
         _weaponManager.Swap(weapon);
     }
 
+
+    //Fades sprite
     IEnumerator FadeOut()
     {
         for(float f = 1f; f >= -0.05f; f -= 0.05f)
@@ -134,6 +130,7 @@ public class Player : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
+    //When current health reaches 0, character dies and fade out
     private void Death()
     {
         StartCoroutine("FadeOut");

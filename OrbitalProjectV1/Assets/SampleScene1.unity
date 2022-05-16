@@ -6403,7 +6403,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.8060837, y: 1}
+    m_SensorSize: {x: 4.238683, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -6595,7 +6595,8 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: d25fa797761994670ad1c925a3db14a6, type: 3}
 --- !u!1001 &1545096943
 PrefabInstance:
@@ -6877,6 +6878,30 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 4775776755131148098, guid: 93028c554625549a1ac0bbb39c5d2087, type: 3}
   m_PrefabInstance: {fileID: 1545096943}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1583751965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1583751952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66e90c7bd02ee40ed99df3c86c120b07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1583751966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1583751952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66e90c7bd02ee40ed99df3c86c120b07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1814943011
 GameObject:
   m_ObjectHideFlags: 0
@@ -6965,12 +6990,20 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4874153600760186223, guid: 9a6be083943e347e8b12abbb3de67ffb, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4874153600760186223, guid: 9a6be083943e347e8b12abbb3de67ffb, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4874153600760186223, guid: 9a6be083943e347e8b12abbb3de67ffb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 1.783
       objectReference: {fileID: 0}
     - target: {fileID: 4874153600760186223, guid: 9a6be083943e347e8b12abbb3de67ffb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.953
       objectReference: {fileID: 0}
     - target: {fileID: 4874153600760186223, guid: 9a6be083943e347e8b12abbb3de67ffb, type: 3}
       propertyPath: m_LocalPosition.z
@@ -7007,6 +7040,10 @@ PrefabInstance:
     - target: {fileID: 8069962991690258899, guid: 9a6be083943e347e8b12abbb3de67ffb, type: 3}
       propertyPath: m_Name
       value: Laser
+      objectReference: {fileID: 0}
+    - target: {fileID: 8069962991690258899, guid: 9a6be083943e347e8b12abbb3de67ffb, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9a6be083943e347e8b12abbb3de67ffb, type: 3}
