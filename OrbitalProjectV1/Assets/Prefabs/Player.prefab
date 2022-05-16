@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8318844877162588810}
-  m_Layer: 0
+  - component: {fileID: 1808751637}
+  m_Layer: 11
   m_Name: Weapon
-  m_TagString: Untagged
+  m_TagString: playerWeap
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33,6 +34,18 @@ Transform:
   m_Father: {fileID: 4775776755131148096}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1808751637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4246232615695590073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edf33fbb3777e43d0bf3419e23d8c239, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4775776755131148220
 GameObject:
   m_ObjectHideFlags: 0
@@ -47,9 +60,10 @@ GameObject:
   - component: {fileID: 4775776755131148221}
   - component: {fileID: 4775776755131148097}
   - component: {fileID: 4775776755131148098}
-  m_Layer: 0
+  - component: {fileID: 4731356444992484632}
+  m_Layer: 8
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -155,7 +169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef1526a24b0ad4913b697994aea03848, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animator: {fileID: 0}
+  _animator: {fileID: 4775776755131148098}
   maxHealth: 100
   healthBar: {fileID: 0}
   selfDamage: 10
@@ -210,6 +224,22 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!58 &4731356444992484632
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4775776755131148220}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.105
 --- !u!1001 &2482114134752377373
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -217,6 +247,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8318844877162588810}
     m_Modifications:
+    - target: {fileID: 3036588866563388422, guid: 9a6be083943e347e8b12abbb3de67ffb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4874153600760186223, guid: 9a6be083943e347e8b12abbb3de67ffb, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -264,6 +298,14 @@ PrefabInstance:
     - target: {fileID: 8069962991690258899, guid: 9a6be083943e347e8b12abbb3de67ffb, type: 3}
       propertyPath: m_Name
       value: Laser
+      objectReference: {fileID: 0}
+    - target: {fileID: 8069962991690258899, guid: 9a6be083943e347e8b12abbb3de67ffb, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 8069962991690258899, guid: 9a6be083943e347e8b12abbb3de67ffb, type: 3}
+      propertyPath: m_TagString
+      value: playerWeap
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9a6be083943e347e8b12abbb3de67ffb, type: 3}
@@ -328,8 +370,16 @@ PrefabInstance:
       value: Cannon
       objectReference: {fileID: 0}
     - target: {fileID: 4212596513427843569, guid: d25fa797761994670ad1c925a3db14a6, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212596513427843569, guid: d25fa797761994670ad1c925a3db14a6, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212596513427843569, guid: d25fa797761994670ad1c925a3db14a6, type: 3}
+      propertyPath: m_TagString
+      value: playerWeap
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d25fa797761994670ad1c925a3db14a6, type: 3}

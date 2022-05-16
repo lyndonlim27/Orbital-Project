@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
 {
     private Vector2 _movement;
     private Rigidbody2D _rb;
+    private Collider2D col;
     public Animator _animator;
     private Transform _target;
     private int currHealth;
@@ -25,6 +26,17 @@ public class Player : MonoBehaviour
 
     int count = 0;
 
+    private void Awake()
+    {
+        col = GetComponent<Collider2D>();
+        
+    }
+
+    public bool isDead()
+    {
+        Debug.Log(currHealth);
+        return this.currHealth <= 0;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -36,6 +48,7 @@ public class Player : MonoBehaviour
         _target = GameObject.FindGameObjectWithTag("Enemy").transform;
         weaponManager = this.gameObject.transform.GetChild(0).gameObject.GetComponent<WeaponPickup>();
         currWeapon = weaponManager.ActiveWeapon().GetComponent<Weapon>();
+
     }
 
     // Update is called once per frame
