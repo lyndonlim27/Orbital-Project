@@ -14,6 +14,8 @@ public class Player : MonoBehaviour
     private WeaponPickup _weaponManager;
     private SpriteRenderer _spriteRenderer;
     private DamageFlicker _flicker;
+    private float _time = 0;
+    private float _timeDelay = 0;
 
     [Header("Player properties")]
     [SerializeField] private int maxHealth = 100;
@@ -46,7 +48,8 @@ public class Player : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {   
+    {
+        _time = _time + 1f * Time.deltaTime;
         if(_currHealth == 0)
         {
             Death();
@@ -58,7 +61,7 @@ public class Player : MonoBehaviour
         if (Input.GetButtonDown("Shoot") || Input.GetMouseButtonDown(0))
         {
             Shoot();
-            
+            _timeDelay = 0.5f;
             
         }
 
@@ -69,7 +72,8 @@ public class Player : MonoBehaviour
                 TakeDamage(selfDamage);
             }
         }
-        if (count < 1)
+       // if (count < 1)
+       if(_time >= _timeDelay)
         {
             _movement.x = Input.GetAxisRaw("Horizontal");
             _movement.y = Input.GetAxisRaw("Vertical");
@@ -79,8 +83,10 @@ public class Player : MonoBehaviour
             _animator.SetFloat("Vertical", _movement.y);
             _animator.SetFloat("Speed", _movement.magnitude);
             _currWeapon.TurnWeapon(_movement);
+            _time = 0;
+            _timeDelay = 0;
         }
-        count--;
+       // count--;
 
 
     }
