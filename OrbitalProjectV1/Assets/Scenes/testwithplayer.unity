@@ -134,10 +134,6 @@ PrefabInstance:
       propertyPath: wordBank
       value: 
       objectReference: {fileID: 2100611995}
-    - target: {fileID: 578112609394458851, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
-      propertyPath: m_SortingOrder
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3525773751680018864, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -225,14 +221,6 @@ PrefabInstance:
     - target: {fileID: 6377906355013469003, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
       propertyPath: m_Name
       value: DeathKnight
-      objectReference: {fileID: 0}
-    - target: {fileID: 6377906355013469003, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
-      propertyPath: m_TagString
-      value: Enemy
-      objectReference: {fileID: 0}
-    - target: {fileID: 7607372028189982284, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
-      propertyPath: m_LinearDrag
-      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
@@ -564,6 +552,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 443843116, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 1.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 443843117, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
+      propertyPath: m_fontSize
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 443843117, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 443843119, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
       propertyPath: wordBank
       value: 
@@ -677,10 +677,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 600699330672627227, guid: 93028c554625549a1ac0bbb39c5d2087, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4775776755131148096, guid: 93028c554625549a1ac0bbb39c5d2087, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -733,21 +729,7 @@ PrefabInstance:
       propertyPath: healthBar
       value: 
       objectReference: {fileID: 517327390}
-    - target: {fileID: 4775776755131148222, guid: 93028c554625549a1ac0bbb39c5d2087, type: 3}
-      propertyPath: m_Mass
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4775776755131148222, guid: 93028c554625549a1ac0bbb39c5d2087, type: 3}
-      propertyPath: m_LinearDrag
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4775776755131148222, guid: 93028c554625549a1ac0bbb39c5d2087, type: 3}
-      propertyPath: m_GravityScale
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 9034845830006708271, guid: 93028c554625549a1ac0bbb39c5d2087, type: 3}
-    - {fileID: 1323238002437799337, guid: 93028c554625549a1ac0bbb39c5d2087, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93028c554625549a1ac0bbb39c5d2087, type: 3}
 --- !u!114 &2100611995 stripped
 MonoBehaviour:

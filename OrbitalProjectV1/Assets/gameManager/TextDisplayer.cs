@@ -73,7 +73,7 @@ public class TextDisplayer : MonoBehaviour
 
     private void CheckInput()
     {
-        if (player.OutOfRange(entity))
+        if (outOfRange())
         {
             //if out of range, we dont register inputs at all
             return;
@@ -119,6 +119,11 @@ public class TextDisplayer : MonoBehaviour
             // dont do anything if its the starting character;
         }
 
+    }
+
+    private bool outOfRange()
+    {
+        return Vector2.Distance(player.transform.position, entity.transform.position) > 7f;
     }
 
     private bool LetterCorrect(char let)

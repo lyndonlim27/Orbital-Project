@@ -31,7 +31,7 @@ public class IdleState : StateClass
         {
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
         }
-        else
+        else 
         {
             counter--;
         }

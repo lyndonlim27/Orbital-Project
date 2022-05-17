@@ -39,7 +39,6 @@ public class Player : MonoBehaviour
 
     public bool isDead()
     {
-        Debug.Log(_currHealth);
         return this._currHealth <= 0;
     }
 
@@ -65,7 +64,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         _time = _time + 1f * Time.deltaTime;
-        if(_currHealth == 0)
+        if(_currHealth <= 0)
         {
             Death();
         }
@@ -73,10 +72,10 @@ public class Player : MonoBehaviour
         _currWeapon = _weaponManager.ActiveWeapon().GetComponent<Weapon>();
 
         //if (Input.GetButtonDown("Shoot") || Input.GetMouseButtonDown(0))
-        //{   
+        //{
         //    Shoot();
         //    _timeDelay = 0.5f; //When player shoots, pauses direction for 0.5 seconds
-            
+
         //}
 
         if (Input.GetKeyDown(KeyCode.P))
@@ -99,7 +98,6 @@ public class Player : MonoBehaviour
             _timeDelay = 0;
         }
 
-        Debug.Log(_rb.velocity);
     }
 
     private void FixedUpdate()
@@ -154,14 +152,14 @@ public class Player : MonoBehaviour
         _weaponManager.Swap(weapon);
     }
 
-    public bool OutOfRange(Entity entity)
-    {
-        return
-            //check if we are in range.
-            Vector2.Distance(transform.position, entity.transform.position) <= _currWeapon.range &&
-            //check for line of sight
-            Physics2D.Linecast(transform.position,entity.transform.position).collider.gameObject.tag != "Enemy";
-    }
+    //public bool OutOfRange(Entity entity)
+    //{
+    //    return
+    //        //check if we are in range.
+    //        Vector2.Distance(transform.position, entity.transform.position) <= _currWeapon.range &&
+    //        //check for line of sight
+    //        Physics2D.Linecast(transform.position,entity.transform.position).collider.gameObject.tag != "Enemy";
+    //}
 
     //Fades sprite
     IEnumerator FadeOut()

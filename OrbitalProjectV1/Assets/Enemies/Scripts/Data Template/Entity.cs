@@ -11,6 +11,7 @@ public class Entity : MonoBehaviour
         ATTACK_END,
         CAST_END,
         ATTACK_TRIGGER,
+        HURT_END
     }
 
     //data;
@@ -48,6 +49,7 @@ public class Entity : MonoBehaviour
     public virtual void Update()
     {
         stateMachine.Update();
+        Debug.Log("This is current STATE: " +stateMachine.currState);
     }
 
     public virtual void FixedUpdate()
@@ -59,7 +61,7 @@ public class Entity : MonoBehaviour
     {
         if (collision.gameObject.tag == "Obstacles" || collision.gameObject.tag == "Enemy")
         {
-            getNewRoamPosition();
+            stateMachine.ChangeState(StateMachine.STATE.ROAMING,null);
         }
     }
 
@@ -175,8 +177,7 @@ public class Entity : MonoBehaviour
                 break;
             case ANIMATION_CODE.CAST_END:
                 stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
-                break;
-                     
+                break;               
         }
     }
 
