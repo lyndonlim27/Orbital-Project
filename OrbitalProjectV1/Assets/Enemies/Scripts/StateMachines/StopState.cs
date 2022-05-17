@@ -20,13 +20,13 @@ public class StopState : StateClass
 
     private void returnToStartPos()
     {
-        if (Vector2.Distance(entity.transform.position,entity.startingpos) <= 0)
-        {
-            stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
-        } else
+        //curr position > 5f from startingpos,
+        if (Vector2.Distance(entity.transform.position,entity.startingpos) >= 5f)
         {
             entity.moveToStartPos();
         }
+
+        stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
     }
 
     public override void FixedUpdate()

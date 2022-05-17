@@ -79,15 +79,14 @@ public class TextDisplayer : MonoBehaviour
             return;
         }
         // only accepting single keypress, multikeypress too troublesome to handle;
-        if (Input.anyKeyDown)
+
+        for (int i = (int)KeyCode.A; i < (int)KeyCode.Z; i++)
         {
-            Debug.Log(Input.anyKeyDown);
-            string keyPressed = Input.inputString;
-            if(keyPressed.Length == 1)
-            {
-                char key = keyPressed[0];
-                EnterLetter(key);
+            if (Input.GetKeyDown((KeyCode)i)) {
+                Debug.Log(i);
+                EnterLetter((char)i);
             }
+
         }
 
     }
