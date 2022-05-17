@@ -15,8 +15,6 @@ public class Bullet : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float rotateSpeed = 200.0f;
 
-    
-
     // Start is called before the first frame update
     void Start()
     {
@@ -24,13 +22,10 @@ public class Bullet : MonoBehaviour
         _animator = GetComponent<Animator>();
     }
 
-
-
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
     }
-
     
     void FixedUpdate()
     {

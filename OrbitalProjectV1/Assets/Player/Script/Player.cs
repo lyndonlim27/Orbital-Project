@@ -11,20 +11,25 @@ public class Player : MonoBehaviour
     private Collider2D col;
     public Animator _animator;
     private Transform _target;
-    private int currHealth;
+    private int _currHealth;
+    private Weapon _currWeapon;
+    private WeaponPickup _weaponManager;
+    private SpriteRenderer _spriteRenderer;
+    private DamageFlicker _flicker;
+    private float _time = 0;
+    private float _timeDelay = 0;
 
     [Header("Player properties")]
     [SerializeField] private int maxHealth = 100;
-    [SerializeField] private HealthBar healthBar;
     [SerializeField] private int selfDamage = 10;
-    private Weapon currWeapon;
-    private WeaponPickup weaponManager;
-
 
     [Header("Movement")]
     [SerializeField] private float _moveSpeed = 5f;
 
-    int count = 0;
+
+    [Header("Player UI")]
+    [SerializeField] private GameOver _gameOver;
+    [SerializeField] private HealthBar healthBar;
 
     private void Awake()
     {
@@ -41,86 +46,106 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currHealth = maxHealth;
+        _currHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _target = GameObject.FindGameObjectWithTag("Enemy").transform;
-        weaponManager = this.gameObject.transform.GetChild(0).gameObject.GetComponent<WeaponPickup>();
-        currWeapon = weaponManager.ActiveWeapon().GetComponent<Weapon>();
-
+        _weaponManager = this.gameObject.transform.GetChild(0).gameObject.GetComponent<WeaponPickup>();
+        _currWeapon = _weaponManager.ActiveWeapon().GetComponent<Weapon>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _flicker = GetComponent<DamageFlicker>();
     }
 
     // Update is called once per frame
     void Update()
-    {   /*
-        if(currHealth == 0)
+    {
+        _time = _time + 1f * Time.deltaTime;
+        if(_currHealth == 0)
         {
             Death();
         }
-        */
 
-        currWeapon = weaponManager.ActiveWeapon().GetComponent<Weapon>();
+        _currWeapon = _weaponManager.ActiveWeapon().GetComponent<Weapon>();
 
         if (Input.GetButtonDown("Shoot") || Input.GetMouseButtonDown(0))
-        {
+        {   
             Shoot();
-            
+            _timeDelay = 0.5f; //When player shoots, pauses direction for 0.5 seconds
             
         }
 
         if (Input.GetKeyDown(KeyCode.P))
         {
-            TakeDamage(selfDamage);
+            if (_currHealth > 0)
+            {
+                TakeDamage(selfDamage);
+            }
         }
-        if (count < 1)
+
+       if(_time >= _timeDelay)
         {
             _movement.x = Input.GetAxisRaw("Horizontal");
             _movement.y = Input.GetAxisRaw("Vertical");
-
-
             _animator.SetFloat("Horizontal", _movement.x);
             _animator.SetFloat("Vertical", _movement.y);
             _animator.SetFloat("Speed", _movement.magnitude);
-            currWeapon.TurnWeapon(_movement);
+            _currWeapon.TurnWeapon(_movement);
+            _time = 0;
+            _timeDelay = 0;
         }
-        count--;
-
-
     }
 
     private void FixedUpdate()
     {
+        //Move player's position
         _rb.MovePosition(_rb.position + _movement.normalized * _moveSpeed * Time.fixedDeltaTime);
     }
 
 
-    public void TakeDamage(int damageTaken)
+    //When player takes damage, reduce current health and flicker sprite
+    private void TakeDamage(int damageTaken)
     {
-        currHealth -= damageTaken;
-        healthBar.SetHealth(currHealth);
+        _currHealth -= damageTaken;
+        healthBar.SetHealth(_currHealth);
+        _flicker.Flicker();
     }
 
+    //When player shoot, player direction faces the target enemy
     private void Shoot()
     {
-        count = 50;
         Vector2 point2Target = (Vector2)transform.position - (Vector2)_target.transform.position;
         point2Target.Normalize();
         point2Target = -point2Target;
-        currWeapon.Shoot(point2Target);
+        _currWeapon.Shoot(point2Target);
         _animator.SetFloat("Horizontal", Mathf.RoundToInt(point2Target.x));
         _animator.SetFloat("Vertical", Mathf.RoundToInt(point2Target.y));
         _animator.SetFloat("Speed", point2Target.magnitude);
     }
     
-    public void PickupItem(Weapon weapon)
+    public void PickupItem(string weapon)
     {   
-        weaponManager.Swap(weapon);
+        _weaponManager.Swap(weapon);
     }
-    
 
 
+    //Fades sprite
+    IEnumerator FadeOut()
+    {
+        for(float f = 1f; f >= -0.05f; f -= 0.05f)
+        {
+            Color c = _spriteRenderer.material.color;
+            c.a = f;
+            _spriteRenderer.material.color = c;
+            yield return new WaitForSeconds(0.05f);
+        }
+        _gameOver.Setup();
+        this.gameObject.SetActive(false);
+    }
+
+    //When current health reaches 0, character dies and fade out
     private void Death()
     {
+        StartCoroutine("FadeOut");
     }
 }
