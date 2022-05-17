@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D _rb;
     private Collider2D col;
     public Animator _animator;
-    private Transform _target;
+    private Transform _target = null;
     private int _currHealth;
     private Weapon _currWeapon;
     private WeaponPickup _weaponManager;
@@ -39,8 +39,8 @@ public class Player : MonoBehaviour
 
     public bool isDead()
     {
-        Debug.Log(currHealth);
-        return this.currHealth <= 0;
+        Debug.Log(_currHealth);
+        return this._currHealth <= 0;
     }
 
     // Start is called before the first frame update
@@ -50,7 +50,11 @@ public class Player : MonoBehaviour
         healthBar.SetMaxHealth(maxHealth);
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
-        _target = GameObject.FindGameObjectWithTag("Enemy").transform;
+        GameObject _gameObj = GameObject.FindGameObjectWithTag("Enemy");
+        if(_gameObj != null)
+        {
+            _target = _gameObj.transform;
+        }
         _weaponManager = this.gameObject.transform.GetChild(0).gameObject.GetComponent<WeaponPickup>();
         _currWeapon = _weaponManager.ActiveWeapon().GetComponent<Weapon>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -104,7 +108,7 @@ public class Player : MonoBehaviour
 
 
     //When player takes damage, reduce current health and flicker sprite
-    private void TakeDamage(int damageTaken)
+    public void TakeDamage(int damageTaken)
     {
         _currHealth -= damageTaken;
         healthBar.SetHealth(_currHealth);
@@ -114,13 +118,21 @@ public class Player : MonoBehaviour
     //When player shoot, player direction faces the target enemy
     private void Shoot()
     {
-        Vector2 point2Target = (Vector2)transform.position - (Vector2)_target.transform.position;
-        point2Target.Normalize();
-        point2Target = -point2Target;
-        _currWeapon.Shoot(point2Target);
-        _animator.SetFloat("Horizontal", Mathf.RoundToInt(point2Target.x));
-        _animator.SetFloat("Vertical", Mathf.RoundToInt(point2Target.y));
-        _animator.SetFloat("Speed", point2Target.magnitude);
+        if (_target!= null)
+        {
+            Vector2 point2Target = (Vector2)transform.position - (Vector2)_target.transform.position;
+            point2Target.Normalize();
+            point2Target = -point2Target;
+            _currWeapon.Shoot(point2Target);
+            _animator.SetFloat("Horizontal", Mathf.RoundToInt(point2Target.x));
+            _animator.SetFloat("Vertical", Mathf.RoundToInt(point2Target.y));
+            _animator.SetFloat("Speed", point2Target.magnitude);
+        } else
+        {
+
+        }
+        
+        
     }
     
     public void PickupItem(string weapon)

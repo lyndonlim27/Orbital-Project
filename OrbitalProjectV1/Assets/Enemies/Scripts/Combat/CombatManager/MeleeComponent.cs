@@ -37,6 +37,11 @@ public class MeleeComponent : AttackComponent
         return detectionScript.playerDetected != null;
     }
 
+    public void Attack()
+    {
+
+    }
+
 
 
 }
