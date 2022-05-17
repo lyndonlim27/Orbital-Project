@@ -18,7 +18,7 @@ public class Bullet : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _target = GameObject.FindGameObjectWithTag("Enemy").transform;
+        //_target = GameObject.FindGameObjectWithTag("Enemy").transform;
         _animator = GetComponent<Animator>();
     }
 
@@ -26,7 +26,13 @@ public class Bullet : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
     }
-    
+
+    public void TargetEnemy(Entity enemy)
+    {
+        this._target = enemy.transform;
+        Debug.Log(_target);
+    }
+
     void FixedUpdate()
     {
         //When the bullet collide with the enemy, stop the movement of the bullet
@@ -49,6 +55,7 @@ public class Bullet : MonoBehaviour
         //Setting collision to true so that it will trigger the next state
         //for bullet and thus play the explosion animation
         _animator.SetBool("Collision", true);
+        _target.GetComponent<Entity>().Defeated();
     }
 
 }
