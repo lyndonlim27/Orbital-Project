@@ -30,5 +30,14 @@ public class RangedComponent : AttackComponent
         return this.detectionScript.playerDetected != null;
     }
 
-    
+
+    //private IEnumerator KnockBackCo(Rigidbody2D rb)
+    //{
+    //    if (rb != null)
+    //    {
+    //        yield return new WaitForSeconds(knockbackTime);
+    //        rb.velocity = Vector2.zero;
+    //    }
+    //}
+
 }

@@ -186,7 +186,8 @@ PrefabInstance:
       propertyPath: m_Constraints
       value: 4
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2468981061260564649, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
 --- !u!1001 &83117867
 PrefabInstance:
@@ -251,7 +252,8 @@ PrefabInstance:
       propertyPath: m_Constraints
       value: 4
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2468981061260564649, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
 --- !u!4 &119088029 stripped
 Transform:
@@ -321,7 +323,8 @@ PrefabInstance:
       propertyPath: m_Constraints
       value: 4
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2468981061260564649, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
 --- !u!1001 &286472839
 PrefabInstance:
@@ -386,7 +389,8 @@ PrefabInstance:
       propertyPath: m_Constraints
       value: 4
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2468981061260564649, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
 --- !u!1001 &364321971
 PrefabInstance:
@@ -575,7 +579,8 @@ PrefabInstance:
       propertyPath: m_Constraints
       value: 4
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2468981061260564649, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
 --- !u!1 &574457174
 GameObject:
@@ -21730,7 +21735,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7807018, y: 1}
+    m_SensorSize: {x: 1.7730496, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0

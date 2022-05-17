@@ -58,7 +58,7 @@ public class Entity : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Obstacles")
+        if (collision.gameObject.tag == "Obstacles" || collision.gameObject.tag == "enemy")
         {
             getNewRoamPosition();
         }
@@ -139,7 +139,11 @@ public class Entity : MonoBehaviour
         Debug.Log(dir);
         foreach (Transform tf in transform)
         {
-            if (dir.x > 0)
+            if (tf.tag == "UI")
+            {
+                continue;
+            }
+            else if (dir.x > 0)
             {
                 tf.localScale = new Vector2(-1,1);
             } else
@@ -174,7 +178,51 @@ public class Entity : MonoBehaviour
             case ANIMATION_CODE.CAST_END:
                 stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
                 break;
-           
+                     
         }
     }
+
+    public void Hurt()
+    {
+        Debug.Log(animator);
+        animator.SetTrigger("Hurt");
+    }
+
+    public void Defeated()
+    {
+        animator.SetTrigger("Death");
+    }
+
+
+    //for enemies without a death state.
+    private void OnDestroy()
+    {
+        Destroy(gameObject);
+    }
+
+    // use for enemies with death default states.
+    private void DisableEnemy()
+    {
+        foreach(Transform tf in transform.GetComponentsInChildren<Transform>())
+        {
+            //disable colliders
+            Collider2D[] cols = tf.GetComponents<Collider2D>();
+            foreach(Collider2D col in cols)
+            {
+                col.enabled = false;
+            }
+
+            //disable scripts;
+            MonoBehaviour[] scripts = tf.GetComponents<MonoBehaviour>();
+            foreach(MonoBehaviour script in scripts)
+            {
+                script.enabled = false;
+            }
+
+            this.animator.enabled = false;
+            
+        }
+    }
+
+
 }
