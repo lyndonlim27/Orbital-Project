@@ -8,7 +8,7 @@ using System.Linq;
 
 public class TextDisplayer : MonoBehaviour
 {
-
+    public Player player;
     public TextMeshPro wordtoDisplay = null;
     public string remainingword = "";
     public string currentword = "";
@@ -19,6 +19,7 @@ public class TextDisplayer : MonoBehaviour
 
     private void Awake()
     {
+        
         for (char c = 'a'; c <= 'z'; c++)
         {
             int val = c - 'a' + 16;
@@ -41,6 +42,9 @@ public class TextDisplayer : MonoBehaviour
     {
         entity = GetComponentInParent<Entity>();
         Debug.Log(entity);
+        GameObject gameObject = GameObject.FindGameObjectWithTag("Player");
+        this.player = gameObject.GetComponent<Player>();
+        Debug.Log(player);
         GenerateNewWord();
     }
 
@@ -69,6 +73,11 @@ public class TextDisplayer : MonoBehaviour
 
     private void CheckInput()
     {
+        if (player.OutOfRange(entity))
+        {
+            //if out of range, we dont register inputs at all
+            return;
+        }
         // only accepting single keypress, multikeypress too troublesome to handle;
         if (Input.anyKeyDown)
         {
@@ -92,10 +101,10 @@ public class TextDisplayer : MonoBehaviour
             currentcounter++;
             if (isWordComplete())
             {
-                entity.Defeated();
+                player.Shoot(entity);
                 ResetCounter();
                 return;
-                // generate new word for bosses
+                // generate new word and not inst animation for multi-length monsters
                 //GenerateNewWord();
             }
 
@@ -135,7 +144,7 @@ public class TextDisplayer : MonoBehaviour
         SetRemainingWord(ReplaceFirstOccurrence(remainingword,remainingword[currentcounter],Char.ToUpper(remainingword[currentcounter])));
     }
 
-    private bool isWordComplete()
+    public bool isWordComplete()
     {
 
         return !remainingword.Any(c => char.IsLower(c));

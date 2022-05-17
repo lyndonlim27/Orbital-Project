@@ -72,12 +72,12 @@ public class Player : MonoBehaviour
 
         _currWeapon = _weaponManager.ActiveWeapon().GetComponent<Weapon>();
 
-        if (Input.GetButtonDown("Shoot") || Input.GetMouseButtonDown(0))
-        {   
-            Shoot();
-            _timeDelay = 0.5f; //When player shoots, pauses direction for 0.5 seconds
+        //if (Input.GetButtonDown("Shoot") || Input.GetMouseButtonDown(0))
+        //{   
+        //    Shoot();
+        //    _timeDelay = 0.5f; //When player shoots, pauses direction for 0.5 seconds
             
-        }
+        //}
 
         if (Input.GetKeyDown(KeyCode.P))
         {
@@ -98,12 +98,15 @@ public class Player : MonoBehaviour
             _time = 0;
             _timeDelay = 0;
         }
+
+        Debug.Log(_rb.velocity);
     }
 
     private void FixedUpdate()
     {
         //Move player's position
-        _rb.MovePosition(_rb.position + _movement.normalized * _moveSpeed * Time.fixedDeltaTime);
+        transform.position = (Vector2) transform.position +_movement.normalized * _moveSpeed * Time.fixedDeltaTime;
+        //_rb.MovePosition(_rb.position + _movement.normalized * _moveSpeed * Time.fixedDeltaTime);
     }
 
 
@@ -116,30 +119,49 @@ public class Player : MonoBehaviour
     }
 
     //When player shoot, player direction faces the target enemy
-    private void Shoot()
+    public void Shoot(Entity enemy)
     {
-        if (_target!= null)
-        {
-            Vector2 point2Target = (Vector2)transform.position - (Vector2)_target.transform.position;
-            point2Target.Normalize();
-            point2Target = -point2Target;
-            _currWeapon.Shoot(point2Target);
-            _animator.SetFloat("Horizontal", Mathf.RoundToInt(point2Target.x));
-            _animator.SetFloat("Vertical", Mathf.RoundToInt(point2Target.y));
-            _animator.SetFloat("Speed", point2Target.magnitude);
-        } else
-        {
-
-        }
-        
-        
+        Debug.Log("Shoot");
+        Debug.Log(enemy);
+        Vector2 point2Target = (Vector2)transform.position - (Vector2)enemy.transform.position;
+        point2Target.Normalize();
+        point2Target = -point2Target;
+        _currWeapon.Shoot(enemy);
+        _animator.SetFloat("Horizontal", Mathf.RoundToInt(point2Target.x));
+        _animator.SetFloat("Vertical", Mathf.RoundToInt(point2Target.y));
+        _animator.SetFloat("Speed", point2Target.magnitude);
     }
-    
+
+
+        //if (_target!= null && _target.tag == "Enemy")
+        //{
+        //    if (_target.GetComponentInChildren<TextDisplayer>().isWordComplete())
+        //    {
+        //        Debug.Log("Shoot");
+        //        Vector2 point2Target = (Vector2)transform.position - (Vector2)_target.transform.position;
+        //        point2Target.Normalize();
+        //        point2Target = -point2Target;
+        //        _currWeapon.Shoot(point2Target);
+        //        _animator.SetFloat("Horizontal", Mathf.RoundToInt(point2Target.x));
+        //        _animator.SetFloat("Vertical", Mathf.RoundToInt(point2Target.y));
+        //        _animator.SetFloat("Speed", point2Target.magnitude);
+        //    }
+
+        //} else
+       
     public void PickupItem(string weapon)
     {   
         _weaponManager.Swap(weapon);
     }
 
+    public bool OutOfRange(Entity entity)
+    {
+        return
+            //check if we are in range.
+            Vector2.Distance(transform.position, entity.transform.position) <= _currWeapon.range &&
+            //check for line of sight
+            Physics2D.Linecast(transform.position,entity.transform.position).collider.gameObject.tag != "Enemy";
+    }
 
     //Fades sprite
     IEnumerator FadeOut()

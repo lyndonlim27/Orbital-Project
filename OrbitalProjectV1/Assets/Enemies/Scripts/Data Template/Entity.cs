@@ -48,7 +48,6 @@ public class Entity : MonoBehaviour
     public virtual void Update()
     {
         stateMachine.Update();
-        Debug.Log(stateMachine.currState);
     }
 
     public virtual void FixedUpdate()
@@ -58,7 +57,7 @@ public class Entity : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Obstacles" || collision.gameObject.tag == "enemy")
+        if (collision.gameObject.tag == "Obstacles" || collision.gameObject.tag == "Enemy")
         {
             getNewRoamPosition();
         }
@@ -136,7 +135,6 @@ public class Entity : MonoBehaviour
     {
         Vector2 dir = (target - (Vector2) transform.position).normalized;
         spriteRenderer.flipX = dir.x > 0;
-        Debug.Log(dir);
         foreach (Transform tf in transform)
         {
             if (tf.tag == "UI")
@@ -190,6 +188,7 @@ public class Entity : MonoBehaviour
 
     public void Defeated()
     {
+        StartCoroutine(Wait());
         animator.SetTrigger("Death");
     }
 
@@ -222,6 +221,11 @@ public class Entity : MonoBehaviour
             this.animator.enabled = false;
             
         }
+    }
+
+    private IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(1f);
     }
 
 

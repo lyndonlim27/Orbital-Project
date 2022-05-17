@@ -178,9 +178,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3525773751680018864, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 6377906355013469003, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
       propertyPath: m_Name
       value: DeathKnight (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6377906355013469003, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7607372028189982284, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
       propertyPath: m_Constraints
@@ -244,9 +252,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3525773751680018864, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 6377906355013469003, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
       propertyPath: m_Name
       value: DeathKnight (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6377906355013469003, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7607372028189982284, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
       propertyPath: m_Constraints
@@ -315,9 +331,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3525773751680018864, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6377906355013469003, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
       propertyPath: m_Name
       value: DeathKnight (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6377906355013469003, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7607372028189982284, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
       propertyPath: m_Constraints
@@ -381,9 +405,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3525773751680018864, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6377906355013469003, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
       propertyPath: m_Name
       value: DeathKnight
+      objectReference: {fileID: 0}
+    - target: {fileID: 6377906355013469003, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7607372028189982284, guid: 919e34bfa326a42d5bc4feb7d707c73c, type: 3}
       propertyPath: m_Constraints
@@ -401,7 +433,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4775776755131148096, guid: 93028c554625549a1ac0bbb39c5d2087, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4775776755131148096, guid: 93028c554625549a1ac0bbb39c5d2087, type: 3}
       propertyPath: m_LocalPosition.x
@@ -21478,7 +21510,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &737259961
 MonoBehaviour:
@@ -21735,7 +21767,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7730496, y: 1}
+    m_SensorSize: {x: 1.7714286, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0

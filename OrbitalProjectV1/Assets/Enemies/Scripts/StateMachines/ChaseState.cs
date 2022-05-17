@@ -41,7 +41,6 @@ public class ChaseState : StateClass
         } else
         {
             player = entity.detectionScript.playerDetected.GetComponent<Player>();
-            Debug.Log(player);
             if (player.isDead())
             {
                 stateMachine.ChangeState(StateMachine.STATE.IDLE,null);
@@ -63,7 +62,6 @@ public class ChaseState : StateClass
             }
         }
 
-        Debug.Log(stateMachine.currState);
     }
 
     
