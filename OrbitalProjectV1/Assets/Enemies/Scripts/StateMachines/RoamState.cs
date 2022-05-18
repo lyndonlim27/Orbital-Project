@@ -13,8 +13,6 @@ class RoamState : StateClass
 
     public override void Enter(object data)
     {
-        entity.animator.SetBool("isWalking", true);
-        entity.getNewRoamPosition();
         Roam();
 
     }
@@ -26,32 +24,36 @@ class RoamState : StateClass
 
     public void Roam()
     {
-        Player player;
-        GameObject go = entity.detectionScript.playerDetected;
-        if (go != null)
+        Player player = null;
+        
+        if (entity.detectionScript.playerDetected != null)
         {
-            player = go.GetComponent<Player>();
-        } else
-        {
-            player = null;
+            GameObject go = entity.detectionScript.playerDetected;
+
+            if (go != null)
+            {
+                player = go.GetComponent<Player>();
+            }
+            
         }
+
 
         if (player != null)
         {
             stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
-        } 
-        else if (entity.isReached())
+
+        } else if (entity.isReached())
+
         {
             stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
-            
+
         }
-        else
+          else
         {
-            entity.animator.SetBool("isWalking", true);
             entity.moveToRoam();
         }
-
-    }
+     }
+  
 
     public override void FixedUpdate()
     {

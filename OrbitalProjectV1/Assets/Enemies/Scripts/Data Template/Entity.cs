@@ -47,7 +47,6 @@ public class Entity : MonoBehaviour
         spriteRenderer.sprite = stats.sprite;
         startingpos = GetComponent<Transform>().position;
         cooldown = 0;
-
     }
 
     public virtual void Update()
@@ -157,7 +156,6 @@ public class Entity : MonoBehaviour
 
     public void Hurt()
     {
-        Debug.Log(animator);
         animator.SetTrigger("Hurt");
     }
 

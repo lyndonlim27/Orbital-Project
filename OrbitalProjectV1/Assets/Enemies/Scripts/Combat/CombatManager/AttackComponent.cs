@@ -11,7 +11,7 @@ public abstract class AttackComponent : MonoBehaviour
     protected DetectionScript detectionScript;
     protected Entity parent;
     protected EntityStats enemyStats;
-    protected Player target;
+    protected Player target = null;
     public abstract void Attack();
 
     public virtual void Start()

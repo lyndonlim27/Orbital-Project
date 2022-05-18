@@ -11,7 +11,7 @@ public class IdleState : StateClass
 
     public override void Enter(object stateData)
     {
-        entity.animator.SetBool("isWalking", false);
+        
         IdleCounter();
     }
 
@@ -29,8 +29,9 @@ public class IdleState : StateClass
     private void IdleCounter() {
 
         //let roam state handle detection of enemy. 
-        if (counter == 0 || entity.detectionScript.playerDetected != null)
+        if (counter == 0)
         {
+            entity.getNewRoamPosition();
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
         }
         else 

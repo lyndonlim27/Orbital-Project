@@ -19,7 +19,7 @@ public class RangedComponent : AttackComponent
         {
             target = detectionScript.playerDetected.GetComponent<Player>();
 
-            if (target != null)
+            if (target != null && !target.isDead())
             {
                 if (spells.Count != 0) // if there is no spell, nothing to cast here;
                 {

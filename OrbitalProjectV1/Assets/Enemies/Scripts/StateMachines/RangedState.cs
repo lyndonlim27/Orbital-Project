@@ -36,16 +36,21 @@ public class RangedState : StateClass
         Player player = entity.ranged.GetPlayer();
         //basically if player is not null or is not dead, we can initiate attack. for every other condition,
         // we just bounce back to chase state to decide.
-        if (player != null || !player.isDead())
+        if (player == null)
         {
-            entity.ranged.Attack();
-            entity.animator.SetTrigger("Cast");
+            stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
+
         }
         else
         {
-
-            stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
-
+            if (player.isDead())
+            {
+                stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+            } else
+            {
+                entity.ranged.Attack();
+                entity.animator.SetTrigger("Cast");
+            }
         }
     }
 
