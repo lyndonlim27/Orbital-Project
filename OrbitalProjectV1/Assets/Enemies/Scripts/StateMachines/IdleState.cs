@@ -27,7 +27,9 @@ public class IdleState : StateClass
     }
 
     private void IdleCounter() {
-        if (counter == 0)
+
+        //let roam state handle detection of enemy. 
+        if (counter == 0 || entity.detectionScript.playerDetected != null)
         {
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
         }

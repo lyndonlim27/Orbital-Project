@@ -4,44 +4,21 @@ using UnityEngine;
 
 public class MeleeComponent : AttackComponent
 {
-    public Weapon weapon;
-    public DetectionScript detectionScript;
-
-    public override void Init()
-    {
-        base.Init();
-        weapon = GetComponent<Weapon>();
-        detectionScript = GetComponent<DetectionScript>();
-        
-    }
-
-
-    public override void Attack(Player target)
+    public override void Attack()
 
     {
-        if (weapon == null) // if weap == null, means attack animation stored in parent animator.
+        if (detectionScript.playerDetected != null)
         {
-            Vector2 direction = ((Vector2)target.transform.position - (Vector2)transform.position).normalized;
-            target.GetComponent<Rigidbody2D>().AddForce(direction * attackSpeed, ForceMode2D.Impulse);
-            target.TakeDamage(damageValue);
-            //weapon.animator.SetTrigger("Attack");
-        } else
-        {
-            weapon.Attack();
+            target = detectionScript.playerDetected.GetComponent<Player>();
+
+            if (target != null)
+            {
+                Vector2 direction = ((Vector2)target.transform.position - (Vector2)transform.position).normalized;
+                target.GetComponent<Rigidbody2D>().AddForce(direction * enemyStats.attackSpeed, ForceMode2D.Impulse);
+                target.TakeDamage(enemyStats.damageValue);
+            }
         }
-
+           
     }
-
-    public bool inRange()
-    {
-        return detectionScript.playerDetected != null;
-    }
-
-    public void Attack()
-    {
-
-    }
-
-
 
 }

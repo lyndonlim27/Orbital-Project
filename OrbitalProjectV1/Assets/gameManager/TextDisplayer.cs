@@ -43,8 +43,10 @@ public class TextDisplayer : MonoBehaviour
         entity = GetComponentInParent<Entity>();
         Debug.Log(entity);
         GameObject gameObject = GameObject.FindGameObjectWithTag("Player");
-        this.player = gameObject.GetComponent<Player>();
-        Debug.Log(player);
+        if (gameObject != null)
+        {
+            this.player = gameObject.GetComponent<Player>();
+        }
         GenerateNewWord();
     }
 
@@ -73,7 +75,7 @@ public class TextDisplayer : MonoBehaviour
 
     private void CheckInput()
     {
-        if (outOfRange())
+        if (outOfRange() || entity.stateMachine.currState == StateMachine.STATE.STOP)
         {
             //if out of range, we dont register inputs at all
             return;
@@ -122,7 +124,15 @@ public class TextDisplayer : MonoBehaviour
 
     private bool outOfRange()
     {
-        return Vector2.Distance(player.transform.position, entity.transform.position) > 7f;
+        if (player != null)
+        {
+            return Vector2.Distance(player.transform.position, entity.transform.position) > 7f;
+
+        } else
+        {
+            return true;
+        }
+        
     }
 
     private bool LetterCorrect(char let)

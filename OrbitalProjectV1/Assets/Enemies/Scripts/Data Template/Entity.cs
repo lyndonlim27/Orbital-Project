@@ -17,6 +17,7 @@ public class Entity : MonoBehaviour
     //data;
     public EntityStats stats;
     public StateMachine stateMachine;
+    public int angerMultiplier = 1;
     private int cooldown;
     public SpriteRenderer spriteRenderer { get; private set; }
 
@@ -38,9 +39,12 @@ public class Entity : MonoBehaviour
 
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        animator.runtimeAnimatorController = Resources.Load(string.Format("Animations/AnimatorControllers/{0}",stats.animatorname)) as RuntimeAnimatorController;
+        Debug.Log(string.Format("Animations/AnimatorControllers/{0}", stats.animatorname));
         melee = GetComponentInChildren<MeleeComponent>();
         ranged = GetComponentInChildren<RangedComponent>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = stats.sprite;
         startingpos = GetComponent<Transform>().position;
         cooldown = 0;
 
@@ -65,17 +69,6 @@ public class Entity : MonoBehaviour
         }
     }
 
-    //public void SetVelocityRoam()
-    //{
-    //    rb.velocity = rb.velocity * stats.moveSpeed;
-
-    //}
-
-    //public void SetVelocityChase()
-    //{
-    //    rb.velocity = rb.velocity * stats.chaseSpeed;
-    //}
-
     public void getNewRoamPosition()
     {
         roamPos = new Vector2(Random.Range(-maxDist, maxDist), Random.Range(-maxDist, maxDist));
@@ -91,7 +84,7 @@ public class Entity : MonoBehaviour
 
     public void moveToTarget(Player player)
     {
-        float steps = stats.chaseSpeed * Time.deltaTime;
+        float steps = stats.chaseSpeed * Time.deltaTime * angerMultiplier;
         transform.position = Vector3.MoveTowards(transform.position,player.transform.position,steps);
         flipFace(player.transform.position);
     }
@@ -102,21 +95,6 @@ public class Entity : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, startingpos, steps);
         flipFace(startingpos);
     }
-
-    public bool inMeleeRange()
-    {
-        return melee.inRange();
-    }
-
-    public bool inCastRange()
-    {
-        if (ranged == null)
-        {
-            return false;
-        }
-        return ranged.inRange();
-    }
-
 
     public bool isReached()
     {
@@ -130,7 +108,7 @@ public class Entity : MonoBehaviour
 
     public void resetCooldown()
     {
-        this.cooldown = 200;
+        this.cooldown = 50;
     }
 
     public void flipFace(Vector2 target)
@@ -157,12 +135,7 @@ public class Entity : MonoBehaviour
 
     public void meleeAttack()
     {
-        GameObject go = melee.detectionScript.playerDetected;
-        if (go != null)
-        {
-            Player player = go.GetComponent<Player>();
-            melee.Attack(player);
-        }
+        melee.Attack();
     }
 
     public void AnimationBreak(ANIMATION_CODE code)
@@ -176,6 +149,7 @@ public class Entity : MonoBehaviour
                 stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
                 break;
             case ANIMATION_CODE.CAST_END:
+                resetCooldown();
                 stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
                 break;               
         }

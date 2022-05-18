@@ -5,11 +5,11 @@ using UnityEngine;
 public class DetectionScript : MonoBehaviour
 {
     public GameObject playerDetected = null;
-    private Collider2D col;
+    private CircleCollider2D col;
 
     private void Awake()
     {
-        col = GetComponent<Collider2D>();
+        col = GetComponent<CircleCollider2D>();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {

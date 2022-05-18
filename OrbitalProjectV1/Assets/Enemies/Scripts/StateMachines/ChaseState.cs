@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// this is the CONNECTING state to all other states.
+//we can use this state to decide whether to do a ranged or melee attack, roam or chase or return to position.
 public class ChaseState : StateClass
 {
     Player player;
-    // store all detection scripts for casting and melee attacking;
-
     public ChaseState(Entity entity, StateMachine stateMachine) : base(entity, stateMachine) {}
     public override void Enter(object stateData)
     {
@@ -31,41 +31,54 @@ public class ChaseState : StateClass
 
     public void ChaseEnemy()
     {
-        // if target in range of cast and not in range of melee, then cast.
-
         GameObject go = entity.detectionScript.playerDetected;
-
-        if (go == null)
+        //if cant detect any objects
+        Debug.Log("This is" + go);
+        Debug.Log(entity.ranged.GetPlayer());
+        Debug.Log(entity.melee.GetPlayer());
+        if (go != null)
         {
-            stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
+            player = go.GetComponent<Player>();
+
         } else
         {
-            player = entity.detectionScript.playerDetected.GetComponent<Player>();
-            if (player.isDead())
-            {
-                stateMachine.ChangeState(StateMachine.STATE.IDLE,null);
-            }
-            else if (Vector2.Distance(entity.transform.position,entity.startingpos) >= entity.maxDist) 
-            {
-                stateMachine.ChangeState(StateMachine.STATE.STOP,null);
-            }
-            else if (entity.inCastRange() && !entity.inMeleeRange() && !entity.onCooldown())
-            {
-                stateMachine.ChangeState(StateMachine.STATE.ATTACK2, null);
-            }
-            else if (entity.inMeleeRange())
-            {
-                stateMachine.ChangeState(StateMachine.STATE.ATTACK1, null);
-            } else
-            {
-                entity.moveToTarget(player);
-            }
+            player = null;
         }
+            
+        //if object detected but is not player, 
+        if (player == null)
+        {
+            stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
+        }
+        else if (player.isDead())
+        {
+            stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+        }
+        else if (Vector2.Distance(entity.transform.position, entity.startingpos) >= entity.maxDist)
+        {
+            Debug.Log("Stop");
+            stateMachine.ChangeState(StateMachine.STATE.STOP, null);
+        }
+        
+        else if (entity.ranged.GetPlayer() != null && !entity.onCooldown())
+        {
+            stateMachine.ChangeState(StateMachine.STATE.ATTACK2, null);
+            Debug.Log("Inside Attack2");
+                
+        } else if (entity.melee.GetPlayer() != null) {
 
+            stateMachine.ChangeState(StateMachine.STATE.ATTACK1, null);
+            Debug.Log("Inside Attack1");
+        } else
+        {
+            Debug.Log("Inside Chse");
+            entity.moveToTarget(player);
+        }
+            
+               
     }
-
-    
-
-    
-
 }
+
+    
+
+ 

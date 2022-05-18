@@ -19,7 +19,7 @@ public class RangedState : StateClass
     public override void Update()
     {
         //for other logics while in the current state for future implementation;
-        
+        //triggerAttack();
 
     }
 
@@ -29,23 +29,23 @@ public class RangedState : StateClass
 
     public void triggerAttack()
     {
-        GameObject go = entity.ranged.detectionScript.playerDetected;
-        if (go == null)
-        {
-            stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
-        } else 
-        {
-            player = go.GetComponent<Player>();
-            if (player.isDead())
-            {
-                stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+        //basically when in this state, we can initiate an attack already even if it misses.
+        //However, if player is no longer in range in the next instance or dead, we want to go back to chase state and let it decide
+        //the next logical move
 
-            } else
-            {
-                entity.ranged.Attack(player);
-                entity.resetCooldown();
-            }
-           
+        Player player = entity.ranged.GetPlayer();
+        //basically if player is not null or is not dead, we can initiate attack. for every other condition,
+        // we just bounce back to chase state to decide.
+        if (player != null || !player.isDead())
+        {
+            entity.ranged.Attack();
+            entity.animator.SetTrigger("Cast");
+        }
+        else
+        {
+
+            stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
+
         }
     }
 

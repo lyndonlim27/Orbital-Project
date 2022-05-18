@@ -328,10 +328,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cede7a7f5b33c4ea0a0869741e58a2ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parent: {fileID: 6377906355013469003}
-  enemyStats: {fileID: 11400000, guid: 89f03d41c84f2483c90ef8b3eaf7410b, type: 2}
-  spell: {fileID: 7209955310949163474, guid: f8bee11cb544943c09df639e76497e56, type: 3}
-  detectionScript: {fileID: 1715404486}
+  spells:
+  - {fileID: 7209955310949163474, guid: f8bee11cb544943c09df639e76497e56, type: 3}
 --- !u!1 &2039340570
 GameObject:
   m_ObjectHideFlags: 0
@@ -394,10 +392,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90015cf86ee084fff965429b4c95d744, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parent: {fileID: 6377906355013469003}
-  enemyStats: {fileID: 11400000, guid: 89f03d41c84f2483c90ef8b3eaf7410b, type: 2}
-  weapon: {fileID: 0}
-  detectionScript: {fileID: 2039340574}
 --- !u!114 &2039340574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -579,6 +573,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats: {fileID: 11400000, guid: 89f03d41c84f2483c90ef8b3eaf7410b, type: 2}
+  angerMultiplier: 1
   roamPos: {x: 3.7398794, y: -4.4834995}
   maxDist: 5
   detectionScript: {fileID: 1072074807}

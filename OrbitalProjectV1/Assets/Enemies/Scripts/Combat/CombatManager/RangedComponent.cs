@@ -4,32 +4,49 @@ using UnityEngine;
 
 public class RangedComponent : AttackComponent
 {
-    public Spell spell;
-    public DetectionScript detectionScript;
-    
+    public List<Spell> spells;
 
-    public override void Init()
+    public override void Start()
     {
-        base.Init();
-        detectionScript = GetComponent<DetectionScript>();
-
+        base.Start();
+        spells = enemyStats.spells;
     }
 
-    public override void Attack(Player target)
+    public override void Attack()
     {
-        if (spell != null) // if weap == null, means spell animation stored in parent animator.
+
+        if (detectionScript.playerDetected != null)
         {
-            GetComponentInParent<Animator>().SetTrigger("Cast");
-            GameObject.Instantiate(spell, target.transform.position, Quaternion.identity);
+            target = detectionScript.playerDetected.GetComponent<Player>();
+
+            if (target != null)
+            {
+                if (spells.Count != 0) // if there is no spell, nothing to cast here;
+                {
+                    int random = Random.Range(0, spells.Count);
+
+                    Spell spell = spells[random];
+
+                    //shoot or cast;
+                    GetComponentInParent<Animator>().SetTrigger(spell.SpellStats.trigger);
+
+                    if (spell.SpellStats.type == SpellStats.Type.CAST)
+                    {
+                        // if its a casting spell, no need to aim, just instantiate on top of enemy.
+                        GameObject.Instantiate(spell, target.transform.position, Quaternion.identity);
+                    }
+                    else
+                    {
+                        // if its a projectile, need to aim.
+                        Projectile proj = (Projectile)GameObject.Instantiate(spell, transform.position, Quaternion.identity);
+                        proj.SendMessage("SetTarget", target.transform.position);
+                    }
+                }
+
+            }
         }
-
     }
-
-    public bool inRange()
-    {
-        return this.detectionScript.playerDetected != null;
-    }
-
+}
 
     //private IEnumerator KnockBackCo(Rigidbody2D rb)
     //{
@@ -40,4 +57,4 @@ public class RangedComponent : AttackComponent
     //    }
     //}
 
-}
+

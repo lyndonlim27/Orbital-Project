@@ -10,7 +10,13 @@ class MeleeState : StateClass
 
     public override void Enter(object stateData)
     {
-        tryAttack();
+        triggerAttack();
+    }
+
+    public override void Update()
+    {
+        //triggerAttack();
+
     }
 
     public override void Exit()
@@ -23,63 +29,25 @@ class MeleeState : StateClass
         base.FixedUpdate();
     }
 
-    public override void Update()
-    {
-        
-    }
+    
 
-    private void tryAttack()
+    private void triggerAttack()
     {
-        GameObject go = entity.melee.detectionScript.playerDetected;
-        if (go == null)
+        Player player = entity.melee.GetPlayer();
+        if (player != null || !player.isDead())
         {
-            stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
+            // slight difference from ranged, we should only apply the physics from melee attack upon
+            // the animated hit. so we add the meleeattack into the animation event of the melee animation.
+            entity.animator.SetTrigger("Melee");
+
         }
         else
         {
-            player = go.GetComponent<Player>();
-            if (player.isDead())
-            {
-                stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
-            } else
-            {
-                entity.animator.SetTrigger("Melee");
-            }
+
+            stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
+
         }
     }
 
 }
 
-//    WeaponScript weapon;
-//    Animator animator;
-//    public override void Enter(object data)
-//    {
-//        animator = gameObject.GetComponent<Animator>();
-//        MyEnemy enemyScript = gameObject.GetComponent<MyEnemy>();
-//        weapon = gameObject.GetComponent<WeaponScript>();
-//        EnemySpell spellPrefab = enemyScript.spellprefab;
-
-//        int i = Random.Range(0, 2);
-//        if (i == 0)
-//            animator.SetTrigger("AttackTrigger");
-//        else
-//        {
-//            animator.SetTrigger("CastTrigger");
-//            WeaponScript weap = weapon.GetComponent<WeaponScript>();
-//            GameObject target = weap.playerDetected;
-//            if (target == null)
-//            {
-//                return;
-//            }
-//            EnemySpell enemySpell = GameObject.Instantiate(spellPrefab, target.transform.position + new Vector3(0, 2f, 0), Quaternion.identity);
-//        }
-//    }
-//    public override void Update()
-//    {
-
-//    }
-
-//    public override void Exit()
-//    {
-//    }
-//}

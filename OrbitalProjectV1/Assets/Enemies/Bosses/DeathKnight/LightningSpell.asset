@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 293b6096b72ad4a68bc914b14668f340, type: 3}
   m_Name: LightningSpell
   m_EditorClassIdentifier: 
-  damage: 20
+  type: 0
+  damage: 2
   speed: 0.2
   rotation: 10
   lifetime: 3
+  trigger: Cast
