@@ -7,18 +7,16 @@ public class MeleeComponent : AttackComponent
     public override void Attack()
 
     {
-        if (detectionScript.playerDetected != null)
+        if (detectionScript.playerDetected)
         {
-            target = detectionScript.playerDetected.GetComponent<Player>();
-
-            if (target != null && !target.isDead())
+            if (target.isDead())
             {
-                Vector2 direction = ((Vector2)target.transform.position - (Vector2)transform.position).normalized;
-                target.GetComponent<Rigidbody2D>().AddForce(direction * enemyStats.attackSpeed, ForceMode2D.Impulse);
-                target.TakeDamage(enemyStats.damageValue);
+                return;
             }
+            Vector2 direction = ((Vector2)target.transform.position - (Vector2)transform.position).normalized;
+            target.GetComponent<Rigidbody2D>().AddForce(direction * enemyStats.attackSpeed, ForceMode2D.Impulse);
+            target.TakeDamage(enemyStats.damageValue);
         }
-           
     }
 
 }

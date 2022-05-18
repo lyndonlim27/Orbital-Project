@@ -33,8 +33,13 @@ public class LightningSpell : Spell
         if (collision.gameObject != null)
         {
             Player player = collision.GetComponent<Player>();
-            if (player != null && !player.isDead())
+            if (player != null)
             {
+                if (player.isDead())
+                {
+                    return;
+                }
+
                 player.GetComponent<Rigidbody2D>().AddForce(Vector2.down * SpellStats.speed, ForceMode2D.Impulse);
                 player.TakeDamage(SpellStats.damage);
             }

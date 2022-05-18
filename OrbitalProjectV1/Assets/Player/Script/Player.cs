@@ -67,7 +67,7 @@ public class Player : MonoBehaviour
         _time += 1f * Time.deltaTime;
         if(_currHealth <= 0)
         {
-            //Death();
+            Death();
         }
 
         _currWeapon = _weaponManager.ActiveWeapon().GetComponent<Weapon>();
@@ -165,7 +165,6 @@ public class Player : MonoBehaviour
     //When current health reaches 0, character dies and fade out
     private void Death()
     {
-        Destroy(this.gameObject);
-        //StartCoroutine("FadeOut");
+        StartCoroutine("FadeOut");
     }
 }

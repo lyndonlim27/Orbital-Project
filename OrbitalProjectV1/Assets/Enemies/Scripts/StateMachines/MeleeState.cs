@@ -4,8 +4,7 @@ using UnityEngine;
 
 class MeleeState : StateClass
 {
-    Player player;
-
+  
     public MeleeState(Entity entity, StateMachine stateMachine) : base(entity, stateMachine) { }
 
     public override void Enter(object stateData)
@@ -33,17 +32,16 @@ class MeleeState : StateClass
 
     private void triggerAttack()
     {
-        Player player = entity.melee.GetPlayer();
-        if (player == null)
+        if (!entity.melee.detected())
         {
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
 
         }
         else 
         {
-            if (player.isDead())
+            if (entity.player.isDead())
             {
-                stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+                stateMachine.ChangeState(StateMachine.STATE.STOP, null);
             } else
             {
                 // slight difference from ranged, we should only apply the physics from melee attack upon

@@ -5,7 +5,6 @@ using UnityEngine;
 
 class RoamState : StateClass
 {
-
     public RoamState(Entity entity, StateMachine stateMachine) : base(entity, stateMachine)
     {
     
@@ -13,6 +12,8 @@ class RoamState : StateClass
 
     public override void Enter(object data)
     {
+
+        entity.animator.SetBool("isWalking", true);
         Roam();
 
     }
@@ -24,21 +25,8 @@ class RoamState : StateClass
 
     public void Roam()
     {
-        Player player = null;
-        
-        if (entity.detectionScript.playerDetected != null)
-        {
-            GameObject go = entity.detectionScript.playerDetected;
 
-            if (go != null)
-            {
-                player = go.GetComponent<Player>();
-            }
-            
-        }
-
-
-        if (player != null)
+        if (entity.detectionScript.playerDetected)
         {
             stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
 

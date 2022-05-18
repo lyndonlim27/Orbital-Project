@@ -6,7 +6,6 @@ using UnityEngine;
 //we can use this state to decide whether to do a ranged or melee attack, roam or chase or return to position.
 public class ChaseState : StateClass
 {
-    Player player;
     public ChaseState(Entity entity, StateMachine stateMachine) : base(entity, stateMachine) {}
     public override void Enter(object stateData)
     {
@@ -31,48 +30,32 @@ public class ChaseState : StateClass
 
     public void ChaseEnemy()
     {
-        Player player = null;
-
-        if (entity.detectionScript.playerDetected != null)
-        {
-            GameObject go = entity.detectionScript.playerDetected;
-
-            if (go != null)
-            {
-                player = go.GetComponent<Player>();
-            }
-
-        }
+        
         //if object detected but is not player, 
-        if (player == null)
+        if (!entity.detectionScript.playerDetected)
         {
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
         }
-        else if (player.isDead())
-        {
-            //entity.animator.SetBool("isWalking", false);
-            stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
-        }
+
         else if (Vector2.Distance(entity.transform.position, entity.startingpos) >= entity.maxDist)
         {
 
             stateMachine.ChangeState(StateMachine.STATE.STOP, null);
         }
         
-        else if (entity.ranged.GetPlayer() != null && !entity.onCooldown())
+        else if (entity.ranged.detected() && !entity.onCooldown())
         {
             stateMachine.ChangeState(StateMachine.STATE.ATTACK2, null);
 
                 
-        } else if (entity.melee.GetPlayer() != null) {
+        } else if (entity.melee.detected()) {
 
             stateMachine.ChangeState(StateMachine.STATE.ATTACK1, null);
 
         } else
         {
-            entity.moveToTarget(player);
-        }
-            
+            entity.moveToTarget(entity.player);
+        }    
                
     }
 }

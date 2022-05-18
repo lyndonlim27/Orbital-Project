@@ -33,9 +33,16 @@ public class Entity : MonoBehaviour
     public GameObject aliveGO { get; private set; }
     public DetectionScript detectionScript;
     public Vector2 startingpos;
+    public Player player;
 
     public virtual void Start()
     {
+        GameObject go = GameObject.FindWithTag("Player");
+        Debug.Log("This is go");
+        if (go != null)
+        {
+            player = go.GetComponent<Player>();
+        }
 
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
@@ -52,7 +59,7 @@ public class Entity : MonoBehaviour
     public virtual void Update()
     {
         stateMachine.Update();
-//        Debug.Log("This is current STATE: " +stateMachine.currState);
+        Debug.Log("This is current STATE: " +stateMachine.currState);
     }
 
     public virtual void FixedUpdate()
@@ -62,7 +69,7 @@ public class Entity : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Obstacles" || collision.gameObject.tag == "Enemy")
+        if (collision.gameObject.tag == "Obstacles")
         {
             stateMachine.ChangeState(StateMachine.STATE.ROAMING,null);
         }
