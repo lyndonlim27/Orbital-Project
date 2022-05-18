@@ -26,8 +26,9 @@ public class Weapon : MonoBehaviour
         if(player)
         {
         player.PickupItem(this.gameObject.name);
-        }
         Destroy(this.gameObject);
+        }
+       
     }
     
 
@@ -41,8 +42,10 @@ public class Weapon : MonoBehaviour
     }
 
     //Turns the weapon direction towards the enemy and shoot
-    public void Shoot(Entity enemy)
+    //public void Shoot(Entity enemy)
+    public void Shoot(Entity enemy, Vector2 point2Target)
     {
+        /*
         float _x = enemy.transform.position.x;
         float _y = enemy.transform.position.y;
         _animator.SetFloat("Horizontal", Mathf.RoundToInt(_x));
@@ -53,12 +56,25 @@ public class Weapon : MonoBehaviour
         {
             _y = -1;
         }
+
         Quaternion angle = Quaternion.Euler(0, 0, Mathf.Atan2(_y, _x)
                  * Mathf.Rad2Deg);
 
         Bullet bullet = Instantiate(_bulletPrefab, this.transform.position, angle);
         bullet.SendMessage("TargetEnemy", enemy);
+        */
+        _animator.SetFloat("Horizontal", Mathf.RoundToInt(point2Target.x));
+        _animator.SetFloat("Vertical", Mathf.RoundToInt(point2Target.y));
+        _animator.SetFloat("Speed", point2Target.magnitude);
+        if (point2Target.x == 0 && point2Target.y == 0)
+        {
+            point2Target.y = -1;
+        }
+        Quaternion angle = Quaternion.Euler(0, 0, Mathf.Atan2(point2Target.y, point2Target.x)
+         * Mathf.Rad2Deg);
 
+        Bullet bullet = Instantiate(_bulletPrefab, this.transform.position, angle);
+        bullet.TargetEnemy(enemy);
 
     }
 
