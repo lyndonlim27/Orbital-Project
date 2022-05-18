@@ -8,13 +8,22 @@ public class GameOver : MonoBehaviour
 {   
     public void Setup()
     {
-        gameObject.SetActive(true);
+        GameObject[] allObjects = FindObjectsOfType<GameObject>();
+        /*
+        foreach (GameObject obj in allObjects)
+        {
+            if(obj.CompareTag("Enemy") || obj.CompareTag("Player"))
+            {
+                obj.SetActive(false);
+            }
+        }*/                                                                               
+            gameObject.SetActive(true);
 
     }
 
     public void RestartButton()
     {
-        SceneManager.LoadScene("SampleScene1");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void ExitButton()

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -63,7 +64,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _time = _time + 1f * Time.deltaTime;
+        _time += 1f * Time.deltaTime;
         if(_currHealth <= 0)
         {
             Death();
@@ -77,6 +78,7 @@ public class Player : MonoBehaviour
         //    _timeDelay = 0.5f; //When player shoots, pauses direction for 0.5 seconds
 
         //}
+
 
         if (Input.GetKeyDown(KeyCode.P))
         {
@@ -119,12 +121,13 @@ public class Player : MonoBehaviour
     //When player shoot, player direction faces the target enemy
     public void Shoot(Entity enemy)
     {
+        _timeDelay = 0.5f;
         Debug.Log("Shoot");
-        Debug.Log(enemy);
+        //Debug.Log(enemy);
         Vector2 point2Target = (Vector2)transform.position - (Vector2)enemy.transform.position;
         point2Target.Normalize();
         point2Target = -point2Target;
-        _currWeapon.Shoot(enemy);
+        _currWeapon.Shoot(enemy, point2Target);
         _animator.SetFloat("Horizontal", Mathf.RoundToInt(point2Target.x));
         _animator.SetFloat("Vertical", Mathf.RoundToInt(point2Target.y));
         _animator.SetFloat("Speed", point2Target.magnitude);

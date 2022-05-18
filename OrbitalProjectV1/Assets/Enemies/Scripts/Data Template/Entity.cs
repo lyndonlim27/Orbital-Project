@@ -49,7 +49,7 @@ public class Entity : MonoBehaviour
     public virtual void Update()
     {
         stateMachine.Update();
-        Debug.Log("This is current STATE: " +stateMachine.currState);
+//        Debug.Log("This is current STATE: " +stateMachine.currState);
     }
 
     public virtual void FixedUpdate()

@@ -34,4 +34,5 @@ public class Parallax : MonoBehaviour
         }
     }
 
+
 }
