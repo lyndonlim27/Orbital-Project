@@ -34,6 +34,7 @@ public class Entity : MonoBehaviour
     public DetectionScript detectionScript;
     public Vector2 startingpos;
     public Player player;
+    public int health;
 
     public virtual void Start()
     {
@@ -47,19 +48,19 @@ public class Entity : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         animator.runtimeAnimatorController = Resources.Load(string.Format("Animations/AnimatorControllers/{0}",stats.animatorname)) as RuntimeAnimatorController;
-        Debug.Log(string.Format("Animations/AnimatorControllers/{0}", stats.animatorname));
+        animator.SetBool("Death", false);
         melee = GetComponentInChildren<MeleeComponent>();
         ranged = GetComponentInChildren<RangedComponent>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = stats.sprite;
         startingpos = GetComponent<Transform>().position;
         cooldown = 0;
+        health = stats.words;
     }
 
     public virtual void Update()
     {
         stateMachine.Update();
-        Debug.Log("This is current STATE: " +stateMachine.currState);
     }
 
     public virtual void FixedUpdate()
@@ -163,13 +164,22 @@ public class Entity : MonoBehaviour
 
     public void Hurt()
     {
+        health -= 1; // or use weapon damage;
+        Debug.Log(health);
         animator.SetTrigger("Hurt");
     }
 
     public void Defeated()
     {
-        StartCoroutine(Wait());
-        animator.SetTrigger("Death");
+        //StartCoroutine(Wait());
+        if (health == 0)
+        {
+            animator.SetBool("Death", true);
+        } else
+        {
+            Hurt();
+        }
+        
     }
 
 

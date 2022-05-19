@@ -41,7 +41,6 @@ public class TextDisplayer : MonoBehaviour
     void Start()
     {
         entity = GetComponentInParent<Entity>();
-        Debug.Log(entity);
         GameObject gameObject = GameObject.FindGameObjectWithTag("Player");
         if (gameObject != null)
         {
@@ -85,7 +84,6 @@ public class TextDisplayer : MonoBehaviour
         for (int i = (int)KeyCode.A; i < (int)KeyCode.Z; i++)
         {
             if (Input.GetKeyDown((KeyCode)i)) {
-                Debug.Log(i);
                 EnterLetter((char)i);
             }
 
@@ -96,14 +94,14 @@ public class TextDisplayer : MonoBehaviour
     private void EnterLetter(char inputchar)
     {
         if (LetterCorrect(inputchar))
-        {
-            entity.Hurt();
+        { 
             ReplaceLetter();
             currentcounter++;
             if (isWordComplete())
             {
                 player.Shoot(entity);
                 ResetCounter();
+                GenerateNewWord();
                 return;
                 // generate new word and not inst animation for multi-length monsters
                 //GenerateNewWord();
