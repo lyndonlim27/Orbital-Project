@@ -32,7 +32,6 @@ public class IdleState : StateClass
         //let roam state handle detection of enemy. 
         if (counter == 0)
         {
-
             entity.getNewRoamPosition();
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
             

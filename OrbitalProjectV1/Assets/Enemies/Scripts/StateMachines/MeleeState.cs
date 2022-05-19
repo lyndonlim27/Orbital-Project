@@ -52,19 +52,22 @@ class MeleeState : StateClass
 
                     // right now idk how many weapons we can load, maybe can have more
                     // maybe when we decided to add more weapons can have an array weapon[]
-                    int random = 1; //Random.Range(0, 2);
+                    int random = Random.Range(0, 2);
                     Debug.Log(random);
                     if (random == 0)
                     {
                         entity.animator.SetTrigger("Melee");
+                        return;
                     } else
                     {
                         entity.animator.SetTrigger("WeaponAttack");
+                        return;
                     }
 
                 } else
                 {
                     entity.animator.SetTrigger("Melee");
+                    return;
                 }
                 
             }

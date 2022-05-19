@@ -31,20 +31,24 @@ public class RangedComponent : AttackComponent
             } else if (spell == null)
             {
                 Shoot();
+                return;
             } else if (bullet == null)
             {
                 Cast();
+                return;
             }
             else 
             {
                 int random = Random.Range(0, 2);
                 if (random == 0) {
                     Cast();
+                    return;
                 }
                 else
                 {
 
                     Shoot();
+                    return;
                 }
             }
 

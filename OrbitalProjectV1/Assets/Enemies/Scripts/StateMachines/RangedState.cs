@@ -37,6 +37,7 @@ public class RangedState : StateClass
         if (!entity.ranged.detected())
         {
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
+            return;
         }
 
         else
@@ -44,15 +45,18 @@ public class RangedState : StateClass
             if (entity.player.isDead())
             {
                 stateMachine.ChangeState(StateMachine.STATE.STOP, null);
+                return;
             }
             else if (!entity.onCooldown())
             {
                 Debug.Log("We're in attack2!");
-                entity.ranged.Attack();
                 entity.animator.SetTrigger("Cast");
+                entity.ranged.Attack();
+                return;
             } else
             {
                 stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
+                return;
             }
         }
     }
