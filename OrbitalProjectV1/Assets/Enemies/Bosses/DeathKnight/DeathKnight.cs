@@ -15,6 +15,6 @@ public class DeathKnight : Entity
         stateMachine.AddState(StateMachine.STATE.ATTACK1, new MeleeState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.ATTACK2, new RangedState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.STOP, new StopState(this, this.stateMachine));
-        stateMachine.Init(StateMachine.STATE.CHASE, null);
+        stateMachine.Init(StateMachine.STATE.IDLE, null);
     }
 }

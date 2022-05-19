@@ -10,8 +10,9 @@ public class Entity : MonoBehaviour
     {
         ATTACK_END,
         CAST_END,
-        ATTACK_TRIGGER,
-        HURT_END
+        MELEE_TRIGGER,
+        HURT_END,
+        WEAP_TRIGGER
     }
 
     //data;
@@ -19,6 +20,7 @@ public class Entity : MonoBehaviour
     public StateMachine stateMachine;
     public int angerMultiplier = 1;
     private int cooldown;
+    protected DamageFlicker _flicker;
     public SpriteRenderer spriteRenderer { get; private set; }
 
     [Header("Entity Position")]
@@ -35,6 +37,7 @@ public class Entity : MonoBehaviour
     public Vector2 startingpos;
     public Player player;
     public int health;
+    
 
     public virtual void Start()
     {
@@ -47,13 +50,14 @@ public class Entity : MonoBehaviour
 
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        animator.runtimeAnimatorController = Resources.Load(string.Format("Animations/AnimatorControllers/{0}",stats.animatorname)) as RuntimeAnimatorController;
+        //animator.runtimeAnimatorController = Resources.Load(string.Format("Animations/AnimatorControllers/{0}",stats.animatorname)) as RuntimeAnimatorController;
         animator.SetBool("Death", false);
         melee = GetComponentInChildren<MeleeComponent>();
         ranged = GetComponentInChildren<RangedComponent>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = stats.sprite;
         startingpos = GetComponent<Transform>().position;
+        _flicker = GetComponent<DamageFlicker>();
         cooldown = 0;
         health = stats.words;
     }
@@ -61,6 +65,8 @@ public class Entity : MonoBehaviour
     public virtual void Update()
     {
         stateMachine.Update();
+        Debug.Log(stateMachine.currState);
+        Debug.Log(cooldown);
     }
 
     public virtual void FixedUpdate()
@@ -113,9 +119,17 @@ public class Entity : MonoBehaviour
         return this.cooldown != 0;
     }
 
+    public void tick()
+    {
+        if (cooldown > 0)
+        {
+            cooldown--;
+        }
+    }
+
     public void resetCooldown()
     {
-        this.cooldown = 50;
+        this.cooldown = 250;
     }
 
     public void flipFace(Vector2 target)
@@ -145,11 +159,30 @@ public class Entity : MonoBehaviour
         melee.Attack();
     }
 
-    public void AnimationBreak(ANIMATION_CODE code)
+
+    public virtual bool hasWeapon()
+    {
+        return false;
+    }
+
+    public void WeapAttack()
+    {
+        try
+        {
+            Weapon weapon = GetComponentInChildren<Weapon>();
+            weapon.Attack();
+        }
+        catch (System.NullReferenceException)
+        {
+            Debug.Log("No weapon detected");
+        }
+    }
+
+    public virtual void AnimationBreak(ANIMATION_CODE code)
     {
         switch (code)
         {
-            case ANIMATION_CODE.ATTACK_TRIGGER:
+            case ANIMATION_CODE.MELEE_TRIGGER:
                 meleeAttack();
                 break;
             case ANIMATION_CODE.ATTACK_END:
@@ -157,16 +190,22 @@ public class Entity : MonoBehaviour
                 break;
             case ANIMATION_CODE.CAST_END:
                 resetCooldown();
+                Debug.Log("This is inside golem state");
                 stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
-                break;               
+                break;
+            case ANIMATION_CODE.WEAP_TRIGGER:
+                WeapAttack();
+                break;
         }
     }
 
     public void Hurt()
     {
+        animator.SetTrigger("Hurt");
+        _flicker.Flicker();
         health -= 1; // or use weapon damage;
         Debug.Log(health);
-        animator.SetTrigger("Hurt");
+        
     }
 
     public void Defeated()

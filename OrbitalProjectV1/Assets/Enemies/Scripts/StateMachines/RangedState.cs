@@ -33,6 +33,7 @@ public class RangedState : StateClass
         //the next logical move
         //basically if player is not null or is not dead, we can initiate attack. for every other condition,
         // we just bounce back to chase state to decide.
+        Debug.Log("What?");
         if (!entity.ranged.detected())
         {
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
@@ -44,10 +45,14 @@ public class RangedState : StateClass
             {
                 stateMachine.ChangeState(StateMachine.STATE.STOP, null);
             }
-            else
+            else if (!entity.onCooldown())
             {
+                Debug.Log("We're in attack2!");
                 entity.ranged.Attack();
                 entity.animator.SetTrigger("Cast");
+            } else
+            {
+                stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
             }
         }
     }

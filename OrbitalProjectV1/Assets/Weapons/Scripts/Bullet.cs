@@ -5,8 +5,9 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     private Rigidbody2D _rb;
-    private Transform _target;
-    private Animator _animator;
+    protected Transform _target;
+    protected string animationname;
+    protected Animator _animator;
 
     [Header("Bullet properties")]
     [SerializeField] private float speed = 6.0f;
@@ -16,7 +17,7 @@ public class Bullet : MonoBehaviour
     [SerializeField] private float rotateSpeed = 200.0f;
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         //_target = GameObject.FindGameObjectWithTag("Enemy").transform;
         _animator = GetComponent<Animator>();
@@ -24,8 +25,12 @@ public class Bullet : MonoBehaviour
 
     private void Awake()
     {
+        animationname = "Collision";
         _rb = GetComponent<Rigidbody2D>();
     }
+
+    /** can merge using Transform.
+     */
 
     public void TargetEnemy(Entity enemy)
     {
@@ -33,29 +38,45 @@ public class Bullet : MonoBehaviour
         Debug.Log(_target);
     }
 
-    void FixedUpdate()
+    public void TargetPlayer(Player player)
+    {
+        this._target = player.transform;
+        Debug.Log(_target);
+    }
+
+    protected virtual void FixedUpdate()
     {
         //When the bullet collide with the enemy, stop the movement of the bullet
-        if(_animator.GetBool("Collision") == true)
+        stopMovement(animationname);
+        //The bullet will follow the target
+        followTarget();
+        
+    }
+
+    protected virtual void OnCollisionEnter2D(Collision2D collision)
+    {
+        //Setting collision to true so that it will trigger the next state
+        //for bullet and thus play the explosion animation
+        _animator.SetBool(animationname, true);
+        _target.GetComponent<Entity>().Defeated();
+    }
+
+    protected void stopMovement(string animationname)
+    {
+        if (_animator.GetBool(animationname) == true)
         {
             _rb.angularVelocity = 0;
             _rb.velocity = Vector2.zero;
             return;
         }
-        //The bullet will follow the target
+    }
+
+    protected void followTarget()
+    {
         Vector2 point2Target = (Vector2)transform.position - (Vector2)_target.transform.position;
         point2Target.Normalize();
         float value = Vector3.Cross(point2Target, transform.right).z;
         _rb.angularVelocity = rotateSpeed * value;
         _rb.velocity = transform.right * speed;
     }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        //Setting collision to true so that it will trigger the next state
-        //for bullet and thus play the explosion animation
-        _animator.SetBool("Collision", true);
-        _target.GetComponent<Entity>().Defeated();
-    }
-
 }

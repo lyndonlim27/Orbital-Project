@@ -10,6 +10,7 @@ public abstract class Spell : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
+        Debug.Log("Dafuq?");
         animator.SetTrigger("Cast");
     }
 }

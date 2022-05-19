@@ -2,40 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : Spell
+public class Projectile : Bullet
 {
 
-    SpriteRenderer spriteRenderer;
-    Vector3 _target;
-   
-    // Update is called once per frame
-    void Update()
+    private float lifeTime = 3.0f;
+    private int damageval = 3;
+
+    protected override void Start()
     {
-        transform.position += _target * SpellStats.speed * Time.deltaTime;
-        transform.rotation  = Quaternion.LookRotation(Vector3.RotateTowards(transform.position, _target, SpellStats.speed * Time.deltaTime, 0.0f));
+        base.Start();
+        animationname = "Play";
+        Destroy(gameObject, lifeTime);
+    }    
+
+
+    protected override void OnCollisionEnter2D(Collision2D collision)
+    {
+        //Setting collision to true so that it will trigger the next state
+        //for bullet and thus play the explosion animation
+        _animator.SetBool(animationname, true);
+        _target.GetComponent<Player>().TakeDamage(damageval);
     }
 
-    public void SetTarget(Vector3 target)
-    {
-        _target = target;
-    }
-
-
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        animator.SetTrigger("Explosion");
-        GameObject go = collision.gameObject;
-        if (go != null)
-        {
-            Player player = go.GetComponent<Player>();
-            if (player != null)
-            {
-                Vector2 forcedir = spriteRenderer.flipX == true ? Vector2.left : Vector2.right;
-                player.GetComponent<Rigidbody2D>().AddForce(forcedir * SpellStats.speed, ForceMode2D.Impulse);
-                Destroy(this.gameObject);
-            }
-
-        }
-    }
 }

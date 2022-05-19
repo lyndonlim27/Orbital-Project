@@ -9,7 +9,7 @@ public class ChaseState : StateClass
     public ChaseState(Entity entity, StateMachine stateMachine) : base(entity, stateMachine) {}
     public override void Enter(object stateData)
     {
-        //entity.animator.SetBool("isWalking", true);
+        entity.animator.SetBool("isWalking", true);
         ChaseEnemy();
     }
 
@@ -55,7 +55,10 @@ public class ChaseState : StateClass
         } else
         {
             entity.moveToTarget(entity.player);
-        }    
+            
+        }
+
+        entity.tick();
                
     }
 }

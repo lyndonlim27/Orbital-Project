@@ -14,7 +14,15 @@ public class StoneGolem : Entity
         stateMachine.AddState(StateMachine.STATE.ATTACK1, new MeleeState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.ATTACK2, new RangedState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.ENRAGED1, new StageOneState(this, this.stateMachine));
+        stateMachine.AddState(StateMachine.STATE.STOP, new StopState(this, this.stateMachine));
+        stateMachine.Init(StateMachine.STATE.IDLE, null);
     }
+
+    public override bool hasWeapon()
+    {
+        return true;
+    }
+
 }
 
 

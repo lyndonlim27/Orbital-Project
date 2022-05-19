@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class RangedComponent : AttackComponent
 {
-    public List<Spell> spells;
+    //public List<Spell> spells; i want to use an interface to generalize all projectiles.. maybe Projectile interface;
+    public Spell spell;
+    public Projectile bullet;
 
     public override void Start()
     {
         base.Start();
-        spells = enemyStats.spells;
+        //spells = enemyStats.spells;
     }
 
     public override void Attack()
@@ -22,29 +24,43 @@ public class RangedComponent : AttackComponent
             {
                 return;
             }
-            if (spells.Count != 0) // if there is no spell, nothing to cast here;
+            //if (spells.Count != 0) // if there is no spell, nothing to cast here;
+            if (spell == null && bullet == null)
             {
-                int random = Random.Range(0, spells.Count);
-
-                Spell spell = spells[random];
-
-                //shoot or cast;
-                GetComponentInParent<Animator>().SetTrigger(spell.SpellStats.trigger);
-
-                if (spell.SpellStats.type == SpellStats.Type.CAST)
-                {
-                    // if its a casting spell, no need to aim, just instantiate on top of enemy.
-                    GameObject.Instantiate(spell, target.transform.position, Quaternion.identity);
+                return;
+            } else if (spell == null)
+            {
+                Shoot();
+            } else if (bullet == null)
+            {
+                Cast();
+            }
+            else 
+            {
+                int random = Random.Range(0, 2);
+                if (random == 0) {
+                    Cast();
                 }
                 else
                 {
-                    // if its a projectile, need to aim.
-                    Projectile proj = (Projectile)GameObject.Instantiate(spell, transform.position, Quaternion.identity);
-                    proj.SendMessage("SetTarget", target.transform.position);
+
+                    Shoot();
                 }
             }
 
         }
+    }
+
+    private void Shoot()
+    {
+        Projectile bulletinst = Instantiate(bullet, this.transform.position, Quaternion.identity);
+        bulletinst.TargetPlayer(target);
+    }
+
+    private void Cast()
+    {
+        GetComponentInParent<Animator>().SetTrigger(spell.SpellStats.trigger);
+        GameObject.Instantiate(spell, target.transform.position, Quaternion.identity);
     }
 }
 
