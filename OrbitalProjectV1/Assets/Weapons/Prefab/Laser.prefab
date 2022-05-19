@@ -101,7 +101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WeaponName: Laser
-  _moveSpeed: 5
+  range: 200
   _bulletPrefab: {fileID: 2947122831316173463, guid: 81091fd4a4da64272b6b683e666a02ee, type: 3}
 --- !u!50 &3472038180268410804
 Rigidbody2D:
@@ -134,7 +134,7 @@ Animator:
   m_GameObject: {fileID: 8069962991690258899}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: d8bc70feb742d4bf0942ec82129827ca, type: 2}
+  m_Controller: {fileID: 22100000, guid: 8f9ea34ce101349e38dae0d009a7e1f3, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

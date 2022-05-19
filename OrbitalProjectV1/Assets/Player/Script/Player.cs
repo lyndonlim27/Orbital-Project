@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     private DamageFlicker _flicker;
     private float _time = 0;
     private float _timeDelay = 0;
+    private CheckPointManager manager;
 
     [Header("Player properties")]
     [SerializeField] private int maxHealth = 100;
@@ -51,14 +52,23 @@ public class Player : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         GameObject _gameObj = GameObject.FindGameObjectWithTag("Enemy");
-        if(_gameObj != null)
-        {
-            _target = _gameObj.transform;
-        }
         _weaponManager = this.gameObject.transform.GetChild(0).gameObject.GetComponent<WeaponPickup>();
         _currWeapon = _weaponManager.ActiveWeapon().GetComponent<Weapon>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _flicker = GetComponent<DamageFlicker>();
+        manager = GameObject.FindGameObjectWithTag("CheckPointManager").GetComponent<CheckPointManager>();
+
+        if (_gameObj != null)
+        {
+            _target = _gameObj.transform;
+        }
+
+
+        if(manager.getCheckPoint() != null)
+        {
+            Debug.Log("test");
+            this.transform.position = manager.getCheckPoint();
+        }
     }
 
     // Update is called once per frame

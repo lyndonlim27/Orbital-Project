@@ -11,6 +11,7 @@ class MeleeState : StateClass
     public override void Enter(object stateData)
     {
         tryAttack();
+        
     }
 
     public override void Exit()
@@ -30,6 +31,7 @@ class MeleeState : StateClass
 
     private void tryAttack()
     {
+        Debug.Log("ATTACK");
         GameObject go = entity.melee.detectionScript.playerDetected;
         if (go == null)
         {
@@ -40,6 +42,7 @@ class MeleeState : StateClass
             player = go.GetComponent<Player>();
             if (player.isDead())
             {
+                Debug.Log("DEAD");
                 stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
             } else
             {

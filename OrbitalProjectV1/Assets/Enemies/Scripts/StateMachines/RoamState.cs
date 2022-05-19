@@ -30,6 +30,7 @@ class RoamState : StateClass
         GameObject go = entity.detectionScript.playerDetected;
         if (go != null)
         {
+            
             stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
         }
         else if (entity.isReached())

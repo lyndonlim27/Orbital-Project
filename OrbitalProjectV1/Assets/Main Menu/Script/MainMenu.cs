@@ -13,6 +13,12 @@ public class MainMenu : MonoBehaviour
 
     public void SettingsButton()
     {
+        this.gameObject.SetActive(false);
 
+    }
+
+    public void MainMenuActive()
+    {
+        this.gameObject.SetActive(true);
     }
 }
