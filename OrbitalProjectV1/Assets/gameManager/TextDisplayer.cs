@@ -14,12 +14,16 @@ public class TextDisplayer : MonoBehaviour
     public string currentword = "";
     public WordBank wordBank;
     public Entity entity;
+    protected float minDist;
+    public bool IsVisible { get; private set; }
     int currentcounter = 0;
+    
     private Dictionary<char, string> dict = new Dictionary<char, string>();
 
-    private void Awake()
+    protected virtual void Awake()
     {
-        
+        IsVisible = false;
+        wordtoDisplay.enabled = IsVisible;
         for (char c = 'a'; c <= 'z'; c++)
         {
             int val = c - 'a' + 16;
@@ -56,6 +60,7 @@ public class TextDisplayer : MonoBehaviour
         // generate a new word from wordbank;
         currentword = wordBank.GetWord();
         SetRemainingWord(currentword);
+        
     }
 
     private void SetRemainingWord(string currentword)
@@ -67,9 +72,22 @@ public class TextDisplayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CheckPlayerNearby();
+        wordtoDisplay.enabled = IsVisible;
         CheckInput();
     }
 
+
+    private void CheckPlayerNearby()
+    {
+        if (Vector2.Distance(player.transform.position, entity.transform.position) < minDist)
+        {
+            IsVisible = true;
+        } else
+        {
+            IsVisible = false;
+        }
+    }
     
 
     private void CheckInput()
@@ -180,6 +198,11 @@ public class TextDisplayer : MonoBehaviour
 
         return result;
     }
+
+    //public void OnBecameVisible()
+    //{
+    //    this.gameObject.SetActive(true);
+    //}
 
 
 }

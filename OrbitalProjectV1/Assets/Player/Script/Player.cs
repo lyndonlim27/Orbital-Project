@@ -27,14 +27,16 @@ public class Player : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float _moveSpeed = 5f;
 
-
+    
     [Header("Player UI")]
     [SerializeField] private GameOver _gameOver;
     [SerializeField] private HealthBar healthBar;
+    public bool inCombat { get; private set; }
 
     private void Awake()
     {
         col = GetComponent<Collider2D>();
+        inCombat = false;
         
     }
 
@@ -64,8 +66,14 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //freeze player's actions when inside dialogue
+        if (DialogueManager.GetInstance().playing)
+        {
+            return;
+        }
+
         _time += 1f * Time.deltaTime;
-        if(_currHealth <= 0)
+        if (_currHealth <= 0)
         {
             Death();
         }
@@ -78,7 +86,7 @@ public class Player : MonoBehaviour
         //    _timeDelay = 0.5f; //When player shoots, pauses direction for 0.5 seconds
 
         //}
-
+        CheckCombat();
 
         if (Input.GetKeyDown(KeyCode.P))
         {
@@ -88,7 +96,27 @@ public class Player : MonoBehaviour
             }
         }
 
-       if(_time >= _timeDelay)
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            UnlockableDoor door = GameObject.FindObjectOfType<UnlockableDoor>();
+            Debug.Log(door);
+            if (door != null)
+            {
+                door.UnlockDoor();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            UnlockableDoor door = GameObject.FindObjectOfType<UnlockableDoor>();
+            Debug.Log(door);
+            if (door != null)
+            {
+                door.LockDoor();
+            }
+        }
+
+        if (_time >= _timeDelay)
         {
             _movement.x = Input.GetAxisRaw("Horizontal");
             _movement.y = Input.GetAxisRaw("Vertical");
@@ -102,9 +130,29 @@ public class Player : MonoBehaviour
 
     }
 
+    private void CheckCombat()
+    {
+        for (int i = (int)KeyCode.A; i < (int)KeyCode.Z; i++)
+        {
+            if (Input.GetKeyDown((KeyCode)i))
+            {
+                inCombat = true;
+            }
+            else
+            {
+                inCombat = false;
+            }
+        }
+    }
+
     private void FixedUpdate()
     {
         //Move player's position
+        //freeze player's movement when inside dialogue
+        if (DialogueManager.GetInstance().playing)
+        {
+            return;
+        }
         transform.position = (Vector2) transform.position +_movement.normalized * _moveSpeed * Time.fixedDeltaTime;
         //_rb.MovePosition(_rb.position + _movement.normalized * _moveSpeed * Time.fixedDeltaTime);
     }
@@ -167,4 +215,5 @@ public class Player : MonoBehaviour
     {
         StartCoroutine("FadeOut");
     }
+
 }

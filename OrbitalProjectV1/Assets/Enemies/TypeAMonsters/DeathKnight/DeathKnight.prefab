@@ -104,9 +104,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingLayerID: 1764697279
+  m_SortingLayer: 3
+  m_SortingOrder: 3
   m_Sprite: {fileID: -4818586564699129774, guid: 1914d95466e3d4341a618c35a56d5f82, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
@@ -280,15 +280,50 @@ PrefabInstance:
       objectReference: {fileID: 7809617704153707570}
     - target: {fileID: 778092263519708278, guid: 28cf85281a8f64b7989de20590c73ce9, type: 3}
       propertyPath: m_Name
-      value: textUI
+      value: MonsterTextDisplayer
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 778092263519708274, guid: 28cf85281a8f64b7989de20590c73ce9, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 28cf85281a8f64b7989de20590c73ce9, type: 3}
+--- !u!1 &443843115 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 778092263519708278, guid: 28cf85281a8f64b7989de20590c73ce9, type: 3}
+  m_PrefabInstance: {fileID: 778092263693018717}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6501029815920893160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443843115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baf6c5d876fee4495993cf4eb0330ab8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  wordtoDisplay: {fileID: 443843117}
+  remainingword: 
+  currentword: 
+  wordBank: {fileID: 0}
+  entity: {fileID: 7809617704153707570}
 --- !u!224 &443843116 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 778092263519708273, guid: 28cf85281a8f64b7989de20590c73ce9, type: 3}
   m_PrefabInstance: {fileID: 778092263693018717}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &443843117 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 778092263519708272, guid: 28cf85281a8f64b7989de20590c73ce9, type: 3}
+  m_PrefabInstance: {fileID: 778092263693018717}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443843115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4454905014111635155
 PrefabInstance:
   m_ObjectHideFlags: 0

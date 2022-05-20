@@ -8,6 +8,7 @@ TagManager:
   - Weapon
   - Obstacles
   - UI
+  - playerWeap
   layers:
   - Default
   - TransparentFX
@@ -23,10 +24,7 @@ TagManager:
   - Weapons
   - Post Processing
   - No Post Processing
-  - 
-  - 
-  - 
-  - 
+  - ScreenSpace
   - 
   - 
   - 
@@ -47,4 +45,13 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Canvas
+    uniqueID: 3757747789
+    locked: 0
+  - name: Overworld
+    uniqueID: 2975607419
+    locked: 0
+  - name: GameObjects
+    uniqueID: 1764697279
     locked: 0
