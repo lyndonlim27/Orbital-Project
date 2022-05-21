@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,6 +24,8 @@ public class NPC_Script : MonoBehaviour
         itd.GetComponentInParent<SpriteRenderer>().enabled = true;
         itd.GetComponent<TextMeshPro>().enabled = true;
         GetComponentInChildren<DialogueDetection>().enabled = false;
-        this.gameObject.SetActive(false);
+        //this.gameObject.SetActive(false);
     }
+
+
 }

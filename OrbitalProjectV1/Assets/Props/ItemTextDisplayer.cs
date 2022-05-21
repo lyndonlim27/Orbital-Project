@@ -46,6 +46,7 @@ public class ItemTextDisplayer : TextDisplayer
             {
                 RoomManager roomManager = GameObject.FindObjectOfType<RoomManager>();
                 roomManager.FulfillCondition(item._name);
+                this.gameObject.GetComponentInParent<SpriteRenderer>().enabled = false;
                 this.gameObject.SetActive(false);
 
             }
@@ -55,7 +56,7 @@ public class ItemTextDisplayer : TextDisplayer
             if (isWordPartialComplete())
             {
                 this.remainingword = currentword;
-                //SetRemainingWord(currentword);
+                SetRemainingWord(currentword);
                 ResetCounter();
                 
             }

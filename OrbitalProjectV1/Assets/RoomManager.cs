@@ -4,17 +4,18 @@ using UnityEngine;
 
 public abstract class RoomManager : MonoBehaviour
 {
+    protected List<string> conditions;
 
-
-    public Dictionary<string, bool> conditions { get; protected set; }
-
-    public abstract void FulfillCondition(string key);
+    public void FulfillCondition(string key)
+    {
+        this.conditions.Remove(key);
+    }
 
 
     protected bool CanProceed()
     {
-        Debug.Log(!conditions.ContainsValue(false));
-        return !conditions.ContainsValue(false);
+        
+        return conditions.Count == 0;
     }
 
     protected void CheckDialogue()

@@ -4,16 +4,12 @@ using UnityEngine;
 
 public class R1_Mgr : RoomManager
 {
-    public override void FulfillCondition(string key)
-    {
-        this.conditions[key] = true;
-    }
-
+    
     private void Awake()
     {
-        this.conditions = new Dictionary<string, bool>();
-        this.conditions.Add("booze", false);
-        this.conditions.Add("key", false);
+        this.conditions = new List<string>();
+        this.conditions.Add("booze");
+        this.conditions.Add("key");
     }
 
     private void Update()
@@ -25,13 +21,19 @@ public class R1_Mgr : RoomManager
     private void RoomChecker()
     {
         //check condition 1
-        if (conditions["booze"])
+        if (!conditions.Contains("booze"))
         {
-            GameObject.Find("NPC").GetComponentInChildren<DialogueDetection>().Fulfilled();
+            GameObject dd = GameObject.Find("NPC");
+            
+            if (dd != null)
+            {
+                dd.GetComponentInChildren<DialogueDetection>().Fulfilled();
+                
+            }
         }
 
         //check condition 2 and onwards;
-        if (conditions["key"])
+        if (!conditions.Contains("key"))
         {
             GameObject.FindObjectOfType<UnlockableDoor>().UnlockDoor();
         }
