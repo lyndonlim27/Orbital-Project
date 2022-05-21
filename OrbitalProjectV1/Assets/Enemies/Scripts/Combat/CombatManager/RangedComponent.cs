@@ -4,32 +4,69 @@ using UnityEngine;
 
 public class RangedComponent : AttackComponent
 {
+    //public List<Spell> spells; i want to use an interface to generalize all projectiles.. maybe Projectile interface;
     public Spell spell;
-    public DetectionScript detectionScript;
-    
+    public Projectile bullet;
 
-    public override void Init()
+    public override void Start()
     {
-        base.Init();
-        detectionScript = GetComponent<DetectionScript>();
-
+        base.Start();
+        //spells = enemyStats.spells;
     }
 
-    public override void Attack(Player target)
+    public override void Attack()
     {
-        if (spell != null) // if weap == null, means spell animation stored in parent animator.
+
+        if (detectionScript.playerDetected)
         {
-            GetComponentInParent<Animator>().SetTrigger("Cast");
-            GameObject.Instantiate(spell, target.transform.position, Quaternion.identity);
+
+            if (target.isDead())
+            {
+                return;
+            }
+            //if (spells.Count != 0) // if there is no spell, nothing to cast here;
+            if (spell == null && bullet == null)
+            {
+                return;
+            } else if (spell == null)
+            {
+                Shoot();
+                return;
+            } else if (bullet == null)
+            {
+                Cast();
+                return;
+            }
+            else 
+            {
+                int random = Random.Range(0, 2);
+                if (random == 0) {
+                    Cast();
+                    return;
+                }
+                else
+                {
+
+                    Shoot();
+                    return;
+                }
+            }
+
         }
-
     }
 
-    public bool inRange()
+    private void Shoot()
     {
-        return this.detectionScript.playerDetected != null;
+        Projectile bulletinst = Instantiate(bullet, this.transform.position, Quaternion.identity);
+        bulletinst.TargetPlayer(target);
     }
 
+    private void Cast()
+    {
+        GetComponentInParent<Animator>().SetTrigger(spell.SpellStats.trigger);
+        GameObject.Instantiate(spell, target.transform.position, Quaternion.identity);
+    }
+}
 
     //private IEnumerator KnockBackCo(Rigidbody2D rb)
     //{
@@ -40,4 +77,4 @@ public class RangedComponent : AttackComponent
     //    }
     //}
 
-}
+

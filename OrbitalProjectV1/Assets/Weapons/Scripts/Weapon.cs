@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class Weapon : MonoBehaviour
 {
-    private Animator _animator;
+    public Animator _animator { get; private set; }
     public string WeaponName;
     public float range = 200f;
 
@@ -78,10 +78,11 @@ public class Weapon : MonoBehaviour
 
     }
 
-    public void Attack()
+
+    // just a placeholder for weapons without projectiles to override
+    public virtual void Attack()
     {
-
+        return;
     }
-
 
 }

@@ -4,25 +4,28 @@ using UnityEngine;
 
 public class DetectionScript : MonoBehaviour
 {
-    public GameObject playerDetected = null;
-    private Collider2D col;
+    public bool playerDetected;
+    private CircleCollider2D col;
 
     private void Awake()
     {
-        col = GetComponent<Collider2D>();
+        col = GetComponent<CircleCollider2D>();
     }
+
+ 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
         {
-            playerDetected = collision.gameObject;
+            playerDetected = true;
         }
+        
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
         {
-            playerDetected = null;
+            playerDetected = false;
         }
     }
 };

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public abstract class StateClass 
 {
@@ -16,5 +17,30 @@ public abstract class StateClass
     // for physics related updates;
     virtual public void FixedUpdate() { }
     virtual public void Exit() { }
+
+    //handling null target;
+    //public Player CheckTargetExistence()
+    //{
+    //    try
+    //    {
+    //        return entity.detectionScript.playerDetected.GetComponent<Player>()
+    //    } catch (NullReferenceException err)
+    //    {
+    //        Console.WriteLine("Please check the string str.");
+    //    }
+    //    Player player;
+    //    if (entity.detectionScript.playerDetected != null)
+    //    {
+    //        GameObject go = entity.detectionScript.playerDetected;
+    //        if (go != null)
+    //        {
+    //            player = go.GetComponent<Player>();
+
+    //        }
+    //        else
+    //        {
+    //            player = null;
+    //        }
+    //    }
 
 }

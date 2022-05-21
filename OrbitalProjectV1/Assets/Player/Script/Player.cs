@@ -23,19 +23,21 @@ public class Player : MonoBehaviour
 
     [Header("Player properties")]
     [SerializeField] private int maxHealth = 100;
-    [SerializeField] private int selfDamage = 10;
+    [SerializeField] private int selfDamage = 100;
 
     [Header("Movement")]
     [SerializeField] private float _moveSpeed = 5f;
 
-
+    
     [Header("Player UI")]
     [SerializeField] private GameOver _gameOver;
     [SerializeField] private HealthBar healthBar;
+    public bool inCombat { get; private set; }
 
     private void Awake()
     {
         col = GetComponent<Collider2D>();
+        inCombat = false;
         
     }
 
@@ -74,8 +76,14 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //freeze player's actions when inside dialogue
+        if (DialogueManager.GetInstance().playing)
+        {
+            return;
+        }
+
         _time += 1f * Time.deltaTime;
-        if(_currHealth <= 0)
+        if (_currHealth <= 0)
         {
             Death();
         }
@@ -88,7 +96,7 @@ public class Player : MonoBehaviour
         //    _timeDelay = 0.5f; //When player shoots, pauses direction for 0.5 seconds
 
         //}
-
+        CheckCombat();
 
         if (Input.GetKeyDown(KeyCode.P))
         {
@@ -98,7 +106,7 @@ public class Player : MonoBehaviour
             }
         }
 
-       if(_time >= _timeDelay)
+        if (_time >= _timeDelay)
         {
             _movement.x = Input.GetAxisRaw("Horizontal");
             _movement.y = Input.GetAxisRaw("Vertical");
@@ -112,9 +120,29 @@ public class Player : MonoBehaviour
 
     }
 
+    private void CheckCombat()
+    {
+        for (int i = (int)KeyCode.A; i <= (int)KeyCode.Z; i++)
+        {
+            if (Input.GetKeyDown((KeyCode)i))
+            {
+                inCombat = true;
+            }
+            else
+            {
+                inCombat = false;
+            }
+        }
+    }
+
     private void FixedUpdate()
     {
         //Move player's position
+        //freeze player's movement when inside dialogue
+        if (DialogueManager.GetInstance().playing)
+        {
+            return;
+        }
         transform.position = (Vector2) transform.position +_movement.normalized * _moveSpeed * Time.fixedDeltaTime;
         //_rb.MovePosition(_rb.position + _movement.normalized * _moveSpeed * Time.fixedDeltaTime);
     }
@@ -143,22 +171,6 @@ public class Player : MonoBehaviour
         _animator.SetFloat("Speed", point2Target.magnitude);
     }
 
-
-        //if (_target!= null && _target.tag == "Enemy")
-        //{
-        //    if (_target.GetComponentInChildren<TextDisplayer>().isWordComplete())
-        //    {
-        //        Debug.Log("Shoot");
-        //        Vector2 point2Target = (Vector2)transform.position - (Vector2)_target.transform.position;
-        //        point2Target.Normalize();
-        //        point2Target = -point2Target;
-        //        _currWeapon.Shoot(point2Target);
-        //        _animator.SetFloat("Horizontal", Mathf.RoundToInt(point2Target.x));
-        //        _animator.SetFloat("Vertical", Mathf.RoundToInt(point2Target.y));
-        //        _animator.SetFloat("Speed", point2Target.magnitude);
-        //    }
-
-        //} else
        
     public void PickupItem(string weapon)
     {   
@@ -193,4 +205,5 @@ public class Player : MonoBehaviour
     {
         StartCoroutine("FadeOut");
     }
+
 }

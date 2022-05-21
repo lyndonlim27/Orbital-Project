@@ -2,27 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// AttackComponents handle all the forces;
+
 public abstract class AttackComponent : MonoBehaviour
 {
-    public GameObject parent;
-    protected float attackRange;
-    protected float attackSpeed;
-    protected int damageValue;
-    [SerializeField]
-    private EntityStats enemyStats;
-    public abstract void Attack(Player target);
+    
+    protected DetectionScript detectionScript;
+    protected Entity parent;
+    protected EntityStats enemyStats;
+    protected Player target;
+    public abstract void Attack();
 
-    private void Start()
+    public virtual void Start()
     {
         //call our init function whenever Start is called;
-        Init();
+        detectionScript = GetComponent<DetectionScript>();
+        parent = transform.root.GetComponent<Entity>();
+        GameObject go = GameObject.FindWithTag("Player");
+        if (go != null)
+        {
+            target = go.GetComponent<Player>();
+        }
+        enemyStats = parent.stats;
     }
 
-    public virtual void Init()
+    public bool detected()
     {
-        attackRange = enemyStats.attackRange;
-        attackSpeed = enemyStats.attackSpeed;
-        damageValue = enemyStats.damageValue;
+        return detectionScript.playerDetected;
     }
-
+  
 }

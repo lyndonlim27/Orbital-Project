@@ -10,14 +10,17 @@ public class Entity : MonoBehaviour
     {
         ATTACK_END,
         CAST_END,
-        ATTACK_TRIGGER,
-        HURT_END
+        MELEE_TRIGGER,
+        HURT_END,
+        WEAP_TRIGGER
     }
 
     //data;
     public EntityStats stats;
     public StateMachine stateMachine;
+    public int angerMultiplier = 1;
     private int cooldown;
+    protected DamageFlicker _flicker;
     public SpriteRenderer spriteRenderer { get; private set; }
 
     [Header("Entity Position")]
@@ -32,24 +35,38 @@ public class Entity : MonoBehaviour
     public GameObject aliveGO { get; private set; }
     public DetectionScript detectionScript;
     public Vector2 startingpos;
+    public Player player;
+    public int health;
+    
 
     public virtual void Start()
     {
+        GameObject go = GameObject.FindWithTag("Player");
+        Debug.Log("This is go");
+        if (go != null)
+        {
+            player = go.GetComponent<Player>();
+        }
 
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        //animator.runtimeAnimatorController = Resources.Load(string.Format("Animations/AnimatorControllers/{0}",stats.animatorname)) as RuntimeAnimatorController;
+        animator.SetBool("Death", false);
         melee = GetComponentInChildren<MeleeComponent>();
         ranged = GetComponentInChildren<RangedComponent>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = stats.sprite;
         startingpos = GetComponent<Transform>().position;
+        _flicker = GetComponent<DamageFlicker>();
         cooldown = 0;
-
+        health = stats.words;
     }
 
     public virtual void Update()
     {
         stateMachine.Update();
-//        Debug.Log("This is current STATE: " +stateMachine.currState);
+        Debug.Log(stateMachine.currState);
+        Debug.Log(cooldown);
     }
 
     public virtual void FixedUpdate()
@@ -59,22 +76,11 @@ public class Entity : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Obstacles" || collision.gameObject.tag == "Enemy")
+        if (collision.gameObject.tag == "Obstacles")
         {
             stateMachine.ChangeState(StateMachine.STATE.ROAMING,null);
         }
     }
-
-    //public void SetVelocityRoam()
-    //{
-    //    rb.velocity = rb.velocity * stats.moveSpeed;
-
-    //}
-
-    //public void SetVelocityChase()
-    //{
-    //    rb.velocity = rb.velocity * stats.chaseSpeed;
-    //}
 
     public void getNewRoamPosition()
     {
@@ -91,7 +97,7 @@ public class Entity : MonoBehaviour
 
     public void moveToTarget(Player player)
     {
-        float steps = stats.chaseSpeed * Time.deltaTime;
+        float steps = stats.chaseSpeed * Time.deltaTime * angerMultiplier;
         transform.position = Vector3.MoveTowards(transform.position,player.transform.position,steps);
         flipFace(player.transform.position);
     }
@@ -103,21 +109,6 @@ public class Entity : MonoBehaviour
         flipFace(startingpos);
     }
 
-    public bool inMeleeRange()
-    {
-        return melee.inRange();
-    }
-
-    public bool inCastRange()
-    {
-        if (ranged == null)
-        {
-            return false;
-        }
-        return ranged.inRange();
-    }
-
-
     public bool isReached()
     {
         return Vector2.Distance(roamPos,transform.localPosition) == 0;
@@ -128,9 +119,17 @@ public class Entity : MonoBehaviour
         return this.cooldown != 0;
     }
 
+    public void tick()
+    {
+        if (cooldown > 0)
+        {
+            cooldown--;
+        }
+    }
+
     public void resetCooldown()
     {
-        this.cooldown = 200;
+        this.cooldown = 250;
     }
 
     public void flipFace(Vector2 target)
@@ -157,40 +156,69 @@ public class Entity : MonoBehaviour
 
     public void meleeAttack()
     {
-        GameObject go = melee.detectionScript.playerDetected;
-        if (go != null)
+        melee.Attack();
+    }
+
+
+    public virtual bool hasWeapon()
+    {
+        return false;
+    }
+
+    public void WeapAttack()
+    {
+        try
         {
-            Player player = go.GetComponent<Player>();
-            melee.Attack(player);
+            Weapon weapon = GetComponentInChildren<Weapon>();
+            weapon.Attack();
+        }
+        catch (System.NullReferenceException)
+        {
+            Debug.Log("No weapon detected");
         }
     }
 
-    public void AnimationBreak(ANIMATION_CODE code)
+    public virtual void AnimationBreak(ANIMATION_CODE code)
     {
         switch (code)
         {
-            case ANIMATION_CODE.ATTACK_TRIGGER:
+            case ANIMATION_CODE.MELEE_TRIGGER:
                 meleeAttack();
                 break;
             case ANIMATION_CODE.ATTACK_END:
                 stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
                 break;
             case ANIMATION_CODE.CAST_END:
+                resetCooldown();
+                Debug.Log("This is inside golem state");
                 stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
-                break;               
+                break;
+            case ANIMATION_CODE.WEAP_TRIGGER:
+                WeapAttack();
+                break;
         }
     }
 
     public void Hurt()
     {
-        Debug.Log(animator);
         animator.SetTrigger("Hurt");
+        _flicker.Flicker();
+        health -= 1; // or use weapon damage;
+        Debug.Log(health);
+        
     }
 
     public void Defeated()
     {
-        StartCoroutine(Wait());
-        animator.SetTrigger("Death");
+        //StartCoroutine(Wait());
+        if (health == 0)
+        {
+            animator.SetBool("Death", true);
+        } else
+        {
+            Hurt();
+        }
+        
     }
 
 
