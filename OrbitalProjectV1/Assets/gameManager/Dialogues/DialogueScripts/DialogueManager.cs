@@ -25,10 +25,10 @@ public class DialogueManager : MonoBehaviour
         if (dialinst != null)
         {
             Debug.Log("Found more than one dialogue manager");
-        } else
-        {
-            dialinst = this;
         }
+        
+            dialinst = this;
+        
 
     }
 
@@ -84,7 +84,7 @@ public class DialogueManager : MonoBehaviour
         // Event System requires we clear it first, then wait
         // for at least one frame before we set the current selected object.
         EventSystem.current.SetSelectedGameObject(null);
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(0f);
         EventSystem.current.SetSelectedGameObject(choices[0].gameObject);
     }
 
@@ -118,6 +118,7 @@ public class DialogueManager : MonoBehaviour
 
     private void ContinueStory()
     {
+        Debug.Log(currentstory.canContinue);
         if (currentstory.canContinue)
         {
             string nextline = currentstory.Continue();
@@ -149,13 +150,14 @@ public class DialogueManager : MonoBehaviour
         }
         else
         {
+           
             StartCoroutine(ExitDialogue());
         }
     }
 
     private IEnumerator ExitDialogue()
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(1f);
         playing = false;
         dialoguePanel.SetActive(false);
     }

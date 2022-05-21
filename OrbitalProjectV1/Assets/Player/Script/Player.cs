@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
     private float _time = 0;
     private float _timeDelay = 0;
     private CheckPointManager manager;
+    private GameObject SettingsMenu;
 
     [Header("Player properties")]
     [SerializeField] private int maxHealth = 100;
@@ -59,12 +60,13 @@ public class Player : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _flicker = GetComponent<DamageFlicker>();
         manager = GameObject.FindGameObjectWithTag("CheckPointManager").GetComponent<CheckPointManager>();
+        SettingsMenu = GameObject.Find("SettingsMenu");
 
         if (_gameObj != null)
         {
             _target = _gameObj.transform;
         }
-
+        
 
         if(manager.getCheckPoint() != null)
         {
@@ -77,7 +79,11 @@ public class Player : MonoBehaviour
     void Update()
     {
         //freeze player's actions when inside dialogue
-        if (DialogueManager.GetInstance().playing)
+        //  if (DialogueManager.GetInstance().playing)
+        //      return;
+        //  }
+
+        if (SettingsMenu.activeInHierarchy)
         {
             return;
         }
@@ -139,10 +145,10 @@ public class Player : MonoBehaviour
     {
         //Move player's position
         //freeze player's movement when inside dialogue
-        if (DialogueManager.GetInstance().playing)
-        {
-            return;
-        }
+//        if (DialogueManager.GetInstance().playing)
+ //       {
+   //         return;
+     //   }
         transform.position = (Vector2) transform.position +_movement.normalized * _moveSpeed * Time.fixedDeltaTime;
         //_rb.MovePosition(_rb.position + _movement.normalized * _moveSpeed * Time.fixedDeltaTime);
     }
