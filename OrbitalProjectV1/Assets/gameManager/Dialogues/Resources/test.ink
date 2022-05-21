@@ -5,10 +5,10 @@ Bring me booze! And I will show you something cool!
     The guard starts jumping in excitement. The warden keys in his pockets starts jumping around.      
         ** You really should'nt be drinking booze while on guard.
                 
-        ** I am Eren of the Nameless Galaxy and it is truly embarassing to be captured by you lowly slaves
+        ** I am Eren of the Nameless Galaxy!
                 
-        ** You looked like you haven't drank booze for a long time! Do you want more?
-            The guard loses his balance and the keys dropped onto the ground.
+        ** You looked like you haven't drank booze for a long time! Do you want more? #NPC
+            The guard loses his balance and the keys dropped onto the ground.   
                     -> END
         
 * How long have you been here?

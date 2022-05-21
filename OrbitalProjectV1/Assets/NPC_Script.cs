@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class NPC_Script : MonoBehaviour
 {
@@ -14,5 +16,15 @@ public class NPC_Script : MonoBehaviour
     void Update()
     {
         
+    }
+
+    internal void Fulfill()
+    {
+        ItemTextDisplayer itd = GetComponentInChildren<ItemTextDisplayer>();
+        itd.enabled = true;
+        itd.GetComponentInParent<SpriteRenderer>().enabled = true;
+        itd.GetComponent<TextMeshPro>().enabled = true;
+        GetComponentInChildren<DialogueDetection>().enabled = false;
+        this.gameObject.SetActive(false);
     }
 }

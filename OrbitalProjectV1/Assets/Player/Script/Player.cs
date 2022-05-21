@@ -96,26 +96,6 @@ public class Player : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            UnlockableDoor door = GameObject.FindObjectOfType<UnlockableDoor>();
-            Debug.Log(door);
-            if (door != null)
-            {
-                door.UnlockDoor();
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            UnlockableDoor door = GameObject.FindObjectOfType<UnlockableDoor>();
-            Debug.Log(door);
-            if (door != null)
-            {
-                door.LockDoor();
-            }
-        }
-
         if (_time >= _timeDelay)
         {
             _movement.x = Input.GetAxisRaw("Horizontal");
@@ -132,7 +112,7 @@ public class Player : MonoBehaviour
 
     private void CheckCombat()
     {
-        for (int i = (int)KeyCode.A; i < (int)KeyCode.Z; i++)
+        for (int i = (int)KeyCode.A; i <= (int)KeyCode.Z; i++)
         {
             if (Input.GetKeyDown((KeyCode)i))
             {

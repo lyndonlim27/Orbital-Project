@@ -9,21 +9,24 @@ using System.Linq;
 public class TextDisplayer : MonoBehaviour
 {
     public Player player;
-    public TextMeshPro wordtoDisplay = null;
+    public TextMeshPro wordtoDisplay;
     public string remainingword = "";
     public string currentword = "";
     public WordBank wordBank;
+    //change to gameobject ba
     public Entity entity;
     protected float minDist;
     public bool IsVisible { get; private set; }
-    int currentcounter = 0;
+    protected int currentcounter = 0;
     
     private Dictionary<char, string> dict = new Dictionary<char, string>();
 
     protected virtual void Awake()
     {
-        IsVisible = false;
-        wordtoDisplay.enabled = IsVisible;
+
+        wordtoDisplay.enabled = !outOfRange();
+     
+        
         for (char c = 'a'; c <= 'z'; c++)
         {
             int val = c - 'a' + 16;
@@ -42,7 +45,7 @@ public class TextDisplayer : MonoBehaviour
 
     }
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         entity = GetComponentInParent<Entity>();
         GameObject gameObject = GameObject.FindGameObjectWithTag("Player");
@@ -54,7 +57,7 @@ public class TextDisplayer : MonoBehaviour
     }
 
     
-    private void GenerateNewWord()
+    protected virtual void GenerateNewWord()
     {
 
         // generate a new word from wordbank;
@@ -63,34 +66,22 @@ public class TextDisplayer : MonoBehaviour
         
     }
 
-    private void SetRemainingWord(string currentword)
+    protected void SetRemainingWord(string currentword)
     {
         remainingword = currentword;
         wordtoDisplay.text = ConvertToCustomSprites(remainingword);
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
-        CheckPlayerNearby();
-        wordtoDisplay.enabled = IsVisible;
+        wordtoDisplay.enabled = (!outOfRange());
         CheckInput();
-    }
-
-
-    private void CheckPlayerNearby()
-    {
-        if (Vector2.Distance(player.transform.position, entity.transform.position) < minDist)
-        {
-            IsVisible = true;
-        } else
-        {
-            IsVisible = false;
-        }
+        Debug.Log(currentcounter);
     }
     
 
-    private void CheckInput()
+    protected virtual void CheckInput()
     {
         if (outOfRange() || entity.stateMachine.currState == StateMachine.STATE.STOP)
         {
@@ -98,8 +89,8 @@ public class TextDisplayer : MonoBehaviour
             return;
         }
         // only accepting single keypress, multikeypress too troublesome to handle;
-
-        for (int i = (int)KeyCode.A; i < (int)KeyCode.Z; i++)
+        
+        for (int i = (int)KeyCode.A; i <= (int)KeyCode.Z; i++)
         {
             if (Input.GetKeyDown((KeyCode)i)) {
                 EnterLetter((char)i);
@@ -109,7 +100,7 @@ public class TextDisplayer : MonoBehaviour
 
     }
 
-    private void EnterLetter(char inputchar)
+    protected virtual void EnterLetter(char inputchar)
     {
         if (LetterCorrect(inputchar))
         { 
@@ -138,11 +129,12 @@ public class TextDisplayer : MonoBehaviour
 
     }
 
-    private bool outOfRange()
+    protected virtual bool outOfRange()
     {
         if (player != null)
         {
-            return Vector2.Distance(player.transform.position, entity.transform.position) > 7f;
+
+            return Vector2.Distance(player.transform.position, this.transform.position) > minDist;
 
         } else
         {
@@ -151,7 +143,7 @@ public class TextDisplayer : MonoBehaviour
         
     }
 
-    private bool LetterCorrect(char let)
+    protected bool LetterCorrect(char let)
     {
         return char.IsLower(let) && remainingword.IndexOf(let) == currentcounter;
 
@@ -164,12 +156,12 @@ public class TextDisplayer : MonoBehaviour
         return result;
     }
 
-    private void ResetCounter()
+    protected void ResetCounter()
     {
         currentcounter = 0;
     }
 
-    private void ReplaceLetter()
+    protected void ReplaceLetter()
     {
         SetRemainingWord(ReplaceFirstOccurrence(remainingword,remainingword[currentcounter],Char.ToUpper(remainingword[currentcounter])));
     }
@@ -181,7 +173,7 @@ public class TextDisplayer : MonoBehaviour
 
     }
 
-    private bool isWordPartialComplete()
+    protected bool isWordPartialComplete()
     {
 
         return remainingword.Any(c => char.IsUpper(c));

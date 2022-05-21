@@ -18,6 +18,7 @@ public class DialogueManager : MonoBehaviour
     private Story currentstory;
     [SerializeField] private GameObject[] choices;
     private TextMeshProUGUI[] choicesText;
+    public bool dialoguecomplete { get; private set; }
 
     private void Awake()
     {
@@ -28,6 +29,7 @@ public class DialogueManager : MonoBehaviour
         {
             dialinst = this;
         }
+
     }
 
     // for getting the instance of dialmanager;
@@ -82,7 +84,7 @@ public class DialogueManager : MonoBehaviour
         // Event System requires we clear it first, then wait
         // for at least one frame before we set the current selected object.
         EventSystem.current.SetSelectedGameObject(null);
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(.5f);
         EventSystem.current.SetSelectedGameObject(choices[0].gameObject);
     }
 
@@ -120,8 +122,30 @@ public class DialogueManager : MonoBehaviour
         {
             string nextline = currentstory.Continue();
             StartCoroutine(TypeSentence(nextline));
-
             displayChoices();
+            //if (currentstory.currentTags.Contains("NPC"))
+            //{
+            //    Debug.Log("Yes");
+            //    Debug.Log(currentstory.currentTags[currentstory.currentTags.Count - 1]);
+            //    //GameObject.Find("NPC").GetComponent<NPC_Script>().Fulfill();
+
+            //}
+            //would like to use this instead in the future when there is more npcs. 
+            //try
+            //{
+                //maybe use a list to store all npcs possible in current map.
+                //then check if currenttags contain any of the npcs, if yes, then we just get that currenttag and return the result
+                //of that movement and disable the dialoguedetection
+            //    GameObject.Find(currentstory.currentTags[currentstory.currentTags.Count])
+            //    .GetComponent<ItemTextDisplayer>()
+            //    .gameObject
+            //    .SetActive(true);
+            //} catch (NullReferenceException err)
+            //{
+            //    //or break game
+            //    Debug.Log("Null reference");
+            //}
+            
         }
         else
         {
