@@ -22,6 +22,7 @@ public class Entity : MonoBehaviour
     private int cooldown;
     protected DamageFlicker _flicker;
     public SpriteRenderer spriteRenderer { get; private set; }
+    public bool isDead { get; private set; }
 
     [Header("Entity Position")]
     public Vector2 roamPos;
@@ -42,7 +43,6 @@ public class Entity : MonoBehaviour
     public virtual void Start()
     {
         GameObject go = GameObject.FindWithTag("Player");
-        Debug.Log("This is go");
         if (go != null)
         {
             player = go.GetComponent<Player>();
@@ -59,6 +59,7 @@ public class Entity : MonoBehaviour
         startingpos = GetComponent<Transform>().position;
         _flicker = GetComponent<DamageFlicker>();
         cooldown = 0;
+        isDead = false;
         health = stats.words;
     }
 
@@ -213,6 +214,7 @@ public class Entity : MonoBehaviour
         //StartCoroutine(Wait());
         if (health == 0)
         {
+            isDead = true;
             animator.SetBool("Death", true);
         } else
         {

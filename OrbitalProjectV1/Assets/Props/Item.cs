@@ -2,11 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu]
-public class Item : ScriptableObject
+public class Item : MonoBehaviour
 {
-    public string _name;
-    public int _count;
-    public float mindist;
+    public ItemStats itemStats;
+    private SpriteRenderer spriteRenderer;
+
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
+    }
+
+    private void Start()
+    {
+        this.spriteRenderer.sprite = itemStats.sprite;
+    }
+
+    public void setItemStats(ItemStats stats)
+    {
+        this.itemStats = stats;
+    }
 
 }

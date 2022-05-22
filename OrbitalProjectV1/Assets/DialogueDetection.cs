@@ -9,6 +9,7 @@ public class DialogueDetection : MonoBehaviour
     DetectionScript detectionScript;
     [SerializeField] private TextAsset inkJson;
     private Boolean canProceed;
+    private Player player;
 
     // Start is called before the first frame update
 
@@ -16,11 +17,13 @@ public class DialogueDetection : MonoBehaviour
     {
         dialogueAlert.SetActive(false);
         canProceed = false;
+        
     }
 
     void Start()
     {
         detectionScript = GetComponent<DetectionScript>();
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -28,15 +31,12 @@ public class DialogueDetection : MonoBehaviour
     {
         if (detectionScript.playerDetected && !DialogueManager.GetInstance().playing)
         {
-            Player player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
             if (player != null && !player.isDead() && !player.inCombat && canProceed)
             {
                 dialogueAlert.SetActive(true);
                 Debug.Log("Dafuq");
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    Debug.Log("???");
-                    Debug.Log(DialogueManager.GetInstance().playing);
                     DialogueManager.GetInstance().enterDialogue(inkJson);
                 }
             } else

@@ -57,7 +57,6 @@ MonoBehaviour:
   currentword: 
   wordBank: {fileID: 0}
   entity: {fileID: 0}
-  item: {fileID: 11400000, guid: 95699fdfdd44f44f48c605e5f16e09d7, type: 2}
 --- !u!23 &2027396501227417922
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -202,6 +201,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9041435796475656834}
   - component: {fileID: 6340429215453493762}
+  - component: {fileID: 1489572567439864141}
   m_Layer: 0
   m_Name: Key
   m_TagString: Untagged
@@ -277,3 +277,16 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1489572567439864141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6755611652956091329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edb22204958fc4844a6e89da4924f29d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemStats: {fileID: 11400000, guid: 95699fdfdd44f44f48c605e5f16e09d7, type: 2}

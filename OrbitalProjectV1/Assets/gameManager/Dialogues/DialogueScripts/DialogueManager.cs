@@ -18,6 +18,8 @@ public class DialogueManager : MonoBehaviour
     private Story currentstory;
     [SerializeField] private GameObject[] choices;
     private TextMeshProUGUI[] choicesText;
+    // probably use a list next time;
+    private NPC npc;
 
     private void Awake()
     {
@@ -47,7 +49,10 @@ public class DialogueManager : MonoBehaviour
             choicesText[i] = choices[i].GetComponentInChildren<TextMeshProUGUI>();
         }
 
-        
+        npc = GameObject.Find("NPC").GetComponent<NPC>();
+
+
+
 
     }
 
@@ -128,7 +133,7 @@ public class DialogueManager : MonoBehaviour
                 //GameObject.Find("NPC")
                 //    .GetComponentInChildren<DialogueDetection>()
                 //    .enabled = false;
-                GameObject.Find("NPC").GetComponent<NPC_Script>().Fulfill();
+                npc.Fulfill();
             }
             
             

@@ -4,17 +4,25 @@ using UnityEngine;
 
 public class ItemTextDisplayer : TextDisplayer
 {
-    [SerializeField] Item item;
+    SpriteRenderer spriteRenderer;
+    ItemStats _itemstats;
+    private RoomManager roomManager;
+
+
     protected override void Start()
     {
-        this.currentword = item._name;
+        spriteRenderer = GetComponentInParent<SpriteRenderer>();
+        _itemstats = GetComponentInParent<Item>().itemStats;
+        this.currentword = _itemstats._name;
         GameObject gameObject = GameObject.FindGameObjectWithTag("Player");
         if (gameObject != null)
         {
             this.player = gameObject.GetComponent<Player>();
         }
+        roomManager = GameObject.FindObjectOfType<RoomManager>();
         SetRemainingWord(currentword);
-        minDist = item.mindist;
+        minDist = _itemstats.mindist;
+
     }
 
     
@@ -44,9 +52,9 @@ public class ItemTextDisplayer : TextDisplayer
             currentcounter++;
             if (isWordComplete())
             {
-                RoomManager roomManager = GameObject.FindObjectOfType<RoomManager>();
-                roomManager.FulfillCondition(item._name);
-                this.gameObject.GetComponentInParent<SpriteRenderer>().enabled = false;
+                
+                roomManager.FulfillCondition(_itemstats._name);
+                spriteRenderer.enabled = false;
                 this.gameObject.SetActive(false);
 
             }
