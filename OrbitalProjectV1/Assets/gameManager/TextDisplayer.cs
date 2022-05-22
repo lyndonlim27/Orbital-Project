@@ -77,7 +77,6 @@ public class TextDisplayer : MonoBehaviour
     {
         wordtoDisplay.enabled = (!outOfRange());
         CheckInput();
-        Debug.Log(currentcounter);
     }
     
 

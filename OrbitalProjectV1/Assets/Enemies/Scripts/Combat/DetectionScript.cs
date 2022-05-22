@@ -5,11 +5,11 @@ using UnityEngine;
 public class DetectionScript : MonoBehaviour
 {
     public bool playerDetected;
-    private CircleCollider2D col;
+    private Collider2D col;
 
     private void Awake()
     {
-        col = GetComponent<CircleCollider2D>();
+        col = GetComponent<Collider2D>();
     }
 
  

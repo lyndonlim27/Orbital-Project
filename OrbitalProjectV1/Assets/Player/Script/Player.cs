@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     private float _time = 0;
     private float _timeDelay = 0;
     private CheckPointManager manager;
-    private GameObject SettingsMenu;
+    
 
     [Header("Player properties")]
     [SerializeField] private int maxHealth = 100;
@@ -33,6 +33,7 @@ public class Player : MonoBehaviour
     [Header("Player UI")]
     [SerializeField] private GameOver _gameOver;
     [SerializeField] private HealthBar healthBar;
+    [SerializeField] private GameObject SettingsMenu;
     public bool inCombat { get; private set; }
 
     private void Awake()
@@ -60,7 +61,7 @@ public class Player : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _flicker = GetComponent<DamageFlicker>();
         manager = GameObject.FindGameObjectWithTag("CheckPointManager").GetComponent<CheckPointManager>();
-        SettingsMenu = GameObject.Find("SettingsMenu");
+
 
         if (_gameObj != null)
         {

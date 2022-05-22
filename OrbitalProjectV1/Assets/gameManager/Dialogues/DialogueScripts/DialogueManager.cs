@@ -76,7 +76,7 @@ public class DialogueManager : MonoBehaviour
             choices[i].gameObject.SetActive(false);
         }
 
-        StartCoroutine(SelectFirstChoice());
+       // StartCoroutine(SelectFirstChoice());
     }
 
     private IEnumerator SelectFirstChoice()
@@ -84,7 +84,7 @@ public class DialogueManager : MonoBehaviour
         // Event System requires we clear it first, then wait
         // for at least one frame before we set the current selected object.
         EventSystem.current.SetSelectedGameObject(null);
-        yield return new WaitForSeconds(0f);
+        yield return new WaitForSeconds(0.5f);
         EventSystem.current.SetSelectedGameObject(choices[0].gameObject);
     }
 
@@ -157,7 +157,7 @@ public class DialogueManager : MonoBehaviour
 
     private IEnumerator ExitDialogue()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         playing = false;
         dialoguePanel.SetActive(false);
     }

@@ -26,16 +26,17 @@ public class DialogueDetection : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (detectionScript.playerDetected && !DialogueManager.GetInstance().playing)
         {
+            
             Player player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+            Debug.Log(canProceed);
             if (player != null && !player.isDead() && !player.inCombat && canProceed)
             {
                 dialogueAlert.SetActive(true);
-                Debug.Log("Dafuq");
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    Debug.Log("???");
                     Debug.Log(DialogueManager.GetInstance().playing);
                     DialogueManager.GetInstance().enterDialogue(inkJson);
                 }
