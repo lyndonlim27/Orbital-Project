@@ -4,20 +4,30 @@ using UnityEngine;
 
 public class R1_Mgr : RoomManager
 {
-    public override void FulfillCondition(string key)
+    private DialogueDetection dd;
+    private UnlockableDoor door;
+    protected override void Awake()
     {
-        this.conditions[key] = true;
+        base.Awake();
+        RoomManager.conditions.Add("key");
+        this.maxEnemies = 0;
+        dd = GameObject.Find("NPC").GetComponentInChildren<DialogueDetection>();
+        door = GameObject.FindObjectOfType<UnlockableDoor>();
+
     }
 
-    private void Awake()
+    private void Start()
     {
-        this.conditions = new Dictionary<string, bool>();
-        this.conditions.Add("booze", false);
-        this.conditions.Add("key", false);
+          
     }
 
     private void Update()
     {
+        if (!this.activated)
+        {
+            return;
+        }
+        
         RoomChecker();
         CheckDialogue();
     }
@@ -25,21 +35,33 @@ public class R1_Mgr : RoomManager
     private void RoomChecker()
     {
         //check condition 1
-        if (conditions["booze"])
+
+        if (!RoomManager.conditions.Contains("booze"))
         {
-            GameObject.Find("NPC").GetComponentInChildren<DialogueDetection>().Fulfilled();
+            
+            if (dd != null)
+            {
+                dd.Fulfilled();
+                
+            }
         }
 
         //check condition 2 and onwards;
-        if (conditions["key"])
+        if (!RoomManager.conditions.Contains("key"))
         {
-            GameObject.FindObjectOfType<UnlockableDoor>().UnlockDoor();
+            door.UnlockDoor();
         }
 
         
 
     }
 
-
+    protected override void InitializeRoom()
+    {
+        base.InitializeRoom();
+        //maybe wanna do other stuffs; 
+    }
 
 }
+
+

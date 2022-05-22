@@ -107,10 +107,7 @@ public class TextDisplayer : MonoBehaviour
             currentcounter++;
             if (isWordComplete())
             {
-                player.Shoot(entity);
-                ResetCounter();
-                GenerateNewWord();
-                return;
+                
                 // generate new word and not inst animation for multi-length monsters
                 //GenerateNewWord();
             }

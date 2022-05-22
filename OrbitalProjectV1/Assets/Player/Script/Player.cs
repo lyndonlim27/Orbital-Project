@@ -19,8 +19,6 @@ public class Player : MonoBehaviour
     private DamageFlicker _flicker;
     private float _time = 0;
     private float _timeDelay = 0;
-    private CheckPointManager manager;
-    
 
     [Header("Player properties")]
     [SerializeField] private int maxHealth = 100;
@@ -33,7 +31,6 @@ public class Player : MonoBehaviour
     [Header("Player UI")]
     [SerializeField] private GameOver _gameOver;
     [SerializeField] private HealthBar healthBar;
-    [SerializeField] private GameObject SettingsMenu;
     public bool inCombat { get; private set; }
 
     private void Awake()
@@ -56,35 +53,21 @@ public class Player : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         GameObject _gameObj = GameObject.FindGameObjectWithTag("Enemy");
+        if(_gameObj != null)
+        {
+            _target = _gameObj.transform;
+        }
         _weaponManager = this.gameObject.transform.GetChild(0).gameObject.GetComponent<WeaponPickup>();
         _currWeapon = _weaponManager.ActiveWeapon().GetComponent<Weapon>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _flicker = GetComponent<DamageFlicker>();
-        manager = GameObject.FindGameObjectWithTag("CheckPointManager").GetComponent<CheckPointManager>();
-
-
-        if (_gameObj != null)
-        {
-            _target = _gameObj.transform;
-        }
-        
-
-        if(manager.getCheckPoint() != null)
-        {
-            Debug.Log("test");
-            this.transform.position = manager.getCheckPoint();
-        }
     }
 
     // Update is called once per frame
     void Update()
     {
         //freeze player's actions when inside dialogue
-        //  if (DialogueManager.GetInstance().playing)
-        //      return;
-        //  }
-
-        if (SettingsMenu.activeInHierarchy)
+        if (DialogueManager.GetInstance().playing)
         {
             return;
         }
@@ -110,8 +93,10 @@ public class Player : MonoBehaviour
             if (_currHealth > 0)
             {
                 TakeDamage(selfDamage);
+                _rb.AddForce(transform.forward * 15000 * Time.fixedDeltaTime, ForceMode2D.Impulse);
             }
         }
+
 
         if (_time >= _timeDelay)
         {
@@ -146,10 +131,12 @@ public class Player : MonoBehaviour
     {
         //Move player's position
         //freeze player's movement when inside dialogue
-//        if (DialogueManager.GetInstance().playing)
- //       {
-   //         return;
-     //   }
+        if (DialogueManager.GetInstance().playing)
+        {
+            return;
+        }
+
+        
         transform.position = (Vector2) transform.position +_movement.normalized * _moveSpeed * Time.fixedDeltaTime;
         //_rb.MovePosition(_rb.position + _movement.normalized * _moveSpeed * Time.fixedDeltaTime);
     }
