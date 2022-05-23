@@ -5,15 +5,15 @@ using UnityEngine;
 public class TutorialR1Manager : RoomManager
 {
     private DialogueDetection dd;
-    private UnlockableDoor door;
+    private UnlockableDoor door1;
     private Player player;
     protected override void Awake()
     {
         base.Awake();
-        RoomManager.conditions.Add("cannon");
+     //   RoomManager.conditions.Add("cannon");
         this.maxEnemies = 0;
         dd = GameObject.Find("NPC").GetComponentInChildren<DialogueDetection>();
-        door = GameObject.Find("UnlockableDoor1").GetComponent<UnlockableDoor>();
+        door1 = GameObject.Find("UnlockableDoor1").GetComponent<UnlockableDoor>();
         player = GameObject.Find("Player").GetComponent<Player>();
 
     }
@@ -41,10 +41,16 @@ public class TutorialR1Manager : RoomManager
         if (!RoomManager.conditions.Contains("cannon"))
         {
             player.PickupItem("Cannon");
-            door.UnlockDoor();
+            door1.UnlockDoor();
             Debug.Log("GOOSE");
         }
 
+        if (!RoomManager.conditions.Contains("laser"))
+        {
+            player.PickupItem("Laser");
+            door1.UnlockDoor();
+
+        }
 
 
     }
