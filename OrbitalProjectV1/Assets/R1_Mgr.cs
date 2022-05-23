@@ -10,7 +10,6 @@ public class R1_Mgr : RoomManager
     {
         base.Awake();
         RoomManager.conditions.Add("key");
-        this.maxEnemies = 0;
         dd = GameObject.Find("NPC").GetComponentInChildren<DialogueDetection>();
         door = GameObject.FindObjectOfType<UnlockableDoor>();
 

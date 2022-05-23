@@ -274,16 +274,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 778092263519708274, guid: 28cf85281a8f64b7989de20590c73ce9, type: 3}
-      propertyPath: entity
-      value: 
-      objectReference: {fileID: 7809617704153707570}
     - target: {fileID: 778092263519708278, guid: 28cf85281a8f64b7989de20590c73ce9, type: 3}
       propertyPath: m_Name
       value: MonsterTextDisplayer
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 778092263519708274, guid: 28cf85281a8f64b7989de20590c73ce9, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 28cf85281a8f64b7989de20590c73ce9, type: 3}
 --- !u!1 &443843115 stripped
 GameObject:
@@ -306,7 +301,7 @@ MonoBehaviour:
   wordtoDisplay: {fileID: 443843117}
   remainingword: 
   currentword: 
-  wordBank: {fileID: 0}
+  wordBank: {fileID: 8799008058605431207, guid: 4bab73473dbf94538acdf11f87a2b66a, type: 3}
   entity: {fileID: 7809617704153707570}
 --- !u!224 &443843116 stripped
 RectTransform:

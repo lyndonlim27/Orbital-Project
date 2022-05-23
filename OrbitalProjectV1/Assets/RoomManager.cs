@@ -8,23 +8,52 @@ public abstract class RoomManager : MonoBehaviour
     public static List<string> conditions;
     protected List<Entity> entities;
     protected List<NPC> NPCS;
-    [SerializeField] protected List<SpawnArea> spawnAreas;
+    protected List<GameObject> spawnAreas;
+    
     [SerializeField] Entity[] enemyPrefabs;
     [SerializeField] Item itemPrefab;
     [SerializeField] ItemStats[] itemStats;
-
     [SerializeField] NPC[] npcPrefabs;
+    [SerializeField] LayerMask spawnMask;
+
+    //lets fix this part for now
+    [Header("Randomizing factors")] //maybe next time can use delanauy triang
+    [Range(0, 10)]
+    [SerializeField] protected int Enemyspawns = 0; //set a default of 0
+
+    [Range(0, 10)]
+    [SerializeField] protected int maxEnemies = 0;
+
+    [Range(0f, 10f)]
+    [SerializeField] protected float minRadius = 2f;
+
+    [Range(0f, 10f)]
+    [SerializeField] protected float maxRadius = 7f;
+
     private Collider2D roomArea;
     protected bool activated;
-    protected int maxEnemies;
+    // basically minbounds and maxbounds are wrt center of the object. 
+    private Vector2 areaminBound;
+    private Vector2 areamaxBound;
+    private float offset = 3f;
+    private List<float> RandomRadiuses;
+    
+
 
     protected virtual void Awake()
     {
         roomArea = GetComponent<Collider2D>();
+        spawnAreas = new List<GameObject>();
         activated = false;
+        RandomRadiuses = new List<float>();
         conditions = new List<string>();
+        this.areaminBound = roomArea.bounds.min;
+        this.areamaxBound = roomArea.bounds.max;
+        entities = new List<Entity>();
+        GenerateRandomSpawns(minRadius,maxRadius);
+        Debug.Log(spawnAreas.Count);
     }
-   
+
     public virtual void FulfillCondition(string key)
     {
 
@@ -34,18 +63,67 @@ public abstract class RoomManager : MonoBehaviour
     //@param count : number of enemies to spawn
     protected void SpawnEnemies(int count)
     {
-        for (int i = 0; i < spawnAreas.Count; i++)
+
+        for (int j = 0; j < maxEnemies; j++)
         {
-            Bounds bounds = spawnAreas[i].col.bounds;
-            float offsetX = Random.Range(-bounds.extents.x, bounds.extents.x);
-            float offsetY = Random.Range(-bounds.extents.y, bounds.extents.y);
-            for (int j = 0; j < spawnAreas[j].enemycounts; i++)
-            {
-                Entity entity = GameObject.Instantiate(enemyPrefabs[Random.Range(0, enemyPrefabs.Length)], new Vector2(offsetX, offsetY), Quaternion.identity);
-                entities.Add(entity);
-            }
+
+
+            int randNum = Random.Range(0, spawnAreas.Count);
+            CircleCollider2D col = spawnAreas[randNum].GetComponent<CircleCollider2D>();
+            Vector3 randomPoint = GetRandomPoint(col.bounds.min, col.bounds.max);
+            Entity entity = Instantiate(enemyPrefabs[Random.Range(0, enemyPrefabs.Length)], randomPoint, Quaternion.identity);
+            entities.Add(entity);
         }
+        
     }
+
+    //get randompoint within the radius
+    private Vector2 GetRandomPoint(Vector2 minBound, Vector2 maxBound)
+    {
+        Vector2 randomPoint;
+        do
+        {
+            //AABB axis - 4 possible bounds, top left, top right, bl, br
+            //tl = min.x, max.y;
+            //bl = min.x, min.y;
+            //tr = max.x, max.y;
+            //br = max.x, min.y;
+            //anywhere within these 4 bounds are possible pts;
+
+            randomPoint = new Vector2(
+            Random.Range(minBound.x, maxBound.x),
+            Random.Range(minBound.y, maxBound.y));
+
+        } while (!roomArea.OverlapPoint(randomPoint));
+        return randomPoint;
+    }
+
+
+    private void GenerateRandomSpawns(float minRadius, float maxRadius)
+    {
+        Vector2 randPoint;
+        float randRadius;
+        do
+        {
+            randPoint = GetRandomPoint(areaminBound, areamaxBound);
+            randRadius = Random.Range(minRadius, maxRadius);
+            float offset = 3f; //to provide a greater spread between areas;
+            if (Physics2D.OverlapCircle(randPoint, randRadius + offset, spawnMask) == null)
+            {
+                var col = CreateCollider(randPoint, randRadius);
+                
+                spawnAreas.Add(col);
+                Enemyspawns--;
+            }
+            else
+            {
+                Debug.Log("No position found" + randPoint + randRadius);
+            }
+
+        } while (Enemyspawns > 0);
+        
+    }
+
 
     protected void SpawnObjects()
     {
@@ -54,11 +132,9 @@ public abstract class RoomManager : MonoBehaviour
         for(int i = 0; i < itemStats.Length; i++)
         {
             ItemStats _item = itemStats[i];
-            Bounds bounds = roomArea.bounds;
-            float offsetX = Random.Range(bounds.min.x, bounds.max.x);
-            float offsetY = Random.Range(bounds.min.y, bounds.max.y);
+            Vector2 randomPoint = GetRandomPoint(areaminBound,areamaxBound);
             Item initprop = GameObject.Instantiate(itemPrefab,
-                                                          new Vector2(offsetX, offsetY),
+                                                          randomPoint,
                                                           Quaternion.identity);
             initprop.setItemStats(_item);
             if (_item.conditional == 1)
@@ -140,6 +216,16 @@ public abstract class RoomManager : MonoBehaviour
             
         }
         
+    }
+
+    private GameObject CreateCollider(Vector2 randomPoint, float rad)
+    {
+        GameObject spawnArea = new GameObject("Area" + Enemyspawns);
+        CircleCollider2D col = spawnArea.AddComponent<CircleCollider2D>() as CircleCollider2D;  
+        col.radius = rad;
+        col.transform.position = randomPoint;
+        spawnArea.layer = LayerMask.NameToLayer("spawnArea");
+        return spawnArea;
     }
 
 }

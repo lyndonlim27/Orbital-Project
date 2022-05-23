@@ -610,6 +610,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: textUI
       objectReference: {fileID: 0}
+    - target: {fileID: 668735066680347944, guid: 28da4d3c6f2c64449b295de3a684d089, type: 3}
+      propertyPath: wordBank
+      value: 
+      objectReference: {fileID: 8799008058605431207, guid: 4bab73473dbf94538acdf11f87a2b66a, type: 3}
+    - target: {fileID: 668735066680347944, guid: 28da4d3c6f2c64449b295de3a684d089, type: 3}
+      propertyPath: wordtoDisplay
+      value: 
+      objectReference: {fileID: 5979670690665465791}
     - target: {fileID: 4552204210542264927, guid: 28da4d3c6f2c64449b295de3a684d089, type: 3}
       propertyPath: entity
       value: 
@@ -713,3 +721,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8734421209421692764, guid: 28da4d3c6f2c64449b295de3a684d089, type: 3}
   m_PrefabInstance: {fileID: 6879708332353468548}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5979670690665465791 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 974374596974690107, guid: 28da4d3c6f2c64449b295de3a684d089, type: 3}
+  m_PrefabInstance: {fileID: 6879708332353468548}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
