@@ -66,8 +66,6 @@ public class Entity : MonoBehaviour
     public virtual void Update()
     {
         stateMachine.Update();
-        Debug.Log(stateMachine.currState);
-        Debug.Log(cooldown);
     }
 
     public virtual void FixedUpdate()

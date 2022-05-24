@@ -247,8 +247,11 @@ namespace Ink.Runtime
 
 		public bool canContinue {
 			get {
-				return !currentPointer.isNull && !hasError;
-			}
+
+                return !currentPointer.isNull && !hasError;
+
+
+            }
 		}
             
         public bool hasError

@@ -28,6 +28,7 @@ class RoamState : StateClass
 
         if (entity.detectionScript.playerDetected)
         {
+            
             stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
 
         } else if (entity.isReached())

@@ -26,7 +26,7 @@ public class Weapon : MonoBehaviour
         if(player)
         {
         player.PickupItem(this.gameObject.name);
-        Destroy(this.gameObject);
+       // Destroy(this.gameObject);
         }
        
     }
