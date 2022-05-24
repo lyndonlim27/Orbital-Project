@@ -4,13 +4,9 @@ using UnityEngine;
 
 public class MoveCameraAuto : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
+    /**
+     * Move Camera with time.
+     */
     void Update()
     {
         transform.Translate(1 * Time.deltaTime, 0, 0);

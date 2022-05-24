@@ -9,6 +9,6 @@ public class EnemyData : EntityData
     public float chaseSpeed;
     public float attackRange;
     public float attackSpeed;
-    public List<Spell> spells;
+    public List<Projectile> spells;
     public string animatorname;
 }

@@ -3,26 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/**
+ * HealthBar of the Player.
+ */
 public class HealthBar : MonoBehaviour
 {
     [SerializeField] private Slider slider;
     [SerializeField] private Gradient gradient;
     [SerializeField] private Image fill;
     [SerializeField] private Text percentage;
-  
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    /**
+     * Setting Max Health in the UI.
+     */
     public void SetMaxHealth(int health)
     {
         slider.maxValue = health;
@@ -31,6 +24,9 @@ public class HealthBar : MonoBehaviour
         percentage.text = health.ToString() + "%";
     }
 
+    /**
+     * For changing the health UI upon damaged.
+     */
     public void SetHealth(int health)
     {
         slider.value = health;

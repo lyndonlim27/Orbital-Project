@@ -4,8 +4,16 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+
+/**
+ * GameOver UI Page.
+ */
 public class GameOver : MonoBehaviour
-{   
+{
+
+    /**
+     * Disable all active gameObjects and Setup GameOver Page.
+     */
     public void Setup()
     {
         GameObject[] allObjects = FindObjectsOfType<GameObject>();
@@ -22,11 +30,18 @@ public class GameOver : MonoBehaviour
 
     }
 
+
+    /**
+     * Restart Button.
+     */
     public void RestartButton()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    /**
+     * Exit Button.
+     */
     public void ExitButton()
     {
         SceneManager.LoadScene("MainMenu");

@@ -2,20 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ * Parallax Camera Movement.
+ */
 public class Parallax : MonoBehaviour
 {
     private float _length, _startPos;
     [SerializeField] private GameObject cam;
     [SerializeField] private float _parallaxEffect;
 
-    // Start is called before the first frame update
+    /**
+     * Initialize and fit sprite to window size.
+     */
     void Start()
     {
         _startPos = transform.position.x;
         _length = GetComponent<SpriteRenderer>().bounds.size.x;
     }
 
-    // Update is called once per frame
+    /**
+     * Move camera view.
+     */
     void FixedUpdate()
     {
         float temp = cam.transform.position.x * (1 - _parallaxEffect);

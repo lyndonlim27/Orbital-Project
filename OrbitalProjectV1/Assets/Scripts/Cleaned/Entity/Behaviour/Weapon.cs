@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/**
+ * Weapon Behaviour.
+ */
 public class Weapon : MonoBehaviour
 {
     public Animator _animator { get; private set; }
@@ -19,20 +22,24 @@ public class Weapon : MonoBehaviour
     }
 
 
-    //When weaopn collides with player, pick up weapon
+    /**
+     * When weaopn collides with player, pick up weapon.
+     */
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Player player = collision.GetComponent<Player>();
+
         if(player)
         {
         player.PickupItem(this.gameObject.name);
-       // Destroy(this.gameObject);
         }
        
     }
     
 
-    //Turns the weapon direction
+    /** 
+     * Turns the weapon direction.
+     */
     public void TurnWeapon(Vector2 movement)
     {
         //Turns the weapon to the same direction as the player
@@ -41,28 +48,11 @@ public class Weapon : MonoBehaviour
         _animator.SetFloat("Speed", movement.magnitude);
     }
 
-    //Turns the weapon direction towards the enemy and shoot
-    //public void Shoot(Entity enemy)
-    public void Shoot(Entity enemy, Vector2 point2Target)
+    /** 
+     * Turns the weapon direction towards the enemy and shoot
+     */
+    public void Shoot(Enemy enemy, Vector2 point2Target)
     {
-        /*
-        float _x = enemy.transform.position.x;
-        float _y = enemy.transform.position.y;
-        _animator.SetFloat("Horizontal", Mathf.RoundToInt(_x));
-        _animator.SetFloat("Vertical", Mathf.RoundToInt(_y));
-        _animator.SetFloat("Speed", enemy.transform.position.magnitude);
-
-        if (_x == 0 && _y == 0)
-        {
-            _y = -1;
-        }
-
-        Quaternion angle = Quaternion.Euler(0, 0, Mathf.Atan2(_y, _x)
-                 * Mathf.Rad2Deg);
-
-        Bullet bullet = Instantiate(_bulletPrefab, this.transform.position, angle);
-        bullet.SendMessage("TargetEnemy", enemy);
-        */
         _animator.SetFloat("Horizontal", Mathf.RoundToInt(point2Target.x));
         _animator.SetFloat("Vertical", Mathf.RoundToInt(point2Target.y));
         _animator.SetFloat("Speed", point2Target.magnitude);
@@ -79,7 +69,9 @@ public class Weapon : MonoBehaviour
     }
 
 
-    // just a placeholder for weapons without projectiles to override
+    /**
+     * May need to remove this.
+     */
     public virtual void Attack()
     {
         return;
