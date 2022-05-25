@@ -33,7 +33,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -47,7 +47,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -69,6 +69,30 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -83,10 +107,10 @@ TextureImporter:
       name: 7beaa276-421e-4e5a-ba86-44f42cfedce8-removebg-preview_0
       rect:
         serializedVersion: 2
-        x: 234
-        y: 65
-        width: 20
-        height: 20
+        x: 0
+        y: 0
+        width: 689
+        height: 107
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -96,48 +120,6 @@ TextureImporter:
       bones: []
       spriteID: 07cb422b1cf7a4b7f87624eb0a49094f
       internalID: 422392490
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 7beaa276-421e-4e5a-ba86-44f42cfedce8-removebg-preview_1
-      rect:
-        serializedVersion: 2
-        x: 314
-        y: 60
-        width: 34
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ef7a17b92e5b545b69c6a1b0e3ac2fcf
-      internalID: -1165110268
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 7beaa276-421e-4e5a-ba86-44f42cfedce8-removebg-preview_2
-      rect:
-        serializedVersion: 2
-        x: 414
-        y: 56
-        width: 43
-        height: 43
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 099e50b44892548c2a0b63f6dc26d7c2
-      internalID: -1514325533
       vertices: []
       indices: 
       edges: []
@@ -153,8 +135,6 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      7beaa276-421e-4e5a-ba86-44f42cfedce8-removebg-preview_2: -1514325533
-      7beaa276-421e-4e5a-ba86-44f42cfedce8-removebg-preview_1: -1165110268
       7beaa276-421e-4e5a-ba86-44f42cfedce8-removebg-preview_0: 422392490
   spritePackingTag: 
   pSDRemoveMatte: 0

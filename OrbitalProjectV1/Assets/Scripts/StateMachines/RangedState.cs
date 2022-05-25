@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RangedState : StateClass
 {
-    public RangedState(Entity entity, StateMachine stateMachine) : base(entity, stateMachine)
+    public RangedState(EnemyBehaviour enemy, StateMachine stateMachine) : base(enemy, stateMachine)
     {
     }
 
@@ -34,7 +34,7 @@ public class RangedState : StateClass
         //basically if player is not null or is not dead, we can initiate attack. for every other condition,
         // we just bounce back to chase state to decide.
         Debug.Log("What?");
-        if (!entity.ranged.detected())
+        if (!enemy.ranged.detected())
         {
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
             return;
@@ -42,16 +42,16 @@ public class RangedState : StateClass
 
         else
         {
-            if (entity.player.isDead())
+            if (enemy.player.isDead())
             {
                 stateMachine.ChangeState(StateMachine.STATE.STOP, null);
                 return;
             }
-            else if (!entity.onCooldown())
+            else if (!enemy.onCooldown())
             {
                 Debug.Log("We're in attack2!");
-                entity.animator.SetTrigger("Cast");
-                entity.ranged.Attack();
+                enemy.animator.SetTrigger("Cast");
+                enemy.ranged.Attack();
                 return;
             } else
             {

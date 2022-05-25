@@ -10,7 +10,7 @@ using System.Linq;
 /**
  * TextLogic of General Entities.
  */
-public class TextLogic : MonoBehaviour
+public abstract class TextLogic : MonoBehaviour
 {
     private Player player;
     private TextMeshPro Textdisplayer;
@@ -19,8 +19,7 @@ public class TextLogic : MonoBehaviour
 
     protected float minDist;
     protected int currentcounter = 0;
-
-
+    protected EntityBehaviour parent;
     /**
      * Retrieving data.
      */
@@ -29,6 +28,7 @@ public class TextLogic : MonoBehaviour
         Textdisplayer = GetComponent<TextMeshPro>();
         Textdisplayer.enabled = !outOfRange();
         player = GameObject.FindObjectOfType<Player>(true);
+        parent = this.gameObject.transform.root.GetComponent<EntityBehaviour>();
 
 
     }
@@ -104,7 +104,8 @@ public class TextLogic : MonoBehaviour
             ReplaceLetter();
             currentcounter++;
             if (isWordComplete())
-            {     
+            {
+                player.Shoot(parent);
                 GenerateNewWord();
             }
 
@@ -199,6 +200,5 @@ public class TextLogic : MonoBehaviour
         return remainingword.Any(c => char.IsUpper(c));
 
     }
-
 
 }

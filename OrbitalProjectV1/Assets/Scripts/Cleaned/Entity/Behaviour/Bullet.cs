@@ -2,52 +2,52 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class Bullet : RangedBehaviour
 {
     private Rigidbody2D _rb;
-    protected Transform _target;
+    protected EntityBehaviour _target;
     protected string animationname;
     protected Animator _animator;
 
     [Header("Bullet properties")]
     [SerializeField] private float speed = 6.0f;
-    //[SerializeField] private float lifeTime = 10.0f;
+    private float lifeTime;
 
     [Header("Movement")]
     [SerializeField] private float rotateSpeed = 200.0f;
 
-    // Start is called before the first frame update
-    protected virtual void Start()
-    {
-        //_target = GameObject.FindGameObjectWithTag("Enemy").transform;
-        _animator = GetComponent<Animator>();
-    }
-
     private void Awake()
     {
-        animationname = "Collision";
         _rb = GetComponent<Rigidbody2D>();
+        if (_target.GetType() == typeof(Enemy))
+        {
+            lifeTime = 999f;
+        }
+        else
+        {
+            lifeTime = rangedData.lifetime;
+        }
+    }
+
+    // Start is called before the first frame update
+    private void Start()
+    {
+        Destroy(gameObject, lifeTime);
+        _animator = GetComponent<Animator>();
     }
 
     /** can merge using Transform.
      */
 
-    public void TargetEnemy(Entity enemy)
+    public void TargetEntity(EntityBehaviour entity)
     {
-        this._target = enemy.transform;
-        Debug.Log(_target);
-    }
-
-    public void TargetPlayer(Player player)
-    {
-        this._target = player.transform;
-        Debug.Log(_target);
+        this._target = entity;
     }
 
     protected virtual void FixedUpdate()
     {
         //When the bullet collide with the enemy, stop the movement of the bullet
-        stopMovement(animationname);
+        stopMovement(rangedData.ac_name);
         //The bullet will follow the target
         followTarget();
         
@@ -58,7 +58,14 @@ public class Bullet : MonoBehaviour
         //Setting collision to true so that it will trigger the next state
         //for bullet and thus play the explosion animation
         _animator.SetBool(animationname, true);
-        _target.GetComponent<Entity>().Defeated();
+        EntityBehaviour _hit = collision.gameObject.GetComponent<EntityBehaviour>();
+
+        if (_hit == null || _hit != _target) // 
+        {
+            return;
+        }
+        _hit.Defeated();
+
     }
 
     protected void stopMovement(string animationname)

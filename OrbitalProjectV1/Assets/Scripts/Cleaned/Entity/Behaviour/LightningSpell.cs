@@ -11,6 +11,13 @@ public class LightningSpell : RangedBehaviour
         this.col = GetComponent<Collider2D>();
     }
 
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+        animator.SetTrigger(rangedData.ac_name);
+    }
+
+
     private void OnEnable()
     {
         this.col.enabled = true;
@@ -40,8 +47,8 @@ public class LightningSpell : RangedBehaviour
                     return;
                 }
 
-                player.GetComponent<Rigidbody2D>().AddForce(Vector2.down * SpellStats.speed, ForceMode2D.Impulse);
-                player.TakeDamage(SpellStats.damage);
+                player.GetComponent<Rigidbody2D>().AddForce(Vector2.down * rangedData.speed, ForceMode2D.Impulse);
+                player.TakeDamage(rangedData.damage);
             }
             
 

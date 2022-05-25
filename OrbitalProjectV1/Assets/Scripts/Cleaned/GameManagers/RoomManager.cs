@@ -18,7 +18,7 @@ public abstract class RoomManager : MonoBehaviour
      */
     public List<string> conditions { get; protected set; }
     public List<EntityBehaviour> items { get; protected set; }
-    public List<Enemy> enemies { get; protected set; }
+    public List<EnemyBehaviour> enemies { get; protected set; }
     public List<NPCBehaviour> npcs { get; protected set; }
 
     /**
@@ -55,7 +55,7 @@ public abstract class RoomManager : MonoBehaviour
         this.areamaxBound = roomArea.bounds.max;
         conditions = new List<string>();
         items = new List<EntityBehaviour>();
-        enemies = new List<Enemy>();
+        enemies = new List<EnemyBehaviour>();
         npcs = new List<NPCBehaviour>();
     }
 
@@ -190,7 +190,7 @@ public abstract class RoomManager : MonoBehaviour
      */
     private void ResumeGame()
     {
-        foreach (Enemy _enemy in enemies)
+        foreach (EnemyBehaviour _enemy in enemies)
         {
             _enemy.enabled = true;
             _enemy.animator.enabled = true;
@@ -202,7 +202,7 @@ public abstract class RoomManager : MonoBehaviour
      */
     private void PauseGame()
     {
-        foreach (Enemy _enemy in enemies)
+        foreach (EnemyBehaviour _enemy in enemies)
         {
             _enemy.enabled = false;
             _enemy.animator.enabled = false;

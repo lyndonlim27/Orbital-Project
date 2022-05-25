@@ -51,4 +51,9 @@ public class UnlockableDoor : EntityBehaviour
 
 
     }
+
+    public override void Defeated()
+    {
+        UnlockDoor();
+    }
 }

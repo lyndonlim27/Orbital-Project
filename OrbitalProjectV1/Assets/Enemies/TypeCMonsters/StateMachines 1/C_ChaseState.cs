@@ -6,7 +6,7 @@ using UnityEngine;
 //we can use this state to decide whether to do a ranged or melee attack, roam or chase or return to position.
 public class C_ChaseState : StateClass
 {
-    public C_ChaseState(Entity entity, StateMachine stateMachine) : base(entity, stateMachine) { }
+    public C_ChaseState(EnemyBehaviour enemy, StateMachine stateMachine) : base(enemy, stateMachine) { }
     public override void Enter(object stateData)
     {
     }

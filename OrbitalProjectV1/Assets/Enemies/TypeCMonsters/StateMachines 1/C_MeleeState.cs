@@ -5,7 +5,7 @@ using UnityEngine;
 class C_MeleeState : StateClass
 {
 
-    public C_MeleeState(Entity entity, StateMachine stateMachine) : base(entity, stateMachine) { }
+    public C_MeleeState(EnemyBehaviour enemy, StateMachine stateMachine) : base(enemy, stateMachine) { }
 
     public override void Enter(object stateData)
     {

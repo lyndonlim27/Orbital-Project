@@ -16,8 +16,8 @@ public class MeleeComponent : AttackComponent
             }
 
             Vector2 direction = ((Vector2)target.transform.position - (Vector2)transform.position).normalized;
-            target.GetComponent<Rigidbody2D>().AddForce(direction * enemyStats.attackSpeed, ForceMode2D.Impulse);
-            target.TakeDamage(enemyStats.damageValue);
+            target.GetComponent<Rigidbody2D>().AddForce(direction * enemyData.attackSpeed, ForceMode2D.Impulse);
+            target.TakeDamage(enemyData.damageValue);
         }
     }
 

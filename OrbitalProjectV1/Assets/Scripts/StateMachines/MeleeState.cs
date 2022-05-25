@@ -5,7 +5,7 @@ using UnityEngine;
 class MeleeState : StateClass
 {
   
-    public MeleeState(Entity entity, StateMachine stateMachine) : base(entity, stateMachine) { }
+    public MeleeState(EnemyBehaviour enemy, StateMachine stateMachine) : base(enemy, stateMachine) { }
 
     public override void Enter(object stateData)
     {
@@ -32,21 +32,21 @@ class MeleeState : StateClass
 
     private void triggerAttack()
     {
-        if (!entity.melee.detected())
+        if (!enemy.melee.detected())
         {
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
 
         }
         else 
         {
-            if (entity.player.isDead())
+            if (enemy.player.isDead())
             {
                 stateMachine.ChangeState(StateMachine.STATE.STOP, null);
             } else
             {
                 // slight difference from ranged, we should only apply the physics from melee attack upon
                 // the animated hit. so we add the meleeattack into the animation event of the melee animation.
-                if (entity.hasWeapon())
+                if (enemy.hasWeapon())
                 {
 
 
@@ -56,17 +56,17 @@ class MeleeState : StateClass
                     Debug.Log(random);
                     if (random == 0)
                     {
-                        entity.animator.SetTrigger("Melee");
+                        enemy.animator.SetTrigger("Melee");
                         return;
                     } else
                     {
-                        entity.animator.SetTrigger("WeaponAttack");
+                        enemy.animator.SetTrigger("WeaponAttack");
                         return;
                     }
 
                 } else
                 {
-                    entity.animator.SetTrigger("Melee");
+                    enemy.animator.SetTrigger("Melee");
                     return;
                 }
                 

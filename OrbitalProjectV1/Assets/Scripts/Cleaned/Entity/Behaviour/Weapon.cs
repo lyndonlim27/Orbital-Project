@@ -10,7 +10,7 @@ public class Weapon : MonoBehaviour
 {
     public Animator _animator { get; private set; }
     public string WeaponName;
-    public float range = 200f;
+    public float range = 200f;  
 
     [Header("Weapon properties")]
     [SerializeField] private Bullet _bulletPrefab;
@@ -40,7 +40,7 @@ public class Weapon : MonoBehaviour
     /** 
      * Turns the weapon direction.
      */
-    public void TurnWeapon(Vector2 movement)
+    public virtual void TurnWeapon(Vector2 movement)
     {
         //Turns the weapon to the same direction as the player
         _animator.SetFloat("Horizontal", movement.x);
@@ -51,7 +51,7 @@ public class Weapon : MonoBehaviour
     /** 
      * Turns the weapon direction towards the enemy and shoot
      */
-    public void Shoot(Enemy enemy, Vector2 point2Target)
+    public virtual void Shoot(EntityBehaviour entity, Vector2 point2Target)
     {
         _animator.SetFloat("Horizontal", Mathf.RoundToInt(point2Target.x));
         _animator.SetFloat("Vertical", Mathf.RoundToInt(point2Target.y));
@@ -64,17 +64,13 @@ public class Weapon : MonoBehaviour
          * Mathf.Rad2Deg);
 
         Bullet bullet = Instantiate(_bulletPrefab, this.transform.position, angle);
-        bullet.TargetEnemy(enemy);
+        bullet.TargetEntity(entity);
 
     }
 
-
-    /**
-     * May need to remove this.
-     */
-    public virtual void Attack()
+    public virtual void MeleeAttack()
     {
-        return;
+
     }
 
 }

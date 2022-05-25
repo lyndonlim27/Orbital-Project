@@ -5,13 +5,13 @@ using UnityEngine;
 public class IdleState : StateClass
 {
     private int counter;
-    public IdleState(Entity entity, StateMachine stateMachine) : base(entity, stateMachine)
+    public IdleState(EnemyBehaviour enemy, StateMachine stateMachine) : base(enemy, stateMachine)
     {
     }
 
     public override void Enter(object stateData)
     {
-        entity.animator.SetBool("isWalking", false);
+        enemy.animator.SetBool("isWalking", false);
         counter = 100;
         IdleCounter();
     }
@@ -32,7 +32,7 @@ public class IdleState : StateClass
         //let roam state handle detection of enemy. 
         if (counter == 0)
         {
-            entity.getNewRoamPosition();
+            enemy.getNewRoamPosition();
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
             
         }
