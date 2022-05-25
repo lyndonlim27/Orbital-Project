@@ -25,7 +25,7 @@ public abstract class RoomManager : MonoBehaviour
      * Prefabs.
      */
     [Header("Prefabs")]
-    [SerializeField] Enemy[] enemyPrefabs;
+    [SerializeField] EnemyBehaviour[] enemyPrefabs;
     [SerializeField] EntityBehaviour[] itemPrefab;
     [SerializeField] NPCBehaviour NPCPrefab;
 
