@@ -8,11 +8,12 @@ public class DialogueDetection : MonoBehaviour
     private Player player;
     private NPCBehaviour currentNPC;
     private DialogueManager dialMgr;
-    private GameObject dialogueAlert;
     private Boolean canProceed;
     private DetectionScript detectionScript;
-    
-    
+
+    [SerializeField] private GameObject dialogueAlert;
+
+
     /**
      * Retrieving Data.
      */
@@ -29,7 +30,7 @@ public class DialogueDetection : MonoBehaviour
     void Start()
     {
         detectionScript = GetComponent<DetectionScript>();
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        //player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         currentNPC = GetComponentInParent<NPCBehaviour>();
 
     }

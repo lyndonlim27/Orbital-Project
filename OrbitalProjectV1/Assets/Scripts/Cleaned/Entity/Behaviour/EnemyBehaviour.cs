@@ -21,7 +21,6 @@ public class EnemyBehaviour : EntityBehaviour
     public int angerMultiplier = 1;
     private int cooldown;
     protected DamageFlicker _flicker;
-    public SpriteRenderer spriteRenderer { get; private set; }
     public bool isDead { get; private set; }
 
     [Header("Entity Position")]
@@ -257,4 +256,13 @@ public class EnemyBehaviour : EntityBehaviour
         yield return new WaitForSeconds(1f);
     }
 
+    public override void SetEntityStats(EntityData stats)
+    {
+        this.enemyData = (EnemyData) stats;
+    }
+
+    public override EntityData GetData()
+    {
+        return enemyData;
+    }
 }

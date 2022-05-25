@@ -177,4 +177,13 @@ public class Player : EntityBehaviour
         StartCoroutine("FadeOut");
     }
 
+    public override void SetEntityStats(EntityData stats)
+    {
+        this.playerData = (PlayerData) stats;
+    }
+
+    public override EntityData GetData()
+    {
+        return playerData;
+    }
 }

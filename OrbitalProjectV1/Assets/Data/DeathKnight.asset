@@ -9,14 +9,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bb0d0cc8f18d4e678ddc9e30e2faec8, type: 3}
+  m_Script: {fileID: 11500000, guid: a6001843dad184b65bbe555da823aabd, type: 3}
   m_Name: DeathKnight
   m_EditorClassIdentifier: 
-  words: 0
-  damageValue: 0
-  moveSpeed: 0
-  chaseSpeed: 0
-  attackRange: 0
-  attackSpeed: 0
+  _name: DeathKnight
+  minDist: 7
+  isStateful: 1
   sprite: {fileID: -750047184722822154, guid: 1914d95466e3d4341a618c35a56d5f82, type: 3}
-  animatorname: AC_DeathKnight
+  condition: 0
+  placementType: MANUAL
+  pos: {x: 10, y: 10}
+  gold: 0
+  damageValue: 5
+  moveSpeed: 1
+  chaseSpeed: 2
+  attackRange: 5
+  attackSpeed: 1
+  rangeds:
+  - {fileID: 0}
+  animatorname: 
+  words: 0

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8829fab5cdda47428f8ee00410e300f, type: 3}
+  m_Name: GuardNPC
+  m_EditorClassIdentifier: 
+  _name: 
+  minDist: 5
+  isStateful: 0
+  sprite: {fileID: -912726738, guid: 3d0edb390cea44b59aca161dcb2fb1f7, type: 3}
+  condition: 1
+  placementType: MANUAL
+  pos: {x: -4.5, y: 2.9}
+  gold: 0
+  NPC_name: Guard1
+  story: {fileID: 4900000, guid: 769fca554659b41448a65682236006be, type: 3}
+  _animator: {fileID: 0}

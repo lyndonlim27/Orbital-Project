@@ -5,13 +5,11 @@ using TMPro;
 
 public class NPCBehaviour : EntityBehaviour
 {
-    [SerializeField] public NPCData data { get; private set; }
-    SpriteRenderer spriteRenderer;
-    // Start is called before the first frame update
+    [SerializeField] private NPCData data;
 
     private void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        this.spriteRenderer = GetComponent<SpriteRenderer>();
     }
     void Start()
     {
@@ -32,5 +30,15 @@ public class NPCBehaviour : EntityBehaviour
     public override void Defeated()
     {
         return;
+    }
+
+    public override void SetEntityStats(EntityData stats)
+    {
+        this.data = (NPCData) stats;
+    }
+
+    public override EntityData GetData()
+    {
+        return data;
     }
 }

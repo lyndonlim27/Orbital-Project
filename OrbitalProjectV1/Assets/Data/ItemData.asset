@@ -9,13 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 293b6096b72ad4a68bc914b14668f340, type: 3}
-  m_Name: LightningSpell
+  m_Script: {fileID: 11500000, guid: 8bb0d0cc8f18d4e678ddc9e30e2faec8, type: 3}
+  m_Name: ItemData
   m_EditorClassIdentifier: 
-  type: 0
-  damage: 20
-  speed: 0.2
-  rotation: 10
-  lifetime: 3
-  trigger: Cast
-  ac_name: 
+  _name: item
+  minDist: 1
+  isStateful: 0
+  sprite: {fileID: 170574505, guid: b1d431202be5043a2a9304e0cda5f151, type: 3}
+  condition: 1
+  placementType: MANUAL
+  pos: {x: 1.13, y: -0.55}
+  gold: 0

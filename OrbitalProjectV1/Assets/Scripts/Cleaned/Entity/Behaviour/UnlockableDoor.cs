@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnlockableDoor : EntityBehaviour
+public class UnlockableDoor : ItemBehaviour
 {
 
     private bool unlocked;
@@ -56,4 +56,5 @@ public class UnlockableDoor : EntityBehaviour
     {
         UnlockDoor();
     }
+
 }
