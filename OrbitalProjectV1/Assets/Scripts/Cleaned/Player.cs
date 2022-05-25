@@ -14,13 +14,13 @@ public class Player : EntityBehaviour
     private Collider2D col;
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
-    private DamageFlicker _flicker;
     private float _time = 0;
     private float _timeDelay = 0;
     private DialogueManager dialMgr;
     private int _currHealth;
     private Weapon _currWeapon;
     private WeaponPickup _weaponManager;
+    private DamageFlicker _flicker;
 
 
     [Header("Player UI")]
@@ -50,7 +50,7 @@ public class Player : EntityBehaviour
         _weaponManager = this.gameObject.GetComponentInChildren<WeaponPickup>();
         _currWeapon = _weaponManager.ActiveWeapon().GetComponent<Weapon>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _flicker = GetComponent<DamageFlicker>();
+        _flicker = GameObject.FindObjectOfType<DamageFlicker>();
         dialMgr = GameObject.FindObjectOfType<DialogueManager>();
     }
 
@@ -133,7 +133,7 @@ public class Player : EntityBehaviour
     {
         _currHealth -= damageTaken;
         healthBar.SetHealth(_currHealth);
-        _flicker.Flicker();
+        _flicker.Flicker(this);
     }
 
     //When player shoot, player direction faces the target enemy
@@ -181,4 +181,6 @@ public class Player : EntityBehaviour
     {
         return playerData;
     }
+
+
 }

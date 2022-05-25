@@ -14,8 +14,6 @@ public class DamageFlicker : MonoBehaviour
 
     void Start()
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        _originalMaterial = _spriteRenderer.material;
         _flickerMaterial = Resources.Load<Material>("Material/FlickerMaterial");
     }
 
@@ -25,9 +23,11 @@ public class DamageFlicker : MonoBehaviour
         
     }
 
-    public void Flicker()
+    public void Flicker(EntityBehaviour entityBehaviour)
     {
-        if(_flickerRoutine != null)
+        _spriteRenderer = entityBehaviour.GetComponent<SpriteRenderer>();
+        _originalMaterial = _spriteRenderer.material;
+        if (_flickerRoutine != null)
         {
             StopCoroutine(_flickerRoutine);
         }

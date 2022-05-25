@@ -41,12 +41,8 @@ public class EnemyBehaviour : EntityBehaviour
 
     public virtual void Start()
     {
-        GameObject go = GameObject.FindWithTag("Player");
-        if (go != null)
-        {
-            player = go.GetComponent<Player>();
-        }
 
+        player = GameObject.FindObjectOfType<Player>();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         //animator.runtimeAnimatorController = Resources.Load(string.Format("Animations/AnimatorControllers/{0}",stats.animatorname)) as RuntimeAnimatorController;
@@ -200,7 +196,7 @@ public class EnemyBehaviour : EntityBehaviour
     public void Hurt()
     {
         animator.SetTrigger("Hurt");
-        _flicker.Flicker();
+        _flicker.Flicker(this);
         health -= 1; // or use weapon damage;
         Debug.Log(health);
         

@@ -13,7 +13,7 @@ public class ItemTextLogic : TextLogic
 
     protected override void GenerateNewWord()
     {
-        remainingword = currentword;
+        this.remainingword = currentword;
     }
 
     protected override void PerformAction()

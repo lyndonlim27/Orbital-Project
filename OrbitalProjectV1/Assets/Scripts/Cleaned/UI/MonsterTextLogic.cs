@@ -22,6 +22,8 @@ public class MonsterTextLogic : TextLogic{
     protected override void GenerateNewWord()
     {
         currentword = wordGenerator.GetWord();
+        Debug.Log(currentword);
+        UpdateRemainingWord(currentword);
     }
 
     protected override void PerformAction()

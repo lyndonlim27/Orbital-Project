@@ -15,8 +15,8 @@ public abstract class TextLogic : MonoBehaviour
     
     [SerializeField] private TextMeshPro Textdisplayer;
     protected Player player;
-    protected string remainingword = "";
-    protected string currentword = "";
+    public string remainingword { get; protected set; } 
+    public string currentword { get; protected set; }
 
     protected float minDist;
     protected int currentcounter = 0;
@@ -31,6 +31,8 @@ public abstract class TextLogic : MonoBehaviour
         player = GameObject.FindObjectOfType<Player>(true);
         parent = this.gameObject.transform.root.GetComponent<EntityBehaviour>();
         minDist = parent.GetData().minDist;
+        remainingword = "";
+        currentword = parent.GetData()._name;
 
 
     }
@@ -40,6 +42,8 @@ public abstract class TextLogic : MonoBehaviour
     protected virtual void Start()
     {
         GenerateNewWord();
+        Debug.Log(currentword);
+        Debug.Log(remainingword);
     }
 
     /**
@@ -52,9 +56,9 @@ public abstract class TextLogic : MonoBehaviour
      * @param currentword
      * Remaining word.
      */
-    protected void UpdateRemainingWord(string currentword)
+    protected void UpdateRemainingWord(string word)
     {
-        remainingword = currentword;
+        remainingword = word;
     }
 
     /**
@@ -109,6 +113,7 @@ public abstract class TextLogic : MonoBehaviour
             {
                 PerformAction();
                 GenerateNewWord();
+                ResetCounter();
                 
                 
             }
@@ -123,7 +128,7 @@ public abstract class TextLogic : MonoBehaviour
                
         }
 
-        UpdateRemainingWord(currentword);
+        
 
     }
 

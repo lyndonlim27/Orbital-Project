@@ -9,6 +9,7 @@ using TMPro;
 public class TextConverter : MonoBehaviour
 {
     private TextMeshPro tmp;
+    private TextLogic textlogic;
     private Dictionary<char, string> dict = new Dictionary<char, string>();
 
     /**
@@ -30,13 +31,30 @@ public class TextConverter : MonoBehaviour
             dict.Add(c, temp);
         }
 
+        textlogic = GetComponent<TextLogic>();
+        tmp = GetComponent<TextMeshPro>();
+
+    }
+
+    private void Start()
+    {
+
+        if (tmp != null)
+        {
+            tmp.text = ConvertToCustomSprites(textlogic.remainingword);
+        }
     }
 
     private void Update()
     {
-        tmp.text = ConvertToCustomSprites(tmp.text);
+        if (tmp != null)
+        {
+            tmp.text = ConvertToCustomSprites(textlogic.remainingword);
+        }
 
     }
+
+    
 
 
     /**
