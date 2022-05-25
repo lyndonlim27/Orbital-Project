@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: ItemData
   m_EditorClassIdentifier: 
   _name: item
-  minDist: 1
+  minDist: 3
   isStateful: 0
   sprite: {fileID: 170574505, guid: b1d431202be5043a2a9304e0cda5f151, type: 3}
   condition: 1
   placementType: MANUAL
   pos: {x: 1.13, y: -0.55}
   gold: 0
+  damageFlicker: {fileID: 0}

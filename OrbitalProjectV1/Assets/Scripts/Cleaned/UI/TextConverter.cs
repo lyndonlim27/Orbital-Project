@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 /**
  * TextConverter of General Entities.
  */
 public class TextConverter : MonoBehaviour
 {
-
+    private TextMeshPro tmp;
     private Dictionary<char, string> dict = new Dictionary<char, string>();
 
     /**
@@ -29,10 +30,15 @@ public class TextConverter : MonoBehaviour
             dict.Add(c, temp);
         }
 
-        
+    }
 
+    private void Update()
+    {
+        tmp.text = ConvertToCustomSprites(tmp.text);
 
     }
+
+
     /**
      * Convert to Custom Sprites.
      * @param word
@@ -49,5 +55,7 @@ public class TextConverter : MonoBehaviour
 
         return result;
     }
+
     
+
 }

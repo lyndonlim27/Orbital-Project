@@ -10,7 +10,6 @@ public class MonsterTextLogic : TextLogic{
     {
 
         base.Awake();
-        minDist = 3f;
         wordGenerator = GameObject.FindObjectOfType<WordBank>();
 
     }
@@ -23,5 +22,10 @@ public class MonsterTextLogic : TextLogic{
     protected override void GenerateNewWord()
     {
         currentword = wordGenerator.GetWord();
+    }
+
+    protected override void PerformAction()
+    {
+        player.Shoot(parent);
     }
 }

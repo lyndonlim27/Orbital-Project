@@ -30,7 +30,7 @@ public class DialogueDetection : MonoBehaviour
     void Start()
     {
         detectionScript = GetComponent<DetectionScript>();
-        //player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        player = GameObject.FindObjectOfType<Player>();
         currentNPC = GetComponentInParent<NPCBehaviour>();
 
     }

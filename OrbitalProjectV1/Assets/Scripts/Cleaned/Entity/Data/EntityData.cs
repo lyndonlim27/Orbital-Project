@@ -13,5 +13,5 @@ public class EntityData : ScriptableObject
     public string placementType;
     public Vector2 pos;
     public int gold;
-    private DamageFlicker _flicker;
+    public GameObject damageFlicker;
 }

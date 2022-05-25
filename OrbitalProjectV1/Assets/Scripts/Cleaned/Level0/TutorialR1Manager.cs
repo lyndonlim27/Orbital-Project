@@ -35,19 +35,19 @@ public class TutorialR1Manager : RoomManager
     {
         dd.Fulfilled();
         Debug.Log(conditions);
-        if (conditions.Contains("cannon"))
-        {
-            player.PickupItem("Cannon");
-            door1.UnlockDoor();
-            Debug.Log("GOOSE");
-        }
+        //if (conditions.Contains("cannon"))
+        //{
+        //    player.PickupItem("Cannon");
+        //    door1.UnlockDoor();
+        //    Debug.Log("GOOSE");
+        //}
 
-        if (conditions.Contains("laser"))
-        {
-            player.PickupItem("Laser");
-            door1.UnlockDoor();
+        //if (conditions.Contains("laser"))
+        //{
+        //    player.PickupItem("Laser");
+        //    door1.UnlockDoor();
 
-        }
+        //}
 
 
     }

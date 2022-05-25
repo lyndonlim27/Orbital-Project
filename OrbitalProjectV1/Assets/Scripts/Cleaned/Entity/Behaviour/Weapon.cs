@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 /**
  * Weapon Behaviour.
  */
-public class Weapon : MonoBehaviour
+public class Weapon : EntityBehaviour
 {
     public Animator _animator { get; private set; }
     public string WeaponName;
@@ -20,22 +20,6 @@ public class Weapon : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
     }
-
-
-    /**
-     * When weaopn collides with player, pick up weapon.
-     */
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        Player player = collision.GetComponent<Player>();
-
-        if(player)
-        {
-        player.PickupItem(this.gameObject.name);
-        }
-       
-    }
-    
 
     /** 
      * Turns the weapon direction.
@@ -73,4 +57,18 @@ public class Weapon : MonoBehaviour
 
     }
 
+    public override void SetEntityStats(EntityData stats)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void Defeated()
+    {
+
+    }
+
+    public override EntityData GetData()
+    {
+        throw new System.NotImplementedException();
+    }
 }

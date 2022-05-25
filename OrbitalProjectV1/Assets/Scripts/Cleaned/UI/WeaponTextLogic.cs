@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemTextLogic : TextLogic
+public class WeaponTextLogic : TextLogic
 {
     private RoomManager roomManager;
 
@@ -19,5 +19,7 @@ public class ItemTextLogic : TextLogic
     protected override void PerformAction()
     {
         Destroy(parent.gameObject);
+        this.player.GetComponent<WeaponPickup>().Swap(parent.GetData()._name);
     }
+
 }

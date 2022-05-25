@@ -8,7 +8,6 @@ public class Laser : Weapon
 
     private Coroutine Lookcoroutine;
     private float speed = 1f;
-    private SpriteRenderer spriteRenderer;
     private Collider2D col;
     private Player player;
 

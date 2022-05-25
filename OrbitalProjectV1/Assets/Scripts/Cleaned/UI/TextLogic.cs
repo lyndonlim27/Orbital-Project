@@ -12,8 +12,9 @@ using System.Linq;
  */
 public abstract class TextLogic : MonoBehaviour
 {
-    private Player player;
-    private TextMeshPro Textdisplayer;
+    
+    [SerializeField] private TextMeshPro Textdisplayer;
+    protected Player player;
     protected string remainingword = "";
     protected string currentword = "";
 
@@ -29,6 +30,7 @@ public abstract class TextLogic : MonoBehaviour
         Textdisplayer.enabled = !outOfRange();
         player = GameObject.FindObjectOfType<Player>(true);
         parent = this.gameObject.transform.root.GetComponent<EntityBehaviour>();
+        minDist = parent.GetData().minDist;
 
 
     }
@@ -105,8 +107,10 @@ public abstract class TextLogic : MonoBehaviour
             currentcounter++;
             if (isWordComplete())
             {
-                player.Shoot(parent);
+                PerformAction();
                 GenerateNewWord();
+                
+                
             }
 
         } else 
@@ -118,6 +122,8 @@ public abstract class TextLogic : MonoBehaviour
             }
                
         }
+
+        UpdateRemainingWord(currentword);
 
     }
 
@@ -201,4 +207,8 @@ public abstract class TextLogic : MonoBehaviour
 
     }
 
+    /**
+     * Perform an action on completion of word.
+     */
+    protected abstract void PerformAction();
 }

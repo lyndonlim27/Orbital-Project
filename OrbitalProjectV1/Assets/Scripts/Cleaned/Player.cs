@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class Player : EntityBehaviour
 {
-    PlayerData playerData;
+    [SerializeField] private PlayerData playerData;
 
     private Vector2 _movement;
     private Rigidbody2D _rb;
@@ -21,7 +21,6 @@ public class Player : EntityBehaviour
     private int _currHealth;
     private Weapon _currWeapon;
     private WeaponPickup _weaponManager;
-
 
 
     [Header("Player UI")]
@@ -152,11 +151,6 @@ public class Player : EntityBehaviour
         _animator.SetFloat("Speed", point2Target.magnitude);
     }
 
-       
-    public void PickupItem(string weapon)
-    {   
-        _weaponManager.Swap(weapon);
-    }
 
     //Fades sprite
     IEnumerator FadeOut()
