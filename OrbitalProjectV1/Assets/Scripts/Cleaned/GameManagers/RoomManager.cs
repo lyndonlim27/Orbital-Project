@@ -32,9 +32,9 @@ public abstract class RoomManager : MonoBehaviour
     /**
      * Data.
      */
-    [SerializeField] public EntityData[] _itemData { get; private set; }
-    [SerializeField] public NPCData[] _npcData { get; private set; }
-    [SerializeField] public EnemyData[] _enemyData { get; private set; }
+    public EntityData[] _itemData;
+    public NPCData[] _npcData;
+    public EnemyData[] _enemyData;
 
     /**
      * Room.
@@ -64,7 +64,6 @@ public abstract class RoomManager : MonoBehaviour
     protected abstract void FulfillCondition(string key);
 
     protected abstract void UnfulfillCondition(string key);
-
 
     /** 
      * Get a random position inside the room.
@@ -98,7 +97,10 @@ public abstract class RoomManager : MonoBehaviour
      */
     protected void SpawnObjects()
     {
-       
+        if(_itemData == null)
+        {
+            return;
+        }
         for(int i = 0; i < _itemData.Length; i++)
         {
             EntityData _item = _itemData[i];
@@ -195,6 +197,7 @@ public abstract class RoomManager : MonoBehaviour
             _enemy.enabled = true;
             _enemy.animator.enabled = true;
         }
+        player.enabled = true;
     }
 
     /**
@@ -207,6 +210,7 @@ public abstract class RoomManager : MonoBehaviour
             _enemy.enabled = false;
             _enemy.animator.enabled = false;
         }
+        player.enabled = false;
     }
 
     /**

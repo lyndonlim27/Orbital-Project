@@ -30,7 +30,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dialoguetext;
     [SerializeField] private GameObject[] choices;
 
-    /**
+    /** 
      * Retrieving of Data.
      */
     private void Awake()
