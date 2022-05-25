@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 8734421209421692764}
   - component: {fileID: 1236112941348276567}
   - component: {fileID: 974374596974690107}
-  - component: {fileID: 668735066680347944}
+  - component: {fileID: 9002083385817635875}
+  - component: {fileID: 3385320659042304519}
   m_Layer: 5
   m_Name: MonstertextUI
   m_TagString: UI
@@ -173,7 +174,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 1236112941348276567}
   m_maskType: 0
---- !u!114 &668735066680347944
+--- !u!114 &9002083385817635875
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -182,6 +183,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 492773244403657515}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: baf6c5d876fee4495993cf4eb0330ab8, type: 3}
+  m_Script: {fileID: 11500000, guid: cb7044edd9a3445b086ce1836bcb15dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Textdisplayer: {fileID: 974374596974690107}
+--- !u!114 &3385320659042304519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492773244403657515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72df990f3c94d4298b5cd8a371c8c7c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

@@ -190,6 +190,7 @@ public abstract class RoomManager : MonoBehaviour
      */
     private void ResumeGame()
     {
+        player.enabled = true;
         foreach (EnemyBehaviour _enemy in enemies)
         {
             _enemy.enabled = true;
@@ -202,8 +203,10 @@ public abstract class RoomManager : MonoBehaviour
      */
     private void PauseGame()
     {
+        player.enabled = false;
         foreach (EnemyBehaviour _enemy in enemies)
         {
+            
             _enemy.enabled = false;
             _enemy.animator.enabled = false;
         }

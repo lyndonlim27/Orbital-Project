@@ -6,10 +6,10 @@ using TMPro;
 /**
  * TextConverter of General Entities.
  */
-public class TextConverter : MonoBehaviour
+public class CanvasConverter : MonoBehaviour
 {
-    private TextMeshPro tmp;
-    private TextLogic textlogic;
+    private TextMeshProUGUI tmp;
+    private TypingTestTL textlogic;
     private Dictionary<char, string> dict = new Dictionary<char, string>();
 
     /**
@@ -32,8 +32,8 @@ public class TextConverter : MonoBehaviour
         }
 
         dict.Add(' ', " ");
-        textlogic = GetComponent<TextLogic>();
-        tmp = GetComponent<TextMeshPro>();
+        textlogic = GetComponent<TypingTestTL>();
+        tmp = GetComponent<TextMeshProUGUI>();
 
     }
 

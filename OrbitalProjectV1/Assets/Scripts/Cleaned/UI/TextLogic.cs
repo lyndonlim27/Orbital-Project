@@ -13,7 +13,7 @@ using System.Linq;
 public abstract class TextLogic : MonoBehaviour
 {
     
-    [SerializeField] private TextMeshPro Textdisplayer;
+    public TextMeshPro Textdisplayer { get; protected set; }
     protected Player player;
     public string remainingword { get; protected set; } 
     public string currentword { get; protected set; }
@@ -86,9 +86,12 @@ public abstract class TextLogic : MonoBehaviour
         {
             return;
         }
-       
+
+        
+
         for (int i = (int)KeyCode.A; i <= (int)KeyCode.Z; i++)
         {
+            
             if (Input.GetKeyDown((KeyCode)i)) {
                 Validator((char)i);
             }
@@ -105,8 +108,10 @@ public abstract class TextLogic : MonoBehaviour
      */
     protected virtual void Validator(char inputchar)
     {
+
         if (LetterCorrect(inputchar))
-        { 
+        {
+            
             ReplaceLetter();
             currentcounter++;
             if (isWordComplete())
@@ -157,7 +162,8 @@ public abstract class TextLogic : MonoBehaviour
      */
     protected bool LetterCorrect(char let)
     {
-        return char.IsLower(let) && remainingword.IndexOf(let) == currentcounter;
+        return remainingword[currentcounter] == char.ToLower(let);
+        //return remainingword.IndexOf(char.ToLower(let)) == currentcounter;
 
     }
 
