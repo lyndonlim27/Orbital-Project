@@ -5,7 +5,7 @@ using UnityEngine;
 public class C_IdleState : StateClass
 {
     private int counter;
-    public C_IdleState(Entity entity, StateMachine stateMachine) : base(entity, stateMachine)
+    public C_IdleState(EnemyBehaviour enemy, StateMachine stateMachine) : base(enemy, stateMachine)
     {
     }
 

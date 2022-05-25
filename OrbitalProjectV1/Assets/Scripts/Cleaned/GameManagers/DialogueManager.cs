@@ -116,7 +116,7 @@ public class DialogueManager : MonoBehaviour
     {
         currentNPC = npc;
         NPCData _npcData = npc.data;
-        currentstory = new Story(_npcdata.story);
+        currentstory = new Story(_npcData.story.text);
         playing = true;
         dialoguePanel.SetActive(true);
         ContinueStory();

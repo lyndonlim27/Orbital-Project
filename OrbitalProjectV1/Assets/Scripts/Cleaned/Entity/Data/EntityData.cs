@@ -12,5 +12,6 @@ public class EntityData : ScriptableObject
     public int condition;
     public string placementType;
     public Vector2 pos;
-    
+    public int gold;
+    private DamageFlicker _flicker;
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class C_RangedState : StateClass
 {
-    public C_RangedState(Entity entity, StateMachine stateMachine) : base(entity, stateMachine)
+    public C_RangedState(EnemyBehaviour enemy, StateMachine stateMachine) : base(enemy, stateMachine)
     {
     }
 

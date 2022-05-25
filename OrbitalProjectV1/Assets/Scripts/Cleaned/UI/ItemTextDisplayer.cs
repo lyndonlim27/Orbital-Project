@@ -6,6 +6,10 @@ public class ItemTextLogic : TextLogic
 {
     private RoomManager roomManager;
 
+    protected override bool CheckInternalInput()
+    {
+        return true;
+    }
 
     protected override void GenerateNewWord()
     {

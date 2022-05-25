@@ -6,7 +6,7 @@ using CodeMonkey.Utils;
 public abstract class Enemy : MonoBehaviour
 {
     [Header("Enemy Stats")]
-    [SerializeField] protected IWeapon weapon;
+    [SerializeField] protected Weapon weapon;
     [SerializeField] protected int health;
     [SerializeField] protected float speed;
     protected Rigidbody2D rb;

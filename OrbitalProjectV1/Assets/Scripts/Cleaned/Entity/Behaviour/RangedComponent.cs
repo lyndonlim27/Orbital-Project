@@ -5,8 +5,8 @@ using UnityEngine;
 public class RangedComponent : AttackComponent
 {
     //public List<Spell> spells; i want to use an interface to generalize all projectiles.. maybe Projectile interface;
-    public Spell spell;
-    public Projectile bullet;
+    public LightningSpell spell;
+    public Bullet bullet;
 
     public override void Start()
     {
@@ -57,13 +57,13 @@ public class RangedComponent : AttackComponent
 
     private void Shoot()
     {
-        Projectile bulletinst = Instantiate(bullet, this.transform.position, Quaternion.identity);
-        bulletinst.TargetPlayer(target);
+        Bullet bulletinst = Instantiate(bullet, this.transform.position, Quaternion.identity);
+        bulletinst.TargetEntity(target);
     }
 
     private void Cast()
     {
-        GetComponentInParent<Animator>().SetTrigger(spell.SpellStats.trigger);
+        GetComponentInParent<Animator>().SetTrigger(spell.rangedData.ac_name);
         GameObject.Instantiate(spell, target.transform.position, Quaternion.identity);
     }
 }

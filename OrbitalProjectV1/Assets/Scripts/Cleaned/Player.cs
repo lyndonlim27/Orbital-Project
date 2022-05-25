@@ -5,29 +5,25 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class Player : MonoBehaviour
+public class Player : EntityBehaviour
 {
+    PlayerData playerData;
+
     private Vector2 _movement;
     private Rigidbody2D _rb;
     private Collider2D col;
-    public Animator _animator;
-    private Transform _target = null;
-    private int _currHealth;
-    private Weapon _currWeapon;
-    private WeaponPickup _weaponManager;
+    private Animator _animator;
     private SpriteRenderer _spriteRenderer;
     private DamageFlicker _flicker;
     private float _time = 0;
     private float _timeDelay = 0;
+    private DialogueManager dialMgr;
+    private int _currHealth;
+    private Weapon _currWeapon;
+    private WeaponPickup _weaponManager;
 
-    [Header("Player properties")]
-    [SerializeField] private int maxHealth = 100;
-    [SerializeField] private int selfDamage = 100;
 
-    [Header("Movement")]
-    [SerializeField] private float _moveSpeed = 5f;
 
-    
     [Header("Player UI")]
     [SerializeField] private GameOver _gameOver;
     [SerializeField] private HealthBar healthBar;
@@ -48,26 +44,22 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _currHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
+        _currHealth = playerData.maxHealth;
+        healthBar.SetMaxHealth(playerData.maxHealth);
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
-        GameObject _gameObj = GameObject.FindGameObjectWithTag("Enemy");
-        if(_gameObj != null)
-        {
-            _target = _gameObj.transform;
-        }
-        _weaponManager = this.gameObject.transform.GetChild(0).gameObject.GetComponent<WeaponPickup>();
+        _weaponManager = this.gameObject.GetComponentInChildren<WeaponPickup>();
         _currWeapon = _weaponManager.ActiveWeapon().GetComponent<Weapon>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _flicker = GetComponent<DamageFlicker>();
+        dialMgr = GameObject.FindObjectOfType<DialogueManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
         //freeze player's actions when inside dialogue
-        if (DialogueManager.GetInstance().playing)
+        if (dialMgr.playing)
         {
             return;
         }
@@ -75,24 +67,18 @@ public class Player : MonoBehaviour
         _time += 1f * Time.deltaTime;
         if (_currHealth <= 0)
         {
-            Death();
+            Defeated();
         }
 
         _currWeapon = _weaponManager.ActiveWeapon().GetComponent<Weapon>();
 
-        //if (Input.GetButtonDown("Shoot") || Input.GetMouseButtonDown(0))
-        //{
-        //    Shoot();
-        //    _timeDelay = 0.5f; //When player shoots, pauses direction for 0.5 seconds
-
-        //}
         CheckCombat();
 
         if (Input.GetKeyDown(KeyCode.P))
         {
             if (_currHealth > 0)
             {
-                TakeDamage(selfDamage);
+                TakeDamage(3);
                 _rb.AddForce(transform.forward * 15000 * Time.fixedDeltaTime, ForceMode2D.Impulse);
             }
         }
@@ -131,13 +117,13 @@ public class Player : MonoBehaviour
     {
         //Move player's position
         //freeze player's movement when inside dialogue
-        if (DialogueManager.GetInstance().playing)
+        if (dialMgr.playing)
         {
             return;
         }
 
         
-        transform.position = (Vector2) transform.position +_movement.normalized * _moveSpeed * Time.fixedDeltaTime;
+        transform.position = (Vector2) transform.position +_movement.normalized * playerData._moveSpeed * Time.fixedDeltaTime;
         //_rb.MovePosition(_rb.position + _movement.normalized * _moveSpeed * Time.fixedDeltaTime);
     }
 
@@ -151,15 +137,15 @@ public class Player : MonoBehaviour
     }
 
     //When player shoot, player direction faces the target enemy
-    public void Shoot(Entity enemy)
+    public void Shoot(EntityBehaviour entity)
     {
         _timeDelay = 0.5f;
         Debug.Log("Shoot");
         //Debug.Log(enemy);
-        Vector2 point2Target = (Vector2)transform.position - (Vector2)enemy.transform.position;
+        Vector2 point2Target = (Vector2)transform.position - (Vector2)entity.transform.position;
         point2Target.Normalize();
         point2Target = -point2Target;
-        _currWeapon.Shoot(enemy, point2Target);
+        _currWeapon.Shoot(entity, point2Target);
         _animator.SetFloat("Horizontal", Mathf.RoundToInt(point2Target.x));
         _animator.SetFloat("Vertical", Mathf.RoundToInt(point2Target.y));
         _animator.SetFloat("Speed", point2Target.magnitude);
@@ -170,15 +156,6 @@ public class Player : MonoBehaviour
     {   
         _weaponManager.Swap(weapon);
     }
-
-    //public bool OutOfRange(Entity entity)
-    //{
-    //    return
-    //        //check if we are in range.
-    //        Vector2.Distance(transform.position, entity.transform.position) <= _currWeapon.range &&
-    //        //check for line of sight
-    //        Physics2D.Linecast(transform.position,entity.transform.position).collider.gameObject.tag != "Enemy";
-    //}
 
     //Fades sprite
     IEnumerator FadeOut()
@@ -195,7 +172,7 @@ public class Player : MonoBehaviour
     }
 
     //When current health reaches 0, character dies and fade out
-    private void Death()
+    public override void Defeated()
     {
         StartCoroutine("FadeOut");
     }

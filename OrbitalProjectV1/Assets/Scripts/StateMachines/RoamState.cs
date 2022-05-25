@@ -5,7 +5,7 @@ using UnityEngine;
 
 class RoamState : StateClass
 {
-    public RoamState(Entity entity, StateMachine stateMachine) : base(entity, stateMachine)
+    public RoamState(EnemyBehaviour enemy, StateMachine stateMachine) : base(enemy, stateMachine)
     {
     
     }
@@ -13,7 +13,7 @@ class RoamState : StateClass
     public override void Enter(object data)
     {
 
-        entity.animator.SetBool("isWalking", true);
+        enemy.animator.SetBool("isWalking", true);
         Roam();
 
     }
@@ -26,12 +26,12 @@ class RoamState : StateClass
     public void Roam()
     {
 
-        if (entity.detectionScript.playerDetected)
+        if (enemy.detectionScript.playerDetected)
         {
             
             stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
 
-        } else if (entity.isReached())
+        } else if (enemy.isReached())
 
         {
             stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
@@ -39,7 +39,7 @@ class RoamState : StateClass
         }
           else
         {
-            entity.moveToRoam();
+            enemy.moveToRoam();
         }
      }
   

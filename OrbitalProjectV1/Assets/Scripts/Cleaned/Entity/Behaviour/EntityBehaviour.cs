@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EntityBehaviour : MonoBehaviour
+public abstract class EntityBehaviour : MonoBehaviour
 {
     public EntityData entityData;
     private SpriteRenderer spriteRenderer;
@@ -23,4 +23,5 @@ public class EntityBehaviour : MonoBehaviour
         this.entityData = stats;
     }
 
+    public abstract void Defeated();
 }

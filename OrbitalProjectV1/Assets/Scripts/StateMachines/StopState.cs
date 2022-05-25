@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StopState : StateClass
 {
-    public StopState(Entity entity, StateMachine stateMachine) : base(entity, stateMachine)
+    public StopState(EnemyBehaviour enemy, StateMachine stateMachine) : base(enemy, stateMachine)
     {
     }
 
@@ -21,12 +21,12 @@ public class StopState : StateClass
     private void returnToStartPos()
     {
         //curr position > 5f from startingpos,
-        if (Vector2.Distance(entity.transform.position, entity.startingpos) <= 0f)
+        if (Vector2.Distance(enemy.transform.position, enemy.startingpos) <= 0f)
         {
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
         } else
         {
-            entity.moveToStartPos();
+            enemy.moveToStartPos();
         }
 
         

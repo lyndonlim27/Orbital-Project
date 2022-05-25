@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Laser : Weapon //i would wanna use a general inheritance member like RayCast.
+public class Laser : Weapon
 {
     public int damageValue;
 
@@ -10,8 +10,15 @@ public class Laser : Weapon //i would wanna use a general inheritance member lik
     private float speed = 1f;
     private SpriteRenderer spriteRenderer;
     private Collider2D col;
+    private Player player;
 
-    public override void Attack()
+
+    private void Awake()
+    {
+        Player player = GameObject.FindObjectOfType<Player>();
+    }
+
+    public override void MeleeAttack()
     {
         _animator.SetTrigger("Play");
            
@@ -32,8 +39,6 @@ public class Laser : Weapon //i would wanna use a general inheritance member lik
 
     public void RotateTowardsPlayer()
     {
-        GameObject go = GameObject.FindGameObjectWithTag("Player");
-        Player player = go.GetComponent<Player>();
         Vector3 dir = (transform.position - player.transform.position).normalized;
         dir = -dir;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
@@ -69,7 +74,7 @@ public class Laser : Weapon //i would wanna use a general inheritance member lik
 
     public void ResetParentState()
     {
-        Entity parent = GetComponentInParent<Entity>();
+        EnemyBehaviour parent = GetComponentInParent<EnemyBehaviour>();
         parent.stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
     }
     

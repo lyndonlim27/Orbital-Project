@@ -7,9 +7,5 @@ public abstract class RangedBehaviour : MonoBehaviour
     public RangedData rangedData;
     protected Animator animator;
 
-    void Start()
-    {
-        animator = GetComponent<Animator>();
-        animator.SetTrigger(rangedData.ac_name);
-    }
+    
 }

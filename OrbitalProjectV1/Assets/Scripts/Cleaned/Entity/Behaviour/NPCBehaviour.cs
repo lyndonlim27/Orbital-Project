@@ -5,7 +5,7 @@ using TMPro;
 
 public class NPCBehaviour : EntityBehaviour
 {
-    [SerializeField] private NPCData data;
+    [SerializeField] public NPCData data { get; private set; }
     SpriteRenderer spriteRenderer;
     // Start is called before the first frame update
 
@@ -29,5 +29,8 @@ public class NPCBehaviour : EntityBehaviour
        
     }
 
-
+    public override void Defeated()
+    {
+        return;
+    }
 }

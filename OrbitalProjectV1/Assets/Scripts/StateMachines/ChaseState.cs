@@ -6,10 +6,10 @@ using UnityEngine;
 //we can use this state to decide whether to do a ranged or melee attack, roam or chase or return to position.
 public class ChaseState : StateClass
 {
-    public ChaseState(Entity entity, StateMachine stateMachine) : base(entity, stateMachine) {}
+    public ChaseState(EnemyBehaviour enemy, StateMachine stateMachine) : base(enemy, stateMachine) {}
     public override void Enter(object stateData)
     {
-        entity.animator.SetBool("isWalking", true);
+        enemy.animator.SetBool("isWalking", true);
         ChaseEnemy();
     }
 
@@ -32,33 +32,33 @@ public class ChaseState : StateClass
     {
         
         //if object detected but is not player, 
-        if (!entity.detectionScript.playerDetected)
+        if (!enemy.detectionScript.playerDetected)
         {
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
         }
 
-        else if (Vector2.Distance(entity.transform.position, entity.startingpos) >= entity.maxDist)
+        else if (Vector2.Distance(enemy.transform.position, enemy.startingpos) >= enemy.maxDist)
         {
 
             stateMachine.ChangeState(StateMachine.STATE.STOP, null);
         }
         
-        else if (entity.ranged.detected() && !entity.onCooldown())
+        else if (enemy.ranged.detected() && !enemy.onCooldown())
         {
             stateMachine.ChangeState(StateMachine.STATE.ATTACK2, null);
 
                 
-        } else if (entity.melee.detected()) {
+        } else if (enemy.melee.detected()) {
 
             stateMachine.ChangeState(StateMachine.STATE.ATTACK1, null);
 
         } else
         {
-            entity.moveToTarget(entity.player);
+            enemy.moveToTarget(enemy.player);
             
         }
 
-        entity.tick();
+        enemy.tick();
                
     }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyBehaviour : MonoBehaviour
+public class EnemyBehaviour : EntityBehaviour
 {
 
     //animation handler;
@@ -16,7 +16,7 @@ public class EnemyBehaviour : MonoBehaviour
     }
 
     //data;
-    public EntityStats stats;
+    public EnemyData enemyData;
     public StateMachine stateMachine;
     public int angerMultiplier = 1;
     private int cooldown;
@@ -55,12 +55,12 @@ public class EnemyBehaviour : MonoBehaviour
         melee = GetComponentInChildren<MeleeComponent>();
         ranged = GetComponentInChildren<RangedComponent>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = stats.sprite;
+        spriteRenderer.sprite = enemyData.sprite;
         startingpos = GetComponent<Transform>().position;
         _flicker = GetComponent<DamageFlicker>();
         cooldown = 0;
         isDead = false;
-        health = stats.words;
+        health = enemyData.words;
     }
 
     public virtual void Update()
@@ -89,21 +89,21 @@ public class EnemyBehaviour : MonoBehaviour
 
     public void moveToRoam()
     {
-        float steps = stats.moveSpeed * Time.deltaTime;
+        float steps = enemyData.moveSpeed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, roamPos, steps);
         flipFace(roamPos);
     }
 
     public void moveToTarget(Player player)
     {
-        float steps = stats.chaseSpeed * Time.deltaTime * angerMultiplier;
+        float steps = enemyData.chaseSpeed * Time.deltaTime * angerMultiplier;
         transform.position = Vector3.MoveTowards(transform.position,player.transform.position,steps);
         flipFace(player.transform.position);
     }
 
     public void moveToStartPos()
     {
-        float steps = stats.moveSpeed * Time.deltaTime;
+        float steps = enemyData.moveSpeed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, startingpos, steps);
         flipFace(startingpos);
     }
@@ -169,7 +169,7 @@ public class EnemyBehaviour : MonoBehaviour
         try
         {
             Weapon weapon = GetComponentInChildren<Weapon>();
-            weapon.Attack();
+            weapon.MeleeAttack();
         }
         catch (System.NullReferenceException)
         {
@@ -207,7 +207,7 @@ public class EnemyBehaviour : MonoBehaviour
         
     }
 
-    public void Defeated()
+    public override void Defeated()
     {
         //StartCoroutine(Wait());
         if (health == 0)
@@ -256,6 +256,5 @@ public class EnemyBehaviour : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
     }
-
 
 }
