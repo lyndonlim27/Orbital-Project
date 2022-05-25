@@ -59,10 +59,10 @@ public class Player : EntityBehaviour
     void Update()
     {
         //freeze player's actions when inside dialogue
-        if (dialMgr.playing)
+/*        if (dialMgr.playing)
         {
             return;
-        }
+        }*/
 
         _time += 1f * Time.deltaTime;
         if (_currHealth <= 0)
@@ -117,10 +117,11 @@ public class Player : EntityBehaviour
     {
         //Move player's position
         //freeze player's movement when inside dialogue
+        /*
         if (dialMgr.playing)
         {
             return;
-        }
+        }*/
 
         
         transform.position = (Vector2) transform.position +_movement.normalized * playerData._moveSpeed * Time.fixedDeltaTime;
