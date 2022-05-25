@@ -19,7 +19,7 @@ public class Bullet : RangedBehaviour
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
-        if (_target.GetType() == typeof(Enemy))
+        if (_target.GetType() == typeof(EnemyBehaviour))
         {
             lifeTime = 999f;
         }
