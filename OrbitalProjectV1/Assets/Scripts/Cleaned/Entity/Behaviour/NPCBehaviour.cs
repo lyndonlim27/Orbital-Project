@@ -7,6 +7,7 @@ public class NPCBehaviour : EntityBehaviour
 {
     [SerializeField] private NPCData data;
 
+
     private void Awake()
     {
         this.spriteRenderer = GetComponent<SpriteRenderer>();

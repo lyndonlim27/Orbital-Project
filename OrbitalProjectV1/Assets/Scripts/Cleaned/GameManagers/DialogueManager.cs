@@ -30,18 +30,15 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dialoguetext;
     [SerializeField] private GameObject[] choices;
 
-    /**
+    /** 
      * Retrieving of Data.
      */
     private void Awake()
     {
         RoomManager roomManager = GameObject.FindObjectOfType<RoomManager>(false);
-        choicesText = new TextMeshProUGUI[choices.Length];
-        for (int i = 0; i < choices.Length; i ++)
-        {
-            choicesText[i] = choices[i].GetComponentInChildren<TextMeshProUGUI>();
-        }
-   
+        //npc = roomManager.npcs;
+        //_npcData = roomManager._npcData;
+
     }
 
     /**
@@ -51,7 +48,13 @@ public class DialogueManager : MonoBehaviour
     {
         playing = false;
         dialoguePanel.SetActive(false);
- 
+        choicesText = new TextMeshProUGUI[choices.Length];
+        for (int i = 0; i < choices.Length; i++)
+        {
+            choicesText[i] = choices[i].GetComponentInChildren<TextMeshProUGUI>();
+           //choices[i].gameObject.SetActive(false);
+        }
+
     }
 
     /**
@@ -71,6 +74,7 @@ public class DialogueManager : MonoBehaviour
         // enable and initialize the choices up to the amount of choices for this line of dialogue
         foreach (Choice choice in currentchoices)
         {
+            Debug.Log(currentchoices.Count);
             choices[index].gameObject.SetActive(true);
             choicesText[index].text = choice.text;
             index++;
@@ -80,7 +84,7 @@ public class DialogueManager : MonoBehaviour
         {
             choices[i].gameObject.SetActive(false);
         }
-
+        StartCoroutine(SelectFirstChoice());
     }
 
     /**
@@ -132,7 +136,7 @@ public class DialogueManager : MonoBehaviour
      * Continue Story.
      */
     private void ContinueStory()
-    {
+    {   
         if (currentstory.canContinue)
         {
             string nextline = currentstory.Continue();
@@ -180,6 +184,16 @@ public class DialogueManager : MonoBehaviour
       
         yield return null;
     }
+
+    private IEnumerator SelectFirstChoice()
+    {
+        // Event System requires we clear it first, then wait
+        // for at least one frame before we set the current selected object.
+        EventSystem.current.SetSelectedGameObject(null);
+        yield return new WaitForEndOfFrame();
+        EventSystem.current.SetSelectedGameObject(choices[0].gameObject);
+    }
+    
 
 
 }
