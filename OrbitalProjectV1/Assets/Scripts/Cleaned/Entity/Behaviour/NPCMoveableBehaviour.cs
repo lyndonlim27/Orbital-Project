@@ -38,7 +38,7 @@ public class NPCMoveableBehaviour : NPCBehaviour
             _animator.SetFloat("Horizontal", Mathf.RoundToInt(point2Target.x));
             _animator.SetFloat("Vertical", Mathf.RoundToInt(point2Target.y));
             _animator.SetFloat("Speed", point2Target.magnitude);
-        float steps = 3 * Time.deltaTime;
+            float steps = 3 * Time.deltaTime;
             Vector2 offset = new Vector2(_target.transform.position.x, _target.transform.position.y + 1);
             transform.position = Vector3.MoveTowards(transform.position, offset, steps);
         }
