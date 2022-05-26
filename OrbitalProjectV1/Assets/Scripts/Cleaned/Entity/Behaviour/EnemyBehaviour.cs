@@ -18,7 +18,6 @@ public class EnemyBehaviour : EntityBehaviour
     //data;
     public EnemyData enemyData;
     public StateMachine stateMachine;
-    public int angerMultiplier = 1;
     private int cooldown;
     protected DamageFlicker _flicker;
     public bool isDead { get; private set; }
@@ -32,7 +31,7 @@ public class EnemyBehaviour : EntityBehaviour
 
     public Rigidbody2D rb { get; private set; }
     public Animator animator { get; private set; }
-    public GameObject aliveGO { get; private set; }
+ 
     public DetectionScript detectionScript;
     public Vector2 startingpos;
     public Player player;
@@ -52,7 +51,7 @@ public class EnemyBehaviour : EntityBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = enemyData.sprite;
         startingpos = GetComponent<Transform>().position;
-        _flicker = GetComponent<DamageFlicker>();
+        _flicker = GameObject.FindObjectOfType<DamageFlicker>();
         cooldown = 0;
         isDead = false;
         health = enemyData.words;
@@ -91,7 +90,7 @@ public class EnemyBehaviour : EntityBehaviour
 
     public void moveToTarget(Player player)
     {
-        float steps = enemyData.chaseSpeed * Time.deltaTime * angerMultiplier;
+        float steps = enemyData.chaseSpeed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position,player.transform.position,steps);
         flipFace(player.transform.position);
     }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Laser : Weapon
+public class Laser : RangedBehaviour
 {
     public int damageValue;
 
@@ -17,22 +17,14 @@ public class Laser : Weapon
         Player player = GameObject.FindObjectOfType<Player>();
     }
 
-    public override void MeleeAttack()
-    {
-        _animator.SetTrigger("Play");
-           
-    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        Player player = collision.gameObject.GetComponent<Player>();
+        if (player != null)
         {
-            Player player = collision.gameObject.GetComponent<Player>();
-
-            if (player != null)
-            {
-                player.TakeDamage(damageValue);
-            }
+            player.TakeDamage(damageValue);
+            
         }
     }
 

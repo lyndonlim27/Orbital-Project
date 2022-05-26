@@ -162,6 +162,9 @@ public abstract class TextLogic : MonoBehaviour
      */
     protected bool LetterCorrect(char let)
     {
+        Debug.Log(let);
+        Debug.Log(currentcounter);
+        Debug.Log(remainingword);
         return remainingword[currentcounter] == char.ToLower(let);
         //return remainingword.IndexOf(char.ToLower(let)) == currentcounter;
 

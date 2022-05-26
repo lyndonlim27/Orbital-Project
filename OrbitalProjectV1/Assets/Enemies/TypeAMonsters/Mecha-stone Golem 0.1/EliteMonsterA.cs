@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StoneGolem : EnemyBehaviour
+public class EliteMonsterA : EnemyBehaviour
 {
     public override void Start()
     {

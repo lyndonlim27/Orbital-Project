@@ -10,23 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a6001843dad184b65bbe555da823aabd, type: 3}
-  m_Name: DeathKnight
+  m_Name: StoneGolem
   m_EditorClassIdentifier: 
-  _name: DeathKnight
-  minDist: 7
-  isStateful: 1
-  sprite: {fileID: -750047184722822154, guid: 1914d95466e3d4341a618c35a56d5f82, type: 3}
+  _name: StoneGolem
+  minDist: 0
+  isStateful: 0
+  sprite: {fileID: 1558316739, guid: 1ed8b26f1c2354608b32d925213c28da, type: 3}
   condition: 0
   placementType: MANUAL
-  pos: {x: 10, y: 10}
+  pos: {x: 0, y: 4}
   gold: 0
   damageFlicker: {fileID: 672315831686351503, guid: 287fa61315c39429e8235e664399d8cc, type: 3}
   damageValue: 5
   moveSpeed: 1
-  chaseSpeed: 2
+  chaseSpeed: 1
   attackRange: 5
-  attackSpeed: 1
-  rangeds:
-  - {fileID: 7209955310949163474, guid: f8bee11cb544943c09df639e76497e56, type: 3}
-  animatorname: AC_DeathKnight
+  attackSpeed: 3
+  rangeds: []
+  animatorname: 
   words: 0

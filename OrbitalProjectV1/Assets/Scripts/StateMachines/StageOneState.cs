@@ -9,7 +9,7 @@
 
     public override void Enter(object stateData)
     {
-        enemy.angerMultiplier = 2;
+        //enemy.angerMultiplier = 2;
     }
 
     public override void FixedUpdate()

@@ -36,8 +36,11 @@ public class DialogueManager : MonoBehaviour
     private void Awake()
     {
         RoomManager roomManager = GameObject.FindObjectOfType<RoomManager>(false);
-        //npc = roomManager.npcs;
-        //_npcData = roomManager._npcData;
+        choicesText = new TextMeshProUGUI[choices.Length];
+        for (int i = 0; i < choices.Length; i ++)
+        {
+            choicesText[i] = choices[i].GetComponentInChildren<TextMeshProUGUI>();
+        }
    
     }
 
@@ -117,6 +120,7 @@ public class DialogueManager : MonoBehaviour
         currentNPC = npc;
         NPCData _npcData = (NPCData) npc.GetData();
         currentstory = new Story(_npcData.story.text);
+        Debug.Log(currentstory);
         playing = true;
         dialoguePanel.SetActive(true);
         ContinueStory();
