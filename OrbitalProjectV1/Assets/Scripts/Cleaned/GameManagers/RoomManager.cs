@@ -187,9 +187,11 @@ public abstract class RoomManager : MonoBehaviour
     */
     protected void CheckRunningEvents()
     {
-        if (dialMgr.playing || typingTestTL.isActiveAndEnabled)
+        Debug.Log(typingTestTL);
+        Debug.Log(dialMgr.playing);
+        if (dialMgr.playing || typingTestTL.isActiveAndEnabled || popUpSettings.gameObject.activeInHierarchy)
         {
-            //// for now we just use enemy tags, i think next time if got other stuffs then see how
+            
             PauseGame();
         }
         else
@@ -206,15 +208,13 @@ public abstract class RoomManager : MonoBehaviour
      */
     public void ResumeGame()
     {
-        if (!popUpSettings.gameObject.activeInHierarchy)
+       
+        foreach (EnemyBehaviour _enemy in enemies)
         {
-            foreach (EnemyBehaviour _enemy in enemies)
-            {
-                _enemy.enabled = true;
-                _enemy.animator.enabled = true;
-            }
-            player.enabled = true;
+            _enemy.enabled = true;
+            _enemy.animator.enabled = true;
         }
+        player.enabled = true;
     }
 
     /**
@@ -230,6 +230,7 @@ public abstract class RoomManager : MonoBehaviour
             _enemy.animator.enabled = false;
         }
 
+        player.enabled = false;
     }
 
     /**

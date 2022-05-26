@@ -44,6 +44,7 @@ public class TypingTestTL : TextLogic
 
     protected override void Start()
     {
+        
         StartCoroutine(CountDown());
         
     }
@@ -164,8 +165,8 @@ public class TypingTestTL : TextLogic
     {
         yield return new WaitForSeconds(2f);
         Debug.Log("done");
-        this.enabled = false;
         this.transform.parent.parent.gameObject.SetActive(false);
+        this.enabled = false;
         go.SetActive(true);
 
     }
