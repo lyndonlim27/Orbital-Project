@@ -21,7 +21,7 @@ public class DialogueDetection : MonoBehaviour
     {
         dialMgr = GameObject.FindObjectOfType<DialogueManager>(false);
         dialogueAlert.SetActive(false);
-        canProceed = false;
+        canProceed = true;
         
     }
     /**
@@ -38,14 +38,33 @@ public class DialogueDetection : MonoBehaviour
     /** Update is called once per frame
      */
     void Update()
-    {
+    {/*
         if (CheckForPlayer())
         {
             return;
         } 
         dialogueAlert.SetActive(true);        
-        CheckForInteractionButton();
-              
+        CheckForInteractionButton();*/
+        if (detectionScript.playerDetected && !dialMgr.playing)
+        {
+            if (player != null && !player.isDead() && !player.inCombat && canProceed)
+            {
+                dialogueAlert.SetActive(true);
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    dialMgr.EnterDialogue(currentNPC);
+                }
+            }
+            else
+            {
+                dialogueAlert.SetActive(false);
+            }
+
+        }
+        else
+        {
+            dialogueAlert.SetActive(false);
+        }
     }
 
     /**

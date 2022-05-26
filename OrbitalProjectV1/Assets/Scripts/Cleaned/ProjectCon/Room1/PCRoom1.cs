@@ -7,7 +7,6 @@ public class PCRoom1 : RoomManager
     // Start is called before the first frame update
     void Start()
     {
-
     }
 
     // Update is called once per frame
@@ -16,9 +15,10 @@ public class PCRoom1 : RoomManager
 
     }
 
-    protected override void FulfillCondition(string key)
+    public override void FulfillCondition(string key)
     {
-        throw new System.NotImplementedException();
+        Debug.Log(key);
+        conditions.Remove(key);
     }
 
     protected override void RoomChecker()
