@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ba70f7ff786014ee29280b4fa5418ccb
+guid: b0f17a384b44344ec8f639b7173d98e3
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -104,33 +104,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 1_south2_0
+      name: Player2DiagUp_0
       rect:
         serializedVersion: 2
-        x: 2
+        x: 3
         y: 1
-        width: 16
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9c5d965258ec24e6f96299ab4a1f7dfe
-      internalID: -903239417
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 1_south2_1
-      rect:
-        serializedVersion: 2
-        x: 22
-        y: 1
-        width: 16
+        width: 14
         height: 21
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -139,19 +118,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8f68a4111a32e4baf9e79ffa8d7b0903
-      internalID: -452976278
+      spriteID: 6f424656f52b44c7eb4d75e46614a302
+      internalID: -1313752943
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 1_south2_2
+      name: Player2DiagUp_1
       rect:
         serializedVersion: 2
-        x: 42
+        x: 23
         y: 1
-        width: 16
+        width: 14
         height: 20
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -160,19 +139,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a116b31500baf4c54b4ed37f24e02100
-      internalID: -1602565052
+      spriteID: c68fe4cfa4e57423981f563f336ab73b
+      internalID: 1990784120
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 1_south2_3
+      name: Player2DiagUp_2
       rect:
         serializedVersion: 2
-        x: 62
+        x: 43
         y: 1
-        width: 16
+        width: 14
         height: 21
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -181,8 +160,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 517989426ae9c4cf9b3799eee3b5cfab
-      internalID: 1770820468
+      spriteID: 424ddb66267964b3ba2a1d0e19579705
+      internalID: -1478295936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player2DiagUp_3
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 1
+        width: 14
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 170c901a4ca2043ea831265112b771a7
+      internalID: 1418601538
       vertices: []
       indices: 
       edges: []
@@ -198,10 +198,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      1_south2_0: -903239417
-      1_south2_2: -1602565052
-      1_south2_3: 1770820468
-      1_south2_1: -452976278
+      Player2DiagUp_1: 1990784120
+      Player2DiagUp_0: -1313752943
+      Player2DiagUp_3: 1418601538
+      Player2DiagUp_2: -1478295936
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
