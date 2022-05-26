@@ -148,10 +148,8 @@ public class DialogueManager : MonoBehaviour
             if (currentstory.currentTags.Count > 0 &&
                 currentstory.currentTags[currentstory.currentTags.Count - 1] == "NPC")
             {
-                currentNPC.Fulfill();
                 fulfilled = true;
-                
-
+                currentNPC.Fulfill();
             }
 
             DisplayChoices();

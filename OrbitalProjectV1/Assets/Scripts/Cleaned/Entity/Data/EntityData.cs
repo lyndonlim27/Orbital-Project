@@ -7,7 +7,7 @@ public class EntityData : ScriptableObject
 {
     public string _name;
     public float minDist;
-    public bool isStateful;
+    public bool isMoveable;
     public Sprite sprite;
     public int condition;
     public string placementType;

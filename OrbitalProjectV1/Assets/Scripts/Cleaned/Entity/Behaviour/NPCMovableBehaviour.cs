@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPCMoveableBehaviour : NPCBehaviour
+public class NPCMovableBehaviour : NPCBehaviour
 {
     private Animator _animator;
     private Player _target;

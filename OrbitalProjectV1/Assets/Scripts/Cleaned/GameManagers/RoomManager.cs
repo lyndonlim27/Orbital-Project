@@ -28,11 +28,12 @@ public abstract class RoomManager : MonoBehaviour
     [SerializeField] EnemyBehaviour[] enemyPrefabs;
     [SerializeField] EntityBehaviour[] itemPrefab;
     [SerializeField] NPCBehaviour NPCPrefab;
+    [SerializeField] protected GameObject[] doors;
 
-    /**
-     * Data.
-     */
-    public EntityData[] _itemData;
+/**
+ * Data.
+ */
+public EntityData[] _itemData;
     public NPCData[] _npcData;
     public EnemyData[] _enemyData;
 
@@ -68,13 +69,26 @@ public abstract class RoomManager : MonoBehaviour
         dialMgr = GameObject.FindObjectOfType<DialogueManager>(true);
         typingTestTL = GameObject.FindObjectOfType<TypingTestTL>(true);
         popUpSettings = FindObjectOfType<PopUpSettings>(true);
+
     }
 
-    protected abstract void RoomChecker();
+    
 
     public abstract void FulfillCondition(string key);
 
     protected abstract void UnfulfillCondition(string key);
+
+    protected virtual void RoomChecker()
+    {
+        if(conditions.Count == 0)
+        {
+            foreach(GameObject door in doors)
+            {
+                door.GetComponent<Animator>().SetBool("Open", true);
+                door.GetComponent<Collider2D>().enabled = false;
+            }
+        }
+    }
 
     /** 
      * Get a random position inside the room.
@@ -187,8 +201,7 @@ public abstract class RoomManager : MonoBehaviour
     */
     protected void CheckRunningEvents()
     {
-        Debug.Log(typingTestTL);
-        Debug.Log(dialMgr.playing);
+
         if (dialMgr.playing || typingTestTL.isActiveAndEnabled || popUpSettings.gameObject.activeInHierarchy)
         {
             
@@ -252,6 +265,14 @@ public abstract class RoomManager : MonoBehaviour
             
         }
         
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            this.enabled = false;
+        }
     }
 
 }

@@ -47,7 +47,7 @@ public class R1_Mgr : RoomManager
         //check condition 2 and onwards;
         if (!conditions.Contains("key"))
         {
-            door.UnlockDoor();
+         //   door.UnlockDoor();
         }
 
         

@@ -57,7 +57,6 @@ public class TypingTestTL : TextLogic
         if (seconds <= 0)
         {
             textConverter.enabled = false;
-            Debug.Log(wordCount);
             CanvasDisplayer.text = string.Format("Words Per Minute = {0}", (int) (wordCount / (1f/6)));
             StartCoroutine(WaitForStats());
             
@@ -140,7 +139,7 @@ public class TypingTestTL : TextLogic
         }
 
         wordCount = 0;
-        seconds = 10;
+        seconds = 1;
         remainingword = storybank[0];
         storybank.Remove(remainingword);
         int j = 4;

@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class PCRoom1 : RoomManager
 {
+    private TypingTestTL _tl;
 
     // Start is called before the first frame update
     void Start()
     {
         FindObjectOfType<PopUpSettings>(true).PopUpSettingsActive();
         FindObjectOfType<SubMenu>().ControlMenuActive();
+        _tl = GameObject.FindObjectOfType<TypingTestTL>(true);
     }
 
     // Update is called once per frame
@@ -19,22 +21,29 @@ public class PCRoom1 : RoomManager
         {
             return;
         }
-
         CheckRunningEvents();
+        RoomChecker();
     }
 
     public override void FulfillCondition(string key)
     {
-        Debug.Log(key);
         conditions.Remove(key);
-        TypingTestTL tl = GameObject.FindObjectOfType<TypingTestTL>(true);
-        tl.transform.parent.parent.gameObject.SetActive(true);
+        _tl.transform.parent.parent.gameObject.SetActive(true);
 
     }
 
     protected override void RoomChecker()
     {
-        throw new System.NotImplementedException();
+        Debug.Log(_tl.gameObject.activeInHierarchy);
+        Debug.Log(conditions.Count);
+        if (conditions.Count == 0 && !_tl.gameObject.activeInHierarchy)
+        {
+            foreach (GameObject door in doors)
+            {
+                door.GetComponent<Animator>().SetBool("Open", true);
+                door.GetComponent<Collider2D>().enabled = false;
+            }
+        }
     }
 
     protected override void UnfulfillCondition(string key)
