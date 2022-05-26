@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7176412498496553477}
   - component: {fileID: -7525411102249651782}
   - component: {fileID: -7167585196341909129}
+  - component: {fileID: 2238435140654887039}
   m_Layer: 0
   m_Name: Spazer
   m_TagString: playerWeap
@@ -148,3 +149,24 @@ MonoBehaviour:
   WeaponName: spazer
   range: 200
   _bulletPrefab: {fileID: 4506963531214061242, guid: 00394412e84604e1ba021c2a4f9ca94c, type: 3}
+--- !u!50 &2238435140654887039
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3712894707187609684}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0

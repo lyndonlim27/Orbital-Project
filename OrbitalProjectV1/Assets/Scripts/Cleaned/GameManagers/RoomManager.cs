@@ -46,6 +46,11 @@ public abstract class RoomManager : MonoBehaviour
     private DialogueManager dialMgr;
     private TypingTestTL typingTestTL;
 
+    /*
+     * UI
+     */
+    private PopUpSettings popUpSettings;
+
     /**
      * Retrieving of Data.
      */
@@ -62,7 +67,7 @@ public abstract class RoomManager : MonoBehaviour
         player = GameObject.FindObjectOfType<Player>(true);
         dialMgr = GameObject.FindObjectOfType<DialogueManager>(true);
         typingTestTL = GameObject.FindObjectOfType<TypingTestTL>(true);
-
+        popUpSettings = FindObjectOfType<PopUpSettings>(true);
     }
 
     protected abstract void RoomChecker();
@@ -199,23 +204,25 @@ public abstract class RoomManager : MonoBehaviour
     /**
      * Resume game.
      */
-    private void ResumeGame()
+    public void ResumeGame()
     {
-        player.enabled = true;
-        foreach (EnemyBehaviour _enemy in enemies)
+        if (!popUpSettings.gameObject.activeInHierarchy)
         {
-            _enemy.enabled = true;
-            _enemy.animator.enabled = true;
+            foreach (EnemyBehaviour _enemy in enemies)
+            {
+                _enemy.enabled = true;
+                _enemy.animator.enabled = true;
+            }
+            player.enabled = true;
         }
-
     }
 
     /**
      * Pause game.
      */
-    private void PauseGame()
+    public void PauseGame()
     {
-        player.enabled = false;
+
         foreach (EnemyBehaviour _enemy in enemies)
         {
             

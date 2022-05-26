@@ -39,7 +39,7 @@ public class DialogueManager : MonoBehaviour
      */
     private void Awake()
     {
-        roomManager = FindObjectOfType<RoomManager>();
+        roomManager = FindObjectOfType<RoomManager>(false);
         //npc = roomManager.npcs;
         //_npcData = roomManager._npcData;
 
