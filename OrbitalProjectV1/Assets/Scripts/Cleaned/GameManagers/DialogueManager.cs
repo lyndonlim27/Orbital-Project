@@ -37,7 +37,7 @@ public class DialogueManager : MonoBehaviour
      */
     private void Awake()
     {
-        roomManager = FindObjectOfType<RoomManager>();
+        roomManager = FindObjectOfType<RoomManager>(false);
         //npc = roomManager.npcs;
         //_npcData = roomManager._npcData;
 
@@ -106,7 +106,6 @@ public class DialogueManager : MonoBehaviour
      */
     void Update()
     {
-        Debug.Log(FindObjectOfType<RoomManager>());
         if (!playing)
         {
             return;

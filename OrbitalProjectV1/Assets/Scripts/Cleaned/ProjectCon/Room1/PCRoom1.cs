@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class PCRoom1 : RoomManager
 {
+
     // Start is called before the first frame update
     void Start()
     {
+        FindObjectOfType<PopUpSettings>(true).PopUpSettingsActive();
+        FindObjectOfType<SubMenu>().ControlMenuActive();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        CheckDialogue();
     }
 
     public override void FulfillCondition(string key)
