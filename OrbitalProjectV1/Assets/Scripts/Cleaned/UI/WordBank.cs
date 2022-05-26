@@ -16,7 +16,7 @@ public class WordBank : MonoBehaviour
     private void Awake()
     {
         var content = file.text;
-        var AllWords = content.Split("\n");
+        var AllWords = content.Split('\n',' ','.','!','?',';',':');
         wordBank.AddRange(AllWords);
         //wordBank.AddRange(originalwords);
         Shuffle();

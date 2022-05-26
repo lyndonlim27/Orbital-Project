@@ -12,33 +12,40 @@ public class TypingTestTL : TextLogic
     private int wordCount;
     private CanvasConverter textConverter;
     private TextMeshProUGUI CanvasDisplayer;
+    private RoomManager roomManager;
+    private List<string> storybank = new List<string>();
+    GameObject go;
 
     protected override void Awake()
     {
-        currentword = "";
-        seconds = 10;
-        wordCount = 0;
-        StringBuilder sb = new StringBuilder();
         string story = text.text;
+        string word = "";
         foreach (char c in story)
         {
-            if (c == ' ' || c == '\n')
+            if (char.IsLetter(c))
             {
-                currentword += " ";
-                
+                word += c;
             }
-
-            else if (char.IsLetter(c))
+            else
             {
-                currentword += c;
+                storybank.Add(word);
+                word = "";
             }
 
         }
-
-        remainingword = currentword.ToLower();
+        currentword = "";
+        remainingword = "";
         CanvasDisplayer = GetComponent<TextMeshProUGUI>();
         textConverter = GetComponent<CanvasConverter>();
         CanvasDisplayer.enabled = true;
+        seconds = 100;
+        go = FindObjectOfType<DialogueDetection>(true).gameObject;
+    }
+
+    protected override void Start()
+    {
+        StartCoroutine(CountDown());
+        
     }
 
     protected override void Update()
@@ -51,8 +58,11 @@ public class TypingTestTL : TextLogic
             textConverter.enabled = false;
             Debug.Log(wordCount);
             CanvasDisplayer.text = string.Format("Words Per Minute = {0}", (int) (wordCount / (1f/6)));
+            StartCoroutine(WaitForStats());
+            
+            
 
-            Debug.Log("done");
+
         }
         
     }
@@ -65,21 +75,19 @@ public class TypingTestTL : TextLogic
             return;
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (LetterCorrect(' '))
+            {
+                currentcounter++;
+                GenerateNewWord();
+            }
 
+            
+        }
 
         for (int i = (int)KeyCode.A; i <= (int)KeyCode.Z; i++)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                if (LetterCorrect(' '))
-                {
-                    ReplaceLetter();
-                    currentcounter++;
-                    PerformAction();
-                    break;
-                }
-                
-            }
 
             if (Input.GetKeyDown((KeyCode)i))
             {
@@ -97,13 +105,6 @@ public class TypingTestTL : TextLogic
         {
             ReplaceLetter();
             currentcounter++;
-            if (isWordComplete())
-            {
-
-                GenerateNewWord();
-                ResetCounter();
-            }
-
         }
     }
 
@@ -114,13 +115,58 @@ public class TypingTestTL : TextLogic
 
     protected override void GenerateNewWord()
     {
-        return;
+        wordCount++;
+        string newword;
+        while(storybank[0] == "")
+        {
+            storybank.Remove(storybank[0]);
+        }
+        newword = storybank[0];
+        remainingword = remainingword.Substring(currentcounter) + " " + newword.ToLower();
+        storybank.Remove(newword);
+        ResetCounter();
+        
+    }
+
+    private IEnumerator CountDown()
+    {
+        Debug.Log("have i entered coroutine?");
+        List<string> counter = new List<string>() { "THREE", "TWO", "ONE" };
+        for (int i = 0; i < counter.Count; i++)
+        {
+            remainingword = counter[i];
+            yield return new WaitForSeconds(1f);
+        }
+
+        wordCount = 0;
+        seconds = 10;
+        remainingword = storybank[0];
+        storybank.Remove(remainingword);
+        int j = 4;
+        while (j-- > 0)
+        {
+            string cword = storybank[0];
+            storybank.Remove(cword);
+            remainingword += " " + cword;
+        }
+        remainingword = remainingword.ToLower();
+
+
     }
 
     protected override void PerformAction()
     {
-        wordCount++;
-        remainingword = remainingword.Substring(currentcounter);
-        ResetCounter();
+        throw new System.NotImplementedException();
+    }
+
+
+    private IEnumerator WaitForStats()
+    {
+        yield return new WaitForSeconds(2f);
+        Debug.Log("done");
+        this.enabled = false;
+        this.transform.parent.parent.gameObject.SetActive(false);
+        go.SetActive(true);
+
     }
 }

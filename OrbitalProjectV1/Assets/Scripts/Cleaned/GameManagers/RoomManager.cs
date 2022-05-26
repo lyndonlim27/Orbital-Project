@@ -43,6 +43,8 @@ public abstract class RoomManager : MonoBehaviour
     protected bool activated;
     private Vector2 areaminBound;
     private Vector2 areamaxBound;
+    private DialogueManager dialMgr;
+    private TypingTestTL typingTestTL;
 
     /**
      * Retrieving of Data.
@@ -57,6 +59,10 @@ public abstract class RoomManager : MonoBehaviour
         items = new List<EntityBehaviour>();
         enemies = new List<EnemyBehaviour>();
         npcs = new List<NPCBehaviour>();
+        player = GameObject.FindObjectOfType<Player>(true);
+        dialMgr = GameObject.FindObjectOfType<DialogueManager>(true);
+        typingTestTL = GameObject.FindObjectOfType<TypingTestTL>(true);
+
     }
 
     protected abstract void RoomChecker();
@@ -97,14 +103,14 @@ public abstract class RoomManager : MonoBehaviour
      */
     protected void SpawnObjects()
     {
-        if(_itemData == null)
+        if (_itemData == null)
         {
             return;
         }
-        for(int i = 0; i < _itemData.Length; i++)
+        for (int i = 0; i < _itemData.Length; i++)
         {
             EntityData _item = _itemData[i];
-            Vector2 randomPoint = GetRandomPoint(areaminBound,areamaxBound);
+            Vector2 randomPoint = GetRandomPoint(areaminBound, areamaxBound);
             string placementType = _item.placementType;
             EntityBehaviour initprop;
             switch (placementType)
@@ -112,7 +118,7 @@ public abstract class RoomManager : MonoBehaviour
                 //manual placement for all other objects that are not unconditional;
                 //anything that is not unconditional -> switch, conditional, etc.
                 default:
-                case "MANUAL" :  
+                case "MANUAL":
                     initprop = Instantiate(itemPrefab[1], _item.pos, Quaternion.identity);
                     if (_item.condition == 1)
                     {
@@ -123,9 +129,9 @@ public abstract class RoomManager : MonoBehaviour
                     initprop = Instantiate(itemPrefab[0], randomPoint, Quaternion.identity);
                     break;
 
-            } 
+            }
             initprop.SetEntityStats(_item);
-            
+
 
 
         }
@@ -174,9 +180,9 @@ public abstract class RoomManager : MonoBehaviour
     /**
     * Pause/Unpause game when dialogue is/is not running.
     */
-    protected void CheckDialogue()
+    protected void CheckRunningEvents()
     {
-        if (GameObject.FindObjectOfType<DialogueManager>().playing)
+        if (dialMgr.playing || typingTestTL.isActiveAndEnabled)
         {
             //// for now we just use enemy tags, i think next time if got other stuffs then see how
             PauseGame();
@@ -187,6 +193,8 @@ public abstract class RoomManager : MonoBehaviour
 
         }
     }
+
+
 
     /**
      * Resume game.
@@ -199,7 +207,7 @@ public abstract class RoomManager : MonoBehaviour
             _enemy.enabled = true;
             _enemy.animator.enabled = true;
         }
-        player.enabled = true;
+
     }
 
     /**
@@ -214,7 +222,7 @@ public abstract class RoomManager : MonoBehaviour
             _enemy.enabled = false;
             _enemy.animator.enabled = false;
         }
-        player.enabled = false;
+
     }
 
     /**

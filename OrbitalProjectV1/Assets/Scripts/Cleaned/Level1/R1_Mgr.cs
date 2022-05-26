@@ -27,7 +27,7 @@ public class R1_Mgr : RoomManager
         }
         
         RoomChecker();
-        CheckDialogue();
+        CheckRunningEvents();
     }
 
     protected override void RoomChecker()

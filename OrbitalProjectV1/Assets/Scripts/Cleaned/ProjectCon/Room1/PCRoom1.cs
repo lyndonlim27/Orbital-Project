@@ -12,13 +12,21 @@ public class PCRoom1 : RoomManager
     // Update is called once per frame
     void Update()
     {
+        if (!this.activated)
+        {
+            return;
+        }
 
+        CheckRunningEvents();
     }
 
     public override void FulfillCondition(string key)
     {
         Debug.Log(key);
         conditions.Remove(key);
+        TypingTestTL tl = GameObject.FindObjectOfType<TypingTestTL>(true);
+        tl.transform.parent.parent.gameObject.SetActive(true);
+
     }
 
     protected override void RoomChecker()
@@ -31,5 +39,11 @@ public class PCRoom1 : RoomManager
         throw new System.NotImplementedException();
     }
 
+    IEnumerator CountDown()
+    {
+        yield return new WaitForSecondsRealtime(1f);
+
+
+    }
 
 }

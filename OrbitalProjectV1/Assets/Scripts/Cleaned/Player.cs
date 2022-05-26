@@ -74,14 +74,14 @@ public class Player : EntityBehaviour
 
         CheckCombat();
 
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            if (_currHealth > 0)
-            {
-                TakeDamage(3);
-                _rb.AddForce(transform.forward * 15000 * Time.fixedDeltaTime, ForceMode2D.Impulse);
-            }
-        }
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    if (_currHealth > 0)
+        //    {
+        //        TakeDamage(3);
+        //        _rb.AddForce(transform.forward * 15000 * Time.fixedDeltaTime, ForceMode2D.Impulse);
+        //    }
+        //}
 
 
         if (_time >= _timeDelay)

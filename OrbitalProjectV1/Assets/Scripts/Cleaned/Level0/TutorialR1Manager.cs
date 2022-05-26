@@ -28,7 +28,7 @@ public class TutorialR1Manager : RoomManager
         }
 
         RoomChecker();
-        CheckDialogue();
+        CheckRunningEvents();
     }
 
     protected override void RoomChecker()

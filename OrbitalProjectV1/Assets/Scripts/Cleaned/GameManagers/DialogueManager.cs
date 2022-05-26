@@ -25,6 +25,8 @@ public class DialogueManager : MonoBehaviour
 
     private NPCData _npcData;
 
+    private bool fulfilled;
+
     public bool playing { get; private set; }
 
     [Header("DialogueUI")]
@@ -106,7 +108,6 @@ public class DialogueManager : MonoBehaviour
      */
     void Update()
     {
-        Debug.Log(FindObjectOfType<RoomManager>());
         if (!playing)
         {
             return;
@@ -139,7 +140,7 @@ public class DialogueManager : MonoBehaviour
      * Continue Story.
      */
     private void ContinueStory()
-    {   
+    {
         if (currentstory.canContinue)
         {
             string nextline = currentstory.Continue();
@@ -148,8 +149,8 @@ public class DialogueManager : MonoBehaviour
                 currentstory.currentTags[currentstory.currentTags.Count - 1] == "NPC")
             {
                 currentNPC.Fulfill();
-
-                roomManager.FulfillCondition(_npcData._name);
+                fulfilled = true;
+                
 
             }
 
@@ -159,6 +160,8 @@ public class DialogueManager : MonoBehaviour
         else
         {
             StartCoroutine(ExitDialogue());
+            
+            
         }
     }
 
@@ -168,6 +171,11 @@ public class DialogueManager : MonoBehaviour
     private IEnumerator ExitDialogue()
     {
         yield return new WaitForSeconds(0.5f);
+        if (fulfilled)
+        {
+            roomManager.FulfillCondition(_npcData._name);
+        }
+
         playing = false;
         dialoguePanel.SetActive(false);
     }

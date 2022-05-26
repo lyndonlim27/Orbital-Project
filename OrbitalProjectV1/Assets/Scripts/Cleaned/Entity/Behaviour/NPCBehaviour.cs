@@ -6,6 +6,7 @@ using TMPro;
 public class NPCBehaviour : EntityBehaviour
 {
     [SerializeField] private NPCData data;
+    protected bool fulfilled;
 
     private void Awake()
     {
@@ -26,6 +27,7 @@ public class NPCBehaviour : EntityBehaviour
 
     internal virtual void Fulfill()
     {
+        fulfilled = true;
         this.GetComponentInChildren<DialogueDetection>().gameObject.SetActive(false);
         this.GetComponent<Animator>().enabled = false;
     }
