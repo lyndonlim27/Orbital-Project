@@ -10,7 +10,7 @@ public class TreasureRoom : RoomManager
 
     }
 
-    protected override void FulfillCondition(string key)
+    public override void FulfillCondition(string key)
     {
         throw new System.NotImplementedException();
     }

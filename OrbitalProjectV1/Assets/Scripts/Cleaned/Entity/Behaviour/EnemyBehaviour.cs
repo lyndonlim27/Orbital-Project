@@ -56,6 +56,7 @@ public class EnemyBehaviour : EntityBehaviour
         cooldown = 0;
         isDead = false;
         health = enemyData.words;
+        Debug.Log(FindObjectOfType<RoomManager>());
     }
 
     public virtual void Update()

@@ -7,14 +7,15 @@ public class NPCBehaviour : EntityBehaviour
 {
     [SerializeField] private NPCData data;
 
-
     private void Awake()
     {
         this.spriteRenderer = GetComponent<SpriteRenderer>();
+        
     }
     void Start()
     {
         this.spriteRenderer.sprite = data.sprite;
+
     }
 
     // Update is called once per frame
@@ -25,7 +26,8 @@ public class NPCBehaviour : EntityBehaviour
 
     internal virtual void Fulfill()
     {
-       
+        this.GetComponentInChildren<DialogueDetection>().gameObject.SetActive(false);
+        this.GetComponent<Animator>().enabled = false;
     }
 
     public override void Defeated()
@@ -42,4 +44,5 @@ public class NPCBehaviour : EntityBehaviour
     {
         return data;
     }
+
 }

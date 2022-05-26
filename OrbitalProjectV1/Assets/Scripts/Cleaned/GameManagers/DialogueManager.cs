@@ -23,6 +23,8 @@ public class DialogueManager : MonoBehaviour
 
     private NPCBehaviour currentNPC;
 
+    private NPCData _npcData;
+
     public bool playing { get; private set; }
 
     [Header("DialogueUI")]
@@ -35,9 +37,7 @@ public class DialogueManager : MonoBehaviour
      */
     private void Awake()
     {
-        RoomManager roomManager = GameObject.FindObjectOfType<RoomManager>(false);
-
-       
+        roomManager = FindObjectOfType<RoomManager>();
         //npc = roomManager.npcs;
         //_npcData = roomManager._npcData;
 
@@ -56,6 +56,7 @@ public class DialogueManager : MonoBehaviour
             choicesText[i] = choices[i].GetComponentInChildren<TextMeshProUGUI>();
            //choices[i].gameObject.SetActive(false);
         }
+
 
     }
 
@@ -76,7 +77,6 @@ public class DialogueManager : MonoBehaviour
         // enable and initialize the choices up to the amount of choices for this line of dialogue
         foreach (Choice choice in currentchoices)
         {
-            Debug.Log(currentchoices.Count);
             choices[index].gameObject.SetActive(true);
             choicesText[index].text = choice.text;
             index++;
@@ -106,6 +106,7 @@ public class DialogueManager : MonoBehaviour
      */
     void Update()
     {
+        Debug.Log(FindObjectOfType<RoomManager>());
         if (!playing)
         {
             return;
@@ -124,7 +125,7 @@ public class DialogueManager : MonoBehaviour
     public void EnterDialogue(NPCBehaviour npc)
     {
         currentNPC = npc;
-        NPCData _npcData = (NPCData) npc.GetData();
+        _npcData = (NPCData) npc.GetData();
         currentstory = new Story(_npcData.story.text);
         playing = true;
         dialoguePanel.SetActive(true);
@@ -142,12 +143,13 @@ public class DialogueManager : MonoBehaviour
         {
             string nextline = currentstory.Continue();
             StartCoroutine(TypeSentence(nextline));
-
-            
             if (currentstory.currentTags.Count > 0 &&
                 currentstory.currentTags[currentstory.currentTags.Count - 1] == "NPC")
             {
                 currentNPC.Fulfill();
+
+                roomManager.FulfillCondition(_npcData._name);
+
             }
 
             DisplayChoices();
@@ -164,7 +166,7 @@ public class DialogueManager : MonoBehaviour
      */
     private IEnumerator ExitDialogue()
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.5f);
         playing = false;
         dialoguePanel.SetActive(false);
     }

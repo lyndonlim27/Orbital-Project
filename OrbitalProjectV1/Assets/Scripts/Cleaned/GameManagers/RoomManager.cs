@@ -61,7 +61,7 @@ public abstract class RoomManager : MonoBehaviour
 
     protected abstract void RoomChecker();
 
-    protected abstract void FulfillCondition(string key);
+    public abstract void FulfillCondition(string key);
 
     protected abstract void UnfulfillCondition(string key);
 
@@ -142,6 +142,7 @@ public abstract class RoomManager : MonoBehaviour
             if (conditional == 1)
             {
                 conditions.Add(_npcd._name);
+                Debug.Log(_npcd._name);
             }
 
             NPCBehaviour initNPC = Instantiate(NPCPrefab, _npcd.pos, Quaternion.identity);

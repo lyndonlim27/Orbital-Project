@@ -9,11 +9,13 @@ public class NPCMoveableBehaviour : NPCBehaviour
     private Rigidbody2D _rb;
     private DialogueManager dialogueManager;
     private RoomManager roomManager;
+    private DetectionScript _detectionScript;
     // Start is called before the first frame update
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+        _detectionScript = GetComponentInChildren<DetectionScript>();
     }
     void Start()
     {
@@ -25,7 +27,11 @@ public class NPCMoveableBehaviour : NPCBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (GetComponentInChildren<DetectionScript>().playerDetected) {
+        if (_detectionScript == null)
+        {
+            return;
+        }
+        if (_detectionScript.playerDetected) {
             Vector2 point2Target = (Vector2)transform.position - (Vector2)_target.transform.position;
             point2Target.Normalize();
             point2Target = -point2Target;

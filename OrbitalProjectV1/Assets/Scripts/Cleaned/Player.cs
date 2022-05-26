@@ -52,6 +52,7 @@ public class Player : EntityBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _flicker = GameObject.FindObjectOfType<DamageFlicker>();
         dialMgr = GameObject.FindObjectOfType<DialogueManager>();
+        Debug.Log(FindObjectOfType<RoomManager>());
     }
 
     // Update is called once per frame

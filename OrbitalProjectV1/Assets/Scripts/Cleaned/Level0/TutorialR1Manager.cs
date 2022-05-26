@@ -54,7 +54,7 @@ public class TutorialR1Manager : RoomManager
 
 
 
-    protected override void FulfillCondition(string key)
+    public override void FulfillCondition(string key)
     {
         throw new System.NotImplementedException();
     }
