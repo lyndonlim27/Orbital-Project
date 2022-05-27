@@ -7,7 +7,6 @@ public class NPCMovableBehaviour : NPCBehaviour
     private Animator _animator;
     private Player _target;
     private DialogueManager dialogueManager;
-    private RoomManager roomManager;
     private DetectionScript _detectionScript;
     private Collider2D _col;
     // Start is called before the first frame update
@@ -22,7 +21,6 @@ public class NPCMovableBehaviour : NPCBehaviour
     void Start()
     {
         _target = GameObject.FindObjectOfType<Player>();
-        roomManager = transform.root.GetComponent<RoomManager>();
     }
 
     // Update is called once per frame

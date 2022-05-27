@@ -39,7 +39,6 @@ public class DialogueManager : MonoBehaviour
      */
     private void Awake()
     {
-        roomManager = FindObjectOfType<RoomManager>(false);
         //npc = roomManager.npcs;
         //_npcData = roomManager._npcData;
 
@@ -203,7 +202,11 @@ public class DialogueManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
         EventSystem.current.SetSelectedGameObject(choices[0].gameObject);
     }
-    
+
+    public void SetCurrentRoom(RoomManager roomManager)
+    {
+        this.roomManager = roomManager;
+    }
 
 
 }

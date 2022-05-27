@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PCRoom2 : RoomManager
-{
+{   
     public override void FulfillCondition(string key)
     {
-        throw new System.NotImplementedException();
+        conditions.Remove(key);
     }
 
-    protected override void UnfulfillCondition(string key)
+    public override void UnfulfillCondition(string key)
     {
-        throw new System.NotImplementedException();
+        conditions.Add(key);
     }
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +25,27 @@ public class PCRoom2 : RoomManager
     // Update is called once per frame
     void Update()
     {
-        
+        Debug.Log(Physics2D.OverlapBox(transform.position, roomSize, 0));
+        if (Physics2D.OverlapBox(transform.position, roomSize, 0))
+        {
+
+            if(activated == false)
+            {
+                activated = true;
+                dialMgr.SetCurrentRoom(this);
+                SpawnObjects();
+                AddConditionalNPCS();
+            }
+        }
+        else
+        {
+            this.enabled = false;
+        }
+    
+
+        RoomChecker();
+        Debug.Log(conditions.Count);
     }
+
+
 }

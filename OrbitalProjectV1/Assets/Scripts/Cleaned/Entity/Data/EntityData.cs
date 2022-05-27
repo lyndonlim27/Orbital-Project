@@ -7,10 +7,19 @@ public class EntityData : ScriptableObject
 {
     public string _name;
     public float minDist;
-    public bool isMoveable;
     public Sprite sprite;
+    public enum TYPE
+    {
+        PRESSURE_SWITCH,
+        SWITCH,
+        OBJECT,
+        NPC,
+        ITEM,
+        ENEMY
+    }
     public int condition;
-    public string placementType;
+    public TYPE _type;
+    public bool random;
     public Vector2 pos;
     public int gold;
     public GameObject damageFlicker;

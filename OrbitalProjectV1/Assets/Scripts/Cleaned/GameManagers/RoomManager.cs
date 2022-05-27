@@ -29,23 +29,26 @@ public abstract class RoomManager : MonoBehaviour
     [SerializeField] EntityBehaviour[] itemPrefab;
     [SerializeField] NPCBehaviour NPCPrefab;
     [SerializeField] protected GameObject[] doors;
+    [SerializeField] LayerMask layerMask;
+    [SerializeField] protected Vector2 roomSize;
 
-/**
- * Data.
- */
-public EntityData[] _itemData;
+    /**
+     * Data.
+     */
+    public EntityData[] _itemData;
     public NPCData[] _npcData;
     public EnemyData[] _enemyData;
 
     /**
      * Room.
      */
-    private Collider2D roomArea;
+    private PolygonCollider2D roomArea;
     protected bool activated;
     private Vector2 areaminBound;
     private Vector2 areamaxBound;
-    private DialogueManager dialMgr;
+    protected DialogueManager dialMgr;
     private TypingTestTL typingTestTL;
+    
 
     /*
      * UI
@@ -58,7 +61,7 @@ public EntityData[] _itemData;
     protected virtual void Awake()
     {
         activated = false;
-        roomArea = GetComponent<Collider2D>();
+        roomArea = GetComponent<PolygonCollider2D>();
         this.areaminBound = roomArea.bounds.min;
         this.areamaxBound = roomArea.bounds.max;
         conditions = new List<string>();
@@ -72,20 +75,28 @@ public EntityData[] _itemData;
 
     }
 
-    
+
 
     public abstract void FulfillCondition(string key);
 
-    protected abstract void UnfulfillCondition(string key);
+    public abstract void UnfulfillCondition(string key);
 
     protected virtual void RoomChecker()
     {
-        if(conditions.Count == 0)
+        if (conditions.Count == 0)
         {
-            foreach(GameObject door in doors)
+            foreach (GameObject door in doors)
             {
                 door.GetComponent<Animator>().SetBool("Open", true);
                 door.GetComponent<Collider2D>().enabled = false;
+            }
+        }
+        else
+        {
+            foreach (GameObject door in doors)
+            {
+                door.GetComponent<Animator>().SetBool("Open", false);
+                door.GetComponent<Collider2D>().enabled = true;
             }
         }
     }
@@ -107,12 +118,10 @@ public EntityData[] _itemData;
             //tr = max.x, max.y;
             //br = max.x, min.y;
             //anywhere within these 4 bounds are possible pts;
-
             randomPoint = new Vector2(
             Random.Range(minBound.x, maxBound.x),
             Random.Range(minBound.y, maxBound.y));
-
-        } while (!roomArea.OverlapPoint(randomPoint));
+        } while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
         return randomPoint;
     }
 
@@ -129,30 +138,44 @@ public EntityData[] _itemData;
         for (int i = 0; i < _itemData.Length; i++)
         {
             EntityData _item = _itemData[i];
-            Vector2 randomPoint = GetRandomPoint(areaminBound, areamaxBound);
-            string placementType = _item.placementType;
             EntityBehaviour initprop;
-            switch (placementType)
+            if (_item.condition == 1)
             {
-                //manual placement for all other objects that are not unconditional;
-                //anything that is not unconditional -> switch, conditional, etc.
-                default:
-                case "MANUAL":
-                    initprop = Instantiate(itemPrefab[1], _item.pos, Quaternion.identity);
-                    if (_item.condition == 1)
-                    {
-                        conditions.Add(_item._name);
-                    }
-                    break;
-                case "RANDOM":
-                    initprop = Instantiate(itemPrefab[0], randomPoint, Quaternion.identity);
-                    break;
-
+                conditions.Add(_item._name);
             }
+            initprop = InstantiateEntity(_item);
             initprop.SetEntityStats(_item);
+            initprop.SetCurrentRoom(this);
+        }
+    }
 
 
+    /**
+     * Check what type the entity it is and instantiate
+     */
 
+    private EntityBehaviour InstantiateEntity(EntityData data)
+    {
+
+        Vector2 pos = data.random ? GetRandomPoint(areaminBound, areamaxBound) : data.pos;
+
+        switch (data._type)
+        {
+            default:
+            case EntityData.TYPE.OBJECT:
+                return Instantiate(itemPrefab[0], pos, Quaternion.identity);
+            case EntityData.TYPE.ITEM:
+                return Instantiate(itemPrefab[1], pos, Quaternion.identity);
+            case EntityData.TYPE.PRESSURE_SWITCH:
+                return Instantiate(itemPrefab[2], pos, Quaternion.identity);
+            case EntityData.TYPE.SWITCH:
+                return Instantiate(itemPrefab[3], pos, Quaternion.identity);
+                /*
+                case EntityData.TYPE.NPC:
+                    return Instantiate(itemPrefab[4], data.pos, Quaternion.identity);
+                case EntityData.TYPE.ENEMY:
+                    return Instantiate(itemPrefab[5], data.pos, Quaternion.identity);
+                */
         }
     }
 
@@ -172,6 +195,7 @@ public EntityData[] _itemData;
 
             NPCBehaviour initNPC = Instantiate(NPCPrefab, _npcd.pos, Quaternion.identity);
             initNPC.SetEntityStats(_npcd);
+            initNPC.SetCurrentRoom(this);
         }
 
     }
@@ -204,7 +228,7 @@ public EntityData[] _itemData;
 
         if (dialMgr.playing || typingTestTL.isActiveAndEnabled || popUpSettings.gameObject.activeInHierarchy)
         {
-            
+
             PauseGame();
         }
         else
@@ -221,7 +245,7 @@ public EntityData[] _itemData;
      */
     public void ResumeGame()
     {
-       
+
         foreach (EnemyBehaviour _enemy in enemies)
         {
             _enemy.enabled = true;
@@ -238,7 +262,7 @@ public EntityData[] _itemData;
 
         foreach (EnemyBehaviour _enemy in enemies)
         {
-            
+
             _enemy.enabled = false;
             _enemy.animator.enabled = false;
         }
@@ -251,13 +275,15 @@ public EntityData[] _itemData;
      * @param collision 
      * Check whether is player.
      */
+    /*
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.CompareTag("Player"))
         {
             if (activated == false)
             {
                 activated = true;
+                dialMgr.SetCurrentRoom(this);
                 SpawnObjects();
                 AddConditionalNPCS();
 
@@ -265,14 +291,23 @@ public EntityData[] _itemData;
             
         }
         
-    }
+    }*/
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.CompareTag("Player"))
         {
-            this.enabled = false;
+            if (conditions.Count == 0)
+            {
+                this.enabled = false;
+            }
         }
     }
 
+    void OnDrawGizmos()
+    {
+        Gizmos.DrawWireCube(transform.position, roomSize);
+
+
+    }
 }

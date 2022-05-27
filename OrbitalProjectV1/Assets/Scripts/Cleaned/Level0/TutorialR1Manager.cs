@@ -59,7 +59,7 @@ public class TutorialR1Manager : RoomManager
         throw new System.NotImplementedException();
     }
 
-    protected override void UnfulfillCondition(string key)
+    public override void UnfulfillCondition(string key)
     {
         throw new System.NotImplementedException();
     }

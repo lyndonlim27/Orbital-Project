@@ -46,7 +46,7 @@ public class PCRoom1 : RoomManager
         }
     }
 
-    protected override void UnfulfillCondition(string key)
+    public override void UnfulfillCondition(string key)
     {
         throw new System.NotImplementedException();
     }

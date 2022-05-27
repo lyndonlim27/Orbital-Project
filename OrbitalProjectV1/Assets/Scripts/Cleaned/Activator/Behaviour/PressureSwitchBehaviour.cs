@@ -9,7 +9,7 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
     [SerializeField] private SwitchData data;
     public LayerMask layerMask;
     private List<Collider2D> colliders;
-    private bool _active;
+    private Coroutine _coroutine = null;
     /*
     private void Update()
     {
@@ -36,6 +36,7 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
         return data;
     }
 
+
     /*
     private void FixedUpdate()
     {
@@ -59,17 +60,25 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
     public void OnTriggerEnter2D(Collider2D collider)
     {
         colliders.Add(collider);
-        OnSwitch();
+        if (colliders.Count == 1)
+        {
+            OnSwitch();
+            if (_coroutine != null)
+            {
+                StopCoroutine(_coroutine);
+            }
+        }
     }
 
 
  
     public void OnTriggerExit2D(Collider2D collider)
     {
+
         colliders.Remove(collider);
-        if(colliders.Count == 0)
+        if (colliders.Count == 0)
         {
-            StartCoroutine(offDelay());
+            _coroutine = StartCoroutine(offDelay());
         }
         //OffSwitch();
       //  StartCoroutine(offDelay());
@@ -92,11 +101,13 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
     private void OnSwitch()
     {
         _animator.SetBool("Collision", true);
+        currentRoom.FulfillCondition(data._name);
     }
 
     private void OffSwitch()
     {
         _animator.SetBool("Collision", false);
+        currentRoom.UnfulfillCondition(data._name);
     }
 
     public override void Defeated()
