@@ -23,28 +23,11 @@ public class PCRoom2 : RoomManager
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
-        Debug.Log(Physics2D.OverlapBox(transform.position, roomSize, 0));
-        if (Physics2D.OverlapBox(transform.position, roomSize, 0))
-        {
 
-            if(activated == false)
-            {
-                activated = true;
-                dialMgr.SetCurrentRoom(this);
-                SpawnObjects();
-                AddConditionalNPCS();
-            }
-        }
-        else
-        {
-            this.enabled = false;
-        }
-    
-
+        base.Update();
         RoomChecker();
-        Debug.Log(conditions.Count);
     }
 
 

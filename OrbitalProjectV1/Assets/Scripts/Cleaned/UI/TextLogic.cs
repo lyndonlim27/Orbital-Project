@@ -32,7 +32,7 @@ public abstract class TextLogic : MonoBehaviour
         parent = this.gameObject.transform.root.GetComponent<EntityBehaviour>();
         minDist = parent.GetData().minDist;
         remainingword = "";
-        currentword = parent.GetData()._name;
+        currentword = parent.GetData()._name.ToLower();
 
 
     }
@@ -42,8 +42,7 @@ public abstract class TextLogic : MonoBehaviour
     protected virtual void Start()
     {
         GenerateNewWord();
-        Debug.Log(currentword);
-        Debug.Log(remainingword);
+
     }
 
     /**
@@ -162,9 +161,6 @@ public abstract class TextLogic : MonoBehaviour
      */
     protected bool LetterCorrect(char let)
     {
-        Debug.Log(let);
-        Debug.Log(currentcounter);
-        Debug.Log(remainingword);
         return remainingword[currentcounter] == char.ToLower(let);
         //return remainingword.IndexOf(char.ToLower(let)) == currentcounter;
 

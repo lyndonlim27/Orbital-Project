@@ -42,7 +42,6 @@ public class TextConverter : MonoBehaviour
 
         if (tmp != null)
         {
-            Debug.Log(tmp.text);
             tmp.text = ConvertToCustomSprites(textlogic.remainingword);
         }
     }

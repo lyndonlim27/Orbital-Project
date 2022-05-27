@@ -15,12 +15,9 @@ public class PCRoom1 : RoomManager
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
-        if (!this.activated)
-        {
-            return;
-        }
+        base.Update();
         CheckRunningEvents();
         RoomChecker();
     }
@@ -50,12 +47,4 @@ public class PCRoom1 : RoomManager
     {
         throw new System.NotImplementedException();
     }
-
-    IEnumerator CountDown()
-    {
-        yield return new WaitForSecondsRealtime(1f);
-
-
-    }
-
 }

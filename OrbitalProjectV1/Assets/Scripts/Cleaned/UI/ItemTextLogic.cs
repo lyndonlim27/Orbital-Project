@@ -18,6 +18,6 @@ public class ItemTextLogic : TextLogic
 
     protected override void PerformAction()
     {
-        Destroy(parent.gameObject);
+        parent.GetComponent<ItemWithTextBehaviour>().Defeated();
     }
 }

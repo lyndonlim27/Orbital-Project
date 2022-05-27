@@ -29,7 +29,7 @@ public abstract class RoomManager : MonoBehaviour
     [SerializeField] EntityBehaviour[] itemPrefab;
     [SerializeField] NPCBehaviour NPCPrefab;
     [SerializeField] protected GameObject[] doors;
-    [SerializeField] LayerMask layerMask;
+    [SerializeField] protected LayerMask layerMask;
     [SerializeField] protected Vector2 roomSize;
 
     /**
@@ -75,6 +75,31 @@ public abstract class RoomManager : MonoBehaviour
 
     }
 
+    protected virtual void Update()
+    {
+        if (Physics2D.OverlapBox(transform.position, roomSize, 0, LayerMask.GetMask("Player")) != null)
+        {
+
+            if (activated == false)
+            {
+                activated = true;
+                dialMgr.SetCurrentRoom(this);
+                SpawnObjects();
+                AddConditionalNPCS();
+            }
+            else
+            {
+
+            }
+        }
+        else
+        {
+            if (activated)
+            {
+                this.enabled = false;
+            }
+        }
+    }
 
 
     public abstract void FulfillCondition(string key);
@@ -138,14 +163,15 @@ public abstract class RoomManager : MonoBehaviour
         for (int i = 0; i < _itemData.Length; i++)
         {
             EntityData _item = _itemData[i];
-            EntityBehaviour initprop;
+            //EntityBehaviour initprop;
             if (_item.condition == 1)
             {
                 conditions.Add(_item._name);
             }
-            initprop = InstantiateEntity(_item);
+            InstantiateEntity(_item);
+            /*
             initprop.SetEntityStats(_item);
-            initprop.SetCurrentRoom(this);
+            initprop.SetCurrentRoom(this); */
         }
     }
 
@@ -154,22 +180,35 @@ public abstract class RoomManager : MonoBehaviour
      * Check what type the entity it is and instantiate
      */
 
-    private EntityBehaviour InstantiateEntity(EntityData data)
+    public void InstantiateEntity(EntityData data)
     {
 
         Vector2 pos = data.random ? GetRandomPoint(areaminBound, areamaxBound) : data.pos;
-
+      
         switch (data._type)
         {
             default:
             case EntityData.TYPE.OBJECT:
-                return Instantiate(itemPrefab[0], pos, Quaternion.identity);
+                itemPrefab[0].SetEntityStats(data);
+                itemPrefab[0].GetComponent<SpriteRenderer>().sprite = data.sprite;
+                Instantiate(itemPrefab[0], pos, Quaternion.identity).SetCurrentRoom(this);
+                break;
             case EntityData.TYPE.ITEM:
-                return Instantiate(itemPrefab[1], pos, Quaternion.identity);
+                itemPrefab[1].SetEntityStats(data);
+                itemPrefab[1].GetComponent<SpriteRenderer>().sprite = data.sprite;
+                Instantiate(itemPrefab[1], pos, Quaternion.identity).SetCurrentRoom(this);
+                break;
             case EntityData.TYPE.PRESSURE_SWITCH:
-                return Instantiate(itemPrefab[2], pos, Quaternion.identity);
+                itemPrefab[2].SetEntityStats(data);
+                itemPrefab[2].GetComponent<SpriteRenderer>().sprite = data.sprite;
+                Instantiate(itemPrefab[2], pos, Quaternion.identity).SetCurrentRoom(this);
+                break;
             case EntityData.TYPE.SWITCH:
-                return Instantiate(itemPrefab[3], pos, Quaternion.identity);
+                itemPrefab[3].SetEntityStats(data);
+                itemPrefab[3].GetComponent<SpriteRenderer>().sprite = data.sprite;
+                Instantiate(itemPrefab[3], pos, Quaternion.identity).SetCurrentRoom(this);
+                break;
+
                 /*
                 case EntityData.TYPE.NPC:
                     return Instantiate(itemPrefab[4], data.pos, Quaternion.identity);
