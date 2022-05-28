@@ -30,6 +30,7 @@ public class ProjConExit : MonoBehaviour
             _player.gameObject.SetActive(false);
             _camera.Follow = ship.transform;
             ship.enabled = true;
+            ship.GetComponent<AudioSource>().enabled = true;
         }
     }
 }

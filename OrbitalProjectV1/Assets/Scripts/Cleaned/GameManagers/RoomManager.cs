@@ -48,6 +48,7 @@ public abstract class RoomManager : MonoBehaviour
     private Vector2 areamaxBound;
     protected DialogueManager dialMgr;
     private TypingTestTL typingTestTL;
+    private Collider2D _collider;
     
 
     /*
@@ -77,7 +78,8 @@ public abstract class RoomManager : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (Physics2D.OverlapBox(transform.position, roomSize, 0, LayerMask.GetMask("Player")) != null)
+        _collider = Physics2D.OverlapBox(transform.position, roomSize, 0, LayerMask.GetMask("Player"));
+        if (_collider != null)
         {
 
             if (activated == false)
@@ -108,7 +110,7 @@ public abstract class RoomManager : MonoBehaviour
 
     protected virtual void RoomChecker()
     {
-        if (conditions.Count == 0)
+        if (conditions.Count == 0 && _collider != null)
         {
             foreach (GameObject door in doors)
             {

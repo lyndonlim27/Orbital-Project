@@ -26,10 +26,7 @@ public class NPCMovableBehaviour : NPCBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (fulfilled)
-        {
-            _col.enabled = true;
-        }
+
         if (!fulfilled & _detectionScript.playerDetected) {
             Vector2 point2Target = (Vector2)transform.position - (Vector2)_target.transform.position;
             point2Target.Normalize();
