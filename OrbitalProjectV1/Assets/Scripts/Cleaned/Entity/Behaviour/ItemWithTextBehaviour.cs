@@ -8,14 +8,14 @@ public class ItemWithTextBehaviour : EntityBehaviour
     private Animator _animator;
     
 
-    protected override void Awake()
+    void Awake()
     {
-        base.Awake();
+        this.spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
         
     }
 
-    protected override void Start()
+     void Start()
     {
         spriteRenderer.sprite = data.sprite;
         _animator.runtimeAnimatorController =
@@ -34,11 +34,27 @@ public class ItemWithTextBehaviour : EntityBehaviour
                 + new Vector2(Random.Range(-1, 1), Random.Range(-1, 1));
             entityData.random = false;
             currentRoom.InstantiateEntity(entityData);
+            if(entityData.condition == 1)
+            {
+                currentRoom.UnfulfillCondition(entityData._name);
+            }
            // entity.SetEntityStats(entityData);
            // entity.GetComponent<SpriteRenderer>().sprite = entityData.sprite;
            //Debug.Log(entity.GetData());
             
         }
+
+        if (data.isAWeapon)
+        {
+            FindObjectOfType<WeaponPickup>().Swap(data._name);
+        }
+
+        if(data.condition == 1)
+        {
+            currentRoom.FulfillCondition(data._name);
+        }
+
+        
     }
 
     public override EntityData GetData()

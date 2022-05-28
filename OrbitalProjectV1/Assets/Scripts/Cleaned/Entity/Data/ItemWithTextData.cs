@@ -8,6 +8,7 @@ public class ItemWithTextData : EntityData
     public List<EntityData> entityDatas;
     public string ac_name;
     public string _trigger;
+    public bool isAWeapon;
 
     // Start is called before the first frame update
 

@@ -10,7 +10,7 @@ public class PCRoom1 : RoomManager
     void Start()
     {
         FindObjectOfType<PopUpSettings>(true).PopUpSettingsActive();
-        FindObjectOfType<SubMenu>().ControlMenuActive();
+        FindObjectOfType<SubMenu>(true).ControlMenuActive();
         _tl = GameObject.FindObjectOfType<TypingTestTL>(true);
     }
 
@@ -31,8 +31,6 @@ public class PCRoom1 : RoomManager
 
     protected override void RoomChecker()
     {
-        Debug.Log(_tl.gameObject.activeInHierarchy);
-        Debug.Log(conditions.Count);
         if (conditions.Count == 0 && !_tl.gameObject.activeInHierarchy)
         {
             foreach (GameObject door in doors)

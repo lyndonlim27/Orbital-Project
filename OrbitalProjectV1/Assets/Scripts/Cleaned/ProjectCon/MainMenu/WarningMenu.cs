@@ -1,14 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class LoadProjConScene : MonoBehaviour
+public class WarningMenu : MonoBehaviour
 {
 
-    public void LoadScene()
+    public void WarningMenuActive()
     {
-        SceneManager.LoadScene("Assets/Scenes/ProjectConceptScene.unity");
+        this.gameObject.SetActive(true);
+    }
+
+    public void WarningMenuInactive()
+    {
+        this.gameObject.SetActive(false);
     }
 
     // Start is called before the first frame update

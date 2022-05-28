@@ -26,8 +26,8 @@ public abstract class RoomManager : MonoBehaviour
      */
     [Header("Prefabs")]
     [SerializeField] EnemyBehaviour[] enemyPrefabs;
-    [SerializeField] EntityBehaviour[] itemPrefab;
-    [SerializeField] NPCBehaviour NPCPrefab;
+    [SerializeField] EntityBehaviour[] entityPrefabs;
+ //   [SerializeField] NPCBehaviour NPCPrefab;
     [SerializeField] protected GameObject[] doors;
     [SerializeField] protected LayerMask layerMask;
     [SerializeField] protected Vector2 roomSize;
@@ -35,8 +35,8 @@ public abstract class RoomManager : MonoBehaviour
     /**
      * Data.
      */
-    public EntityData[] _itemData;
-    public NPCData[] _npcData;
+    public EntityData[] _EntityData;
+   // public NPCData[] _npcData;
     public EnemyData[] _enemyData;
 
     /**
@@ -85,7 +85,7 @@ public abstract class RoomManager : MonoBehaviour
                 activated = true;
                 dialMgr.SetCurrentRoom(this);
                 SpawnObjects();
-                AddConditionalNPCS();
+                //AddConditionalNPCS();
             }
             else
             {
@@ -156,13 +156,13 @@ public abstract class RoomManager : MonoBehaviour
      */
     protected void SpawnObjects()
     {
-        if (_itemData == null)
+        if (_EntityData == null)
         {
             return;
         }
-        for (int i = 0; i < _itemData.Length; i++)
+        for (int i = 0; i < _EntityData.Length; i++)
         {
-            EntityData _item = _itemData[i];
+            EntityData _item = _EntityData[i];
             //EntityBehaviour initprop;
             if (_item.condition == 1)
             {
@@ -189,29 +189,31 @@ public abstract class RoomManager : MonoBehaviour
         {
             default:
             case EntityData.TYPE.OBJECT:
-                itemPrefab[0].SetEntityStats(data);
-                itemPrefab[0].GetComponent<SpriteRenderer>().sprite = data.sprite;
-                Instantiate(itemPrefab[0], pos, Quaternion.identity).SetCurrentRoom(this);
+                entityPrefabs[0].SetEntityStats(data);
+                entityPrefabs[0].GetComponent<SpriteRenderer>().sprite = data.sprite;
+                Instantiate(entityPrefabs[0], pos, Quaternion.identity).SetCurrentRoom(this);
                 break;
             case EntityData.TYPE.ITEM:
-                itemPrefab[1].SetEntityStats(data);
-                itemPrefab[1].GetComponent<SpriteRenderer>().sprite = data.sprite;
-                Instantiate(itemPrefab[1], pos, Quaternion.identity).SetCurrentRoom(this);
+                entityPrefabs[1].SetEntityStats(data);
+                entityPrefabs[1].GetComponent<SpriteRenderer>().sprite = data.sprite;
+                Instantiate(entityPrefabs[1], pos, Quaternion.identity).SetCurrentRoom(this);
                 break;
             case EntityData.TYPE.PRESSURE_SWITCH:
-                itemPrefab[2].SetEntityStats(data);
-                itemPrefab[2].GetComponent<SpriteRenderer>().sprite = data.sprite;
-                Instantiate(itemPrefab[2], pos, Quaternion.identity).SetCurrentRoom(this);
+                entityPrefabs[2].SetEntityStats(data);
+                entityPrefabs[2].GetComponent<SpriteRenderer>().sprite = data.sprite;
+                Instantiate(entityPrefabs[2], pos, Quaternion.identity).SetCurrentRoom(this);
                 break;
             case EntityData.TYPE.SWITCH:
-                itemPrefab[3].SetEntityStats(data);
-                itemPrefab[3].GetComponent<SpriteRenderer>().sprite = data.sprite;
-                Instantiate(itemPrefab[3], pos, Quaternion.identity).SetCurrentRoom(this);
+                entityPrefabs[3].SetEntityStats(data);
+                entityPrefabs[3].GetComponent<SpriteRenderer>().sprite = data.sprite;
+                Instantiate(entityPrefabs[3], pos, Quaternion.identity).SetCurrentRoom(this);
                 break;
-
+            case EntityData.TYPE.NPC:
+                entityPrefabs[4].SetEntityStats(data);
+                entityPrefabs[4].GetComponent<SpriteRenderer>().sprite = data.sprite;
+                Instantiate(entityPrefabs[4], pos, Quaternion.identity).SetCurrentRoom(this);
+                break;
                 /*
-                case EntityData.TYPE.NPC:
-                    return Instantiate(itemPrefab[4], data.pos, Quaternion.identity);
                 case EntityData.TYPE.ENEMY:
                     return Instantiate(itemPrefab[5], data.pos, Quaternion.identity);
                 */
@@ -221,6 +223,7 @@ public abstract class RoomManager : MonoBehaviour
     /**
      * Storing conditional NPCs.
      */
+    /*
     protected void AddConditionalNPCS()
     {
         foreach (NPCData _npcd in _npcData)
@@ -237,7 +240,7 @@ public abstract class RoomManager : MonoBehaviour
             initNPC.SetCurrentRoom(this);
         }
 
-    }
+    }*/
 
     /**
      * Check that every conditions are fulfilled and enemies are dead.

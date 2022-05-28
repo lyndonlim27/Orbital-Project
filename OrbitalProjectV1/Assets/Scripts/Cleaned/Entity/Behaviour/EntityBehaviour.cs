@@ -14,16 +14,6 @@ public abstract class EntityBehaviour : MonoBehaviour
 
     public abstract EntityData GetData();
 
-    protected virtual void Awake()
-    {
-        this.spriteRenderer = GetComponent<SpriteRenderer>();
-    }
-
-    protected virtual void Start()
-    {
-
-    }
-
     public void SetCurrentRoom(RoomManager roomManager)
     {
         currentRoom = roomManager;
