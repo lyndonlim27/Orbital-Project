@@ -21,6 +21,7 @@ public class Player : EntityBehaviour
     private Weapon _currWeapon;
     private WeaponPickup _weaponManager;
     private DamageFlicker _flicker;
+    private int _currGold;
 
 
     [Header("Player UI")]
@@ -73,16 +74,15 @@ public class Player : EntityBehaviour
 
         CheckCombat();
 
-        //if (Input.GetKeyDown(KeyCode.P))
-        //{
-        //    if (_currHealth > 0)
-        //    {
-        //        TakeDamage(3);
-        //        _rb.AddForce(transform.forward * 15000 * Time.fixedDeltaTime, ForceMode2D.Impulse);
-        //    }
-        //}
-
-
+        if (_currHealth > 100)
+        {
+            _currHealth = 100;
+        }
+         
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            TakeDamage(20);
+        }
         if (_time >= _timeDelay)
         {
             _movement.x = Input.GetAxisRaw("Horizontal");
@@ -134,6 +134,17 @@ public class Player : EntityBehaviour
         _currHealth -= damageTaken;
         healthBar.SetHealth(_currHealth);
         _flicker.Flicker(this);
+    }
+
+    public void AddHealth(int health)
+    {
+        _currHealth += health;
+        healthBar.SetHealth(_currHealth);
+    }
+
+    public void AddGold(int gold)
+    {
+        _currGold += gold;
     }
 
     //When player shoot, player direction faces the target enemy

@@ -27,6 +27,5 @@ public class PopUpSettings : MonoBehaviour
     {
         this.gameObject.SetActive(false);
         roomManager.ResumeGame();
-        Debug.Log("WHY");
     }
 }

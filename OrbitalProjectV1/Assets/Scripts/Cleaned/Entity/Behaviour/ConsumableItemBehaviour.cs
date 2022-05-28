@@ -4,21 +4,39 @@ using UnityEngine;
 
 public class ConsumableItemBehaviour : EntityBehaviour
 {
-    [SerializeField] private EntityData itemData;
+    [SerializeField] private ConsumableItemData _itemData;
 
     public override void Defeated()
     {
-        //drop some gold;
-        Destroy(gameObject);
+        Destroy(this.gameObject);
     }
 
     public override EntityData GetData()
     {   
-        return itemData;
+        return _itemData;
     }
 
     public override void SetEntityStats(EntityData stats)
     {
-        this.itemData = stats;
+        this._itemData = (ConsumableItemData) stats;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            Player player = collision.GetComponent<Player>();
+            switch (_itemData._consumableType)
+            {
+                default:
+                case ConsumableItemData.CONSUMABLE.HEALTH:
+                    player.AddHealth(_itemData._health);
+                    break;
+                case ConsumableItemData.CONSUMABLE.GOLD:
+                    player.AddGold(_itemData._gold);
+                    break;
+            }
+            Defeated();
+        }
     }
 }

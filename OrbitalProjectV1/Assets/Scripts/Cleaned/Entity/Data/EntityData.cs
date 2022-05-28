@@ -21,6 +21,5 @@ public class EntityData : ScriptableObject
     public TYPE _type;
     public bool random;
     public Vector2 pos;
-    public int gold;
     public GameObject damageFlicker;
 }
