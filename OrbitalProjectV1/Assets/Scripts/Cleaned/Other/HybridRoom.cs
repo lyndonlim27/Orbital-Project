@@ -10,9 +10,9 @@ public class HybridRoom : RoomManager
         
     }
 
-    private void Update()
+    protected override void Update()
     {
-        
+        base.Update();
     }
 
     protected override void RoomChecker()
