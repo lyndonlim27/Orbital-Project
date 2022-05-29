@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class PCRoom3 : RoomManager
 {
+    int cooldown;
+    //ConsumableItemData consumables;
+
+    public PolygonCollider2D consumableSpawn;
+
     public override void FulfillCondition(string key)
     {
         conditions.Remove(key);
@@ -17,14 +22,20 @@ public class PCRoom3 : RoomManager
     // Start is called before the first frame update
     void Start()
     {
-        
+        cooldown = 600;
     }
 
     protected override void Update()
     {
 
+        if (cooldown == 0)
+        {
+            
+        }
+
         base.Update();
         RoomChecker();
+        
     }
 
     // Update is called once per frame

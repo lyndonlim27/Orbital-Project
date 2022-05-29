@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Bullet : RangedBehaviour
 {
+    public EnemyBehaviour _firer;
     private Rigidbody2D _rb;
     protected EntityBehaviour _target;
     protected string animationname;
-    protected Animator _animator;
 
     [Header("Bullet properties")]
     [SerializeField] private float speed = 6.0f;
@@ -16,10 +16,23 @@ public class Bullet : RangedBehaviour
     [Header("Movement")]
     [SerializeField] private float rotateSpeed = 200.0f;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _rb = GetComponent<Rigidbody2D>();
-        if (_target.GetType() == typeof(EnemyBehaviour))
+        //this.spriteRenderer.sprite = rangedData.sprite;
+        //_animator = (Animator) Resources.Load(string.Format("Animations/AnimatorControllers/{0}", rangedData.ac_name));
+        //_animator = GetComponent<Animator>();
+        //_animator.enabled = false;
+        
+        
+    }
+
+    // Start is called before the first frame update
+    private void Start()
+    {
+        spriteRenderer.sprite = rangedData.sprite;
+        if (!_target.CompareTag("Player"))
         {
             lifeTime = 999f;
         }
@@ -27,13 +40,12 @@ public class Bullet : RangedBehaviour
         {
             lifeTime = rangedData.lifetime;
         }
-    }
-
-    // Start is called before the first frame update
-    private void Start()
-    {
-        Destroy(gameObject, lifeTime);
+        gameObject.AddComponent<Animator>();
         _animator = GetComponent<Animator>();
+        animationname = rangedData.trigger;
+        _animator.runtimeAnimatorController = Resources.Load(string.Format("Animations/AnimatorControllers/{0}", rangedData.ac_name)) as RuntimeAnimatorController;
+        transform.localScale = new Vector2(rangedData.scale, rangedData.scale);
+        Destroy(gameObject, lifeTime);
     }
 
     /** can merge using Transform.
@@ -47,7 +59,7 @@ public class Bullet : RangedBehaviour
     protected virtual void FixedUpdate()
     {
         //When the bullet collide with the enemy, stop the movement of the bullet
-        stopMovement(rangedData.ac_name);
+        stopMovement(rangedData.trigger);
         //The bullet will follow the target
         followTarget();
         
@@ -58,14 +70,25 @@ public class Bullet : RangedBehaviour
         //Setting collision to true so that it will trigger the next state
         //for bullet and thus play the explosion animation
         _animator.SetBool(animationname, true);
+        if (_firer != null)
+        {
+            _firer.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+        }
         EntityBehaviour _hit = collision.gameObject.GetComponent<EntityBehaviour>();
 
         if (_hit == null || _hit != _target) // 
         {
             return;
         }
-        _hit.Defeated();
-
+        if (_hit.CompareTag("Player"))
+        {
+            _hit.GetComponent<Player>().TakeDamage(rangedData.damage);
+        }
+        else
+        {
+            _hit.Defeated();
+        }
+        
     }
 
     protected void stopMovement(string animationname)

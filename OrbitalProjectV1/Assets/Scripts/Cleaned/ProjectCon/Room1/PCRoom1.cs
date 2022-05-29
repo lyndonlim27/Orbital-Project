@@ -10,14 +10,17 @@ public class PCRoom1 : RoomManager
     void Start()
     {
         FindObjectOfType<PopUpSettings>(true).PopUpSettingsActive();
-        FindObjectOfType<SubMenu>(true).ControlMenuActive();
+        FindObjectOfType<SubMenu>().ControlMenuActive();
         _tl = GameObject.FindObjectOfType<TypingTestTL>(true);
     }
 
     // Update is called once per frame
     protected override void Update()
     {
-        base.Update();
+        if (!this.activated)
+        {
+            return;
+        }
         CheckRunningEvents();
         RoomChecker();
     }
@@ -31,6 +34,8 @@ public class PCRoom1 : RoomManager
 
     protected override void RoomChecker()
     {
+        Debug.Log(_tl.gameObject.activeInHierarchy);
+        Debug.Log(conditions.Count);
         if (conditions.Count == 0 && !_tl.gameObject.activeInHierarchy)
         {
             foreach (GameObject door in doors)
@@ -45,4 +50,12 @@ public class PCRoom1 : RoomManager
     {
         throw new System.NotImplementedException();
     }
+
+    IEnumerator CountDown()
+    {
+        yield return new WaitForSecondsRealtime(1f);
+
+
+    }
+
 }

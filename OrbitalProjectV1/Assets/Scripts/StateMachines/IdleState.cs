@@ -40,6 +40,8 @@ public class IdleState : StateClass
         {
             counter--;
         }
+
+        enemy.tick();
     }
 
     public override void Exit()

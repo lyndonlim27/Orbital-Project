@@ -10,15 +10,13 @@ public abstract class AttackComponent : MonoBehaviour
     
     protected DetectionScript detectionScript;
     protected EnemyBehaviour parent;
-    protected EnemyData enemyData;
     protected Player target;
+    protected EnemyData enemyData;
     public abstract void Attack();
 
     private void Awake()
     {
         target = GameObject.FindObjectOfType<Player>();
-        
-        
         
     }
 
@@ -27,10 +25,13 @@ public abstract class AttackComponent : MonoBehaviour
         //call our init function whenever Start is called;
         detectionScript = GetComponent<DetectionScript>();
         parent = transform.root.GetComponent<EnemyBehaviour>();
-        enemyData = parent.enemyData;
+        enemyData = parent.enemyData;    
         
-        
-        
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(this.transform.position, 1);
     }
 
     public bool detected()

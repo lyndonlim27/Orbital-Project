@@ -9,13 +9,6 @@ public class Laser : RangedBehaviour
     private Coroutine Lookcoroutine;
     private float speed = 1f;
     private Collider2D col;
-    private Player player;
-
-
-    private void Awake()
-    {
-        Player player = GameObject.FindObjectOfType<Player>();
-    }
 
 
     private void OnCollisionEnter2D(Collision2D collision)

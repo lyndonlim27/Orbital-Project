@@ -10,6 +10,7 @@ public class DetectionScript : MonoBehaviour
     private void Awake()
     {
         col = GetComponent<Collider2D>();
+        playerDetected = false;
     }
 
  

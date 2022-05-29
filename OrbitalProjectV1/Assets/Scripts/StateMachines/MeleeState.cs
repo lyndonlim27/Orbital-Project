@@ -14,7 +14,7 @@ class MeleeState : StateClass
 
     public override void Update()
     {
-        //triggerAttack();
+        enemy.tick();
 
     }
 

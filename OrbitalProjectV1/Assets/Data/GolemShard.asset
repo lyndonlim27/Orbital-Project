@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10a1c4479d5574dac908b62726c971cb, type: 3}
+  m_Name: GolemShard
+  m_EditorClassIdentifier: 
+  _name: ORBITAL
+  minDist: 3
+  sprite: {fileID: 305096539, guid: 819aac2cc6d4642538dd542ed7ec2e6b, type: 3}
+  condition: 1
+  _type: 6
+  random: 0
+  pos: {x: -22.5, y: 58}
+  gold: 0
+  damageFlicker: {fileID: 0}
+  entityDatas: []
+  ac_name: AC_FloatingRock
+  _trigger: 
+  isAWeapon: 0

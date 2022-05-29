@@ -39,7 +39,8 @@ public class ChaseState : StateClass
 
         else if (Vector2.Distance(enemy.transform.position, enemy.startingpos) >= enemy.maxDist)
         {
-
+            Debug.Log(Vector2.Distance(enemy.transform.position, enemy.startingpos));
+            Debug.Log(enemy.maxDist);
             stateMachine.ChangeState(StateMachine.STATE.STOP, null);
         }
         

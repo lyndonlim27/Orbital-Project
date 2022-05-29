@@ -25,4 +25,41 @@ public class C_ChaseState : StateClass
     {
         base.Update();
     }
+
+    public void ChaseEnemy()
+    {
+
+        //if object detected but is not player, 
+        if (!enemy.detectionScript.playerDetected)
+        {
+            stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+        }
+
+        else if (Vector2.Distance(enemy.transform.position, enemy.startingpos) >= enemy.maxDist)
+        {
+
+            stateMachine.ChangeState(StateMachine.STATE.STOP, null);
+        }
+
+        else if (enemy.ranged.detected() && !enemy.onCooldown())
+        {
+            stateMachine.ChangeState(StateMachine.STATE.ATTACK2, null);
+
+
+        }
+        else if (enemy.melee.detected())
+        {
+
+            stateMachine.ChangeState(StateMachine.STATE.ATTACK1, null);
+
+        }
+        else
+        {
+            enemy.moveToTarget(enemy.player);
+
+        }
+
+        enemy.tick();
+
+    }
 }

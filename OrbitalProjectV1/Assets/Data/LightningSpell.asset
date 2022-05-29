@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: LightningSpell
   minDist: 0
-  isStateful: 0
+  isMoveable: 0
   sprite: {fileID: 29702762353113097, guid: 1914d95466e3d4341a618c35a56d5f82, type: 3}
   condition: 0
   placementType: 
@@ -26,5 +26,5 @@ MonoBehaviour:
   speed: 1
   rotation: 0
   lifetime: 0
-  trigger: 
-  ac_name: Cast
+  trigger: Cast
+  ac_name: LightningSpell_VFX

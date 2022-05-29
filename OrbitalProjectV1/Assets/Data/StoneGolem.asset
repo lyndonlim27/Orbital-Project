@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: StoneGolem
   m_EditorClassIdentifier: 
   _name: StoneGolem
-  minDist: 0
-  isStateful: 0
+  minDist: 20
   sprite: {fileID: 1558316739, guid: 1ed8b26f1c2354608b32d925213c28da, type: 3}
   condition: 0
-  placementType: MANUAL
-  pos: {x: 0, y: 4}
+  _type: 7
+  random: 0
+  pos: {x: -22, y: 55}
   gold: 0
   damageFlicker: {fileID: 672315831686351503, guid: 287fa61315c39429e8235e664399d8cc, type: 3}
   damageValue: 5
@@ -27,5 +27,5 @@ MonoBehaviour:
   attackRange: 5
   attackSpeed: 3
   rangeds: []
-  animatorname: 
-  words: 0
+  animatorname: AC_Golem
+  words: 10

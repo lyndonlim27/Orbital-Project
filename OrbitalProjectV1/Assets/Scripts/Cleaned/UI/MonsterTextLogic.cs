@@ -16,13 +16,13 @@ public class MonsterTextLogic : TextLogic{
 
     protected override bool CheckInternalInput()
     {
-        return !parent.gameObject.GetComponent<EnemyBehaviour>().stateMachine.Equals(StateMachine.STATE.STOP);
+        StateMachine stateMachine = parent.gameObject.GetComponent<EnemyBehaviour>().stateMachine;
+        return (!stateMachine.currState.Equals(StateMachine.STATE.STOP)) && (!stateMachine.currState.Equals(StateMachine.STATE.ENRAGED1));
     }
 
     protected override void GenerateNewWord()
     {
         currentword = wordGenerator.GetWord();
-        Debug.Log(currentword);
         UpdateRemainingWord(currentword);
     }
 

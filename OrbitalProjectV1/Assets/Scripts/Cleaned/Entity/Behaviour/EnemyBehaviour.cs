@@ -18,13 +18,13 @@ public class EnemyBehaviour : EntityBehaviour
     //data;
     public EnemyData enemyData;
     public StateMachine stateMachine;
-    private int cooldown;
+    //private int cooldown;
     protected DamageFlicker _flicker;
-    public bool isDead { get; private set; }
+    public bool isDead;
 
     [Header("Entity Position")]
     public Vector2 roamPos;
-    public float maxDist = 5f;
+    public float maxDist = 100f;
 
     public MeleeComponent melee { get; private set; }
     public RangedComponent ranged { get; private set; }
@@ -36,31 +36,37 @@ public class EnemyBehaviour : EntityBehaviour
     public Vector2 startingpos;
     public Player player;
     public int health;
-    
+
+    public int cooldown;
 
     public virtual void Start()
     {
 
-        player = GameObject.FindObjectOfType<Player>();
+        player = GameObject.FindObjectOfType<Player>(true);
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         //animator.runtimeAnimatorController = Resources.Load(string.Format("Animations/AnimatorControllers/{0}",stats.animatorname)) as RuntimeAnimatorController;
-        animator.SetBool("Death", false);
         melee = GetComponentInChildren<MeleeComponent>();
         ranged = GetComponentInChildren<RangedComponent>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = enemyData.sprite;
         startingpos = GetComponent<Transform>().position;
         _flicker = GameObject.FindObjectOfType<DamageFlicker>();
-        cooldown = 0;
         isDead = false;
         health = enemyData.words;
-        Debug.Log(FindObjectOfType<RoomManager>());
+    }
+
+    public void Initialize()
+    {
+        this.animator.SetBool("NotSpawned", true);
+        stateMachine.Init(StateMachine.STATE.IDLE, null);
     }
 
     public virtual void Update()
     {
         stateMachine.Update();
+        //Debug.Log(stateMachine.currState);
+        //Debug.Log(cooldown);
     }
 
     public virtual void FixedUpdate()
@@ -70,15 +76,47 @@ public class EnemyBehaviour : EntityBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Obstacles")
+        if (collision.gameObject.CompareTag("Obstacles"))
         {
+            getNewRoamPosition();
             stateMachine.ChangeState(StateMachine.STATE.ROAMING,null);
         }
     }
 
+
+    public bool onCooldown()
+    {
+        if (ranged == null)
+        {
+            return this.cooldown != 0;
+        } else
+        {
+            return this.cooldown != 0 && ranged.abletoAttack == true;
+        }
+        
+    }
+
+    public void tick()
+    {
+        if (cooldown > 0)
+        {
+            cooldown--;
+        }
+    }
+
+
+
+    public void resetCooldown()
+    {
+        this.cooldown = 1000;
+        stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+    }
+
     public void getNewRoamPosition()
     {
-        roamPos = new Vector2(Random.Range(-maxDist, maxDist), Random.Range(-maxDist, maxDist));
+        //roamPos = new Vector2(Random.Range(-2, 2), Random.Range(-2, 2));
+        roamPos = this.currentRoom.GetRandomPoint();
+ 
         
     }
 
@@ -108,44 +146,30 @@ public class EnemyBehaviour : EntityBehaviour
         return Vector2.Distance(roamPos,transform.localPosition) == 0;
     }
 
-    public bool onCooldown()
-    {
-        return this.cooldown != 0;
-    }
-
-    public void tick()
-    {
-        if (cooldown > 0)
-        {
-            cooldown--;
-        }
-    }
-
-    public void resetCooldown()
-    {
-        this.cooldown = 250;
-    }
-
     public void flipFace(Vector2 target)
     {
         Vector2 dir = (target - (Vector2) transform.position).normalized;
-        spriteRenderer.flipX = dir.x > 0;
-        foreach (Transform tf in transform)
+        spriteRenderer.flipX = dir.x > 0.1f;
+        if (melee == null)
         {
-            if (tf.tag == "UI")
-            {
-                continue;
-            }
-            else if (dir.x > 0)
-            {
-                tf.localScale = new Vector2(-1,1);
-            } else
-            {
-                tf.localScale = new Vector2(1, 1);
-            }
-            
+            return;
+        }
+        if (dir.x >= 0.1f)
+        {
+            melee.transform.localScale = new Vector2(-1, 1);
+        }
+        else if (dir.x <= 0.1f)
+        {
+            melee.transform.localScale = new Vector2(1, 1);
         }
 
+
+    }
+
+    public void Teleport()
+    {
+        this.transform.position = roamPos;
+        this.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
     }
 
     public void meleeAttack()
@@ -183,8 +207,6 @@ public class EnemyBehaviour : EntityBehaviour
                 stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
                 break;
             case ANIMATION_CODE.CAST_END:
-                resetCooldown();
-                Debug.Log("This is inside golem state");
                 stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
                 break;
             case ANIMATION_CODE.WEAP_TRIGGER:
@@ -193,12 +215,17 @@ public class EnemyBehaviour : EntityBehaviour
         }
     }
 
-    public void Hurt()
+    public virtual void Hurt()
     {
-        animator.SetTrigger("Hurt");
         _flicker.Flicker(this);
-        health -= 1; // or use weapon damage;
-        Debug.Log(health);
+        if (health == 0)
+        {
+            Defeated();
+        } else
+        {
+            health--;
+        }
+        //hpBarUI.TakeDamage(); // or use weapon damage;
         
     }
 
@@ -208,7 +235,7 @@ public class EnemyBehaviour : EntityBehaviour
         if (health == 0)
         {
             isDead = true;
-            animator.SetBool("Death", true);
+            animator.SetTrigger("Death");
         } else
         {
             Hurt();
@@ -217,10 +244,23 @@ public class EnemyBehaviour : EntityBehaviour
     }
 
 
-    //for enemies without a death state.
-    private void OnDestroy()
+
+    //private void OnDestroy()
+    //{
+    //    Destroy(gameObject);
+    //}
+
+    //default fade animation;
+    IEnumerator FadeOut()
     {
-        Destroy(gameObject);
+        for (float f = 1f; f >= -0.05f; f -= 0.05f)
+        {
+            Color c = spriteRenderer.material.color;
+            c.a = f;
+            spriteRenderer.material.color = c;
+            yield return new WaitForSeconds(0.05f);
+        }
+        this.gameObject.SetActive(false);
     }
 
     // use for enemies with death default states.
@@ -261,4 +301,10 @@ public class EnemyBehaviour : EntityBehaviour
     {
         return enemyData;
     }
+
+    public RoomManager GetCurrentRoom()
+    {
+        return this.currentRoom;
+    }
+    
 }

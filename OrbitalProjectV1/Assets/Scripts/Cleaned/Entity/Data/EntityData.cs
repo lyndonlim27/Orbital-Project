@@ -15,7 +15,9 @@ public class EntityData : ScriptableObject
         OBJECT,
         NPC,
         ITEM,
-        ENEMY
+        ENEMY,
+        BOSSPROPS,
+        BOSS
     }
     public int condition;
     public TYPE _type;

@@ -18,6 +18,7 @@ public class StateMachine
         ENRAGED2,
         ENRAGED3,
         ENRAGED4,
+        TELEPORT
 
     }
     public STATE currState { get; private set; }

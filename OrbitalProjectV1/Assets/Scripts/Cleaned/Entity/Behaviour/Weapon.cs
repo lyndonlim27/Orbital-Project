@@ -14,6 +14,7 @@ public class Weapon : EntityBehaviour
 
     [Header("Weapon properties")]
     [SerializeField] private Bullet _bulletPrefab;
+    [SerializeField] private RangedData rangedData;
 
     // Start is called before the first frame update
     void Start()
@@ -46,8 +47,10 @@ public class Weapon : EntityBehaviour
         }
         Quaternion angle = Quaternion.Euler(0, 0, Mathf.Atan2(point2Target.y, point2Target.x)
          * Mathf.Rad2Deg);
-
-        Bullet bullet = Instantiate(_bulletPrefab, this.transform.position, angle);
+        _bulletPrefab.SetEntityStats(rangedData);
+        _bulletPrefab.GetComponent<SpriteRenderer>().sprite = rangedData.sprite;
+        _bulletPrefab.TargetEntity(entity);
+        Bullet bullet = Instantiate(_bulletPrefab, (Vector2) this.transform.position + point2Target * 1.5f, angle);
         bullet.TargetEntity(entity);
 
     }

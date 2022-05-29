@@ -168,13 +168,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyData: {fileID: 11400000, guid: 31b343c2771ce466db194b8cc0ff8cd0, type: 2}
-  angerMultiplier: 1
   roamPos: {x: 3.7398794, y: -4.4834995}
   maxDist: 5
   detectionScript: {fileID: 4922891896808437268}
   startingpos: {x: 3.13, y: -0.15}
   player: {fileID: 0}
   health: 0
+  cooldown: 0
 --- !u!222 &4796193182509937543
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -298,11 +298,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5374529570316568474, guid: e6a52f8760b004de7ab6d69f73e6a14c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.092
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5374529570316568474, guid: e6a52f8760b004de7ab6d69f73e6a14c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.175
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5374529570316568474, guid: e6a52f8760b004de7ab6d69f73e6a14c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -450,7 +450,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spell: {fileID: 7209955310949163474, guid: f8bee11cb544943c09df639e76497e56, type: 3}
-  bullet: {fileID: 0}
+  bullet: {fileID: 1215365519537057854, guid: 2d431e00bb0be46d8b719dd29172aecb, type: 3}
+  rangeds:
+  - {fileID: 11400000, guid: 40027b5c9fcc549d7a142481eecf21f0, type: 2}
+  - {fileID: 11400000, guid: fa4155c5745af4d04953db0c64d42fb8, type: 2}
+  - {fileID: 11400000, guid: 8f104031de1404436866443573a46aaa, type: 2}
 --- !u!1001 &8755737205042307312
 PrefabInstance:
   m_ObjectHideFlags: 0

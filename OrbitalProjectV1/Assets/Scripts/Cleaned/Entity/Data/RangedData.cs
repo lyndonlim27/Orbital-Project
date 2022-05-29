@@ -7,7 +7,8 @@ public class RangedData : EntityData
 {
     public enum Type
     {
-        CAST,
+        CAST_ONTARGET,
+        CAST_SELF,
         PROJECTILE,
     };
     public Type type;
@@ -15,4 +16,5 @@ public class RangedData : EntityData
     public float speed, rotation, lifetime;
     public string trigger;
     public string ac_name;
+    public float scale;
 }

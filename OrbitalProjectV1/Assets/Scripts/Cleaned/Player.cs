@@ -58,12 +58,6 @@ public class Player : EntityBehaviour
     // Update is called once per frame
     void Update()
     {
-        //freeze player's actions when inside dialogue
-/*        if (dialMgr.playing)
-        {
-            return;
-        }*/
-
         _time += 1f * Time.deltaTime;
         if (_currHealth <= 0)
         {
@@ -134,6 +128,10 @@ public class Player : EntityBehaviour
         _currHealth -= damageTaken;
         healthBar.SetHealth(_currHealth);
         _flicker.Flicker(this);
+        if (_currHealth <= 0)
+        {
+            Defeated();
+        }
     }
 
     public void AddHealth(int health)
@@ -151,7 +149,6 @@ public class Player : EntityBehaviour
     public void Shoot(EntityBehaviour entity)
     {
         _timeDelay = 0.5f;
-        Debug.Log("Shoot");
         //Debug.Log(enemy);
         Vector2 point2Target = (Vector2)transform.position - (Vector2)entity.transform.position;
         point2Target.Normalize();

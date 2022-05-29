@@ -9,7 +9,7 @@ class C_MeleeState : StateClass
 
     public override void Enter(object stateData)
     {
-        base.Enter(stateData);
+        triggerAttack();
     }
 
     public override void Exit()
@@ -24,6 +24,29 @@ class C_MeleeState : StateClass
 
     public override void Update()
     {
-        base.Update();
+        
+    }
+
+    private void triggerAttack()
+    {
+
+        if (!enemy.detectionScript.playerDetected)
+        {
+            stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+
+        }
+        else
+        {
+            if (enemy.player.isDead())
+            {
+                stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+            }
+            else
+            {
+                enemy.flipFace(enemy.player.transform.position);
+                enemy.animator.SetTrigger("Melee");
+                return;
+            }
+        }
     }
 }

@@ -30,6 +30,7 @@ public abstract class TextLogic : MonoBehaviour
         Textdisplayer.enabled = !outOfRange();
         player = GameObject.FindObjectOfType<Player>(true);
         parent = this.gameObject.transform.root.GetComponent<EntityBehaviour>();
+        Debug.Log(parent);
         minDist = parent.GetData().minDist;
         remainingword = "";
         currentword = parent.GetData()._name.ToLower();

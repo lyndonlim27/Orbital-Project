@@ -86,7 +86,7 @@ public abstract class RoomManager : MonoBehaviour
             {
                 activated = true;
                 dialMgr.SetCurrentRoom(this);
-                SpawnObjects();
+                SpawnObjects(_EntityData);
                 //AddConditionalNPCS();
             }
             else
@@ -110,7 +110,11 @@ public abstract class RoomManager : MonoBehaviour
 
     protected virtual void RoomChecker()
     {
+<<<<<<< Updated upstream
         if (conditions.Count == 0 && _collider != null)
+=======
+        if (conditions.Count == 0 && enemies.Count == 0)
+>>>>>>> Stashed changes
         {
             foreach (GameObject door in doors)
             {
@@ -134,7 +138,7 @@ public abstract class RoomManager : MonoBehaviour
      * Boundaries of the room. 
      * @return get randompoint within the radius.
      */
-    private Vector2 GetRandomPoint(Vector2 minBound, Vector2 maxBound)
+    public Vector2 GetRandomPoint()
     {
         Vector2 randomPoint;
         do
@@ -146,8 +150,8 @@ public abstract class RoomManager : MonoBehaviour
             //br = max.x, min.y;
             //anywhere within these 4 bounds are possible pts;
             randomPoint = new Vector2(
-            Random.Range(minBound.x, maxBound.x),
-            Random.Range(minBound.y, maxBound.y));
+            Random.Range(areaminBound.x, areamaxBound.x),
+            Random.Range(areaminBound.y, areamaxBound.y));
         } while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
         return randomPoint;
     }
@@ -156,27 +160,27 @@ public abstract class RoomManager : MonoBehaviour
     /**
      * SpawnObjects inside the room.
      */
-    protected void SpawnObjects()
+    public void SpawnObjects(EntityData[] entityDatas)
     {
-        if (_EntityData == null)
+        if (entityDatas == null)
         {
             return;
         }
-        for (int i = 0; i < _EntityData.Length; i++)
+        for (int i = 0; i < entityDatas.Length; i++)
         {
-            EntityData _item = _EntityData[i];
+            EntityData _item = entityDatas[i];
             //EntityBehaviour initprop;
             if (_item.condition == 1)
             {
                 conditions.Add(_item._name);
             }
             InstantiateEntity(_item);
+            
             /*
             initprop.SetEntityStats(_item);
             initprop.SetCurrentRoom(this); */
         }
     }
-
 
     /**
      * Check what type the entity it is and instantiate
@@ -185,7 +189,7 @@ public abstract class RoomManager : MonoBehaviour
     public void InstantiateEntity(EntityData data)
     {
 
-        Vector2 pos = data.random ? GetRandomPoint(areaminBound, areamaxBound) : data.pos;
+        Vector2 pos = data.random ? GetRandomPoint() : data.pos;
       
         switch (data._type)
         {
@@ -215,10 +219,18 @@ public abstract class RoomManager : MonoBehaviour
                 entityPrefabs[4].GetComponent<SpriteRenderer>().sprite = data.sprite;
                 Instantiate(entityPrefabs[4], pos, Quaternion.identity).SetCurrentRoom(this);
                 break;
-                /*
-                case EntityData.TYPE.ENEMY:
-                    return Instantiate(itemPrefab[5], data.pos, Quaternion.identity);
-                */
+            case EntityData.TYPE.ENEMY:
+                enemyPrefabs[0].SetEntityStats(data);
+                enemyPrefabs[0].GetComponent<SpriteRenderer>().sprite = data.sprite;
+                Instantiate(enemyPrefabs[0], data.pos, Quaternion.identity).SetCurrentRoom(this);
+                break;
+            case EntityData.TYPE.BOSS:
+                enemyPrefabs[1].SetEntityStats(data);
+                //enemyPrefabs[1].GetComponent<SpriteRenderer>().sprite = data.sprite;
+                Instantiate(enemyPrefabs[1], data.pos, Quaternion.identity).SetCurrentRoom(this);
+                break;
+
+
         }
     }
 
@@ -354,4 +366,5 @@ public abstract class RoomManager : MonoBehaviour
 
 
     }
+
 }
