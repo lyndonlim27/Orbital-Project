@@ -32,15 +32,7 @@ public class DamageFlicker : MonoBehaviour
             _spriteRenderer = entityBehaviour.GetComponent<SpriteRenderer>();
             _originalMaterial = _spriteRenderer.material;
         }
-<<<<<<< Updated upstream
-        /*
-        if (!_playing)
-        {
-            StartCoroutine(FlickerRoutine());
-        }*/
-=======
 
->>>>>>> Stashed changes
         // If the flashRoutine is not null, then it is currently running.
         if (_flickerRoutine != null)
         {

@@ -110,11 +110,8 @@ public abstract class RoomManager : MonoBehaviour
 
     protected virtual void RoomChecker()
     {
-<<<<<<< Updated upstream
-        if (conditions.Count == 0 && _collider != null)
-=======
-        if (conditions.Count == 0 && enemies.Count == 0)
->>>>>>> Stashed changes
+
+        if (conditions.Count == 0 && enemies.Count == 0 && _collider != null)
         {
             foreach (GameObject door in doors)
             {
