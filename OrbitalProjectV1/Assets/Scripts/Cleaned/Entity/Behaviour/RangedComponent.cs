@@ -8,6 +8,7 @@ public class RangedComponent : AttackComponent
     public Spell spell;
     public Bullet bullet;
     public List<RangedData> rangeds;
+    //private int cooldown;
     public bool abletoAttack { get; private set; }
 
     public override void Start()
