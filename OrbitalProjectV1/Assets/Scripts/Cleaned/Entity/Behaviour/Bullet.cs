@@ -44,6 +44,7 @@ public class Bullet : RangedBehaviour
         _animator = GetComponent<Animator>();
         animationname = rangedData.trigger;
         _animator.runtimeAnimatorController = Resources.Load(string.Format("Animations/AnimatorControllers/{0}", rangedData.ac_name)) as RuntimeAnimatorController;
+        Debug.Log(_animator);
         transform.localScale = new Vector2(rangedData.scale, rangedData.scale);
         Destroy(gameObject, lifeTime);
     }

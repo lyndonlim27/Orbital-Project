@@ -131,6 +131,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: ItemTextUI
       objectReference: {fileID: 0}
+    - target: {fileID: 3116212859344019807, guid: 31d7a4d059f444bb1aa34c3a7f57414c, type: 3}
+      propertyPath: m_StyleSheet
+      value: 
+      objectReference: {fileID: 11400000, guid: f952c082cb03451daed3ee968ac6c63e, type: 2}
+    - target: {fileID: 3116212859344019807, guid: 31d7a4d059f444bb1aa34c3a7f57414c, type: 3}
+      propertyPath: m_spriteAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: f1375da807fc64fdaac7e2b7fdd0248f, type: 2}
+    - target: {fileID: 3116212859344019807, guid: 31d7a4d059f444bb1aa34c3a7f57414c, type: 3}
+      propertyPath: m_characterSpacing
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 4828405615882172040, guid: 31d7a4d059f444bb1aa34c3a7f57414c, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -161,7 +173,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4828405615882172040, guid: 31d7a4d059f444bb1aa34c3a7f57414c, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4828405615882172040, guid: 31d7a4d059f444bb1aa34c3a7f57414c, type: 3}
       propertyPath: m_SizeDelta.y

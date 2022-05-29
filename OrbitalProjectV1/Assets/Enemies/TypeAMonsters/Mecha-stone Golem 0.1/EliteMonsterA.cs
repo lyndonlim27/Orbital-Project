@@ -49,12 +49,14 @@ public class EliteMonsterA : EnemyBehaviour
     }
 
     public override void Defeated()
-    {
-        Debug.Log(hpBarUI.currlength);
+    { 
         if (hpBarUI.currlength == 0)
         {
             isDead = true;
             animator.SetTrigger("Death");
+            hpBarUI.gameObject.SetActive(false);
+            Debug.Log(hpBarUI.currlength);
+
         }
         else
         {
@@ -82,6 +84,8 @@ public class EliteMonsterA : EnemyBehaviour
                 HardenCooldown--;
             }
         }
+        Debug.Log(stateMachine.currState);
+        Debug.Log(HardenCooldown);
     }
 
     public void ActivateStage1()
@@ -101,7 +105,7 @@ public class EliteMonsterA : EnemyBehaviour
     {
         if (stateMachine.currState == StateMachine.STATE.ENRAGED1)
         {
-
+            Debug.Log(allProps.Count);
             if (allProps.Count == 0 || hpBarUI.HPBarFull())
             {
                 resetHardenCooldown();

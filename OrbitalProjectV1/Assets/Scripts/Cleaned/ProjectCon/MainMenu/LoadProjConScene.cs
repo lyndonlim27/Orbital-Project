@@ -8,7 +8,7 @@ public class LoadProjConScene : MonoBehaviour
 
     public void LoadScene()
     {
-        SceneManager.LoadScene("Assets/Scenes/ProjectConceptScene.unity");
+        SceneManager.LoadScene("Assets/Scenes/ProjectConceptScene3.unity");
     }
 
     // Start is called before the first frame update

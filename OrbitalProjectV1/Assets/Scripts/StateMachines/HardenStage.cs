@@ -16,7 +16,10 @@ public class HardenStage : StateClass
     {
         eliteMonster = (EliteMonsterA)enemy;
         regentimer = 1200;
-        eliteMonster.ActivateStage1();
+        if (eliteMonster.allProps.Count == 0)
+        {
+            eliteMonster.ActivateStage1();
+        }
         eliteMonster.animator.SetTrigger("Harden");
     }
 

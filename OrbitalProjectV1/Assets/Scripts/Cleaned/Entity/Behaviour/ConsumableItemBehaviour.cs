@@ -5,9 +5,22 @@ using UnityEngine;
 public class ConsumableItemBehaviour : EntityBehaviour
 {
     [SerializeField] private ConsumableItemData _itemData;
+    
+    [SerializeField] AudioSource soundeffect;
 
+
+    void Awake()
+    {
+        this.spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    void Start()
+    {
+        spriteRenderer.sprite = _itemData.sprite;
+    }
     public override void Defeated()
     {
+
         Destroy(this.gameObject);
     }
 
@@ -36,7 +49,23 @@ public class ConsumableItemBehaviour : EntityBehaviour
                     player.AddGold(_itemData._gold);
                     break;
             }
-            Defeated();
+            soundeffect.Play();
+            StartCoroutine(FadeOut(soundeffect.clip.length));
+            
         }
     }
+    //Fades sprite
+    IEnumerator FadeOut(float f)
+    {
+        for (float g = f; g >= -0.05f; g-= 0.05f)
+        {
+            Color c = spriteRenderer.material.color;
+            c.a = g;
+            spriteRenderer.material.color = c;
+            yield return new WaitForSeconds(0.05f);
+        }
+        Defeated();
+    }
+
+
 }

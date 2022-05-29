@@ -80,7 +80,7 @@ GameObject:
   - component: {fileID: 6406900395948451216}
   m_Layer: 0
   m_Name: StoneGolem
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -281,7 +281,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
-  m_Pitch: 1
+  m_Pitch: 0.7
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -556,17 +556,57 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6762626420165131959}
     m_Modifications:
+    - target: {fileID: -2789957180903196313, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
+      propertyPath: m_Pitch
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: -2789957180903196313, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
+      propertyPath: Priority
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: -2789957180903196313, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
+      propertyPath: m_Volume
+      value: 0.77
+      objectReference: {fileID: 0}
+    - target: {fileID: 4703571955519201052, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
+      propertyPath: AudioSystem
+      value: 
+      objectReference: {fileID: 87422207739035147, guid: 10b94a66c96a145f6980d6ff87f137fd, type: 3}
+    - target: {fileID: 4703571955519201052, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
+      propertyPath: typingeffect.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4703571955519201052, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
+      propertyPath: typingeffect.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4703571955519201052, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
+      propertyPath: typingeffect.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4703571955519201052, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
+      propertyPath: typingeffect.Array.data[2]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4703571955519201052, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
+      propertyPath: typingeffect.Array.data[3]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4703571955519201052, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
+      propertyPath: typingeffect.Array.data[4]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4703571955519201052, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
+      propertyPath: typingeffect.Array.data[5]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4703571955519201052, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
+      propertyPath: typingeffect.Array.data[6]
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4941556689354952322, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
       propertyPath: m_Name
       value: MonsterTextDisplayer
-      objectReference: {fileID: 0}
-    - target: {fileID: 4941556689354952324, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
-      propertyPath: m_fontSize
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4941556689354952324, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
-      propertyPath: m_fontSizeBase
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4941556689354952325, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
       propertyPath: m_Pivot.x
@@ -603,10 +643,6 @@ PrefabInstance:
     - target: {fileID: 4941556689354952325, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
       propertyPath: m_SizeDelta.y
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4941556689354952325, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
-      propertyPath: m_LocalScale.x
-      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4941556689354952325, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
       propertyPath: m_LocalPosition.x
@@ -656,7 +692,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8067156615297935606, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
+    - {fileID: 149269950373407635, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
+    - {fileID: 1360568345444504371, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
+    - {fileID: 1865252148108408693, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
+    - {fileID: 6950195266035775819, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
+    - {fileID: 9150381159366654661, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b6b90bc5d01b646e2b32be66a7983672, type: 3}
 --- !u!224 &1822342969877630810 stripped
 RectTransform:

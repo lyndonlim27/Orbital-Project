@@ -17,10 +17,12 @@ public abstract class TextLogic : MonoBehaviour
     protected Player player;
     public string remainingword { get; protected set; } 
     public string currentword { get; protected set; }
+    private GameObject AudioSystem;
 
     protected float minDist;
     protected int currentcounter = 0;
     protected EntityBehaviour parent;
+    protected Dictionary<KeyCode, AudioSource> audioSources;
     /**
      * Retrieving data.
      */
@@ -34,8 +36,7 @@ public abstract class TextLogic : MonoBehaviour
         minDist = parent.GetData().minDist;
         remainingword = "";
         currentword = parent.GetData()._name.ToLower();
-
-
+        
     }
     /**
      * Initialize gameObject.
@@ -43,6 +44,14 @@ public abstract class TextLogic : MonoBehaviour
     protected virtual void Start()
     {
         GenerateNewWord();
+        AudioSystem = GameObject.FindGameObjectWithTag("Audio");
+        audioSources = new Dictionary<KeyCode, AudioSource>();
+        AudioSource[] temp = AudioSystem.GetComponentsInChildren<AudioSource>();
+        for (int i = (int)KeyCode.A; i <= (int)KeyCode.Z; i++)
+        {
+            audioSources[(KeyCode)i] = temp[i-97];
+        }
+        
 
     }
 
@@ -91,8 +100,8 @@ public abstract class TextLogic : MonoBehaviour
 
         for (int i = (int)KeyCode.A; i <= (int)KeyCode.Z; i++)
         {
-            
             if (Input.GetKeyDown((KeyCode)i)) {
+                audioSources[(KeyCode)i].Play();
                 Validator((char)i);
             }
 
@@ -175,6 +184,7 @@ public abstract class TextLogic : MonoBehaviour
     private string ReplaceFirstOccurrence(string Source, char Find, char Replace)
     {
         int Place = Source.IndexOf(Find);
+        
         string result = Source.Remove(Place, 1).Insert(Place, Replace.ToString());
         return result;
     }

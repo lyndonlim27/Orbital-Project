@@ -32,18 +32,18 @@ public class RangedComponent : AttackComponent
             int random = Random.Range(0, rangeds.Count);
             RangedData rangeddata = rangeds[random];
             if (rangeddata.type == RangedData.Type.CAST_ONTARGET ||
-                rangeddata.type == RangedData.Type.CAST_SELF )
-            { 
+                rangeddata.type == RangedData.Type.CAST_SELF)
+            {
                 StartCoroutine(Cast(rangeddata));
                 return;
             }
             else if (rangeddata.type == RangedData.Type.PROJECTILE)
             {
-                Debug.Log(rangeddata);
                 StartCoroutine(Shoot(rangeddata));
                 return;
             }
         }
+        
     }
 
 
@@ -118,11 +118,11 @@ public class RangedComponent : AttackComponent
                 spellinst.SetEntityStats(data);
                 StartCoroutine(StartCooldown());
             }
+            
         }
         
         
     }
-
 
     IEnumerator StartCooldown()
     {
@@ -130,7 +130,6 @@ public class RangedComponent : AttackComponent
         abletoAttack = true;
         parent.resetCooldown();
     }
-
 
 }
 

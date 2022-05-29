@@ -34,7 +34,7 @@ public class PCRoom3 : RoomManager
 
     protected override void Update()
     {
-        if (activated)
+        if (activated && conditions.Count != 0)
         {
             bosshp.gameObject.SetActive(true);
             if (cooldown == 0)

@@ -72,11 +72,7 @@ public class Player : EntityBehaviour
         {
             _currHealth = 100;
         }
-         
-        if(Input.GetKeyDown(KeyCode.P))
-        {
-            TakeDamage(1);
-        }
+
         if (_time >= _timeDelay)
         {
             _movement.x = Input.GetAxisRaw("Horizontal");
@@ -88,6 +84,7 @@ public class Player : EntityBehaviour
             _time = 0;
             _timeDelay = 0;
         }
+
 
     }
 
