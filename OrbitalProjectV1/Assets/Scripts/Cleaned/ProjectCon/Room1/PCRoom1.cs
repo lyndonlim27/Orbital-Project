@@ -17,12 +17,10 @@ public class PCRoom1 : RoomManager
     // Update is called once per frame
     protected override void Update()
     {
-        if (!this.activated)
-        {
-            return;
-        }
+        base.Update();
         CheckRunningEvents();
         RoomChecker();
+
     }
 
     public override void FulfillCondition(string key)
@@ -34,8 +32,7 @@ public class PCRoom1 : RoomManager
 
     protected override void RoomChecker()
     {
-        Debug.Log(_tl.gameObject.activeInHierarchy);
-        Debug.Log(conditions.Count);
+
         if (conditions.Count == 0 && !_tl.gameObject.activeInHierarchy)
         {
             foreach (GameObject door in doors)

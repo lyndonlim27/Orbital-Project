@@ -49,6 +49,7 @@ public class DialogueDetection : MonoBehaviour
         {
             if (player != null && !player.isDead() && !player.inCombat && canProceed)
             {
+                Debug.Log("We are in this detection");
                 dialogueAlert.SetActive(true);
                 if (Input.GetKeyDown(KeyCode.Space))
                 {

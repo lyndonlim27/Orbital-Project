@@ -98,7 +98,10 @@ public abstract class RoomManager : MonoBehaviour
         {
             if (activated)
             {
-                this.enabled = false;
+                if (conditions.Count == 0)
+                {
+                    //this.enabled = false;
+                }
             }
         }
     }
@@ -371,6 +374,9 @@ public abstract class RoomManager : MonoBehaviour
         }
         
     }*/
+
+    
+
 
     private void OnTriggerExit2D(Collider2D collision)
     {
