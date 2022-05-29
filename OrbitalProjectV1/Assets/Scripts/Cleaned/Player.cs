@@ -81,7 +81,7 @@ public class Player : EntityBehaviour
          
         if(Input.GetKeyDown(KeyCode.P))
         {
-            TakeDamage(20);
+            TakeDamage(1);
         }
         if (_time >= _timeDelay)
         {

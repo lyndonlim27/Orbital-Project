@@ -8,6 +8,7 @@ public class DamageFlicker : MonoBehaviour
     private float _duration = 0.125f;
     private SpriteRenderer _spriteRenderer;
     private Material _originalMaterial;
+    private bool _playing;
     private Coroutine _flickerRoutine;
     // Start is called before the first frame update
 
@@ -15,6 +16,7 @@ public class DamageFlicker : MonoBehaviour
     void Start()
     {
         _flickerMaterial = Resources.Load<Material>("Material/FlickerMaterial");
+       // _playing = false;
     }
 
     // Update is called once per frame
@@ -25,14 +27,27 @@ public class DamageFlicker : MonoBehaviour
 
     public void Flicker(EntityBehaviour entityBehaviour)
     {
-        _spriteRenderer = entityBehaviour.GetComponent<SpriteRenderer>();
-        _originalMaterial = _spriteRenderer.material;
+        if (_spriteRenderer == null && _originalMaterial == null)
+        {
+            _spriteRenderer = entityBehaviour.GetComponent<SpriteRenderer>();
+            _originalMaterial = _spriteRenderer.material;
+        }
+        /*
+        if (!_playing)
+        {
+            StartCoroutine(FlickerRoutine());
+        }*/
+        // If the flashRoutine is not null, then it is currently running.
         if (_flickerRoutine != null)
         {
+            // In this case, we should stop it first.
+            // Multiple FlashRoutines the same time would cause bugs.
             StopCoroutine(_flickerRoutine);
         }
 
+        // Start the Coroutine, and store the reference for it.
         _flickerRoutine = StartCoroutine(FlickerRoutine());
+
     }
 
     private IEnumerator FlickerRoutine()
