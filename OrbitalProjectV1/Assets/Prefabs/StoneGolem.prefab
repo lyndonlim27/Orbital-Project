@@ -162,7 +162,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 3
   m_Sprite: {fileID: 1558316739, guid: 1ed8b26f1c2354608b32d925213c28da, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -224,6 +224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyData: {fileID: 11400000, guid: 7c18992022d21482285e42cae6d4a2cd, type: 2}
+  isDead: 0
   roamPos: {x: 0, y: 0}
   maxDist: 10
   detectionScript: {fileID: 6762626419530351819}
@@ -244,6 +245,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b378410b27ba6431fb8a1c0aaec55249, type: 2}
   fodderType: {fileID: 4431353508152069340, guid: 896b235e0f2974ac7a44bb24b9c34c37, type: 3}
   hpBarUI: {fileID: 0}
+  HardenCooldown: 0
   stage2: 0
 --- !u!1 &6762626420980749892
 GameObject:

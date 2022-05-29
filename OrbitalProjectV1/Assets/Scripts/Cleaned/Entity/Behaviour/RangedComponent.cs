@@ -94,14 +94,16 @@ public class RangedComponent : AttackComponent
         Quaternion angle = data.type == RangedData.Type.CAST_SELF ? Quaternion.Euler(0,0,Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg) : Quaternion.identity;
         EliteMonsterA eliteMonsterA = (EliteMonsterA)parent;
         Spell spellinst;
+
         if (eliteMonsterA != null)
         {
-            
+
             if (eliteMonsterA.stage2)
             {
                 float ang = 360f;
                 while (ang != 0)
                 {
+
                     Quaternion direction = Quaternion.Euler(0, 0, ang);
                     spellinst = GameObject.Instantiate(spell, this.transform.position, direction);
                     spellinst.SetEntityStats(data);
@@ -117,6 +119,7 @@ public class RangedComponent : AttackComponent
                 StartCoroutine(StartCooldown());
             }
         }
+        
         
     }
 

@@ -223,8 +223,10 @@ public abstract class RoomManager : MonoBehaviour
                 break;
             case EntityData.TYPE.BOSS:
                 enemyPrefabs[1].SetEntityStats(data);
-                //enemyPrefabs[1].GetComponent<SpriteRenderer>().sprite = data.sprite;
-                Instantiate(enemyPrefabs[1], data.pos, Quaternion.identity).SetCurrentRoom(this);
+                enemyPrefabs[1].GetComponent<SpriteRenderer>().sprite = data.sprite;
+                EliteMonsterA emA = (EliteMonsterA) Instantiate(enemyPrefabs[1], data.pos, Quaternion.identity);
+                emA.SetCurrentRoom(this);
+                enemies.Add(emA);
                 break;
 
 
