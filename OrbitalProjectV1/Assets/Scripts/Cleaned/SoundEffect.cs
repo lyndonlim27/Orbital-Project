@@ -6,7 +6,7 @@ public class SoundEffect : MonoBehaviour
 {
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private AudioClip _ac1, _ac2, _ac3, _ac4, _ac5;
-
+    [SerializeField] private AudioClip[] audios;
 
     public void AudioClip1()
     {
@@ -39,4 +39,5 @@ public class SoundEffect : MonoBehaviour
         _audioSource.Play();
 
     }
+
 }

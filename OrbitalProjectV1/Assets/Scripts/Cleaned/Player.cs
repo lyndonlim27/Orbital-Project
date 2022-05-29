@@ -136,8 +136,10 @@ public class Player : EntityBehaviour
 
     public void AddHealth(int health)
     {
-        _currHealth += health;
+      
+        _currHealth = Math.Min(_currHealth+health,100);
         healthBar.SetHealth(_currHealth);
+        
     }
 
     public void AddGold(int gold)

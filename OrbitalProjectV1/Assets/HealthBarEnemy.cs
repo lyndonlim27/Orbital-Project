@@ -83,4 +83,14 @@ public class HealthBarEnemy : MonoBehaviour
     {
         return currlength <= (int) (acHpBars.Length / 4);
     }
+
+    public void ResetHealthBar()
+    {
+        foreach(Animator acbar in acHpBars)
+        {
+            acbar.gameObject.SetActive(true);
+        }
+        this.currlength = acHpBars.Length;
+
+    }
 }

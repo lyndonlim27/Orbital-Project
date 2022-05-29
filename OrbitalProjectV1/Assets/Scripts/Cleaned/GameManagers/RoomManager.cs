@@ -111,7 +111,7 @@ public abstract class RoomManager : MonoBehaviour
     protected virtual void RoomChecker()
     {
 
-        if (conditions.Count == 0 && enemies.Count == 0 && _collider != null)
+        if (conditions.Count == 0 && CheckEnemiesDead() && _collider != null)
         {
             foreach (GameObject door in doors)
             {
@@ -149,6 +149,30 @@ public abstract class RoomManager : MonoBehaviour
             randomPoint = new Vector2(
             Random.Range(areaminBound.x, areamaxBound.x),
             Random.Range(areaminBound.y, areamaxBound.y));
+        } while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
+        return randomPoint;
+    }
+
+    /** 
+     * Get a random position inside 2 given vectors.
+     * @param minBound, maxBound
+     * Boundaries of the room. 
+     * @return get randompoint within the radius.
+     */
+    public Vector2 GetRandomPoint(Vector2 minArea, Vector2 maxArea)
+    {
+        Vector2 randomPoint;
+        do
+        {
+            //AABB axis - 4 possible bounds, top left, top right, bl, br
+            //tl = min.x, max.y;
+            //bl = min.x, min.y;
+            //tr = max.x, max.y;
+            //br = max.x, min.y;
+            //anywhere within these 4 bounds are possible pts;
+            randomPoint = new Vector2(
+            Random.Range(minArea.x, maxArea.x),
+            Random.Range(minArea.y, maxArea.y));
         } while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
         return randomPoint;
     }
