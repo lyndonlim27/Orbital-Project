@@ -54,7 +54,7 @@ public class HardenStage : StateClass
 
     public void ResetRegenTimer()
     {
-        regentimer = 7;
+        regentimer = 5;
     }
 
 }

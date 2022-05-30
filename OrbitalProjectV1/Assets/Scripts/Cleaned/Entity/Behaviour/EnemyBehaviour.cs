@@ -109,7 +109,7 @@ public class EnemyBehaviour : EntityBehaviour
 
     public void resetCooldown()
     {
-        this.cooldown = 20;
+        this.cooldown = 10;
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
     }
 
