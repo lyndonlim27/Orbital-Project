@@ -35,7 +35,7 @@ class MeleeState : StateClass
 
         EliteMonsterA eliteMonsterA = (EliteMonsterA)enemy;
 
-        if (eliteMonsterA.hpBarUI.HalfHP())
+        if (eliteMonsterA.hpBarUI.HalfHP() && eliteMonsterA.HardenCooldown == 0)
         {
             stateMachine.ChangeState(StateMachine.STATE.ENRAGED1, null);
         }

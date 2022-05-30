@@ -202,13 +202,35 @@ public class EnemyBehaviour : EntityBehaviour
         switch (code)
         {
             case ANIMATION_CODE.MELEE_TRIGGER:
-                meleeAttack();
+                if (stateMachine.currState == StateMachine.STATE.ENRAGED1)
+                {
+                    return;
+                }
+                else
+                {
+                    meleeAttack();
+                }
                 break;
             case ANIMATION_CODE.ATTACK_END:
-                stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
+                if (stateMachine.currState == StateMachine.STATE.ENRAGED1)
+                {
+                    return;
+                }
+                else
+                {
+                    stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
+                }
+                
                 break;
             case ANIMATION_CODE.CAST_END:
-                stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
+                if (stateMachine.currState == StateMachine.STATE.ENRAGED1)
+                {
+                    return;
+                }
+                else
+                {
+                    stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
+                }
                 break;
             case ANIMATION_CODE.WEAP_TRIGGER:
                 WeapAttack();
