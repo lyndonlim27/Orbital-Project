@@ -33,7 +33,14 @@ class MeleeState : StateClass
     private void triggerAttack()
     {
 
-        if (!enemy.melee.detected())
+        EliteMonsterA eliteMonsterA = (EliteMonsterA)enemy;
+
+        if (eliteMonsterA.hpBarUI.HalfHP())
+        {
+            stateMachine.ChangeState(StateMachine.STATE.ENRAGED1, null);
+        }
+
+        else if (!enemy.melee.detected())
         {
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
 

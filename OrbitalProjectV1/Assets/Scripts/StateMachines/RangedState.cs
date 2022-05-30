@@ -27,8 +27,14 @@ public class RangedState : StateClass
 
     public void triggerAttack()
     {
-       
-        if (!enemy.ranged.detected())
+        EliteMonsterA eliteMonsterA = (EliteMonsterA)enemy;
+
+        if(eliteMonsterA.hpBarUI.HalfHP())
+        {
+            stateMachine.ChangeState(StateMachine.STATE.ENRAGED1, null);
+        }
+
+        else if (!enemy.ranged.detected())
         {
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
             return;
