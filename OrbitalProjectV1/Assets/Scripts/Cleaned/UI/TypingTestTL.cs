@@ -16,6 +16,7 @@ public class TypingTestTL : TextLogic
     private List<string> storybank = new List<string>();
     GameObject go;
 
+
     protected override void Awake()
     {
         string story = text.text;
@@ -44,9 +45,9 @@ public class TypingTestTL : TextLogic
 
     protected override void Start()
     {
-        
+        InstantiateAudio();
         StartCoroutine(CountDown());
-        
+
     }
 
     protected override void Update()
@@ -57,7 +58,7 @@ public class TypingTestTL : TextLogic
         if (seconds <= 0)
         {
             textConverter.enabled = false;
-            CanvasDisplayer.text = string.Format("Words Per Minute = {0}", (int) (wordCount / (1f/6)));
+            CanvasDisplayer.text = string.Format("Words Per Minute = {0}", (int) (wordCount / 30) * 60);
             StartCoroutine(WaitForStats());
             
             
@@ -66,7 +67,6 @@ public class TypingTestTL : TextLogic
         }
         
     }
-
 
     protected override void CheckInput()
     {
@@ -91,6 +91,7 @@ public class TypingTestTL : TextLogic
 
             if (Input.GetKeyDown((KeyCode)i))
             {
+                audioSources[(KeyCode)i].Play();
                 Validator((char)i);
             }
 
@@ -134,12 +135,13 @@ public class TypingTestTL : TextLogic
         List<string> counter = new List<string>() { "THREE", "TWO", "ONE" };
         for (int i = 0; i < counter.Count; i++)
         {
+            audioSources[KeyCode.A].Play();
             remainingword = counter[i];
             yield return new WaitForSeconds(1f);
         }
 
         wordCount = 0;
-        seconds = 1;
+        seconds = 30;
         remainingword = storybank[0];
         storybank.Remove(remainingword);
         int j = 4;

@@ -84,8 +84,6 @@ public class EliteMonsterA : EnemyBehaviour
                 HardenCooldown--;
             }
         }
-        Debug.Log(stateMachine.currState);
-        Debug.Log(HardenCooldown);
     }
 
     public void ActivateStage1()

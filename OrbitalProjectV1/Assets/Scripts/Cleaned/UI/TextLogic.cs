@@ -44,15 +44,19 @@ public abstract class TextLogic : MonoBehaviour
     protected virtual void Start()
     {
         GenerateNewWord();
+        InstantiateAudio();
+
+    }
+
+    protected void InstantiateAudio()
+    {
         AudioSystem = GameObject.FindGameObjectWithTag("Audio");
         audioSources = new Dictionary<KeyCode, AudioSource>();
         AudioSource[] temp = AudioSystem.GetComponentsInChildren<AudioSource>();
         for (int i = (int)KeyCode.A; i <= (int)KeyCode.Z; i++)
         {
-            audioSources[(KeyCode)i] = temp[i-97];
+            audioSources[(KeyCode)i] = temp[i - 97];
         }
-        
-
     }
 
     /**

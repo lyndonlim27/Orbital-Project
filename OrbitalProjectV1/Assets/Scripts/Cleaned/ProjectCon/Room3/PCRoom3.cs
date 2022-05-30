@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class PCRoom3 : RoomManager
 {
@@ -10,9 +12,21 @@ public class PCRoom3 : RoomManager
     public PolygonCollider2D consumableSpawn;
     private Vector2 consumableminArea;
     private Vector2 consumablemaxArea;
+    private Material _ogmat;
+    private Material _newmat;
+
+    [SerializeField] private Light lightSource;
+    [SerializeField] private TilemapRenderer[] tilemapRenderers;
     [SerializeField] private ConsumableItemBehaviour consumablePrefab;
     [SerializeField] List<ConsumableItemData> consumables;
     [SerializeField] private HealthBarEnemy bosshp;
+    [SerializeField] private Image WarningPanel;
+
+    private bool Coroutinerunning;
+    private float intensity;
+    private bool up;
+    private float multiplier = 1;
+
 
     public override void FulfillCondition(string key)
     {
@@ -30,27 +44,124 @@ public class PCRoom3 : RoomManager
         cooldown = 2000;
         consumableminArea = consumableSpawn.bounds.min;
         consumablemaxArea = consumableSpawn.bounds.max;
+        _ogmat = tilemapRenderers[0].material;
+        _newmat = Resources.Load<Material>("Material/Alert");
+        Coroutinerunning = false;
+        intensity = 0.1f;
+        up = true;
+
     }
 
     protected override void Update()
     {
-        if (activated && conditions.Count != 0)
+        //activated && conditions == 0;
+        if (WarningPanel == null && activated && CheckEnemiesDead())
         {
-            bosshp.gameObject.SetActive(true);
-            if (cooldown == 0)
+            StopAllCoroutines();
+            foreach (TilemapRenderer tmr in tilemapRenderers)
             {
-                InstantiateConsumables();
-                ResetCooldown();
-            }
-            else
-            {
-                cooldown--;
+                tmr.material = _ogmat;
             }
         }
+        else if (activated && !CheckEnemiesDead())
+        {
 
+            if (!Coroutinerunning)
+            {
+                ChangeMaterial();
+                StartCoroutine(StartScene());
+            }
+
+            Debug.Log(intensity);
+            LightsOut();
+
+            SpawnConsumables();
+        }
         base.Update();
         RoomChecker();
         
+
+    }
+
+    private void LightsOut()
+    {
+        if (up)
+        {
+            lightSource.intensity = intensity;
+            intensity += 0.05f * multiplier;
+            if (intensity >= 0.6f)
+            {
+                up = !up;
+            }
+        }
+        else
+        {
+            lightSource.intensity = intensity;
+            intensity -= 0.05f * multiplier;
+            if (intensity <= 0.1f)
+            {
+                up = !up;
+            }
+        }
+    }
+
+    private void SpawnConsumables()
+    {
+        if (cooldown == 0)
+        {
+            InstantiateConsumables();
+            ResetCooldown();
+        }
+        else
+        {
+            cooldown--;
+        }
+    }
+
+    private IEnumerator StartScene()
+    {
+        Coroutinerunning = true;
+        WarningPanel.gameObject.SetActive(true);
+        AudioSource au = GetComponent<AudioSource>();
+        
+        for (int i = 0; i < 3; i++)
+        {
+            //Fade in
+            au.Play();
+            float g;
+            for (g = 0.5f; g <= 1f; g += 0.05f)
+            {
+                Color c = WarningPanel.color;
+                c.a = g;
+                WarningPanel.color = c;
+                yield return new WaitForSeconds(0.03f);
+
+            }
+
+            //Fade Out
+            for (; g >= 0.5f; g -= 0.05f)
+            {
+                Color c = WarningPanel.color;
+                c.a = g;
+                WarningPanel.color = c;
+                yield return new WaitForSeconds(0.03f);
+            }
+         
+            
+
+        }
+        Destroy(WarningPanel.gameObject);
+        multiplier = 0.25f;
+        bosshp.gameObject.SetActive(true);
+
+    }
+
+    private void ChangeMaterial()
+    {
+        foreach(TilemapRenderer tmr in tilemapRenderers)
+        {
+            tmr.material = _newmat;
+        }
     }
 
     private void InstantiateConsumables()
@@ -70,5 +181,6 @@ public class PCRoom3 : RoomManager
     {
         cooldown = 2000;
     }
+
 
 }

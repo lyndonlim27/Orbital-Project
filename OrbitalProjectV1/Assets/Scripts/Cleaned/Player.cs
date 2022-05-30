@@ -85,7 +85,6 @@ public class Player : EntityBehaviour
             _timeDelay = 0;
         }
 
-
     }
 
     private void CheckCombat()

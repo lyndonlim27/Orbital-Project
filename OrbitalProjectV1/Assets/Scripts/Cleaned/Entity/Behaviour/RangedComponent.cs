@@ -29,6 +29,7 @@ public class RangedComponent : AttackComponent
             {
                 parent.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
             }
+
             abletoAttack = false;
             int random = Random.Range(0, rangeds.Count);
             RangedData rangeddata = rangeds[random];
@@ -130,6 +131,7 @@ public class RangedComponent : AttackComponent
         yield return new WaitForSeconds(1.5f);
         abletoAttack = true;
         parent.resetCooldown();
+
     }
 
 }

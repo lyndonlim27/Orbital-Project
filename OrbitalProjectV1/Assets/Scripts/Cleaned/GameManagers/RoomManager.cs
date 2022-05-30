@@ -89,20 +89,6 @@ public abstract class RoomManager : MonoBehaviour
                 SpawnObjects(_EntityData);
                 //AddConditionalNPCS();
             }
-            else
-            {
-
-            }
-        }
-        else
-        {
-            if (activated)
-            {
-                if (conditions.Count == 0)
-                {
-                    //this.enabled = false;
-                }
-            }
         }
     }
 
