@@ -11,7 +11,7 @@ public class EliteMonsterA : EnemyBehaviour
     public EnemyBehaviour fodderType;
     private List<EnemyBehaviour> fodderObjects;
     public HealthBarEnemy hpBarUI;
-    public int HardenCooldown = 0;
+    public float HardenCooldown = 0;
     public bool stage2;
 
 
@@ -66,6 +66,7 @@ public class EliteMonsterA : EnemyBehaviour
 
     public override void Update()
     {
+
         if (this.hpBarUI.QuarterHP() && !stage2)
         {
             animator.SetTrigger("Stage2");
@@ -81,7 +82,7 @@ public class EliteMonsterA : EnemyBehaviour
             base.Update();
             if (HardenCooldown > 0)
             {
-                HardenCooldown--;
+                HardenCooldown -= Time.deltaTime;
             }
         }
     }
@@ -113,7 +114,7 @@ public class EliteMonsterA : EnemyBehaviour
 
     public void resetHardenCooldown()
     {
-        this.HardenCooldown = 8000;
+        this.HardenCooldown = 80;
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
     }
 

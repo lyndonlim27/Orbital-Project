@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class PCRoom3 : RoomManager
 {
-    int cooldown;
+    float cooldown;
     //ConsumableItemData consumables;
 
     public PolygonCollider2D consumableSpawn;
@@ -41,7 +41,7 @@ public class PCRoom3 : RoomManager
     // Start is called before the first frame update
     void Start()
     {
-        cooldown = 2000;
+        cooldown = 15;
         consumableminArea = consumableSpawn.bounds.min;
         consumablemaxArea = consumableSpawn.bounds.max;
         _ogmat = tilemapRenderers[0].material;
@@ -72,7 +72,6 @@ public class PCRoom3 : RoomManager
                 StartCoroutine(StartScene());
             }
 
-            Debug.Log(intensity);
             LightsOut();
 
             SpawnConsumables();
@@ -88,7 +87,7 @@ public class PCRoom3 : RoomManager
         if (up)
         {
             lightSource.intensity = intensity;
-            intensity += 0.05f * multiplier;
+            intensity += Time.deltaTime * multiplier ;
             if (intensity >= 0.6f)
             {
                 up = !up;
@@ -97,7 +96,7 @@ public class PCRoom3 : RoomManager
         else
         {
             lightSource.intensity = intensity;
-            intensity -= 0.05f * multiplier;
+            intensity -= Time.deltaTime * multiplier ;
             if (intensity <= 0.1f)
             {
                 up = !up;
@@ -107,14 +106,14 @@ public class PCRoom3 : RoomManager
 
     private void SpawnConsumables()
     {
-        if (cooldown == 0)
+        if (cooldown <= 0)
         {
             InstantiateConsumables();
             ResetCooldown();
         }
         else
         {
-            cooldown--;
+            cooldown-= Time.deltaTime;
         }
     }
 
@@ -151,7 +150,7 @@ public class PCRoom3 : RoomManager
 
         }
         Destroy(WarningPanel.gameObject);
-        multiplier = 0.25f;
+        multiplier = 0.5f;
         bosshp.gameObject.SetActive(true);
 
     }
@@ -179,7 +178,7 @@ public class PCRoom3 : RoomManager
 
     private void ResetCooldown()
     {
-        cooldown = 2000;
+        cooldown = 15;
     }
 
 

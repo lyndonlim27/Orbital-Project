@@ -37,7 +37,7 @@ public class EnemyBehaviour : EntityBehaviour
     public Player player;
     public int health;
 
-    public int cooldown;
+    public float cooldown;
 
     public virtual void Start()
     {
@@ -65,6 +65,7 @@ public class EnemyBehaviour : EntityBehaviour
     public virtual void Update()
     {
         stateMachine.Update();
+      //  Debug.Log(cooldown);
         //Debug.Log(stateMachine.currState);
         //Debug.Log(cooldown);
     }
@@ -88,10 +89,10 @@ public class EnemyBehaviour : EntityBehaviour
     {
         if (ranged == null)
         {
-            return this.cooldown != 0;
+            return this.cooldown > 0;
         } else
         {
-            return this.cooldown != 0 && ranged.abletoAttack == true;
+            return this.cooldown > 0 && ranged.abletoAttack == true;
         }
         
     }
@@ -100,7 +101,7 @@ public class EnemyBehaviour : EntityBehaviour
     {
         if (cooldown > 0)
         {
-            cooldown--;
+            cooldown-= Time.deltaTime;
         }
     }
 
@@ -108,7 +109,7 @@ public class EnemyBehaviour : EntityBehaviour
 
     public void resetCooldown()
     {
-        this.cooldown = 1000;
+        this.cooldown = 20;
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
     }
 

@@ -4,7 +4,7 @@ using System.Text;
 using UnityEngine;
 using TMPro;
 
-public class TypingTestTL : TextLogic
+public class  TypingTestTL : TextLogic
 {
     [SerializeField] private TextAsset text;
 
@@ -58,12 +58,8 @@ public class TypingTestTL : TextLogic
         if (seconds <= 0)
         {
             textConverter.enabled = false;
-            CanvasDisplayer.text = string.Format("Words Per Minute = {0}", (int) (wordCount / 30) * 60);
+            CanvasDisplayer.text = string.Format("Words Per Minute = {0}",  (wordCount * 2));
             StartCoroutine(WaitForStats());
-            
-            
-
-
         }
         
     }
@@ -168,7 +164,7 @@ public class TypingTestTL : TextLogic
         Debug.Log("done");
         this.transform.parent.parent.gameObject.SetActive(false);
         this.enabled = false;
-        go.SetActive(true);
+        go.SetActive(false);
 
     }
 }

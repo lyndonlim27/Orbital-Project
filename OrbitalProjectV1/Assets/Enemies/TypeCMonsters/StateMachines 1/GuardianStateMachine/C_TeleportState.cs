@@ -8,7 +8,7 @@ public class C_TeleportState : StateClass
     {
 
     }
-    private int teleportcounter = 250;
+    private float teleportcounter = 3f;
 
     public override void Enter(object stateData)
     {
@@ -37,7 +37,7 @@ public class C_TeleportState : StateClass
     {
 
         //let roam state handle detection of enemy if enemy is a non-stationary type.
-        if (teleportcounter == 0)
+        if (teleportcounter <= 0)
         {
             enemy.getNewRoamPosition();
             stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
@@ -49,7 +49,7 @@ public class C_TeleportState : StateClass
             {
                 stateMachine.ChangeState(StateMachine.STATE.ATTACK1, null);
             }
-            teleportcounter--;
+            teleportcounter-= Time.deltaTime;
 
         }
         

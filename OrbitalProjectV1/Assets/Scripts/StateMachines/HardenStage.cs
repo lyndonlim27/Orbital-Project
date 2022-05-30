@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HardenStage : StateClass
 {
-    public int regentimer;
+    public float regentimer;
     EliteMonsterA eliteMonster;
     EnemyData[] enemyDatas;
     public HardenStage(EnemyBehaviour entity, StateMachine stateMachine) : base(entity, stateMachine)
@@ -15,7 +15,7 @@ public class HardenStage : StateClass
     public override void Enter(object stateData)
     {
         eliteMonster = (EliteMonsterA)enemy;
-        regentimer = 1200;
+        regentimer = 10;
         if (eliteMonster.allProps.Count == 0)
         {
             eliteMonster.ActivateStage1();
@@ -39,14 +39,14 @@ public class HardenStage : StateClass
     {
 
         eliteMonster.CheckInteruption();
-        if (regentimer == 0)
+        if (regentimer <= 0)
         {
             eliteMonster.RegenHP();
             ResetRegenTimer();
             
         } else
         {
-            regentimer--;
+            regentimer -= Time.deltaTime;
         }
         
         
@@ -54,7 +54,7 @@ public class HardenStage : StateClass
 
     public void ResetRegenTimer()
     {
-        regentimer = 1200;
+        regentimer = 7;
     }
 
 }

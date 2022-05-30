@@ -74,14 +74,14 @@ public class RangedComponent : AttackComponent
                 bulletinst = GameObject.Instantiate(bullet, (Vector2)transform.position + dir * 2f, Quaternion.Euler(0, 0, angle + 45f));
                 bulletinst.TargetEntity(target);
                 bulletinst._firer = eliteMonsterA;
-                StartCoroutine(StartCooldown());
+                StartCooldown();
             }
             else
             {
                 bulletinst = Instantiate(bullet, (Vector2)transform.position + dir * 2f, direction);
                 bulletinst.TargetEntity(target);
                 bulletinst._firer = eliteMonsterA;
-                StartCoroutine(StartCooldown());
+                StartCooldown();
             }
         }
         
@@ -112,13 +112,13 @@ public class RangedComponent : AttackComponent
                     ang -= 45f;
 
                 }
-                StartCoroutine(StartCooldown());
+                StartCooldown();
             }
             else
             {
                 spellinst = GameObject.Instantiate(spell, this.transform.position, angle);
                 spellinst.SetEntityStats(data);
-                StartCoroutine(StartCooldown());
+                StartCooldown();
             }
             
         }
@@ -126,12 +126,19 @@ public class RangedComponent : AttackComponent
         
     }
 
+    /*
     IEnumerator StartCooldown()
     {
         yield return new WaitForSeconds(1.5f);
         abletoAttack = true;
         parent.resetCooldown();
 
+    }*/
+
+    private void StartCooldown()
+    {
+        abletoAttack = true;
+        parent.resetCooldown();
     }
 
 }
