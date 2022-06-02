@@ -47,7 +47,7 @@ public class EnemyBehaviour : EntityBehaviour
     private int currentWaypoint = 0;
     public float repathRate = 1f;
     private float lastRepath = float.NegativeInfinity;
-    public float nextWaypointDistance = 3f;
+    public float nextWaypointDistance = 0.5f;
     public bool reachedEndOfPath;
 
     public virtual void Start()
@@ -82,11 +82,6 @@ public class EnemyBehaviour : EntityBehaviour
 
     void OnPathComplete(Pathfinding.Path p)
     {
-        //if (!p.error)
-        //{
-        //    path = p;
-        //    currentWaypoint = 0;
-        //}
 
         p.Claim(this);
         if (!p.error)
@@ -140,8 +135,8 @@ public class EnemyBehaviour : EntityBehaviour
 
     public void getNewRoamPosition()
     {
-        roamPos = new Vector2(Random.Range(-2, 2), Random.Range(-2, 2));
-        //roamPos = this.currentRoom.GetRandomPoint();
+        //roamPos = new Vector2(Random.Range(-2, 2), Random.Range(-2, 2));
+        roamPos = this.currentRoom.GetRandomPoint();
  
         
     }

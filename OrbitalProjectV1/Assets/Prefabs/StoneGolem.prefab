@@ -235,6 +235,9 @@ MonoBehaviour:
   player: {fileID: 0}
   health: 0
   cooldown: 0
+  repathRate: 0.5
+  nextWaypointDistance: 3
+  reachedEndOfPath: 0
   stageProp: {fileID: 4787399030627389434, guid: c7a80671574be4bad9fcf27d9c1d51c4, type: 3}
   propsData:
   - {fileID: 11400000, guid: 9cefff5005f2c4309ba081714b1a62dc, type: 2}
