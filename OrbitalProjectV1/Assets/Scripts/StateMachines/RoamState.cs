@@ -13,15 +13,17 @@ class RoamState : StateClass
     public override void Enter(object data)
     {
         enemy.animator.SetBool("isWalking", true);
-        Roam();
 
     }
 
     public override void Update()
     {
         Roam();
+        
         enemy.tick();
     }
+
+
 
     public void Roam()
     {
@@ -34,6 +36,8 @@ class RoamState : StateClass
         } else if (enemy.isReached())
 
         {
+
+            Debug.Log("Dafuq");
             stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
 
         }

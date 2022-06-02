@@ -34,6 +34,13 @@ public class EliteMonsterA : EnemyBehaviour
         stateMachine.AddState(StateMachine.STATE.ATTACK2, new RangedState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.ENRAGED1, new HardenStage(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.STOP, new StopState(this, this.stateMachine));
+
+    }
+
+    public override void Initialize()
+    { 
+        this.animator.SetBool("NotSpawned", true);
+        stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
         
     }
 
@@ -79,7 +86,7 @@ public class EliteMonsterA : EnemyBehaviour
            
         } else
         {
-            base.Update();
+            stateMachine.Update();
             if (HardenCooldown > 0)
             {
                 HardenCooldown -= Time.deltaTime;

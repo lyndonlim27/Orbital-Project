@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Pathfinding;
 
 public class EnemyBehaviour : EntityBehaviour
 {
@@ -36,8 +37,18 @@ public class EnemyBehaviour : EntityBehaviour
     public Vector2 startingpos;
     public Player player;
     public int health;
-
     public float cooldown;
+
+    /** Pathfinding
+     * 
+     */
+    private Seeker seeker;
+    private Path path;
+    private int currentWaypoint = 0;
+    public float repathRate = 1f;
+    private float lastRepath = float.NegativeInfinity;
+    public float nextWaypointDistance = 3f;
+    public bool reachedEndOfPath;
 
     public virtual void Start()
     {
@@ -53,28 +64,44 @@ public class EnemyBehaviour : EntityBehaviour
         startingpos = GetComponent<Transform>().position;
         _flicker = GameObject.FindObjectOfType<DamageFlicker>();
         isDead = false;
+        seeker = GetComponent<Pathfinding.Seeker>();
         health = enemyData.words;
     }
 
-    public void Initialize()
-    {
-        this.animator.SetBool("NotSpawned", true);
-        stateMachine.Init(StateMachine.STATE.IDLE, null);
+    public virtual void Initialize() {
     }
 
     public virtual void Update()
     {
         stateMachine.Update();
+        Debug.Log("Reached = " + isReached());
       //  Debug.Log(cooldown);
         //Debug.Log(stateMachine.currState);
         //Debug.Log(cooldown);
     }
 
-    public virtual void FixedUpdate()
+    void OnPathComplete(Pathfinding.Path p)
     {
-        stateMachine.FixedUpdate();
-    }
+        //if (!p.error)
+        //{
+        //    path = p;
+        //    currentWaypoint = 0;
+        //}
 
+        p.Claim(this);
+        if (!p.error)
+        {
+            if (path != null) path.Release(this);
+            path = p;
+            // Reset the waypoint counter so that we start to move towards the first point in the path
+            currentWaypoint = 0;
+        }
+        else
+        {
+            p.Release(this);
+        }
+    }
+    
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Obstacles"))
@@ -83,7 +110,6 @@ public class EnemyBehaviour : EntityBehaviour
             stateMachine.ChangeState(StateMachine.STATE.ROAMING,null);
         }
     }
-
 
     public bool onCooldown()
     {
@@ -106,8 +132,7 @@ public class EnemyBehaviour : EntityBehaviour
     }
 
 
-
-    public void resetCooldown()
+        public void resetCooldown()
     {
         this.cooldown = 10;
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
@@ -115,8 +140,8 @@ public class EnemyBehaviour : EntityBehaviour
 
     public void getNewRoamPosition()
     {
-        //roamPos = new Vector2(Random.Range(-2, 2), Random.Range(-2, 2));
-        roamPos = this.currentRoom.GetRandomPoint();
+        roamPos = new Vector2(Random.Range(-2, 2), Random.Range(-2, 2));
+        //roamPos = this.currentRoom.GetRandomPoint();
  
         
     }
@@ -124,27 +149,90 @@ public class EnemyBehaviour : EntityBehaviour
     public void moveToRoam()
     {
         float steps = enemyData.moveSpeed * Time.deltaTime;
-        transform.position = Vector3.MoveTowards(transform.position, roamPos, steps);
+        AStarMove(roamPos);
+        //transform.position = Vector3.MoveTowards(transform.position, roamPos, steps);
         flipFace(roamPos);
     }
+
+    private void AStarMove(Vector2 destination)
+    {
+        if (Time.time > lastRepath + repathRate && seeker.IsDone())
+        {
+            lastRepath = Time.time;
+            // Start a new path to the targetPosition, call the the OnPathComplete function
+            // when the path has been calculated (which may take a few frames depending on the complexity)
+            seeker.StartPath(transform.position, destination, OnPathComplete);
+        }
+        if (path == null)
+        {
+            // We have no path to follow yet, so don't do anything
+            return;
+        }
+        // Check in a loop if we are close enough to the current waypoint to switch to the next one.
+        // We do this in a loop because many waypoints might be close to each other and we may reach
+        // several of them in the same frame.
+        reachedEndOfPath = false;
+        // The distance to the next waypoint in the path
+        float distanceToWaypoint;
+        while (true)
+        {
+            // If you want maximum performance you can check the squared distance instead to get rid of a
+            // square root calculation. But that is outside the scope of this tutorial.
+            distanceToWaypoint = Vector3.Distance(transform.position, path.vectorPath[currentWaypoint]);
+            if (distanceToWaypoint < nextWaypointDistance)
+            {
+                // Check if there is another waypoint or if we have reached the end of the path
+                if (currentWaypoint + 1 < path.vectorPath.Count)
+                {
+                    currentWaypoint++;
+                }
+                else
+                {
+                    // Set a status variable to indicate that the agent has reached the end of the path.
+                    // You can use this to trigger some special code if your game requires that.
+                    reachedEndOfPath = true;
+                    break;
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+        // Slow down smoothly upon approaching the end of the path
+        // This value will smoothly go from 1 to 0 as the agent approaches the last waypoint in the path.
+        var speedFactor = reachedEndOfPath ? Mathf.Sqrt(distanceToWaypoint / nextWaypointDistance) : 1f;
+        // Direction to the next waypoint
+        // Normalize it so that it has a length of 1 world unit
+        Vector3 dir = (path.vectorPath[currentWaypoint] - transform.position).normalized;
+        // Multiply the direction by our desired speed to get a velocity
+        Vector3 velocity = dir * enemyData.moveSpeed * speedFactor;
+        // Move the agent using the CharacterController component
+        // Note that SimpleMove takes a velocity in meters/second, so we should not multiply by Time.deltaTime
+        // If you are writing a 2D game you may want to remove the CharacterController and instead modify the position directly
+        transform.position += velocity * Time.deltaTime;
+    }
+
 
     public void moveToTarget(Player player)
     {
         float steps = enemyData.chaseSpeed * Time.deltaTime;
-        transform.position = Vector3.MoveTowards(transform.position,player.transform.position,steps);
+        AStarMove(player.transform.position);
+        //transform.position = Vector3.MoveTowards(transform.position,player.transform.position,steps);
         flipFace(player.transform.position);
     }
 
     public void moveToStartPos()
     {
         float steps = enemyData.moveSpeed * Time.deltaTime;
-        transform.position = Vector3.MoveTowards(transform.position, startingpos, steps);
+        AStarMove(startingpos);
+        //transform.position = Vector3.MoveTowards(transform.position, startingpos, steps);
         flipFace(startingpos);
     }
 
     public bool isReached()
     {
-        return Vector2.Distance(roamPos,transform.localPosition) == 0;
+        return Vector2.Distance(roamPos,transform.localPosition) <= 0.5f;
     }
 
     public void flipFace(Vector2 target)
@@ -265,13 +353,6 @@ public class EnemyBehaviour : EntityBehaviour
         }
         
     }
-
-
-
-    //private void OnDestroy()
-    //{
-    //    Destroy(gameObject);
-    //}
 
     //default fade animation;
     IEnumerator FadeOut()

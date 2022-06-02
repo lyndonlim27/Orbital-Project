@@ -13,7 +13,6 @@ public class IdleState : StateClass
     {
         enemy.animator.SetBool("isWalking", false);
         counter = 100;
-        IdleCounter();
     }
 
     public override void FixedUpdate()
