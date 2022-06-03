@@ -9,7 +9,11 @@ public abstract class SkillBehaviour : MonoBehaviour
     protected Player _player;
     protected float currCooldown;
     public abstract void ActivateSkill();
-    public abstract void ChangeSkill(string skillName);
+    public virtual void ChangeSkill(string skillName)
+    {
+        this.skillData = Resources.Load<SkillData>("Data/SkillData/" + skillName);
+        GetComponent<Image>().overrideSprite = skillData.sprite;
+    }
 
     public virtual void Start()
     {
@@ -32,7 +36,6 @@ public abstract class SkillBehaviour : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             ChangeSkill("SlowData");
-            Debug.Log("CHANGED");
         }
     }
 
