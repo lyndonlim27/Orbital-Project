@@ -20,6 +20,7 @@ public class DebuffBehaviour : SkillBehaviour
                     break;
                 case DebuffData.DEBUFF_TYPE.SLOW:
                     StartCoroutine(Slow());
+                    debuffAnimator.SetTrigger("Activate");
                     break;
             }
         }
@@ -102,9 +103,8 @@ public class DebuffBehaviour : SkillBehaviour
 
     public override void ChangeSkill(string skillName)
     {
-        this._debuffData = Resources.Load<DebuffData>("Data/SkillData/" + skillName);
-        GetComponent<Image>().overrideSprite = _debuffData.sprite;
-        Debug.Log(this._debuffData);
+        base.ChangeSkill(skillName);
+        this._debuffData = (DebuffData)skillData;
     }
 
 }

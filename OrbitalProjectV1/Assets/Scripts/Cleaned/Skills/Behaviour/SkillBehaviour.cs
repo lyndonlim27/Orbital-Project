@@ -8,6 +8,7 @@ public abstract class SkillBehaviour : MonoBehaviour
     [SerializeField] protected SkillData skillData;
     protected Player _player;
     protected float currCooldown;
+    protected Animator debuffAnimator;
     public abstract void ActivateSkill();
     public virtual void ChangeSkill(string skillName)
     {
@@ -20,6 +21,7 @@ public abstract class SkillBehaviour : MonoBehaviour
         currCooldown = 0;
         _player = FindObjectOfType<Player>();
         GetComponent<Image>().overrideSprite = skillData.sprite;
+        debuffAnimator = GameObject.Find("DebuffAnimator").GetComponent<Animator>();
     }
 
     public virtual void Update()
