@@ -9,6 +9,7 @@ public class PlayerData : EntityData
 
     [Header("Player properties")]
     public int maxHealth;
+    public int maxMana;
     public int selfDamage;
 
     [Header("Movement")]

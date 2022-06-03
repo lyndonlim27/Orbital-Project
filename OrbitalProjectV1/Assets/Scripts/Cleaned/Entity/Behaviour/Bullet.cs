@@ -10,7 +10,7 @@ public class Bullet : RangedBehaviour
     protected string animationname;
 
     [Header("Bullet properties")]
-    [SerializeField] private float speed = 6.0f;
+    private float speed;
     private float lifeTime;
 
     [Header("Movement")]
@@ -31,6 +31,7 @@ public class Bullet : RangedBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        speed = rangedData.speed;
         spriteRenderer.sprite = rangedData.sprite;
         if (!_target.CompareTag("Player"))
         {
@@ -48,6 +49,12 @@ public class Bullet : RangedBehaviour
         transform.localScale = new Vector2(rangedData.scale, rangedData.scale);
         Destroy(gameObject, lifeTime);
     }
+
+    private void Update()
+    {
+        speed = rangedData.speed;
+    }
+
 
     /** can merge using Transform.
      */

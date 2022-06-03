@@ -29,7 +29,7 @@ public class EnemyBehaviour : EntityBehaviour
     public MeleeComponent melee { get; private set; }
     public RangedComponent ranged { get; private set; }
 
-    public Rigidbody2D rb { get; private set; }
+    public Rigidbody2D rb;
     public Animator animator { get; private set; }
  
     public DetectionScript detectionScript;
@@ -317,7 +317,7 @@ public class EnemyBehaviour : EntityBehaviour
 
     public override void SetEntityStats(EntityData stats)
     {
-        this.enemyData = (EnemyData) stats;
+        this.enemyData = Instantiate((EnemyData) stats);
     }
 
     public override EntityData GetData()

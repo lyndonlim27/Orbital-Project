@@ -18,6 +18,7 @@ public class Player : EntityBehaviour
     private float _timeDelay = 0;
     private DialogueManager dialMgr;
     private int _currHealth;
+    private int _currMana;
     private Weapon _currWeapon;
     private WeaponPickup _weaponManager;
     private DamageFlicker _flicker;
@@ -45,6 +46,7 @@ public class Player : EntityBehaviour
     void Start()
     {
         _currHealth = playerData.maxHealth;
+        _currMana = playerData.maxMana;
         healthBar.SetMaxHealth(playerData.maxHealth);
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
@@ -188,5 +190,13 @@ public class Player : EntityBehaviour
         return playerData;
     }
 
+    public int GetMana()
+    {
+        return _currMana;
+    }
 
+    public void UseMana(int manaCost)
+    {
+        _currMana -= manaCost;
+    }
 }
