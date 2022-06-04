@@ -8645,7 +8645,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 3.264706, y: 1}
+    m_SensorSize: {x: 3.0885608, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -8662,7 +8662,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1199980824}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -23.4, y: 48.7, z: -10}
+  m_LocalPosition: {x: -22.59, y: 45.17, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9183,7 +9183,8 @@ MonoBehaviour:
   roomSize: {x: 40, y: 22}
   _EntityData:
   - {fileID: 11400000, guid: 7c18992022d21482285e42cae6d4a2cd, type: 2}
-  _enemyData: []
+  _enemyData:
+  - {fileID: 11400000, guid: 7c18992022d21482285e42cae6d4a2cd, type: 2}
   consumableSpawn: {fileID: 49132823}
   lightSource: {fileID: 1046048496}
   tilemapRenderers:
@@ -18420,7 +18421,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1924427486}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -23.4, y: 48.7, z: -10}
+  m_LocalPosition: {x: -22.59, y: 45.17, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -18588,6 +18589,18 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1924427488}
+    - target: {fileID: 452630265, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 7.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 452630265, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -229
+      objectReference: {fileID: 0}
+    - target: {fileID: 4374332775502748977, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4374332775865201289, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
       propertyPath: m_Name
       value: Player 1
@@ -18606,11 +18619,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4374332776539690098, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -23.4
+      value: -22.59
       objectReference: {fileID: 0}
     - target: {fileID: 4374332776539690098, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 48.7
+      value: 45.17
       objectReference: {fileID: 0}
     - target: {fileID: 4374332776539690098, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
       propertyPath: m_LocalPosition.z
@@ -18643,6 +18656,26 @@ PrefabInstance:
     - target: {fileID: 4374332776539690098, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4374332776856344446, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9015927139262890777, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+      propertyPath: m_Name
+      value: DebuffAnimator
+      objectReference: {fileID: 0}
+    - target: {fileID: 9015927139262890777, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9015927139262890779, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+      propertyPath: m_Size.x
+      value: 0.42
+      objectReference: {fileID: 0}
+    - target: {fileID: 9015927139262890779, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+      propertyPath: m_Size.y
+      value: 0.42
       objectReference: {fileID: 0}
     - target: {fileID: 9015927139262890779, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
       propertyPath: m_Sprite

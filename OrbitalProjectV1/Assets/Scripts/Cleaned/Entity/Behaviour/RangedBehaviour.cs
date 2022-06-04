@@ -18,7 +18,7 @@ public abstract class RangedBehaviour : EntityBehaviour
 
     public override void SetEntityStats(EntityData stats)
     {
-        RangedData rangedD = Instantiate((RangedData)stats);
+        RangedData rangedD = (RangedData)stats;
         if (rangedD != null)
         {
             this.rangedData = rangedD;

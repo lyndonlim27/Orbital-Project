@@ -16,6 +16,10 @@ public class RangedComponent : AttackComponent
         base.Start();
         abletoAttack = true;
         //spells = enemyStats.spells;
+        for(int i = 0; i <rangeds.Count; i++)
+        {
+            rangeds[i] = Instantiate(rangeds[i]);
+        }
 
     }
 

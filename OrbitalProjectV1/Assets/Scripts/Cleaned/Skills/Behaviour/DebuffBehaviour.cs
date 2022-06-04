@@ -7,6 +7,8 @@ public class DebuffBehaviour : SkillBehaviour
 {
     private DebuffData _debuffData;
     private bool _stop;
+    private ParticleSystem _slowParticle;
+    private ParticleSystem _stunParticle;
     public override void ActivateSkill()
     {
         if (_debuffData != null && CheckEnoughMana())
@@ -16,11 +18,16 @@ public class DebuffBehaviour : SkillBehaviour
             {
                 default:
                 case DebuffData.DEBUFF_TYPE.STUN:
+                    debuffAnimator.runtimeAnimatorController =
+                        Resources.Load<AnimatorOverrideController>("Animations/AnimatorControllers/StunDebuffVFX");
+                    debuffAnimator.SetTrigger("Activate");
                     StartCoroutine(Stun());
                     break;
                 case DebuffData.DEBUFF_TYPE.SLOW:
-                    StartCoroutine(Slow());
+                    debuffAnimator.runtimeAnimatorController =
+                        Resources.Load<RuntimeAnimatorController>("Animations/AnimatorControllers/SlowDebuffVFX");
                     debuffAnimator.SetTrigger("Activate");
+                    StartCoroutine(Slow());
                     break;
             }
         }
@@ -31,7 +38,8 @@ public class DebuffBehaviour : SkillBehaviour
     {
         base.Start();
         _debuffData = (DebuffData)skillData;
-
+        _slowParticle = Resources.Load<ParticleSystem>("ParticlePrefab/SlowDebuff");
+        _stunParticle = Resources.Load<ParticleSystem>("ParticlePrefab/StunDebuff");
     }
 
     // Update is called once per frame
@@ -49,12 +57,14 @@ public class DebuffBehaviour : SkillBehaviour
         {
             enemy.rb.constraints = RigidbodyConstraints2D.FreezeAll;
             enemy.GetComponent<EnemyBehaviour>().enabled = false;
+            Instantiate(_stunParticle, enemy.transform);
         }
         yield return new WaitForSeconds(_debuffData.duration);
         foreach (EnemyBehaviour enemy in FindObjectsOfType<EnemyBehaviour>())
         {
             enemy.rb.constraints = RigidbodyConstraints2D.None;
             enemy.GetComponent<EnemyBehaviour>().enabled = true;
+            Destroy(enemy.transform.Find("StunDebuff(Clone)").gameObject);
         }
     }
 
@@ -68,9 +78,14 @@ public class DebuffBehaviour : SkillBehaviour
             RangedComponent rangedComponent = enemy.GetComponentInChildren<RangedComponent>();
             if (rangedComponent != null)
             {
-                enemy.GetComponentInChildren<RangedComponent>().spell.rangedData.speed *= _debuffData.slowAmount;
-                enemy.GetComponentInChildren<RangedComponent>().bullet.rangedData.speed *= _debuffData.slowAmount;
+                foreach (RangedData rangedData in rangedComponent.rangeds)
+                {
+                    rangedData.speed *= _debuffData.slowAmount;
+                }
+                //enemy.GetComponentInChildren<RangedComponent>().spell.rangedData.speed *= 
+               // enemy.GetComponentInChildren<RangedComponent>().bullet.rangedData.speed *= _debuffData.slowAmount;
             }
+            Instantiate(_slowParticle, enemy.transform);
             Debug.Log("SLOW");
         }
     }
@@ -85,10 +100,15 @@ public class DebuffBehaviour : SkillBehaviour
             RangedComponent rangedComponent = enemy.GetComponentInChildren<RangedComponent>();
             if (rangedComponent != null)
             {
-                enemy.GetComponentInChildren<RangedComponent>().spell.rangedData.speed /= _debuffData.slowAmount;
-                enemy.GetComponentInChildren<RangedComponent>().bullet.rangedData.speed /= _debuffData.slowAmount;
+                foreach (RangedData rangedData in rangedComponent.rangeds)
+                {
+                    rangedData.speed /= _debuffData.slowAmount;
+                }
+                //enemy.GetComponentInChildren<RangedComponent>().spell.rangedData.speed /= _debuffData.slowAmount;
+                //enemy.GetComponentInChildren<RangedComponent>().bullet.rangedData.speed /= _debuffData.slowAmount;
             }
             Debug.Log("STOP SLOW");
+            Destroy(enemy.transform.Find("SlowDebuff(Clone)").gameObject);
         }
     }
 
