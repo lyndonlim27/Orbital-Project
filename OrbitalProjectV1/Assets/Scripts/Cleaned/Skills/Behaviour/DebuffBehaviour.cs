@@ -11,7 +11,7 @@ public class DebuffBehaviour : SkillBehaviour
     private ParticleSystem _stunParticle;
     public override void ActivateSkill()
     {
-        if (_debuffData != null && CheckEnoughMana())
+        if (_debuffData != null && CanCast())
         {
             _player.UseMana(_debuffData.manaCost);
             switch (_debuffData.debuffType)
@@ -70,6 +70,7 @@ public class DebuffBehaviour : SkillBehaviour
 
     private void StartSlow()
     {
+        ResetCooldown();
         foreach (EnemyBehaviour enemy in FindObjectsOfType<EnemyBehaviour>())
         {
             enemy.enemyData.chaseSpeed *= _debuffData.slowAmount;
@@ -94,9 +95,9 @@ public class DebuffBehaviour : SkillBehaviour
     {
         foreach (EnemyBehaviour enemy in FindObjectsOfType<EnemyBehaviour>())
         {
-            enemy.enemyData.chaseSpeed /= 0.5f;
-            enemy.enemyData.attackSpeed /= 0.5f;
-            enemy.enemyData.moveSpeed /= 0.5f;
+            enemy.enemyData.chaseSpeed /= _debuffData.slowAmount;
+            enemy.enemyData.attackSpeed /= _debuffData.slowAmount;
+            enemy.enemyData.moveSpeed /= _debuffData.slowAmount;
             RangedComponent rangedComponent = enemy.GetComponentInChildren<RangedComponent>();
             if (rangedComponent != null)
             {

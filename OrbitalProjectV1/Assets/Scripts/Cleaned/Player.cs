@@ -27,7 +27,8 @@ public class Player : EntityBehaviour
 
     [Header("Player UI")]
     [SerializeField] private GameOver _gameOver;
-    [SerializeField] private HealthBar healthBar;
+    [SerializeField] private HealthBar _healthBar;
+    [SerializeField] private ManaBar _manaBar;
     public bool inCombat { get; private set; }
 
     private void Awake()
@@ -47,7 +48,8 @@ public class Player : EntityBehaviour
     {
         _currHealth = playerData.maxHealth;
         _currMana = playerData.maxMana;
-        healthBar.SetMaxHealth(playerData.maxHealth);
+        _healthBar.SetMaxHealth(playerData.maxHealth);
+        _manaBar.SetMaxMana(playerData.maxMana);
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _weaponManager = this.gameObject.GetComponentInChildren<WeaponPickup>();
@@ -124,7 +126,7 @@ public class Player : EntityBehaviour
     public void TakeDamage(int damageTaken)
     {
         _currHealth -= damageTaken;
-        healthBar.SetHealth(_currHealth);
+        _healthBar.SetHealth(_currHealth);
         _flicker.Flicker(this);
         if (_currHealth <= 0)
         {
@@ -136,7 +138,7 @@ public class Player : EntityBehaviour
     {
       
         _currHealth = Math.Min(_currHealth+health,100);
-        healthBar.SetHealth(_currHealth);
+        _healthBar.SetHealth(_currHealth);
         
     }
 
@@ -198,5 +200,12 @@ public class Player : EntityBehaviour
     public void UseMana(int manaCost)
     {
         _currMana -= manaCost;
+        _manaBar.SetMana(_currMana);
+    }
+
+    public void AddMana(int mana)
+    {
+        _currMana += mana;
+        _manaBar.SetMana(_currMana);
     }
 }

@@ -22,7 +22,7 @@ public class HealthBar : MonoBehaviour
         slider.maxValue = health;
         slider.value = health;
         fill.color = gradient.Evaluate(1f);
-        percentage.text = health.ToString() + "%";
+        percentage.text = health.ToString() + " HP";
     }
 
     /**
@@ -32,6 +32,6 @@ public class HealthBar : MonoBehaviour
     {
         slider.value = health;
         fill.color = gradient.Evaluate(slider.normalizedValue);
-        percentage.text = health.ToString() + "%";
+        percentage.text = health.ToString() + " HP";
     }
 }
