@@ -182,8 +182,8 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: 4bab73473dbf94538acdf11f87a2b66a, type: 3}
 --- !u!114 &255104054 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6762626420165131962, guid: 62c9a4b5b36974cb5b2691b7ce7c1f0b, type: 3}
-  m_PrefabInstance: {fileID: 6762626420452371900}
+  m_CorrespondingSourceObject: {fileID: 5787611773632561294, guid: 164b6bfe6c7394737beedcec951c93df, type: 3}
+  m_PrefabInstance: {fileID: 5787611771734709128}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -950,11 +950,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccfc5b41edd944a8fb6ae395060b8f02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetPosition: {fileID: 308215083}
-  speed: 2
-  nextWaypointDistance: 3
-  repathRate: 0.5
-  reachedEndOfPath: 0
 --- !u!4 &1419388394
 Transform:
   m_ObjectHideFlags: 0
@@ -975,60 +970,60 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3745240068291893840, guid: 378f2be05f0434f529e21656fe414122, type: 3}
   m_PrefabInstance: {fileID: 880694334}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &6762626420452371900
+--- !u!1001 &5787611771734709128
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6762626420165131959, guid: 62c9a4b5b36974cb5b2691b7ce7c1f0b, type: 3}
+    - target: {fileID: 5787611772595388696, guid: 164b6bfe6c7394737beedcec951c93df, type: 3}
+      propertyPath: m_Name
+      value: StoneGolemPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 5787611772595388697, guid: 164b6bfe6c7394737beedcec951c93df, type: 3}
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
-    - target: {fileID: 6762626420165131959, guid: 62c9a4b5b36974cb5b2691b7ce7c1f0b, type: 3}
+    - target: {fileID: 5787611772595388697, guid: 164b6bfe6c7394737beedcec951c93df, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.9158779
       objectReference: {fileID: 0}
-    - target: {fileID: 6762626420165131959, guid: 62c9a4b5b36974cb5b2691b7ce7c1f0b, type: 3}
+    - target: {fileID: 5787611772595388697, guid: 164b6bfe6c7394737beedcec951c93df, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.893039
       objectReference: {fileID: 0}
-    - target: {fileID: 6762626420165131959, guid: 62c9a4b5b36974cb5b2691b7ce7c1f0b, type: 3}
+    - target: {fileID: 5787611772595388697, guid: 164b6bfe6c7394737beedcec951c93df, type: 3}
       propertyPath: m_LocalPosition.z
       value: -3.2191324
       objectReference: {fileID: 0}
-    - target: {fileID: 6762626420165131959, guid: 62c9a4b5b36974cb5b2691b7ce7c1f0b, type: 3}
+    - target: {fileID: 5787611772595388697, guid: 164b6bfe6c7394737beedcec951c93df, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 6762626420165131959, guid: 62c9a4b5b36974cb5b2691b7ce7c1f0b, type: 3}
+    - target: {fileID: 5787611772595388697, guid: 164b6bfe6c7394737beedcec951c93df, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6762626420165131959, guid: 62c9a4b5b36974cb5b2691b7ce7c1f0b, type: 3}
+    - target: {fileID: 5787611772595388697, guid: 164b6bfe6c7394737beedcec951c93df, type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6762626420165131959, guid: 62c9a4b5b36974cb5b2691b7ce7c1f0b, type: 3}
+    - target: {fileID: 5787611772595388697, guid: 164b6bfe6c7394737beedcec951c93df, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6762626420165131959, guid: 62c9a4b5b36974cb5b2691b7ce7c1f0b, type: 3}
+    - target: {fileID: 5787611772595388697, guid: 164b6bfe6c7394737beedcec951c93df, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6762626420165131959, guid: 62c9a4b5b36974cb5b2691b7ce7c1f0b, type: 3}
+    - target: {fileID: 5787611772595388697, guid: 164b6bfe6c7394737beedcec951c93df, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6762626420165131959, guid: 62c9a4b5b36974cb5b2691b7ce7c1f0b, type: 3}
+    - target: {fileID: 5787611772595388697, guid: 164b6bfe6c7394737beedcec951c93df, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6762626420165131961, guid: 62c9a4b5b36974cb5b2691b7ce7c1f0b, type: 3}
-      propertyPath: m_Name
-      value: StoneGolem
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 62c9a4b5b36974cb5b2691b7ce7c1f0b, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 164b6bfe6c7394737beedcec951c93df, type: 3}

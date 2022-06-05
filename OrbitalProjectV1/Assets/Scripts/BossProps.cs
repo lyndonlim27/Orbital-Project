@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class BossProps : ItemWithTextBehaviour
 {
-    EliteMonsterA boss;
+    EliteMonsterA EliteMonsterA;
+    EliteMonsterS EliteMonsterS;
 
     public override void Defeated()
     {
-        if (boss == null)
+        if (EliteMonsterA == null)
         {
             Debug.Log("dafuq");
-        }
-        Debug.Log(boss.allProps);
-        boss.allProps.Remove(this);
+        } 
+        Debug.Log(EliteMonsterA.allProps);
+        EliteMonsterA.allProps.Remove(this);
         Destroy(this.gameObject);
         
     }
@@ -30,6 +31,11 @@ public class BossProps : ItemWithTextBehaviour
 
     public void SetBoss(EliteMonsterA boss)
     {
-        this.boss = boss;
+        this.EliteMonsterA = boss;
+    }
+
+    public void SetBoss(EliteMonsterS boss)
+    {
+        this.EliteMonsterS = boss;
     }
 }

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a5caf378f7a24f559479c92e5eaf367, type: 3}
+  m_Name: NightBorne_sk2
+  m_EditorClassIdentifier: 
+  _name: 
+  minDist: 0
+  sprite: {fileID: 567692594, guid: 9d985ef4ec39e460e936c881e92115fa, type: 3}
+  condition: 0
+  _type: 0
+  random: 0
+  pos: {x: 0, y: 0}
+  damageFlicker: {fileID: 0}
+  type: 0
+  damage: 0
+  speed: 0
+  rotation: 0
+  lifetime: 0
+  trigger: DeathBomb
+  ac_name: LightningSpell_VFX
+  scale: 3

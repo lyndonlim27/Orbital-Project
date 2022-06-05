@@ -16,7 +16,7 @@ public class EliteMonsterA : EnemyBehaviour
 
 
     private void Awake()
-    {
+    { 
         hpBarUI = GameObject.FindObjectOfType<HealthBarEnemy>(true);
         hpBarUI.gameObject.SetActive(true);
         fodderObjects = new List<EnemyBehaviour>();

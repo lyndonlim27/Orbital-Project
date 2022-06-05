@@ -14,7 +14,6 @@ class MeleeState : StateClass
 
     public override void Update()
     {
-        enemy.tick();
 
     }
 
@@ -40,51 +39,32 @@ class MeleeState : StateClass
             stateMachine.ChangeState(StateMachine.STATE.ENRAGED1, null);
         }
 
-        else if (!enemy.melee.detected())
-        {
-            stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
+        //else if (!enemy.melee.detected())
+        //{
+        //    stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
 
+        //}
+        else if (enemy.player.isDead())
+        {
+            stateMachine.ChangeState(StateMachine.STATE.STOP, null);
         }
         else
         {
-            if (enemy.player.isDead())
+            if (!enemy.inAnimation)
             {
-                stateMachine.ChangeState(StateMachine.STATE.STOP, null);
-            }
-            else
+                List<string> meleetriggers = enemy.enemyData.meleetriggers;
+                int random = Random.Range(0, meleetriggers.Count);
+                enemy.animator.SetTrigger(meleetriggers[random]);
+                enemy.inAnimation = true;
+                    
+            } else
             {
-                enemy.animator.SetTrigger("Melee");
-                return;
+                stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
             }
-                //// slight difference from ranged, we should only apply the physics from melee attack upon
-                //// the animated hit. so we add the meleeattack into the animation event of the melee animation.
-                //if (enemy.hasWeapon())
-                //{
-
-
-                //    // right now idk how many weapons we can load, maybe can have more
-                //    // maybe when we decided to add more weapons can have an array weapon[]
-                //    int random = Random.Range(0, 2);
-                //    Debug.Log(random);
-                //    if (random == 0)
-                //    {
-                //        enemy.animator.SetTrigger("Melee");
-                //        return;
-                //    }
-                //    else
-                //    {
-                //        enemy.animator.SetTrigger("WeaponAttack");
-                //        return;
-                //    }
-
-                //}
-                //else
-                //{
-
-            
-
-            }
+                
         }
+                       
     }
+}
 
 

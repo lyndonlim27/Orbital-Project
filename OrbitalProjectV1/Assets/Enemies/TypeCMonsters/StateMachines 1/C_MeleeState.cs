@@ -41,11 +41,17 @@ class C_MeleeState : StateClass
             {
                 stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
             }
-            else
+            else if (!enemy.inAnimation && !enemy.onCooldown())
             {
                 enemy.flipFace(enemy.player.transform.position);
-                enemy.animator.SetTrigger("Melee");
+                List<string> meleetriggers = enemy.enemyData.meleetriggers;
+                int random = Random.Range(0, meleetriggers.Count);
+                enemy.animator.SetTrigger(meleetriggers[random]);
+                enemy.inAnimation = true;
                 return;
+            } else
+            {
+                stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
             }
         }
     }

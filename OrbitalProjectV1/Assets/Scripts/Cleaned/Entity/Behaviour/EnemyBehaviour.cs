@@ -31,13 +31,16 @@ public class EnemyBehaviour : EntityBehaviour
     public RangedComponent ranged { get; private set; }
 
     public Rigidbody2D rb { get; private set; }
-    public Animator animator { get; private set; }
- 
+    public Animator animator { get; protected set; }
+
     public DetectionScript detectionScript;
     public Vector2 startingpos;
     public Player player;
     public int health;
     public float cooldown;
+    public bool facingRight;
+    public bool inAnimation;
+    public bool stage2;
 
     /** Pathfinding
      * 
@@ -45,9 +48,9 @@ public class EnemyBehaviour : EntityBehaviour
     private Seeker seeker;
     private Path path;
     private int currentWaypoint = 0;
-    public float repathRate = 1f;
+    public float repathRate = 0.5f;
     private float lastRepath = float.NegativeInfinity;
-    public float nextWaypointDistance = 0.5f;
+    public float nextWaypointDistance = 1f;
     public bool reachedEndOfPath;
 
     public virtual void Start()
@@ -69,15 +72,18 @@ public class EnemyBehaviour : EntityBehaviour
     }
 
     public virtual void Initialize() {
+        animator.SetBool("isAlive", true);
+        animator.SetBool("NotSpawned", true);
+        transform.parent.position = transform.position;
+        transform.position = Vector3.zero;
+        cooldown = 2.5f;
     }
 
     public virtual void Update()
     {
         stateMachine.Update();
-        Debug.Log("Reached = " + isReached());
-      //  Debug.Log(cooldown);
-        //Debug.Log(stateMachine.currState);
-        //Debug.Log(cooldown);
+        tick();
+
     }
 
     void OnPathComplete(Pathfinding.Path p)
@@ -96,13 +102,13 @@ public class EnemyBehaviour : EntityBehaviour
             p.Release(this);
         }
     }
-    
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Obstacles"))
         {
             getNewRoamPosition();
-            stateMachine.ChangeState(StateMachine.STATE.ROAMING,null);
+            stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
         }
     }
 
@@ -115,30 +121,33 @@ public class EnemyBehaviour : EntityBehaviour
         {
             return this.cooldown > 0 && ranged.abletoAttack == true;
         }
-        
+
     }
 
     public void tick()
     {
         if (cooldown > 0)
         {
-            cooldown-= Time.deltaTime;
+            cooldown -= Time.deltaTime;
         }
     }
 
 
-        public void resetCooldown()
+    public virtual void resetCooldown()
     {
         this.cooldown = 10;
+        inAnimation = false;
+        transform.parent.position = transform.position;
+        transform.position = Vector3.zero;
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
     }
 
     public void getNewRoamPosition()
     {
-        //roamPos = new Vector2(Random.Range(-2, 2), Random.Range(-2, 2));
-        roamPos = this.currentRoom.GetRandomPoint();
- 
-        
+        roamPos = new Vector2(Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+        //roamPos = this.currentRoom.GetRandomPoint();
+
+
     }
 
     public void moveToRoam()
@@ -156,7 +165,7 @@ public class EnemyBehaviour : EntityBehaviour
             lastRepath = Time.time;
             // Start a new path to the targetPosition, call the the OnPathComplete function
             // when the path has been calculated (which may take a few frames depending on the complexity)
-            seeker.StartPath(transform.position, destination, OnPathComplete);
+            seeker.StartPath(transform.parent.position, destination, OnPathComplete);
         }
         if (path == null)
         {
@@ -173,7 +182,7 @@ public class EnemyBehaviour : EntityBehaviour
         {
             // If you want maximum performance you can check the squared distance instead to get rid of a
             // square root calculation. But that is outside the scope of this tutorial.
-            distanceToWaypoint = Vector3.Distance(transform.position, path.vectorPath[currentWaypoint]);
+            distanceToWaypoint = Vector3.Distance(transform.parent.position, path.vectorPath[currentWaypoint]);
             if (distanceToWaypoint < nextWaypointDistance)
             {
                 // Check if there is another waypoint or if we have reached the end of the path
@@ -199,13 +208,13 @@ public class EnemyBehaviour : EntityBehaviour
         var speedFactor = reachedEndOfPath ? Mathf.Sqrt(distanceToWaypoint / nextWaypointDistance) : 1f;
         // Direction to the next waypoint
         // Normalize it so that it has a length of 1 world unit
-        Vector3 dir = (path.vectorPath[currentWaypoint] - transform.position).normalized;
+        Vector3 dir = (path.vectorPath[currentWaypoint] - transform.parent.position).normalized;
         // Multiply the direction by our desired speed to get a velocity
         Vector3 velocity = dir * enemyData.moveSpeed * speedFactor;
         // Move the agent using the CharacterController component
         // Note that SimpleMove takes a velocity in meters/second, so we should not multiply by Time.deltaTime
         // If you are writing a 2D game you may want to remove the CharacterController and instead modify the position directly
-        transform.position += velocity * Time.deltaTime;
+        transform.parent.position += velocity * Time.deltaTime;
     }
 
 
@@ -227,32 +236,79 @@ public class EnemyBehaviour : EntityBehaviour
 
     public bool isReached()
     {
-        return Vector2.Distance(roamPos,transform.localPosition) <= 0.5f;
+        return Vector2.Distance(roamPos, transform.parent.position) <= 0.1f;
     }
 
     public void flipFace(Vector2 target)
     {
-        Vector2 dir = (target - (Vector2) transform.position).normalized;
-        spriteRenderer.flipX = dir.x > 0.1f;
-        if (melee == null)
+        Vector2 dir = (target - (Vector2)transform.parent.position).normalized;
+        if (dir.x < 0 && !facingRight)
         {
-            return;
-        }
-        if (dir.x >= 0.1f)
+            Debug.Log("shud be right");
+            Flip();
+        } else if (dir.x > 0 && facingRight)
         {
-            melee.transform.localScale = new Vector2(-1, 1);
+            Debug.Log("shud be left");
+            Flip();
         }
-        else if (dir.x <= 0.1f)
-        {
-            melee.transform.localScale = new Vector2(1, 1);
-        }
+        
+        
+        //Debug.Log(dir);
+        //if (dir.x >= 0.1f)
+        //{
+        //    Debug.Log("Dafuq?");
+
+        //    transform.parent.localScale = new Vector3(1, 1);
+        //    //if (melee != null)
+        //    //{
+        //    //    melee.transform.localScale = new Vector2(1, 1);
+        //    //}
+        //}
+        //else if (dir.x <= -0.1f)
+        //{
+        //    Debug.Log("SMLJ");
+        //    transform.parent.localScale = new Vector2(-1, 1);
+        //if (melee != null)
+        //{
+        //    melee.transform.localScale = new Vector2(-1, 1);
+        //}
 
 
     }
 
-    public void Teleport()
+    private void Flip()
     {
-        this.transform.position = roamPos;
+        Vector3 currentFace = transform.parent.localScale;
+        currentFace.x *= -1;
+        transform.parent.localScale = currentFace;
+
+        facingRight = !facingRight;
+    }
+
+    //public void RotateTowardsTarget(Vector3 pos)
+    //{
+
+    //    Vector3 dir = (pos - transform.parent.position).normalized;
+    //    float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90;
+    //    Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+    //    transform.parent.rotation = Quaternion.Slerp(transform.parent.rotation, rotation, 1f * Time.deltaTime);
+    //    //Quaternion targetRotation = Quaternion.identity;
+    //    //do
+    //    //{
+    //    //    Debug.Log("do rotation");
+
+    //    //    Vector2 targetDirection = (pos - (Vector2) transform.parent.position).normalized;
+    //    //    targetRotation = Quaternion.LookRotation(targetDirection);
+    //    //    transform.parent.rotation = Quaternion.RotateTowards(transform.parent.rotation, targetRotation, Time.deltaTime);
+
+    //    //    yield return null;
+
+    //    //} while (Quaternion.Angle(transform.parent.rotation, targetRotation) > 0.01f);
+    //}
+
+    public virtual void Teleport()
+    {
+        this.transform.parent.position = roamPos;
         this.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
     }
 
@@ -303,7 +359,7 @@ public class EnemyBehaviour : EntityBehaviour
                 {
                     stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
                 }
-                
+
                 break;
             case ANIMATION_CODE.CAST_END:
                 if (stateMachine.currState == StateMachine.STATE.ENRAGED1)
@@ -332,7 +388,7 @@ public class EnemyBehaviour : EntityBehaviour
             health--;
         }
         //hpBarUI.TakeDamage(); // or use weapon damage;
-        
+
     }
 
     public override void Defeated()
@@ -346,7 +402,7 @@ public class EnemyBehaviour : EntityBehaviour
         {
             Hurt();
         }
-        
+
     }
 
     //default fade animation;
@@ -365,24 +421,24 @@ public class EnemyBehaviour : EntityBehaviour
     // use for enemies with death default states.
     private void DisableEnemy()
     {
-        foreach(Transform tf in transform.GetComponentsInChildren<Transform>())
+        foreach (Transform tf in transform.GetComponentsInChildren<Transform>())
         {
             //disable colliders
             Collider2D[] cols = tf.GetComponents<Collider2D>();
-            foreach(Collider2D col in cols)
+            foreach (Collider2D col in cols)
             {
                 col.enabled = false;
             }
 
             //disable scripts;
             MonoBehaviour[] scripts = tf.GetComponents<MonoBehaviour>();
-            foreach(MonoBehaviour script in scripts)
+            foreach (MonoBehaviour script in scripts)
             {
                 script.enabled = false;
             }
 
             this.animator.enabled = false;
-            
+
         }
     }
 
@@ -393,7 +449,7 @@ public class EnemyBehaviour : EntityBehaviour
 
     public override void SetEntityStats(EntityData stats)
     {
-        this.enemyData = (EnemyData) stats;
+        this.enemyData = (EnemyData)stats;
     }
 
     public override EntityData GetData()
@@ -405,5 +461,9 @@ public class EnemyBehaviour : EntityBehaviour
     {
         return this.currentRoom;
     }
-    
+
+    //public void OnDrawGizmos()
+    //{
+    //    Gizmos.DrawWireSphere(transform.position,2f);
+    //}
 }

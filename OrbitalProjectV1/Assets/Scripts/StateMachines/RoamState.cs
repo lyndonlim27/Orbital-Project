@@ -12,6 +12,7 @@ class RoamState : StateClass
 
     public override void Enter(object data)
     {
+        enemy.getNewRoamPosition();
         enemy.animator.SetBool("isWalking", true);
 
     }
@@ -19,8 +20,6 @@ class RoamState : StateClass
     public override void Update()
     {
         Roam();
-        
-        enemy.tick();
     }
 
 
@@ -43,6 +42,9 @@ class RoamState : StateClass
         }
           else
         {
+            Debug.Log("Hmm");
+            Debug.Log("enemy pos: " + enemy.transform.position);
+            Debug.Log("roam pos: " + enemy.roamPos);
             enemy.moveToRoam();
         }
      }
