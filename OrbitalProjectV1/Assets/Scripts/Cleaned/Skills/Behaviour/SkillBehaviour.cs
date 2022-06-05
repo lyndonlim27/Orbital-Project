@@ -14,6 +14,7 @@ public abstract class SkillBehaviour : MonoBehaviour
     protected Player _player;
     protected float currCooldown;
     protected Animator debuffAnimator;
+    private AudioSource _audioSource;
     public abstract void ActivateSkill();
 
 
@@ -25,6 +26,7 @@ public abstract class SkillBehaviour : MonoBehaviour
         textCooldown.gameObject.SetActive(false);
         imageCooldown.fillAmount = 0;
         promptText = "";
+        _audioSource = GetComponent<AudioSource>();
         if(_skillData != null)
         {
             manaCostText.gameObject.SetActive(true);
@@ -55,10 +57,6 @@ public abstract class SkillBehaviour : MonoBehaviour
 
             imageCooldown.fillAmount = currCooldown / _skillData.cooldown;
         }
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                ChangeSkill("SlowData");
-            }
     }
 
     public virtual void ChangeSkill(string skillName)
@@ -90,14 +88,17 @@ public abstract class SkillBehaviour : MonoBehaviour
         if(_skillData == null)
         {
             promptText = "Skill not unlocked";
+            _audioSource.Play();
         }
         else if(currCooldown > 0)
         {
             promptText = "Skill on cooldown";
+            _audioSource.Play();
         }
         else if(_player.currMana < _skillData.manaCost)
         {
             promptText = "Not enough mana";
+            _audioSource.Play();
         }
         else
         {

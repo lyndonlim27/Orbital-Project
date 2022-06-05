@@ -11,6 +11,7 @@ public class Shop : MonoBehaviour
     private DebuffBehaviour _debuffSkill;
     private bool Unlocked;
     private Player _player;
+    private AudioSource _audioSource;
     
     // Start is called before the first frame update
     void Start()
@@ -20,6 +21,7 @@ public class Shop : MonoBehaviour
         _promptText = _promptImage.GetComponentInChildren<TextMeshProUGUI>();
         _promptText.text = "";
         _promptImage.gameObject.SetActive(false);
+        _audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -57,6 +59,7 @@ public class Shop : MonoBehaviour
             _promptText.text = "Skill purchased";
             _debuffSkill.ChangeSkill(debuffSkillName);
             _player.UseGold(Resources.Load<SkillData>("Data/SkillData/" + debuffSkillName).goldCost);
+            _audioSource.Play();
         }
         StartCoroutine(UpdateText());
     }
