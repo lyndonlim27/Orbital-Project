@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1807f40ef84ca4d01bccd1e8311f5c9f, type: 3}
+  m_Name: Slow3Data
+  m_EditorClassIdentifier: 
+  skillType: 0
+  cooldown: 35
+  duration: 10
+  manaCost: 40
+  sprite: {fileID: 21300000, guid: cb4d3130191294247abc85455dd887b9, type: 3}
+  skillName: Slow3Data
+  goldCost: 40
+  slowAmount: 0.4
+  debuffType: 0

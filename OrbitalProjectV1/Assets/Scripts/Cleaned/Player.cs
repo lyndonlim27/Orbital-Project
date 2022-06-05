@@ -18,11 +18,12 @@ public class Player : EntityBehaviour
     private float _timeDelay = 0;
     private DialogueManager dialMgr;
     private int _currHealth;
-    private int _currMana;
+    public int currMana { get; private set;}
     private Weapon _currWeapon;
     private WeaponPickup _weaponManager;
     private DamageFlicker _flicker;
-    private int _currGold;
+    private GoldCounter _goldCounter;
+    public int currGold { get; private set;}
 
 
     [Header("Player UI")]
@@ -47,7 +48,8 @@ public class Player : EntityBehaviour
     void Start()
     {
         _currHealth = playerData.maxHealth;
-        _currMana = playerData.maxMana;
+        currMana = playerData.maxMana;
+        currGold = playerData.gold;
         _healthBar.SetMaxHealth(playerData.maxHealth);
         _manaBar.SetMaxMana(playerData.maxMana);
         _rb = GetComponent<Rigidbody2D>();
@@ -57,6 +59,8 @@ public class Player : EntityBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _flicker = GameObject.FindObjectOfType<DamageFlicker>();
         dialMgr = GameObject.FindObjectOfType<DialogueManager>();
+        _goldCounter = FindObjectOfType<GoldCounter>(true);
+        _goldCounter.GoldUpdate();
     }
 
     // Update is called once per frame
@@ -144,7 +148,14 @@ public class Player : EntityBehaviour
 
     public void AddGold(int gold)
     {
-        _currGold += gold;
+        currGold += gold;
+        _goldCounter.GoldUpdate();
+    }
+
+    public void UseGold(int gold)
+    {
+        currGold -= gold;
+        _goldCounter.GoldUpdate();
     }
 
     //When player shoot, player direction faces the target enemy
@@ -192,20 +203,16 @@ public class Player : EntityBehaviour
         return playerData;
     }
 
-    public int GetMana()
-    {
-        return _currMana;
-    }
 
     public void UseMana(int manaCost)
     {
-        _currMana -= manaCost;
-        _manaBar.SetMana(_currMana);
+        currMana -= manaCost;
+        _manaBar.SetMana(currMana);
     }
 
     public void AddMana(int mana)
     {
-        _currMana += mana;
-        _manaBar.SetMana(_currMana);
+        currMana += mana;
+        _manaBar.SetMana(currMana);
     }
 }

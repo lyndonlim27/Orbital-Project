@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class DebuffBehaviour : SkillBehaviour
 {
     private DebuffData _debuffData;
-    private bool _stop;
     private ParticleSystem _slowParticle;
     private ParticleSystem _stunParticle;
     public override void ActivateSkill()
@@ -37,9 +36,10 @@ public class DebuffBehaviour : SkillBehaviour
     public override void Start()
     {
         base.Start();
-        _debuffData = (DebuffData)skillData;
+        _debuffData = (DebuffData)_skillData;
         _slowParticle = Resources.Load<ParticleSystem>("ParticlePrefab/SlowDebuff");
         _stunParticle = Resources.Load<ParticleSystem>("ParticlePrefab/StunDebuff");
+
     }
 
     // Update is called once per frame
@@ -125,7 +125,7 @@ public class DebuffBehaviour : SkillBehaviour
     public override void ChangeSkill(string skillName)
     {
         base.ChangeSkill(skillName);
-        this._debuffData = (DebuffData)skillData;
+        this._debuffData = (DebuffData)_skillData;
     }
 
 }

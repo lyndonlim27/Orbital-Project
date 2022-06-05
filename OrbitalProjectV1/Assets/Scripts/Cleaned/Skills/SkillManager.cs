@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class SkillManager : MonoBehaviour
 {
-
+    [SerializeField] private TextMeshProUGUI _promptText;
     private void Start()
     {
+        _promptText.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -36,8 +39,17 @@ public class SkillManager : MonoBehaviour
         SkillBehaviour skillBehaviour = this.transform.GetChild(index).GetComponent<SkillBehaviour>();
         if (skillBehaviour != null)
         {
+            _promptText.text = skillBehaviour.PromptCheck();
+            StartCoroutine(FlashPrompt());
             skillBehaviour.ActivateSkill();
         }
+    }
+
+    private IEnumerator FlashPrompt()
+    {
+        _promptText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2);
+        _promptText.gameObject.SetActive(false);
     }
 
 }

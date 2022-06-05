@@ -16,4 +16,6 @@ public class SkillData : ScriptableObject
     public float duration;
     public int manaCost;
     public Sprite sprite;
+    public string skillName;
+    public int goldCost;
 }
