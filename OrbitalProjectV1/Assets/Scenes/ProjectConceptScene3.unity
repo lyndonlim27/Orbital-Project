@@ -991,6 +991,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cecb84fc2ee8543d6a217397a4ed689a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &350455581 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 350455581, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+  m_PrefabInstance: {fileID: 790982701}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &350455586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 350455581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61dc4e28c4abd4912a6dd2640e590b6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Slow1Data
+--- !u!1 &375687239 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 375687239, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+  m_PrefabInstance: {fileID: 790982701}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &375687244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 375687239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61dc4e28c4abd4912a6dd2640e590b6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Slow2Data
 --- !u!114 &384633061 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 384633061, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
@@ -1138,6 +1174,24 @@ PolygonCollider2D:
       - {x: -0.44836563, y: 0.120383926}
       - {x: -0.45031762, y: -0.052047882}
       - {x: -0.3516084, y: -0.24919946}
+--- !u!1 &510962593 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 510962593, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+  m_PrefabInstance: {fileID: 790982701}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &510962598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 510962593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61dc4e28c4abd4912a6dd2640e590b6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Stun3Data
 --- !u!1001 &513253799
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1359,10 +1413,82 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 350455583, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 350455586}
+    - target: {fileID: 350455583, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PurchaseDebuffSkill
+      objectReference: {fileID: 0}
+    - target: {fileID: 350455583, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SkillPurchaseButton, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 375687241, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 375687244}
+    - target: {fileID: 375687241, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PurchaseDebuffSkill
+      objectReference: {fileID: 0}
+    - target: {fileID: 375687241, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SkillPurchaseButton, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 510962595, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 510962598}
+    - target: {fileID: 510962595, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PurchaseDebuffSkill
+      objectReference: {fileID: 0}
+    - target: {fileID: 510962595, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SkillPurchaseButton, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 1041890949, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 981218764}
+    - target: {fileID: 1326023305, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1326023308}
+    - target: {fileID: 1326023305, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PurchaseDebuffSkill
+      objectReference: {fileID: 0}
+    - target: {fileID: 1326023305, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SkillPurchaseButton, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1748152710, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1748152713}
+    - target: {fileID: 1748152710, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PurchaseDebuffSkill
+      objectReference: {fileID: 0}
+    - target: {fileID: 1748152710, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SkillPurchaseButton, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2116776071, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2116776074}
+    - target: {fileID: 2116776071, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PurchaseDebuffSkill
+      objectReference: {fileID: 0}
+    - target: {fileID: 2116776071, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SkillPurchaseButton, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 3749213359512465932, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1455,7 +1581,13 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1924427488}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2116776074, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+    - {fileID: 1748152713, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+    - {fileID: 510962598, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+    - {fileID: 350455586, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+    - {fileID: 375687244, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+    - {fileID: 1326023308, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
 --- !u!1 &873654625
 GameObject:
@@ -8520,7 +8652,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7771509, y: 1}
+    m_SensorSize: {x: 1.7781754, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -8660,6 +8792,24 @@ MonoBehaviour:
   m_MaximumFOV: 60
   m_MinimumOrthoSize: 1
   m_MaximumOrthoSize: 5000
+--- !u!1 &1326023303 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1326023303, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+  m_PrefabInstance: {fileID: 790982701}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1326023308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326023303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61dc4e28c4abd4912a6dd2640e590b6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Slow3Data
 --- !u!114 &1367301327 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 269545758, guid: 88365c6661b4948548575e15e51f0204, type: 3}
@@ -9296,6 +9446,24 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8815217351041944792, guid: 88365c6661b4948548575e15e51f0204, type: 3}
   m_PrefabInstance: {fileID: 250702040}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1748152708 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1748152708, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+  m_PrefabInstance: {fileID: 790982701}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1748152713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1748152708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61dc4e28c4abd4912a6dd2640e590b6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Stun2Data
 --- !u!1 &1877244210
 GameObject:
   m_ObjectHideFlags: 0
@@ -18355,6 +18523,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1924427488}
+    - target: {fileID: 951484427, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4374332775865201289, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
       propertyPath: m_Name
       value: Player 1
@@ -18532,6 +18704,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2116776069 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2116776069, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
+  m_PrefabInstance: {fileID: 790982701}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2116776074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2116776069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61dc4e28c4abd4912a6dd2640e590b6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Stun1Data
 --- !u!1001 &203779225282620884
 PrefabInstance:
   m_ObjectHideFlags: 0

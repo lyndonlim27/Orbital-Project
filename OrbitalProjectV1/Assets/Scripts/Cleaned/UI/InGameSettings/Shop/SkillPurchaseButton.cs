@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class SkillPurchaseButton : MonoBehaviour
+public class SkillPurchaseButton : MonoBehaviour
 {
     [SerializeField] protected string skillName;
     protected Shop shop;
@@ -13,5 +13,13 @@ public abstract class SkillPurchaseButton : MonoBehaviour
     }
     // Start is called before the first frame update
 
-    public abstract void PurchaseSkill();
+    public void PurchaseDebuffSkill()
+    {
+        shop.AddDebuffSkill(skillName);
+    }
+
+    public void PurchaseBuffSkill()
+    {
+        shop.AddDebuffSkill(skillName);
+    }
 }

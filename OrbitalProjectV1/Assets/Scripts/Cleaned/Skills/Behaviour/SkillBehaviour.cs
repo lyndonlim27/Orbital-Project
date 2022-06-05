@@ -64,6 +64,7 @@ public abstract class SkillBehaviour : MonoBehaviour
         this._skillData = Resources.Load<SkillData>("Data/SkillData/" + skillName);
         GetComponent<Image>().overrideSprite = _skillData.sprite;
         manaCostText.text = _skillData.manaCost.ToString();
+        manaCostText.gameObject.SetActive(true);
     }
 
     public bool CanCast()
