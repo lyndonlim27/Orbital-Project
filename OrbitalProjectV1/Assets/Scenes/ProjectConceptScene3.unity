@@ -123,6 +123,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &11624292 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1299506636351767749, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+  m_PrefabInstance: {fileID: 2043668483}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &34875918
 GameObject:
   m_ObjectHideFlags: 0
@@ -8832,6 +8843,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a01dfbca5fb44361a7aafdd0f010de3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1395421387 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 840085743807392057, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+  m_PrefabInstance: {fileID: 2043668483}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1396515617 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1396515617, guid: 88365c6661b4948548575e15e51f0204, type: 3}
@@ -8980,6 +9002,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1508667099 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8574291325212453853, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+  m_PrefabInstance: {fileID: 2043668483}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1532732134 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1725104108, guid: 8a8436db07b9b4398b576a94f3ca606e, type: 3}
@@ -18525,6 +18558,30 @@ PrefabInstance:
       objectReference: {fileID: 1924427488}
     - target: {fileID: 951484427, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
       propertyPath: m_WasSpriteAssigned
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1406882058, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+      propertyPath: m_FillAmount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2043668485, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+      propertyPath: _skillData
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2043668485, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+      propertyPath: manaCostText
+      value: 
+      objectReference: {fileID: 11624292}
+    - target: {fileID: 2043668485, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+      propertyPath: textCooldown
+      value: 
+      objectReference: {fileID: 1508667099}
+    - target: {fileID: 2043668485, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+      propertyPath: imageCooldown
+      value: 
+      objectReference: {fileID: 1395421387}
+    - target: {fileID: 840085743807392057, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+      propertyPath: m_FillAmount
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4374332775865201289, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}

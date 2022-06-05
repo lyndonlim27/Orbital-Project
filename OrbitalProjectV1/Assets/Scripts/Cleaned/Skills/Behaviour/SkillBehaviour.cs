@@ -13,7 +13,6 @@ public abstract class SkillBehaviour : MonoBehaviour
     private string promptText;
     protected Player _player;
     protected float currCooldown;
-    protected Animator debuffAnimator;
     private AudioSource _audioSource;
     public abstract void ActivateSkill();
 
@@ -22,7 +21,6 @@ public abstract class SkillBehaviour : MonoBehaviour
     {
         currCooldown = 0;
         _player = FindObjectOfType<Player>();
-        debuffAnimator = GameObject.Find("DebuffAnimator").GetComponent<Animator>();
         textCooldown.gameObject.SetActive(false);
         imageCooldown.fillAmount = 0;
         promptText = "";

@@ -24,6 +24,7 @@ public class Player : EntityBehaviour
     private DamageFlicker _flicker;
     private GoldCounter _goldCounter;
     public int currGold { get; private set;}
+    private float _moveSpeed;
 
 
     [Header("Player UI")]
@@ -52,6 +53,7 @@ public class Player : EntityBehaviour
         currGold = playerData.gold;
         _healthBar.SetMaxHealth(playerData.maxHealth);
         _manaBar.SetMaxMana(playerData.maxMana);
+        _moveSpeed = playerData._moveSpeed;
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _weaponManager = this.gameObject.GetComponentInChildren<WeaponPickup>();
@@ -121,7 +123,7 @@ public class Player : EntityBehaviour
         }*/
 
         
-        transform.position = (Vector2) transform.position +_movement.normalized * playerData._moveSpeed * Time.fixedDeltaTime;
+        transform.position = (Vector2) transform.position +_movement.normalized * _moveSpeed * Time.fixedDeltaTime;
         //_rb.MovePosition(_rb.position + _movement.normalized * _moveSpeed * Time.fixedDeltaTime);
     }
 
@@ -214,5 +216,10 @@ public class Player : EntityBehaviour
     {
         currMana += mana;
         _manaBar.SetMana(currMana);
+    }
+
+    public void SetSpeed(float speed)
+    {
+        _moveSpeed += speed;
     }
 }

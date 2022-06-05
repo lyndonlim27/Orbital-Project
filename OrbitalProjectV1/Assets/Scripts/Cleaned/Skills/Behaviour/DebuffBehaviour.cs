@@ -8,34 +8,13 @@ public class DebuffBehaviour : SkillBehaviour
     private DebuffData _debuffData;
     private ParticleSystem _slowParticle;
     private ParticleSystem _stunParticle;
-    public override void ActivateSkill()
-    {
-        if (_debuffData != null && CanCast())
-        {
-            _player.UseMana(_debuffData.manaCost);
-            switch (_debuffData.debuffType)
-            {
-                default:
-                case DebuffData.DEBUFF_TYPE.STUN:
-                    debuffAnimator.runtimeAnimatorController =
-                        Resources.Load<AnimatorOverrideController>("Animations/AnimatorControllers/StunDebuffVFX");
-                    debuffAnimator.SetTrigger("Activate");
-                    StartCoroutine(Stun());
-                    break;
-                case DebuffData.DEBUFF_TYPE.SLOW:
-                    debuffAnimator.runtimeAnimatorController =
-                        Resources.Load<RuntimeAnimatorController>("Animations/AnimatorControllers/SlowDebuffVFX");
-                    debuffAnimator.SetTrigger("Activate");
-                    StartCoroutine(Slow());
-                    break;
-            }
-        }
-    }
+    private Animator _debuffAnimator;
 
     // Start is called before the first frame update
     public override void Start()
     {
         base.Start();
+        _debuffAnimator = GameObject.Find("DebuffAnimator").GetComponent<Animator>();
         _debuffData = (DebuffData)_skillData;
         _slowParticle = Resources.Load<ParticleSystem>("ParticlePrefab/SlowDebuff");
         _stunParticle = Resources.Load<ParticleSystem>("ParticlePrefab/StunDebuff");
@@ -46,8 +25,32 @@ public class DebuffBehaviour : SkillBehaviour
     public override void Update()
     {
         base.Update();
-
     }
+
+    public override void ActivateSkill()
+    {
+        if (_debuffData != null && CanCast())
+        {
+            _player.UseMana(_debuffData.manaCost);
+            switch (_debuffData.debuffType)
+            {
+                default:
+                case DebuffData.DEBUFF_TYPE.STUN:
+                    _debuffAnimator.runtimeAnimatorController =
+                        Resources.Load<AnimatorOverrideController>("Animations/AnimatorControllers/StunDebuffVFX");
+                    _debuffAnimator.SetTrigger("Activate");
+                    StartCoroutine(Stun());
+                    break;
+                case DebuffData.DEBUFF_TYPE.SLOW:
+                    _debuffAnimator.runtimeAnimatorController =
+                        Resources.Load<RuntimeAnimatorController>("Animations/AnimatorControllers/SlowDebuffVFX");
+                    _debuffAnimator.SetTrigger("Activate");
+                    StartCoroutine(Slow());
+                    break;
+            }
+        }
+    }
+
 
     private IEnumerator Stun()
     {
