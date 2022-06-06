@@ -20,6 +20,6 @@ public class SkillPurchaseButton : MonoBehaviour
 
     public void PurchaseBuffSkill()
     {
-        shop.AddDebuffSkill(skillName);
+        shop.AddBuffSkill(skillName);
     }
 }
