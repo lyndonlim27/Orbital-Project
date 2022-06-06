@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class IdleState : StateClass
 {
-    private int counter;
+    private float counter = 1.5f;
     public IdleState(EnemyBehaviour enemy, StateMachine stateMachine) : base(enemy, stateMachine)
     {
     }
@@ -12,8 +12,7 @@ public class IdleState : StateClass
     public override void Enter(object stateData)
     {
         enemy.animator.SetBool("isWalking", false);
-        counter = 100;
-        IdleCounter();
+        counter = 1.5f;
     }
 
     public override void FixedUpdate()
@@ -29,8 +28,13 @@ public class IdleState : StateClass
 
     private void IdleCounter() {
 
-        //let roam state handle detection of enemy. 
-        if (counter == 0)
+        //let roam state handle detection of enemy.
+        if (!enemy.animator.GetBool("NotSpawned"))
+        {
+            return;
+        }
+
+        else if (counter <= 0)
         {
             enemy.getNewRoamPosition();
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
@@ -38,10 +42,9 @@ public class IdleState : StateClass
         }
         else 
         {
-            counter--;
+            counter-=Time.deltaTime;
         }
 
-        enemy.tick();
     }
 
     public override void Exit()

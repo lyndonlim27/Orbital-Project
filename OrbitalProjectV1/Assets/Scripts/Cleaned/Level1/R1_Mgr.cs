@@ -4,28 +4,23 @@ using UnityEngine;
 
 public class R1_Mgr : RoomManager
 {
-    private DialogueDetection dd;
-    private UnlockableDoor door;
+    private bool added;
     protected override void Awake()
     {
         base.Awake();
-        dd = GameObject.Find("NPC").GetComponentInChildren<DialogueDetection>();
-        door = GameObject.FindObjectOfType<UnlockableDoor>();
+        roomtype = ROOMTYPE.PUZZLE_ROOM;
+        //door = GameObject.FindObjectOfType<UnlockableDoor>();
 
     }
 
     private void Start()
     {
-          
+        added = false;
     }
 
-    private void Update()
+    protected override void Update()
     {
-        if (!this.activated)
-        {
-            return;
-        }
-        
+        base.Update();
         RoomChecker();
         CheckRunningEvents();
     }
@@ -34,36 +29,37 @@ public class R1_Mgr : RoomManager
     {
         //check condition 1
 
-        if (!conditions.Contains("booze"))
+        if (activated && !conditions.Contains("booze"))
         {
-            
-            if (dd != null)
-            {
-                dd.Fulfilled();
-                
-            }
+            npcs[0].Proceed();
+            //foreach(EntityData entitydata in _EntityData)
+            //{
+            //    if (entitydata._name == "key")
+            //    {
+            //        InstantiateEntity(entitydata);
+            //        conditions.Add("key");
+            //        added = true;
+            //    }
+            //}
+           
+        }
+        Debug.Log(conditions.Count);
+        base.RoomChecker();
+
+    }
+
+    protected override void CheckRunningEvents()
+    {
+        if (dialMgr.playing || popUpSettings.gameObject.activeInHierarchy)
+        {
+            PauseGame();
+        } else
+        {
+            ResumeGame();
         }
 
-        //check condition 2 and onwards;
-        if (!conditions.Contains("key"))
-        {
-         //   door.UnlockDoor();
-        }
-
-        
-
     }
 
-
-    public override void FulfillCondition(string key)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void UnfulfillCondition(string key)
-    {
-        throw new System.NotImplementedException();
-    }
 }
 
 

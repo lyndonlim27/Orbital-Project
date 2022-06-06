@@ -9,7 +9,11 @@ public class ChaseState : StateClass
     public ChaseState(EnemyBehaviour enemy, StateMachine stateMachine) : base(enemy, stateMachine) {}
     public override void Enter(object stateData)
     {
-        enemy.animator.SetBool("isWalking", true);
+        if (!enemy.animator.GetBool("isChasing"))
+        {
+            enemy.animator.SetBool("isChasing", true);
+        }
+        
         ChaseEnemy();
     }
 
@@ -26,38 +30,49 @@ public class ChaseState : StateClass
 
     public override void Exit()
     {
+        enemy.animator.SetBool("isChasing", false);
     }
 
     public void ChaseEnemy()
     {
-        
+
         //if object detected but is not player, 
         if (!enemy.detectionScript.playerDetected)
         {
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
         }
 
-        else if (Vector2.Distance(enemy.transform.position, enemy.startingpos) >= enemy.maxDist)
+        else if (enemy.TravelToofar())
         {
             stateMachine.ChangeState(StateMachine.STATE.STOP, null);
         }
-        
-        else if (enemy.ranged.detected() && !enemy.onCooldown())
+
+        else
         {
-            stateMachine.ChangeState(StateMachine.STATE.ATTACK2, null);
 
-                
-        } else if (enemy.melee.detected()) {
+            if (enemy.ranged != null && enemy.ranged.detected() && !enemy.onCooldown())
+            {
+                stateMachine.ChangeState(StateMachine.STATE.ATTACK2, null);
+            }
+            else if (enemy.melee != null && enemy.melee.detected())
+            {
 
-            stateMachine.ChangeState(StateMachine.STATE.ATTACK1, null);
+                stateMachine.ChangeState(StateMachine.STATE.ATTACK1, null);
+            }
 
-        } else
-        {
-            enemy.moveToTarget(enemy.player);
-            
+            else
+            {
+                if (enemy.melee == null)
+                {
+                    stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
+                } else
+                {
+                    enemy.moveToTarget(enemy.player);
+                }
+             
+            } 
+
         }
-
-        enemy.tick();
                
     }
 }

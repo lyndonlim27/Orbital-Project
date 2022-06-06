@@ -31,7 +31,7 @@ public abstract class TextLogic : MonoBehaviour
         Textdisplayer = GetComponent<TextMeshPro>();
         Textdisplayer.enabled = !outOfRange();
         player = GameObject.FindObjectOfType<Player>(true);
-        parent = this.gameObject.transform.root.GetComponent<EntityBehaviour>();
+        parent = this.gameObject.transform.parent.GetComponent<EntityBehaviour>();
         Debug.Log(parent);
         minDist = parent.GetData().minDist;
         remainingword = "";

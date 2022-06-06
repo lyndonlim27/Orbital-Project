@@ -7,5 +7,6 @@ public class NPCData : EntityData
 {
     public TextAsset story;
     public Animator _animator;
+    public EntityData[] dropData;
 
 }

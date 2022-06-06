@@ -24,7 +24,7 @@ public abstract class AttackComponent : MonoBehaviour
     {
         //call our init function whenever Start is called;
         detectionScript = GetComponent<DetectionScript>();
-        parent = transform.root.GetComponent<EnemyBehaviour>();
+        parent = transform.parent.GetComponent<EnemyBehaviour>();
         enemyData = parent.enemyData;    
         
     }

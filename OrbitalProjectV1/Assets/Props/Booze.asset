@@ -9,15 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7648f6129cb624d178c6f7dd535c72ae, type: 3}
+  m_Script: {fileID: 11500000, guid: 10a1c4479d5574dac908b62726c971cb, type: 3}
   m_Name: Booze
   m_EditorClassIdentifier: 
   _name: booze
-  _count: 1
-  mindist: 2
-  speed: 0
-  dir: 
-  damage: 0
-  type: 
+  minDist: 2
   sprite: {fileID: 2089129738, guid: 7fd973faf79db4de3b759121c67f34b6, type: 3}
-  conditional: 1
+  condition: 1
+  _type: 4
+  random: 0
+  pos: {x: 2, y: 2}
+  damageFlicker: {fileID: 0}
+  spawnAtStart: 1
+  entityDatas: []
+  ac_name: 
+  _trigger: 
+  isAWeapon: 0

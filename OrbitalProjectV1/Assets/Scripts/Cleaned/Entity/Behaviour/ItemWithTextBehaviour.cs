@@ -25,23 +25,22 @@ public class ItemWithTextBehaviour : EntityBehaviour
 
     public override void Defeated()
     {
-        _animator.SetTrigger(data._trigger);
-        foreach(EntityData entityData in data.entityDatas)
+        foreach (EntityData entityData in data.entityDatas)
         {
             Debug.Log(entityData.sprite);
-            
-            entityData.pos = (Vector2) this.transform.position
+
+            entityData.pos = (Vector2)this.transform.position
                 + new Vector2(Random.Range(-1, 1), Random.Range(-1, 1));
             entityData.random = false;
             currentRoom.InstantiateEntity(entityData);
-            if(entityData.condition == 1)
+            if (entityData.condition == 1)
             {
                 currentRoom.UnfulfillCondition(entityData._name);
             }
-           // entity.SetEntityStats(entityData);
-           // entity.GetComponent<SpriteRenderer>().sprite = entityData.sprite;
-           //Debug.Log(entity.GetData());
-            
+            // entity.SetEntityStats(entityData);
+            // entity.GetComponent<SpriteRenderer>().sprite = entityData.sprite;
+            //Debug.Log(entity.GetData());
+
         }
 
         if (data.isAWeapon)
@@ -49,10 +48,21 @@ public class ItemWithTextBehaviour : EntityBehaviour
             FindObjectOfType<WeaponPickup>().Swap(data._name);
         }
 
-        if(data.condition == 1)
+        if (data.condition == 1)
         {
             currentRoom.FulfillCondition(data._name);
         }
+
+
+        if (_animator.runtimeAnimatorController == null)
+        {
+            StartCoroutine(FadeOut());
+        } else
+        {
+            _animator.SetTrigger(data._trigger);
+        }
+        
+        
 
         
     }

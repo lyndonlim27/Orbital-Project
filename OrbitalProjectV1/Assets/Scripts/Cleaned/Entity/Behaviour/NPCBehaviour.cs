@@ -22,6 +22,18 @@ public class NPCBehaviour : EntityBehaviour
     // Update is called once per frame
     void Update()
     {
+
+    }
+
+    internal virtual void Proceed()
+    {
+        if (!fulfilled)
+        {
+            this.GetComponentInChildren<DialogueDetection>(true).gameObject.SetActive(true);
+        } else
+        {
+            this.GetComponentInChildren<DialogueDetection>(true).gameObject.SetActive(false);
+        }
         
     }
 
@@ -30,6 +42,13 @@ public class NPCBehaviour : EntityBehaviour
         fulfilled = true;
         this.GetComponentInChildren<DialogueDetection>().gameObject.SetActive(false);
         this.GetComponent<Animator>().enabled = false;
+        if (data.condition == 1)
+        {
+            currentRoom.conditions.Remove(data._name);
+        }
+        
+        currentRoom.SpawnObjects(data.dropData);
+        
     }
 
     public override void Defeated()

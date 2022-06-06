@@ -16,5 +16,4 @@ public class RangedData : EntityData
     public float speed, rotation, lifetime;
     public string trigger;
     public string ac_name;
-    public float scale;
 }

@@ -10,6 +10,9 @@ public class EnemyData : EntityData
     public float chaseSpeed;
     public float attackRange;
     public float attackSpeed;
+    public List<string> meleetriggers;
+    public List<string> defends;
+    public List<string> spelltriggers;
     public List<RangedBehaviour> rangeds;
     public string animatorname;
     public int words;

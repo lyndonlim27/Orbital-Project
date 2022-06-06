@@ -24,4 +24,6 @@ public class EntityData : ScriptableObject
     public bool random;
     public Vector2 pos;
     public GameObject damageFlicker;
+    public bool spawnAtStart;
+    public float scale;
 }

@@ -7,7 +7,7 @@ public class HealthBarEnemy : MonoBehaviour
     public GameObject hpBarController;
     private Animator[] acHpBars;
     private Animator currBar;
-    public EliteMonsterA boss;
+    //public EliteMonsterA boss;
     public int currlength;
 
     private void Awake()

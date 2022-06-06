@@ -12,16 +12,17 @@ class RoamState : StateClass
 
     public override void Enter(object data)
     {
+        enemy.getNewRoamPosition();
         enemy.animator.SetBool("isWalking", true);
-        Roam();
 
     }
 
     public override void Update()
     {
         Roam();
-        enemy.tick();
     }
+
+
 
     public void Roam()
     {
@@ -31,14 +32,23 @@ class RoamState : StateClass
             
             stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
 
+        } else if (enemy.TravelToofar())
+        {
+            stateMachine.ChangeState(StateMachine.STATE.STOP, null);
+
         } else if (enemy.isReached())
 
         {
+
+            Debug.Log("Dafuq");
             stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
 
         }
           else
         {
+            Debug.Log("Hmm");
+            Debug.Log("enemy pos: " + enemy.transform.position);
+            Debug.Log("roam pos: " + enemy.roamPos);
             enemy.moveToRoam();
         }
      }
