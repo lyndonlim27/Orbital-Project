@@ -222,4 +222,9 @@ public class Player : EntityBehaviour
     {
         _moveSpeed += speed;
     }
+
+    public PlayerData GetPlayerData()
+    {
+        return playerData;
+    }
 }

@@ -4,22 +4,17 @@ using UnityEngine;
 
 public class SkillPurchaseButton : MonoBehaviour
 {
-    [SerializeField] protected string skillName;
     protected Shop shop;
+    protected Player player;
+    protected SpriteRenderer spriteRenderer;
 
-    private void Start()
+        
+
+    protected virtual void Start()
     {
+        player = FindObjectOfType<Player>();
         shop = FindObjectOfType<Shop>(true);
-    }
-    // Start is called before the first frame update
-
-    public void PurchaseDebuffSkill()
-    {
-        shop.AddDebuffSkill(skillName);
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    public void PurchaseBuffSkill()
-    {
-        shop.AddBuffSkill(skillName);
-    }
 }

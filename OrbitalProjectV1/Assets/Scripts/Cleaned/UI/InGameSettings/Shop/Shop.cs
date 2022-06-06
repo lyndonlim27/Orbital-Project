@@ -52,7 +52,7 @@ public class Shop : MonoBehaviour
         {
             _promptText.text = "Skill has already been purchased";
         }
-        else if (_debuffSkill.GetSkillData() != null && _debuffSkill.GetSkillData().goldCost > _player.currGold)
+        else if (Resources.Load<SkillData>("Data/SkillData/" + debuffSkillName).goldCost > _player.currGold)
         {
             _promptText.text = "Not enough gold";
         }
@@ -62,6 +62,25 @@ public class Shop : MonoBehaviour
             _debuffSkill.ChangeSkill(debuffSkillName);
             _player.UseGold(Resources.Load<SkillData>("Data/SkillData/" + debuffSkillName).goldCost);
             _audioSource.Play();
+            foreach (DebuffPurchaseButton debuff in GetComponentsInChildren<DebuffPurchaseButton>())
+            {
+                if (debuffSkillName.Contains("Slow"))
+                {
+                    if (debuff.GetDebuffName().Contains("Stun"))
+                    { 
+                        debuff.GetComponent<Image>().color = new Color32(96, 96, 96, 255);
+                        debuff.GetComponent<Button>().enabled = false;
+                    }
+                }
+                else
+                {
+                    if (debuff.GetDebuffName().Contains("Slow"))
+                    {
+                        debuff.GetComponent<Image>().color = new Color32(96, 96, 96, 255);
+                        debuff.GetComponent<Button>().enabled = false;
+                    }
+                }
+            }
         }
         StartCoroutine(UpdateText());
     }
@@ -72,7 +91,7 @@ public class Shop : MonoBehaviour
         {
             _promptText.text = "Skill has already been purchased";
         }
-        else if (_buffSkill.GetSkillData() != null && _buffSkill.GetSkillData().goldCost > _player.currGold)
+        else if (Resources.Load<SkillData>("Data/SkillData/" + buffSkillName).goldCost > _player.currGold)
         {
             _promptText.text = "Not enough gold";
         }

@@ -11,8 +11,6 @@ public class GoldCounter : MonoBehaviour
     {
         Player _player = FindObjectOfType<Player>();
         TextMeshProUGUI _goldText = GetComponentInChildren<TextMeshProUGUI>();
-        Debug.Log(_goldText);
-        Debug.Log(_player);
         _goldText.text = _player.currGold.ToString();
     }
 }

@@ -31,7 +31,6 @@ public abstract class SkillBehaviour : MonoBehaviour
             manaCostText.text = _skillData.manaCost.ToString();
             GetComponent<Image>().overrideSprite = _skillData.sprite;
         }
-
     }
 
     public virtual void Update()

@@ -12,6 +12,7 @@ public class PlayerData : EntityData
     public int maxMana;
     public int selfDamage;
     public int gold;
+    public bool ranged;
 
     [Header("Movement")]
     public float _moveSpeed;
