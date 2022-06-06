@@ -312,8 +312,6 @@ public abstract class RoomManager : MonoBehaviour
                 emf.transform.SetParent(go.transform);
                 emf.transform.localScale = new Vector2(data.scale, data.scale);
                 emf.transform.localPosition = Vector3.zero;
-                
-                
                 break;
             case EntityData.TYPE.BOSS:
                 enemyPrefabs[1].GetComponent<EnemyBehaviour>().SetEntityStats(data);
