@@ -51,7 +51,7 @@ class C_MeleeState : StateClass
                 return;
             } else
             {
-                stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
+                stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
             }
         }
     }

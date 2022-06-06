@@ -25,7 +25,7 @@ public class EnemyBehaviour : EntityBehaviour
 
     [Header("Entity Position")]
     public Vector2 roamPos;
-    public float maxDist = 100f;
+    public float maxDist;
 
     public MeleeComponent melee { get; private set; }
     public RangedComponent ranged { get; private set; }
@@ -144,8 +144,8 @@ public class EnemyBehaviour : EntityBehaviour
 
     public void getNewRoamPosition()
     {
-        roamPos = new Vector2(Random.Range(-5f, 5f), Random.Range(-5f, 5f));
-        //roamPos = this.currentRoom.GetRandomPoint();
+        //roamPos = new Vector2(Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+        roamPos = this.currentRoom.GetRandomPoint();
 
 
     }
@@ -460,6 +460,11 @@ public class EnemyBehaviour : EntityBehaviour
     public RoomManager GetCurrentRoom()
     {
         return this.currentRoom;
+    }
+
+    public bool TravelToofar()
+    {
+        return Vector2.Distance(transform.position, startingpos) >= maxDist;
     }
 
     //public void OnDrawGizmos()

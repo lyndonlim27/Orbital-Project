@@ -5,10 +5,12 @@ using UnityEngine;
 class MeleeState : StateClass
 {
   
-    public MeleeState(EnemyBehaviour enemy, StateMachine stateMachine) : base(enemy, stateMachine) { }
+    public  MeleeState(EnemyBehaviour enemy, StateMachine stateMachine) : base(enemy, stateMachine) { }
 
     public override void Enter(object stateData)
     {
+        enemy.animator.SetBool("isChasing", false);
+        enemy.animator.SetBool("isWalking", false);
         triggerAttack();
     }
 

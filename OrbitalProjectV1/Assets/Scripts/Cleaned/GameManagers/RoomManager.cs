@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Pathfinding;
 
 /**
  * RoomManager.
@@ -11,6 +12,13 @@ public abstract class RoomManager : MonoBehaviour
 {
 
     protected Player player;
+    protected enum ROOMTYPE
+    {
+        PUZZLE_ROOM,
+        FIGHTING_ROOM,
+        HYBRID_ROOM,
+        TREASURE_ROOM
+    }
     /**
      * Concrete classes
      * Every room starts with their own conditions.
@@ -19,18 +27,24 @@ public abstract class RoomManager : MonoBehaviour
     public List<string> conditions { get; protected set; }
     public List<EntityBehaviour> items { get; protected set; }
     public List<EnemyBehaviour> enemies { get; protected set; }
+    
     public List<NPCBehaviour> npcs { get; protected set; }
+    protected ROOMTYPE roomtype;
 
     /**
      * Prefabs.
      */
     [Header("Prefabs")]
     [SerializeField] EnemyBehaviour[] enemyPrefabs;
+    //[SerializeField] GameObject[] enemyPrefabs;
     [SerializeField] EntityBehaviour[] entityPrefabs;
  //   [SerializeField] NPCBehaviour NPCPrefab;
     [SerializeField] protected GameObject[] doors;
     [SerializeField] protected LayerMask layerMask;
+    [SerializeField] protected LayerMask CollisionObjects;
     [SerializeField] protected Vector2 roomSize;
+    [SerializeField] private Color _colour;
+    
 
     /**
      * Data.
@@ -49,12 +63,13 @@ public abstract class RoomManager : MonoBehaviour
     protected DialogueManager dialMgr;
     private TypingTestTL typingTestTL;
     private Collider2D _collider;
-    
+    //private AstarPath AstarGraph;
+
 
     /*
      * UI
      */
-    private PopUpSettings popUpSettings;
+    protected PopUpSettings popUpSettings;
 
     /**
      * Retrieving of Data.
@@ -87,15 +102,56 @@ public abstract class RoomManager : MonoBehaviour
                 activated = true;
                 dialMgr.SetCurrentRoom(this);
                 SpawnObjects(_EntityData);
+                InitializeAStar();
                 //AddConditionalNPCS();
+            }
+        } else
+        {
+            Debug.Log(_collider);
+            if (activated)
+            {
+                DeActivateAStar();
             }
         }
     }
+    private void DeActivateAStar()
+    {
+
+        AstarPath astar = gameObject.GetComponent<AstarPath>();
+        if (astar != null)
+        {
+            astar.enabled = false;
+        }
+
+    }
 
 
-    public abstract void FulfillCondition(string key);
+    private void InitializeAStar()
+    {
+        if (roomtype != ROOMTYPE.FIGHTING_ROOM && roomtype != ROOMTYPE.HYBRID_ROOM)
+        {
+            return;
+        }
+        gameObject.AddComponent<AstarPath>();
+        AstarData astarData = AstarPath.active.data;
+        GridGraph gg = astarData.AddGraph(typeof(GridGraph)) as GridGraph;
+        gg.center = transform.position;
+        gg.is2D = true;
+        gg.SetDimensions((int)roomSize.x, (int)roomSize.y, 1f);
+        gg.collision.use2D = true;
+        gg.collision.mask = CollisionObjects;
+        AstarPath.active.Scan(gg);
+    }
 
-    public abstract void UnfulfillCondition(string key);
+    public virtual void FulfillCondition(string key)
+    {
+        conditions.Remove(key);
+    }
+
+    public virtual void UnfulfillCondition(string key)
+    {
+        conditions.Add(key);
+    }
 
     protected virtual void RoomChecker()
     {
@@ -104,7 +160,8 @@ public abstract class RoomManager : MonoBehaviour
         {
             foreach (GameObject door in doors)
             {
-                door.GetComponent<Animator>().SetBool("Open", true);
+                door.GetComponent<Animator>().enabled = true;
+                door.GetComponent<Animator>().SetBool(door.name, true);
                 door.GetComponent<Collider2D>().enabled = false;
             }
         }
@@ -112,7 +169,7 @@ public abstract class RoomManager : MonoBehaviour
         {
             foreach (GameObject door in doors)
             {
-                door.GetComponent<Animator>().SetBool("Open", false);
+                door.GetComponent<Animator>().enabled = false;
                 door.GetComponent<Collider2D>().enabled = true;
             }
         }
@@ -178,13 +235,22 @@ public abstract class RoomManager : MonoBehaviour
         }
         for (int i = 0; i < entityDatas.Length; i++)
         {
+            
             EntityData _item = entityDatas[i];
             //EntityBehaviour initprop;
             if (_item.condition == 1)
             {
                 conditions.Add(_item._name);
             }
-            InstantiateEntity(_item);
+
+            if (!_item.spawnAtStart)
+            {
+                continue;
+            } else
+            {
+                InstantiateEntity(_item);
+            }
+            
             
             /*
             initprop.SetEntityStats(_item);
@@ -198,8 +264,10 @@ public abstract class RoomManager : MonoBehaviour
 
     public void InstantiateEntity(EntityData data)
     {
+       
 
         Vector2 pos = data.random ? GetRandomPoint() : data.pos;
+        Debug.Log(pos);
       
         switch (data._type)
         {
@@ -227,15 +295,28 @@ public abstract class RoomManager : MonoBehaviour
             case EntityData.TYPE.NPC:
                 entityPrefabs[4].SetEntityStats(data);
                 entityPrefabs[4].GetComponent<SpriteRenderer>().sprite = data.sprite;
-                Instantiate(entityPrefabs[4], pos, Quaternion.identity).SetCurrentRoom(this);
+                NPCBehaviour npc = (NPCBehaviour) Instantiate(entityPrefabs[4], pos, Quaternion.identity);
+                npc.SetCurrentRoom(this);
+                npcs.Add(npc);
                 break;
             case EntityData.TYPE.ENEMY:
+                Debug.Log("hmm");
+                Debug.Log("enemy pos" + pos);
                 enemyPrefabs[0].SetEntityStats(data);
                 enemyPrefabs[0].GetComponent<SpriteRenderer>().sprite = data.sprite;
-                Instantiate(enemyPrefabs[0], data.pos, Quaternion.identity).SetCurrentRoom(this);
+                EnemyBehaviour emf = Instantiate(enemyPrefabs[0], Vector3.zero, Quaternion.identity);
+                emf.SetCurrentRoom(this);
+                GameObject go = new GameObject(data._name);
+                go.layer = LayerMask.NameToLayer("enemy");
+                go.transform.position = pos;
+                emf.transform.SetParent(go.transform);
+                emf.transform.localScale = new Vector2(data.scale, data.scale);
+                emf.transform.localPosition = Vector3.zero;
+                
+                
                 break;
             case EntityData.TYPE.BOSS:
-                enemyPrefabs[1].SetEntityStats(data);
+                enemyPrefabs[1].GetComponent<EnemyBehaviour>().SetEntityStats(data);
                 enemyPrefabs[1].GetComponent<SpriteRenderer>().sprite = data.sprite;
                 EliteMonsterA emA = (EliteMonsterA) Instantiate(enemyPrefabs[1], data.pos, Quaternion.identity);
                 emA.SetCurrentRoom(this);
@@ -291,9 +372,9 @@ public abstract class RoomManager : MonoBehaviour
     /**
     * Pause/Unpause game when dialogue is/is not running.
     */
-    protected void CheckRunningEvents()
+    protected virtual void CheckRunningEvents()
     {
-
+       
         if (dialMgr.playing || typingTestTL.isActiveAndEnabled || popUpSettings.gameObject.activeInHierarchy)
         {
 
@@ -375,10 +456,11 @@ public abstract class RoomManager : MonoBehaviour
         }
     }
 
-    void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
+        Gizmos.color = _colour;
         Gizmos.DrawWireCube(transform.position, roomSize);
-
+        
 
     }
 

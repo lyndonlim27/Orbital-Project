@@ -14,19 +14,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: 
   minDist: 0
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 8bcdaca38c2c4446f81484a0cf651398, type: 3}
   condition: 0
   _type: 0
   random: 0
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
-  damageValue: 0
-  moveSpeed: 0
-  chaseSpeed: 0
-  attackRange: 0
-  attackSpeed: 0
-  meleetriggers: []
-  defends: []
+  damageValue: 1
+  moveSpeed: 1
+  chaseSpeed: 1
+  attackRange: 1
+  attackSpeed: 1
+  meleetriggers:
+  - Melee1
+  - Melee2
+  - Melee3
+  - Melee4
+  - Melee5
+  defends:
+  - Dash
+  - Jump
+  - Def
   spelltriggers: []
   rangeds: []
   animatorname: 

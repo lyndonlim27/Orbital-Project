@@ -27,17 +27,6 @@ public class PCRoom3 : RoomManager
     private bool up;
     private float multiplier = 1;
 
-
-    public override void FulfillCondition(string key)
-    {
-        conditions.Remove(key);
-    }
-
-    public override void UnfulfillCondition(string key)
-    {
-        conditions.Add(key);
-    }
-
     // Start is called before the first frame update
     void Start()
     {

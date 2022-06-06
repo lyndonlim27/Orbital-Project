@@ -9,7 +9,11 @@ public class ChaseState : StateClass
     public ChaseState(EnemyBehaviour enemy, StateMachine stateMachine) : base(enemy, stateMachine) {}
     public override void Enter(object stateData)
     {
-        enemy.animator.SetBool("isChasing", true);
+        if (!enemy.animator.GetBool("isChasing"))
+        {
+            enemy.animator.SetBool("isChasing", true);
+        }
+        
         ChaseEnemy();
     }
 
@@ -38,7 +42,7 @@ public class ChaseState : StateClass
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
         }
 
-        else if (Vector2.Distance(enemy.transform.position, enemy.startingpos) >= enemy.maxDist)
+        else if (enemy.TravelToofar())
         {
             Debug.Log(Vector2.Distance(enemy.transform.position, enemy.startingpos));
             Debug.Log(enemy.maxDist);

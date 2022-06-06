@@ -32,6 +32,10 @@ class RoamState : StateClass
             
             stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
 
+        } else if (enemy.TravelToofar())
+        {
+            stateMachine.ChangeState(StateMachine.STATE.STOP, null);
+
         } else if (enemy.isReached())
 
         {

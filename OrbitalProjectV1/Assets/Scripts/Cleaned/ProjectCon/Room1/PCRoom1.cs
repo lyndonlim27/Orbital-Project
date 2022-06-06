@@ -43,16 +43,9 @@ public class PCRoom1 : RoomManager
         }
     }
 
-    public override void UnfulfillCondition(string key)
-    {
-        throw new System.NotImplementedException();
-    }
-
     IEnumerator CountDown()
     {
         yield return new WaitForSecondsRealtime(1f);
-
-
     }
 
 }

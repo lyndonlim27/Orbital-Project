@@ -8,7 +8,6 @@ public class DialogueDetection : MonoBehaviour
     private Player player;
     private NPCBehaviour currentNPC;
     private DialogueManager dialMgr;
-    private Boolean canProceed;
     private DetectionScript detectionScript;
 
     [SerializeField] private GameObject dialogueAlert;
@@ -21,7 +20,6 @@ public class DialogueDetection : MonoBehaviour
     {
         dialMgr = GameObject.FindObjectOfType<DialogueManager>(false);
         dialogueAlert.SetActive(false);
-        canProceed = true;
         
     }
     /**
@@ -47,7 +45,7 @@ public class DialogueDetection : MonoBehaviour
         CheckForInteractionButton();*/
         if (detectionScript.playerDetected && !dialMgr.playing)
         {
-            if (player != null && !player.isDead() && !player.inCombat && canProceed)
+            if (player != null && !player.isDead() && !player.inCombat)
             {
 //                Debug.Log("We are in this detection");
                 dialogueAlert.SetActive(true);
@@ -68,26 +66,26 @@ public class DialogueDetection : MonoBehaviour
         }
     }
 
-    /**
-     * CheckForPlayer's validity.
-     * return true if player is alive, not in combat and can proceed.
-     */
-    private bool CheckForPlayer()
-    { 
-        if (!detectionScript.playerDetected)
-        {
-            return false;
+    ///**
+    // * CheckForPlayer's validity.
+    // * return true if player is alive, not in combat and can proceed.
+    // */
+    //private bool CheckForPlayer()
+    //{ 
+    //    if (!detectionScript.playerDetected)
+    //    {
+    //        return false;
 
-        } else
-        {
-            if (player.isDead() || player.inCombat || !canProceed)
-            {
-                return false;
-            }
-        }
+    //    } else
+    //    {
+    //        if (player.isDead() || player.inCombat)
+    //        {
+    //            return false;
+    //        }
+    //    }
 
-        return true;
-    }
+    //    return true;
+    //}
 
     /**
      * CheckForInteractionButton.
@@ -100,11 +98,11 @@ public class DialogueDetection : MonoBehaviour
         }
     }
 
-    /**
-     * To check if current prerequisite is fulfilled before allowing interaction between player and NPC.
-     */
-    public void Fulfilled()
-    {
-        this.canProceed = true;
-    }
+    ///**
+    // * To check if current prerequisite is fulfilled before allowing interaction between player and NPC.
+    // */
+    //public void Fulfilled()
+    //{
+    //    this.canProceed = true;
+    //}
 }
