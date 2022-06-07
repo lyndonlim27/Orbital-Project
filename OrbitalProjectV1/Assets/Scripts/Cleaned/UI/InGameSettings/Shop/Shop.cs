@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-public class Shop : MonoBehaviour
+public class Shop : MenuBehaviour
 {
     [SerializeField] private Image _promptImage;
     private TextMeshProUGUI _promptText;
@@ -13,9 +13,10 @@ public class Shop : MonoBehaviour
     private bool Unlocked;
     private Player _player;
     private AudioSource _audioSource;
-    
+
+
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
         _debuffSkill = FindObjectOfType<DebuffBehaviour>();
         _buffSkill = FindObjectOfType<BuffBehaviour>();
@@ -24,6 +25,7 @@ public class Shop : MonoBehaviour
         _promptText.text = "";
         _promptImage.gameObject.SetActive(false);
         _audioSource = GetComponent<AudioSource>();
+
     }
 
     // Update is called once per frame

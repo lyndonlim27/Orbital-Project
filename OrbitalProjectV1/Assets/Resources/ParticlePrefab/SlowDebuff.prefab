@@ -601,7 +601,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 1000
+    maxNumParticles: 100
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 1
     rotation3D: 0
@@ -807,7 +807,7 @@ ParticleSystem:
     arc:
       value: 360
       mode: 0
-      spread: 0
+      spread: 1
       speed:
         serializedVersion: 2
         minMaxState: 0
@@ -1306,7 +1306,7 @@ ParticleSystem:
       maxGradient:
         serializedVersion: 2
         key0: {r: 0.3789296, g: 0.7762091, b: 0.9347392, a: 0}
-        key1: {r: 0.36405307, g: 0.80108356, b: 0.9528302, a: 0.5686275}
+        key1: {r: 0.36405307, g: 0.80108356, b: 0.9528302, a: 0.24313726}
         key2: {r: 0.59126914, g: 0.8762179, b: 0.9716981, a: 0.9137255}
         key3: {r: 0.59126914, g: 0.8762179, b: 0.9716981, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}

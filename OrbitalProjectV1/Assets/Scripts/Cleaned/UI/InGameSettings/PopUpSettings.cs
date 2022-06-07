@@ -2,30 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PopUpSettings : MonoBehaviour
+public class PopUpSettings : MenuBehaviour
 {
-    private RoomManager roomManager;
-    // Start is called before the first frame update
-    void Awake()
+
+    private Player _player;
+    private SkillManager _skillManager;
+
+    private void Awake()
     {
-        roomManager = FindObjectOfType<RoomManager>(false);
+        _player = FindObjectOfType<Player>(true);
+        _skillManager = FindObjectOfType<SkillManager>(true);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
-    public void PopUpSettingsActive()
+    public override void Active()
     {
         this.gameObject.SetActive(true);
-        roomManager.PauseGame();
+        this.transform.Find("Background").gameObject.SetActive(true);
+        this.transform.GetComponentInChildren<MainSettings>(true).Active();
+        this.transform.GetComponentInChildren<WarningMenu>(true).Inactive();
+        this.transform.GetComponentInChildren<ControlMenu>(true).Inactive();
+        this.transform.GetComponentInChildren<Shop>(true).Inactive();
+        _player.GetCurrentRoom().PauseGame();
+        _skillManager.enabled = false;
     }
 
-    public void PopUpSetingsInactive()
+    public override void Inactive()
     {
         this.gameObject.SetActive(false);
-        roomManager.ResumeGame();
+        _player.GetCurrentRoom().ResumeGame();
+        _skillManager.enabled = true;
     }
 }

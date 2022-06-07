@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
+
 public class DebuffPurchaseButton : SkillPurchaseButton
 {
     [SerializeField] private DebuffData _debuffData;
@@ -77,5 +78,7 @@ public class DebuffPurchaseButton : SkillPurchaseButton
     {
         return _debuffData.skillName;
     }
+
+
 
 }

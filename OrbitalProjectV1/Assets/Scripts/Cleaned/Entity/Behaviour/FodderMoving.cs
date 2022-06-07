@@ -27,4 +27,5 @@ public class FodderMoving : EnemyBehaviour
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
 
     }
+
 }

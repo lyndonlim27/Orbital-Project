@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: Knight
   m_EditorClassIdentifier: 
   _name: Knight
-  minDist: 2
+  minDist: 5
   sprite: {fileID: 21300000, guid: 15542999d1eb24b3590b9417587793a4, type: 3}
   condition: 0
   _type: 5
   random: 1
   pos: {x: 0, y: 0}
-  damageFlicker: {fileID: 0}
+  damageFlicker: {fileID: 672315831686351503, guid: 287fa61315c39429e8235e664399d8cc, type: 3}
   spawnAtStart: 1
-  scale: 3
-  damageValue: 1
+  scale: 5
+  damageValue: 10
   moveSpeed: 1
   chaseSpeed: 2
   attackRange: 1
@@ -34,4 +34,4 @@ MonoBehaviour:
   spelltriggers: []
   rangeds: []
   animatorname: AC_TwoAttacksMelee
-  words: 10
+  words: 3

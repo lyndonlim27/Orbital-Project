@@ -166,7 +166,11 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 32768
+  CollisionObjects:
+    serializedVersion: 2
+    m_Bits: 0
   roomSize: {x: 20, y: 15}
+  _colour: {r: 0, g: 0, b: 0, a: 0}
   _EntityData:
   - {fileID: 11400000, guid: d4684f8b684f741a7a739474f7750b03, type: 2}
   _enemyData: []
@@ -347,17 +351,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8815217350946591052, guid: 88365c6661b4948548575e15e51f0204, type: 3}
   m_PrefabInstance: {fileID: 250702040}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &172367337 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2210115702456997032, guid: 88365c6661b4948548575e15e51f0204, type: 3}
-  m_PrefabInstance: {fileID: 250702040}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 040e90bbe7e384491836e1bfee5dab40, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &178602780
 GameObject:
   m_ObjectHideFlags: 0
@@ -501,7 +494,11 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 32768
+  CollisionObjects:
+    serializedVersion: 2
+    m_Bits: 0
   roomSize: {x: 20, y: 10}
+  _colour: {r: 0, g: 0, b: 0, a: 0}
   _EntityData:
   - {fileID: 11400000, guid: b31d6c83c7c524a92a227e60a3454383, type: 2}
   _enemyData: []
@@ -1128,7 +1125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9012bd79dccf49df946e0dedc327800, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefabs: []
+  enemyPrefabs:
+  - {fileID: 5090632890050565972, guid: 34a917a45b64f49a695c944376d9bb1d, type: 3}
   entityPrefabs:
   - {fileID: 3052774998635016109, guid: 6aed6fb34fea54df7a553217e021c31b, type: 3}
   - {fileID: 0}
@@ -1139,7 +1137,11 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 32768
+  CollisionObjects:
+    serializedVersion: 2
+    m_Bits: 0
   roomSize: {x: 30.5, y: 17}
+  _colour: {r: 0, g: 0, b: 0, a: 0}
   _EntityData:
   - {fileID: 11400000, guid: 1a5005d4ce4a546c5997796c3a2d79aa, type: 2}
   - {fileID: 11400000, guid: 075c5055e5e5345518de4baf34d65158, type: 2}
@@ -1152,6 +1154,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 013a994014e0147d2ba382904b60b9ef, type: 2}
   - {fileID: 11400000, guid: abc5002e77bc04ae2bf34c9a58e721dc, type: 2}
   - {fileID: 11400000, guid: 6a50cb6eae0a84aa7b1d063055eb6837, type: 2}
+  - {fileID: 11400000, guid: 73f722faef2ce453e8d41437bb6b2083, type: 2}
   _enemyData: []
 --- !u!60 &401190895
 PolygonCollider2D:
@@ -1975,7 +1978,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6268903899601673544, guid: ac79288898c4543228a73e7af96c262c, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6268903899601673544, guid: ac79288898c4543228a73e7af96c262c, type: 3}
       propertyPath: m_LocalScale.x
@@ -8462,7 +8465,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7780269, y: 1}
+    m_SensorSize: {x: 1.7781609, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -8479,7 +8482,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1199980824}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -22.35, y: 43.76, z: -10}
+  m_LocalPosition: {x: -5.26, y: 21.17, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8866,7 +8869,11 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 32768
+  CollisionObjects:
+    serializedVersion: 2
+    m_Bits: 0
   roomSize: {x: 40, y: 22}
+  _colour: {r: 0, g: 0, b: 0, a: 0}
   _EntityData:
   - {fileID: 11400000, guid: 7c18992022d21482285e42cae6d4a2cd, type: 2}
   _enemyData:
@@ -8879,7 +8886,7 @@ MonoBehaviour:
   consumablePrefab: {fileID: 1585722123075491524, guid: 887c979ab13de416090908c82065ff85, type: 3}
   consumables:
   - {fileID: 11400000, guid: 23532790317044ebe8de1e951381e273, type: 2}
-  bosshp: {fileID: 172367337}
+  bosshp: {fileID: 0}
   WarningPanel: {fileID: 1396515617}
 --- !u!82 &1609593053
 AudioSource:
@@ -18107,7 +18114,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1924427486}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -22.35, y: 43.76, z: -10}
+  m_LocalPosition: {x: -5.26, y: 21.17, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -18308,11 +18315,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4374332776539690098, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -22.35
+      value: -5.26
       objectReference: {fileID: 0}
     - target: {fileID: 4374332776539690098, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 43.76
+      value: 21.17
       objectReference: {fileID: 0}
     - target: {fileID: 4374332776539690098, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
       propertyPath: m_LocalPosition.z

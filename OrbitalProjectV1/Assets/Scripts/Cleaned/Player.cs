@@ -227,4 +227,9 @@ public class Player : EntityBehaviour
     {
         return playerData;
     }
+
+    public RoomManager GetCurrentRoom()
+    {
+        return currentRoom;
+    }
 }

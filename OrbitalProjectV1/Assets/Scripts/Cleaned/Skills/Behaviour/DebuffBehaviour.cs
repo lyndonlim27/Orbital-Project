@@ -56,25 +56,25 @@ public class DebuffBehaviour : SkillBehaviour
     {
         Debug.Log("STUN");
         ResetCooldown();
-        foreach(EnemyBehaviour enemy in FindObjectsOfType<EnemyBehaviour>())
+        foreach(EnemyBehaviour enemy in _player.GetCurrentRoom().GetComponentsInChildren<EnemyBehaviour>())
         {
             enemy.rb.constraints = RigidbodyConstraints2D.FreezeAll;
             enemy.GetComponent<EnemyBehaviour>().enabled = false;
             Instantiate(_stunParticle, enemy.transform);
         }
         yield return new WaitForSeconds(_debuffData.duration);
-        foreach (EnemyBehaviour enemy in FindObjectsOfType<EnemyBehaviour>())
+        foreach (EnemyBehaviour enemy in _player.GetCurrentRoom().GetComponentsInChildren<EnemyBehaviour>())
         {
             enemy.rb.constraints = RigidbodyConstraints2D.None;
             enemy.GetComponent<EnemyBehaviour>().enabled = true;
             Destroy(enemy.transform.Find("StunDebuff(Clone)").gameObject);
         }
     }
-
+    
     private void StartSlow()
     {
         ResetCooldown();
-        foreach (EnemyBehaviour enemy in FindObjectsOfType<EnemyBehaviour>())
+        foreach (EnemyBehaviour enemy in _player.GetCurrentRoom().GetComponentsInChildren<EnemyBehaviour>())
         {
             enemy.enemyData.chaseSpeed *= _debuffData.slowAmount;
             enemy.enemyData.attackSpeed *= _debuffData.slowAmount;
@@ -96,7 +96,7 @@ public class DebuffBehaviour : SkillBehaviour
 
     private void StopSlow()
     {
-        foreach (EnemyBehaviour enemy in FindObjectsOfType<EnemyBehaviour>())
+        foreach (EnemyBehaviour enemy in _player.GetCurrentRoom().GetComponentsInChildren<EnemyBehaviour>())
         {
             enemy.enemyData.chaseSpeed /= _debuffData.slowAmount;
             enemy.enemyData.attackSpeed /= _debuffData.slowAmount;

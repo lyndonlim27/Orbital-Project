@@ -101,13 +101,13 @@ public abstract class RoomManager : MonoBehaviour
             {
                 activated = true;
                 dialMgr.SetCurrentRoom(this);
+                player.SetCurrentRoom(this);
                 SpawnObjects(_EntityData);
                 InitializeAStar();
                 //AddConditionalNPCS();
             }
         } else
         {
-            Debug.Log(_collider);
             if (activated)
             {
                 DeActivateAStar();
@@ -312,6 +312,8 @@ public abstract class RoomManager : MonoBehaviour
                 emf.transform.SetParent(go.transform);
                 emf.transform.localScale = new Vector2(data.scale, data.scale);
                 emf.transform.localPosition = Vector3.zero;
+                go.transform.SetParent(emf.GetCurrentRoom().transform);
+                enemies.Add(emf);
                 break;
             case EntityData.TYPE.BOSS:
                 enemyPrefabs[1].GetComponent<EnemyBehaviour>().SetEntityStats(data);
@@ -406,10 +408,8 @@ public abstract class RoomManager : MonoBehaviour
      */
     public void PauseGame()
     {
-
         foreach (EnemyBehaviour _enemy in enemies)
         {
-
             _enemy.enabled = false;
             _enemy.animator.enabled = false;
         }

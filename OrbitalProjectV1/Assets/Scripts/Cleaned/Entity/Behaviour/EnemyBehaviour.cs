@@ -5,6 +5,7 @@ using Pathfinding;
 
 public class EnemyBehaviour : EntityBehaviour
 {
+    [SerializeField] private FodderHealthBar _healthBar;
 
     //animation handler;
     public enum ANIMATION_CODE
@@ -37,6 +38,7 @@ public class EnemyBehaviour : EntityBehaviour
     public Vector2 startingpos;
     public Player player;
     public int health;
+    private int _maxHealth;
     public float cooldown;
     public bool facingRight;
     public bool inAnimation;
@@ -69,6 +71,10 @@ public class EnemyBehaviour : EntityBehaviour
         isDead = false;
         seeker = GetComponent<Pathfinding.Seeker>();
         health = enemyData.words;
+        if (_healthBar != null)
+        {
+            _healthBar.SetMaxHealth(health);
+        }
     }
 
     public virtual void Initialize() {
@@ -83,7 +89,6 @@ public class EnemyBehaviour : EntityBehaviour
     {
         stateMachine.Update();
         tick();
-
     }
 
     void OnPathComplete(Pathfinding.Path p)
@@ -283,6 +288,17 @@ public class EnemyBehaviour : EntityBehaviour
         transform.parent.localScale = currentFace;
 
         facingRight = !facingRight;
+
+        Vector3 scale = GetComponentInChildren<MonsterTextLogic>().transform.localScale;
+        scale.x *= -1;
+        GetComponentInChildren<MonsterTextLogic>().transform.localScale = scale;
+        if(_healthBar != null)
+        {
+            Vector3 scaleHealthBar = _healthBar.transform.localScale;
+            scaleHealthBar.x *= -1;
+            _healthBar.transform.localScale = scaleHealthBar;
+        }
+
     }
 
     //public void RotateTowardsTarget(Vector3 pos)
@@ -379,15 +395,17 @@ public class EnemyBehaviour : EntityBehaviour
 
     public virtual void Hurt()
     {
+        health--;
         _flicker.Flicker(this);
         if (health == 0)
         {
             Defeated();
-        } else
-        {
-            health--;
         }
         //hpBarUI.TakeDamage(); // or use weapon damage;
+        if (_healthBar != null)
+        {
+            _healthBar.SetHealth(health);
+        }
 
     }
 
@@ -397,7 +415,7 @@ public class EnemyBehaviour : EntityBehaviour
         if (health == 0)
         {
             isDead = true;
-            animator.SetTrigger("Death");
+            animator.SetBool("isAlive", false);
         } else
         {
             Hurt();

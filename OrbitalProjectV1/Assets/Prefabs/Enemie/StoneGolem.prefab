@@ -235,6 +235,9 @@ MonoBehaviour:
   player: {fileID: 0}
   health: 0
   cooldown: 0
+  facingRight: 0
+  inAnimation: 0
+  stage2: 0
   repathRate: 0.5
   nextWaypointDistance: 3
   reachedEndOfPath: 0
@@ -250,7 +253,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d173fea339b704ddeb0e3eb02ccf04e3, type: 2}
   - {fileID: 11400000, guid: b378410b27ba6431fb8a1c0aaec55249, type: 2}
   fodderType: {fileID: 4431353508152069340, guid: 896b235e0f2974ac7a44bb24b9c34c37, type: 3}
-  hpBarUI: {fileID: 0}
+  hpBarUI: {fileID: 4296577664212013763, guid: 07008e977ca9b4c16868836d66557380, type: 3}
   HardenCooldown: 0
   stage2: 0
 --- !u!114 &6461034160846565744
