@@ -13,13 +13,14 @@ public class Weapon : EntityBehaviour
     public float range = 200f;  
 
     [Header("Weapon properties")]
-    [SerializeField] private Bullet _bulletPrefab;
+    [SerializeField] private RangedBehaviour _bulletPrefab;
     [SerializeField] private RangedData rangedData;
 
     // Start is called before the first frame update
     void Start()
     {
         _animator = GetComponent<Animator>();
+        poolManager = FindObjectOfType<PoolManager>();
     }
 
     /** 
@@ -36,7 +37,7 @@ public class Weapon : EntityBehaviour
     /** 
      * Turns the weapon direction towards the enemy and shoot
      */
-    public virtual void Shoot(EntityBehaviour entity, Vector2 point2Target)
+    public virtual void Shoot(GameObject target, Vector2 point2Target)
     {
         _animator.SetFloat("Horizontal", Mathf.RoundToInt(point2Target.x));
         _animator.SetFloat("Vertical", Mathf.RoundToInt(point2Target.y));
@@ -47,12 +48,24 @@ public class Weapon : EntityBehaviour
         }
         Quaternion angle = Quaternion.Euler(0, 0, Mathf.Atan2(point2Target.y, point2Target.x)
          * Mathf.Rad2Deg);
-        _bulletPrefab.SetEntityStats(rangedData);
-        _bulletPrefab.GetComponent<SpriteRenderer>().sprite = rangedData.sprite;
-        _bulletPrefab.TargetEntity(entity);
-        Bullet bullet = Instantiate(_bulletPrefab, (Vector2) this.transform.position + point2Target * 1.5f, angle);
-        bullet.TargetEntity(entity);
+        //_bulletPrefab.SetEntityStats(rangedData);
+        //_bulletPrefab.GetComponent<SpriteRenderer>().sprite = rangedData.sprite;
+        //_bulletPrefab.TargetEntity(target);
+        InstantiateProjectile(target, point2Target, angle);
+        //RangedBehaviour bullet = Instantiate(_bulletPrefab, (Vector2) this.transform.position + point2Target * 1.5f, angle);
 
+
+    }
+
+    private void InstantiateProjectile(GameObject target, Vector2 point2Target, Quaternion angle)
+    {
+        RangedBehaviour bullet = poolManager.GetProjectile(rangedData, target, this.gameObject) as RangedBehaviour;
+        bullet.gameObject.transform.position = (Vector2)this.transform.position + point2Target * 1.5f;
+        bullet.gameObject.transform.rotation = angle;
+        bullet.SetEntityStats(rangedData);
+        bullet.GetComponent<SpriteRenderer>().sprite = rangedData.sprite;
+        bullet.TargetEntity(target);
+        bullet.gameObject.SetActive(true);
     }
 
     public virtual void MeleeAttack()
@@ -62,7 +75,7 @@ public class Weapon : EntityBehaviour
 
     public override void SetEntityStats(EntityData stats)
     {
-        throw new System.NotImplementedException();
+        rangedData = (RangedData)stats;
     }
 
     public override void Defeated()
@@ -72,6 +85,6 @@ public class Weapon : EntityBehaviour
 
     public override EntityData GetData()
     {
-        throw new System.NotImplementedException();
+        return rangedData;
     }
 }

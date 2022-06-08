@@ -144,14 +144,14 @@ public class Player : EntityBehaviour
     }
 
     //When player shoot, player direction faces the target enemy
-    public void Shoot(EntityBehaviour entity)
+    public void Shoot(GameObject target)
     {
         _timeDelay = 0.5f;
         //Debug.Log(enemy);
-        Vector2 point2Target = (Vector2)transform.position - (Vector2)entity.transform.position;
+        Vector2 point2Target = (Vector2)transform.position - (Vector2)target.transform.position;
         point2Target.Normalize();
         point2Target = -point2Target;
-        _currWeapon.Shoot(entity, point2Target);
+        _currWeapon.Shoot(target, point2Target);
         _animator.SetFloat("Horizontal", Mathf.RoundToInt(point2Target.x));
         _animator.SetFloat("Vertical", Mathf.RoundToInt(point2Target.y));
         _animator.SetFloat("Speed", point2Target.magnitude);

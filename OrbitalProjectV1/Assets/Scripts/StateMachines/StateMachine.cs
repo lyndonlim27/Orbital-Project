@@ -14,7 +14,7 @@ public class StateMachine
         ATTACK1,
         ATTACK2,
         DEATH,
-        ENRAGED1,
+        RECOVERY,
         ENRAGED2,
         ENRAGED3,
         ENRAGED4,

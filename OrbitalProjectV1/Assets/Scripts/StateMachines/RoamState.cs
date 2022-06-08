@@ -40,15 +40,11 @@ class RoamState : StateClass
 
         {
 
-            Debug.Log("Dafuq");
             stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
 
         }
           else
         {
-            Debug.Log("Hmm");
-            Debug.Log("enemy pos: " + enemy.transform.position);
-            Debug.Log("roam pos: " + enemy.roamPos);
             enemy.moveToRoam();
         }
      }

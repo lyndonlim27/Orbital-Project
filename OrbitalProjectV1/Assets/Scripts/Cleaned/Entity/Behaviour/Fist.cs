@@ -9,7 +9,7 @@ public class Fist : Weapon
         
     }
 
-    public override void Shoot(EntityBehaviour entity, Vector2 point2Target)
+    public override void Shoot(GameObject target, Vector2 point2Target)
     {
         //EnemyBehaviour enemyBehaviour = (EnemyBehaviour)entity;
         //if (enemyBehaviour != null)
@@ -19,8 +19,11 @@ public class Fist : Weapon
 
 
         //Destroy(entity.gameObject, 0.5f);
-
-        entity.Defeated();
+        if (target.GetComponent<EntityBehaviour>() != null)
+        {
+            target.GetComponent<EntityBehaviour>().Defeated();
+        }
+        
         
     }
 

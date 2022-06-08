@@ -17,17 +17,18 @@ public class MonsterTextLogic : TextLogic{
     protected override bool CheckInternalInput()
     {
         StateMachine stateMachine = parent.gameObject.GetComponent<EnemyBehaviour>().stateMachine;
-        return (!stateMachine.currState.Equals(StateMachine.STATE.STOP)) && (!stateMachine.currState.Equals(StateMachine.STATE.ENRAGED1));
+        return (!stateMachine.currState.Equals(StateMachine.STATE.STOP)) && (!stateMachine.currState.Equals(StateMachine.STATE.RECOVERY));
     }
 
     protected override void GenerateNewWord()
     {
-        currentword = wordGenerator.GetWord();
+        currentword = "a";
+        //currentword = wordGenerator.GetWord();
         UpdateRemainingWord(currentword);
     }
 
     protected override void PerformAction()
     {
-        player.Shoot(parent);
+        player.Shoot(parent.gameObject);
     }
 }

@@ -6,8 +6,6 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
 {
     private Animator _animator;
     //private bool _status;
-    [SerializeField] private SwitchData data;
-    public LayerMask layerMask;
     private List<Collider2D> colliders;
     private Coroutine _coroutine = null;
     /*

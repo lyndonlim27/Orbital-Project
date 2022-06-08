@@ -18,6 +18,10 @@ public class RangedState : StateClass
 
     public override void Update()
     {
+        //if (!enemy.player.isDead())
+        //{
+        //    enemy.flipFace(enemy.player.transform.position);
+        //}
 
     }
 
@@ -25,32 +29,41 @@ public class RangedState : StateClass
     {
     }
 
-    public void triggerAttack()
+    private void triggerAttack()
     {
-        EliteMonsterA eliteMonsterA = (EliteMonsterA)enemy;
 
-        if(eliteMonsterA.hpBarUI.HalfHP() && eliteMonsterA.HardenCooldown == 0)
+        //EliteMonsterA eliteMonsterA = (EliteMonsterA)enemy;
+        //if (eliteMonsterA != null)
+        //{
+        //    if (eliteMonsterA.hpBarUI.HalfHP() && eliteMonsterA.HardenCooldown == 0)
+        //    {
+        //        stateMachine.ChangeState(StateMachine.STATE.RECOVERY, null);
+        //    }
+
+        //}
+
+        if (enemy.player.isDead())
         {
-            stateMachine.ChangeState(StateMachine.STATE.ENRAGED1, null);
+            stateMachine.ChangeState(StateMachine.STATE.STOP, null);
         }
-
-        else if (!enemy.ranged.detected())
-        {
-            stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
-            return;
-        }
-
         else
         {
             if (!enemy.onCooldown())
             {
-                enemy.ranged.Attack();
-            } else
-            {
-                stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
+                List<string> rangedtriggers = enemy.enemyData.rangedtriggers;
+                int random = Random.Range(0,enemy.enemyData.rangedtriggers.Count);
+                enemy.flipFace(enemy.player.transform.position);
+                enemy.animator.SetTrigger(rangedtriggers[random]);
+                enemy.inAnimation = true;
+
             }
-            
+            else
+            {
+                stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+            }
+
         }
+
     }
 
     public override void Exit()

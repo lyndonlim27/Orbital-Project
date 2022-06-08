@@ -21,13 +21,30 @@ public class HardenStage : StateClass
             eliteMonster.ActivateStage1();
         }
         eliteMonster.animator.SetTrigger("Harden");
+        DeActivateComponents();
+
+    }
+
+    private void DeActivateComponents()
+    {
+        eliteMonster.melee.gameObject.SetActive(false);
+        eliteMonster.ranged.gameObject.SetActive(false);
+        eliteMonster.detectionScript.gameObject.SetActive(false);
+    }
+
+    private void ReActivateComponents()
+    {
+        eliteMonster.melee.gameObject.SetActive(true);
+        eliteMonster.ranged.gameObject.SetActive(true);
+        eliteMonster.detectionScript.gameObject.SetActive(true);
     }
 
     public override void Exit()
     {
         eliteMonster.DestroyFodders();
         eliteMonster.DestroyBossProps();
-        
+        ReActivateComponents();
+
     }
 
     public override void FixedUpdate()

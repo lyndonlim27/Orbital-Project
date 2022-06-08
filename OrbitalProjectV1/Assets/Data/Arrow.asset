@@ -16,15 +16,17 @@ MonoBehaviour:
   minDist: 0
   sprite: {fileID: 1722146800, guid: 5c253c912e3434d9e9451cc3a2cb7ca6, type: 3}
   condition: 0
-  _type: 0
+  _type: 10
   random: 0
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
-  type: 2
+  spawnAtStart: 0
+  scale: 1
   damage: 10
   speed: 3
-  rotation: 2
+  rotation: 200
   lifetime: 3
   trigger: Arrow
-  ac_name: Spikes_VFX
-  scale: 1
+  followTarget: 1
+  loop: 1
+  impact_trigger: 

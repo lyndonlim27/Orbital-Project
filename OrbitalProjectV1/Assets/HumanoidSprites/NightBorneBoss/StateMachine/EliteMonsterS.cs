@@ -234,8 +234,8 @@ public class EliteMonsterS : EnemyBehaviour
             //    break;
             default:
                 flipFace((player.transform.position));
-                ranged.StartCoroutine(
-                    ranged.Cast(ranged.rangeds[roll - 1]));
+                //ranged.StartCoroutine(
+                    //ranged.Cast(ranged.rangeds[roll - 1]));
 
                 break;
             case 3:

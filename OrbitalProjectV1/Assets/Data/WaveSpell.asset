@@ -16,15 +16,17 @@ MonoBehaviour:
   minDist: 0
   sprite: {fileID: 1160180818, guid: 17955d31ea0344615acc85c0597a9b51, type: 3}
   condition: 0
-  _type: 0
+  _type: 9
   random: 0
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
-  type: 0
+  spawnAtStart: 1
+  scale: 3
   damage: 1
-  speed: 1
-  rotation: 1
-  lifetime: 3
-  trigger: Cast
-  ac_name: AC_WaterSpell
-  scale: 1
+  speed: 3
+  rotation: 5
+  lifetime: 5
+  trigger: Wave
+  followTarget: 1
+  loop: 0
+  impact_trigger: 

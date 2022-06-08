@@ -5,7 +5,7 @@ using UnityEngine;
 public class Particles : MonoBehaviour
 {
     ParticleSystem particles;
-    ParticleData particleData;
+    [SerializeField] ParticleData particleData;
 
     /**
      * Retrieving Data.
@@ -44,7 +44,8 @@ public class Particles : MonoBehaviour
     private void ChangeParticleEmission()
     {
         var partem = particles.emission;
-        partem.burstCount = particleData.maxparticles;
+        //partem.SetBurst(1, new ParticleSystem.Burst(2.0f, 100));
+        //partem.burst.Count = particleData.maxparticles;
     }
 
     /**

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Knight
   m_EditorClassIdentifier: 
   _name: Knight
-  minDist: 2
+  minDist: 10
   sprite: {fileID: 21300000, guid: 15542999d1eb24b3590b9417587793a4, type: 3}
   condition: 0
   _type: 5
@@ -31,7 +31,6 @@ MonoBehaviour:
   - Melee1
   - Melee2
   defends: []
-  spelltriggers: []
-  rangeds: []
-  animatorname: AC_TwoAttacksMelee
-  words: 10
+  rangedtriggers: []
+  animatorname: Knight
+  words: 10000

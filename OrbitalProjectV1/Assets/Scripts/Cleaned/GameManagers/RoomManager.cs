@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
+using UnityEngine.Pool;
 
 /**
  * RoomManager.
@@ -35,9 +36,8 @@ public abstract class RoomManager : MonoBehaviour
      * Prefabs.
      */
     [Header("Prefabs")]
-    [SerializeField] EnemyBehaviour[] enemyPrefabs;
     //[SerializeField] GameObject[] enemyPrefabs;
-    [SerializeField] EntityBehaviour[] entityPrefabs;
+    //[SerializeField] EntityBehaviour[] entityPrefabs;
  //   [SerializeField] NPCBehaviour NPCPrefab;
     [SerializeField] protected GameObject[] doors;
     [SerializeField] protected LayerMask layerMask;
@@ -70,6 +70,7 @@ public abstract class RoomManager : MonoBehaviour
      * UI
      */
     protected PopUpSettings popUpSettings;
+    private PoolManager poolManager;
 
     /**
      * Retrieving of Data.
@@ -88,6 +89,7 @@ public abstract class RoomManager : MonoBehaviour
         dialMgr = GameObject.FindObjectOfType<DialogueManager>(true);
         typingTestTL = GameObject.FindObjectOfType<TypingTestTL>(true);
         popUpSettings = FindObjectOfType<PopUpSettings>(true);
+        poolManager = FindObjectOfType<PoolManager>(true);
 
     }
 
@@ -142,6 +144,7 @@ public abstract class RoomManager : MonoBehaviour
         gg.collision.mask = CollisionObjects;
         AstarPath.active.Scan(gg);
     }
+
 
     public virtual void FulfillCondition(string key)
     {
@@ -264,65 +267,97 @@ public abstract class RoomManager : MonoBehaviour
 
     public void InstantiateEntity(EntityData data)
     {
-       
+
 
         Vector2 pos = data.random ? GetRandomPoint() : data.pos;
         Debug.Log(pos);
-      
+        EntityBehaviour entity = poolManager.GetObject(data._type);
+        InitializeEntity(data, pos, entity);
+        //switch (data._type)
+        //{
+        //    default:
+        //    case EntityData.TYPE.OBJECT:
+
+        //        entityPrefabs[0].SetEntityStats(data);
+        //        entityPrefabs[0].GetComponent<SpriteRenderer>().sprite = data.sprite;
+        //        Instantiate(entityPrefabs[0], pos, Quaternion.identity).SetCurrentRoom(this);
+        //        break;
+        //    case EntityData.TYPE.ITEM:
+        //        entityPrefabs[1].SetEntityStats(data);
+        //        entityPrefabs[1].GetComponent<SpriteRenderer>().sprite = data.sprite;
+        //        Instantiate(entityPrefabs[1], pos, Quaternion.identity).SetCurrentRoom(this);
+        //        break;
+        //    case EntityData.TYPE.PRESSURE_SWITCH:
+        //        entityPrefabs[2].SetEntityStats(data);
+        //        entityPrefabs[2].GetComponent<SpriteRenderer>().sprite = data.sprite;
+        //        Instantiate(entityPrefabs[2], pos, Quaternion.identity).SetCurrentRoom(this);
+        //        break;
+        //    case EntityData.TYPE.SWITCH:
+        //        entityPrefabs[3].SetEntityStats(data);
+        //        entityPrefabs[3].GetComponent<SpriteRenderer>().sprite = data.sprite;
+        //        Instantiate(entityPrefabs[3], pos, Quaternion.identity).SetCurrentRoom(this);
+        //        break;
+        //    case EntityData.TYPE.NPC:
+        //        entityPrefabs[4].SetEntityStats(data);
+        //        entityPrefabs[4].GetComponent<SpriteRenderer>().sprite = data.sprite;
+        //        NPCBehaviour npc = (NPCBehaviour)Instantiate(entityPrefabs[4], pos, Quaternion.identity);
+        //        npc.SetCurrentRoom(this);
+        //        npcs.Add(npc);
+        //        break;
+        //    case EntityData.TYPE.ENEMY:
+        //        Debug.Log("hmm");
+        //        Debug.Log("enemy pos" + pos);
+        //        enemyPrefabs[0].SetEntityStats(data);
+        //        enemyPrefabs[0].GetComponent<SpriteRenderer>().sprite = data.sprite;
+        //        EnemyBehaviour emf = Instantiate(enemyPrefabs[0], Vector3.zero, Quaternion.identity);
+        //        emf.SetCurrentRoom(this);
+        //        SettingUpEnemy(data, pos, emf);
+        //        break;
+        //    case EntityData.TYPE.BOSS:
+        //        enemyPrefabs[1].GetComponent<EnemyBehaviour>().SetEntityStats(data);
+        //        enemyPrefabs[1].GetComponent<SpriteRenderer>().sprite = data.sprite;
+        //        EliteMonsterA emA = (EliteMonsterA)Instantiate(enemyPrefabs[1], data.pos, Quaternion.identity);
+        //        emA.SetCurrentRoom(this);
+        //        enemies.Add(emA);
+        //        break;
+
+
+        //}
+    }
+
+    private void SettingUpEnemy(EntityData data, Vector2 pos, EnemyBehaviour emf)
+    {
+        GameObject go = new GameObject(data._name);
+        go.layer = LayerMask.NameToLayer("enemy");
+        go.transform.position = pos;
+        emf.transform.SetParent(go.transform);
+        emf.transform.localScale = new Vector2(data.scale, data.scale);
+        emf.transform.localPosition = Vector3.zero;
+        go.transform.SetParent(transform);
+    }
+
+    private void InitializeEntity(EntityData data, Vector2 pos, EntityBehaviour entity)
+    {
+        entity.SetEntityStats(data);
+        entity.GetComponent<SpriteRenderer>().sprite = data.sprite;
+        entity.transform.position = pos;
+        entity.gameObject.SetActive(true);
+        entity.SetCurrentRoom(this);
         switch (data._type)
         {
             default:
-            case EntityData.TYPE.OBJECT:
-                entityPrefabs[0].SetEntityStats(data);
-                entityPrefabs[0].GetComponent<SpriteRenderer>().sprite = data.sprite;
-                Instantiate(entityPrefabs[0], pos, Quaternion.identity).SetCurrentRoom(this);
-                break;
-            case EntityData.TYPE.ITEM:
-                entityPrefabs[1].SetEntityStats(data);
-                entityPrefabs[1].GetComponent<SpriteRenderer>().sprite = data.sprite;
-                Instantiate(entityPrefabs[1], pos, Quaternion.identity).SetCurrentRoom(this);
-                break;
-            case EntityData.TYPE.PRESSURE_SWITCH:
-                entityPrefabs[2].SetEntityStats(data);
-                entityPrefabs[2].GetComponent<SpriteRenderer>().sprite = data.sprite;
-                Instantiate(entityPrefabs[2], pos, Quaternion.identity).SetCurrentRoom(this);
-                break;
-            case EntityData.TYPE.SWITCH:
-                entityPrefabs[3].SetEntityStats(data);
-                entityPrefabs[3].GetComponent<SpriteRenderer>().sprite = data.sprite;
-                Instantiate(entityPrefabs[3], pos, Quaternion.identity).SetCurrentRoom(this);
+                entity.transform.SetParent(transform);
                 break;
             case EntityData.TYPE.NPC:
-                entityPrefabs[4].SetEntityStats(data);
-                entityPrefabs[4].GetComponent<SpriteRenderer>().sprite = data.sprite;
-                NPCBehaviour npc = (NPCBehaviour) Instantiate(entityPrefabs[4], pos, Quaternion.identity);
-                npc.SetCurrentRoom(this);
-                npcs.Add(npc);
+                npcs.Add((NPCBehaviour) entity);
+                entity.transform.SetParent(transform);
                 break;
             case EntityData.TYPE.ENEMY:
-                Debug.Log("hmm");
-                Debug.Log("enemy pos" + pos);
-                enemyPrefabs[0].SetEntityStats(data);
-                enemyPrefabs[0].GetComponent<SpriteRenderer>().sprite = data.sprite;
-                EnemyBehaviour emf = Instantiate(enemyPrefabs[0], Vector3.zero, Quaternion.identity);
-                emf.SetCurrentRoom(this);
-                GameObject go = new GameObject(data._name);
-                go.layer = LayerMask.NameToLayer("enemy");
-                go.transform.position = pos;
-                emf.transform.SetParent(go.transform);
-                emf.transform.localScale = new Vector2(data.scale, data.scale);
-                emf.transform.localPosition = Vector3.zero;
-                break;
             case EntityData.TYPE.BOSS:
-                enemyPrefabs[1].GetComponent<EnemyBehaviour>().SetEntityStats(data);
-                enemyPrefabs[1].GetComponent<SpriteRenderer>().sprite = data.sprite;
-                EliteMonsterA emA = (EliteMonsterA) Instantiate(enemyPrefabs[1], data.pos, Quaternion.identity);
-                emA.SetCurrentRoom(this);
-                enemies.Add(emA);
+                SettingUpEnemy(data, pos, (EnemyBehaviour)entity);
                 break;
 
-
-        }
+        } 
     }
 
     /**

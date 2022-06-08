@@ -44,8 +44,6 @@ public class ChaseState : StateClass
 
         else if (enemy.TravelToofar())
         {
-            Debug.Log(Vector2.Distance(enemy.transform.position, enemy.startingpos));
-            Debug.Log(enemy.maxDist);
             stateMachine.ChangeState(StateMachine.STATE.STOP, null);
         }
 

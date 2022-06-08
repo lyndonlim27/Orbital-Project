@@ -18,6 +18,7 @@ public class EliteMeleeFodder : EnemyBehaviour
         stateMachine.AddState(StateMachine.STATE.ROAMING, new RoamState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.CHASE, new ChaseState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.ATTACK1, new C_MeleeState(this, this.stateMachine));
+        stateMachine.AddState(StateMachine.STATE.ATTACK2, new RangedState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.STOP, new StopState(this, this.stateMachine));
         Dashcooldown = 15f;
         Teleportcooldown = 30f;
@@ -28,7 +29,6 @@ public class EliteMeleeFodder : EnemyBehaviour
     {
         base.Update();
         Dodge();
-
     }
 
 
@@ -53,14 +53,27 @@ public class EliteMeleeFodder : EnemyBehaviour
         {
             List<string> dodges = enemyData.defends;
             int random = Random.Range(0, dodges.Count);
-            
+
             animator.SetTrigger(dodges[random]);
+            DisableAttackComps();
             inAnimation = true;
         }
         else
         {
             Dashcooldown -= Time.deltaTime;
         }
+    }
+
+    private void DisableAttackComps()
+    {
+        melee.gameObject.SetActive(false);
+        ranged.gameObject.SetActive(false);
+    }
+
+    private void EnableAttackComps()
+    {
+        melee.gameObject.SetActive(true);
+        ranged.gameObject.SetActive(true);
     }
 
     public void ResetDash()
@@ -70,6 +83,7 @@ public class EliteMeleeFodder : EnemyBehaviour
         transform.parent.position = transform.position;
         transform.localPosition = Vector3.zero;
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+        EnableAttackComps();
     }
 
     public override void Teleport()
@@ -81,10 +95,10 @@ public class EliteMeleeFodder : EnemyBehaviour
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
     }
 
-    public void CastSpell()
-    {
-        List<string> spellcasts = enemyData.spelltriggers;
-        int rand = Random.Range(0, spellcasts.Count);
-        GetComponent<Animator>().Play(spellcasts[rand]);
-    }
+    //public void CastSpell()
+    //{
+    //    List<string> spellcasts = enemyData.rangedtriggers;
+    //    int rand = Random.Range(0, spellcasts.Count);
+    //    GetComponent<Animator>().Play(spellcasts[rand]);
+    //}
 }

@@ -16,15 +16,17 @@ MonoBehaviour:
   minDist: 0
   sprite: {fileID: 21300000, guid: 6b22c73d194b94c61ac7ba3ad66db93c, type: 3}
   condition: 0
-  _type: 0
+  _type: 10
   random: 0
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
-  type: 2
+  spawnAtStart: 1
+  scale: 1
   damage: 3
-  speed: 1
-  rotation: 1
+  speed: 3
+  rotation: 200
   lifetime: 0.2
-  trigger: Collision
-  ac_name: BulletExplode_VFX
-  scale: 5
+  trigger: bulletidle
+  followTarget: 1
+  loop: 1
+  impact_trigger: bulletexplode

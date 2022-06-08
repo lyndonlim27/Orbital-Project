@@ -35,17 +35,15 @@ class MeleeState : StateClass
     {
 
         EliteMonsterA eliteMonsterA = (EliteMonsterA)enemy;
-
-        if (eliteMonsterA.hpBarUI.HalfHP() && eliteMonsterA.HardenCooldown == 0)
+        if (eliteMonsterA != null)
         {
-            stateMachine.ChangeState(StateMachine.STATE.ENRAGED1, null);
+            if (eliteMonsterA.hpBarUI.HalfHP() && eliteMonsterA.HardenCooldown == 0)
+            {
+                stateMachine.ChangeState(StateMachine.STATE.RECOVERY, null);
+            }
+
         }
 
-        //else if (!enemy.melee.detected())
-        //{
-        //    stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
-
-        //}
         else if (enemy.player.isDead())
         {
             stateMachine.ChangeState(StateMachine.STATE.STOP, null);

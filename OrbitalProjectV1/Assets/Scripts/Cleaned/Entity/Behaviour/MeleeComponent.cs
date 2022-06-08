@@ -5,7 +5,7 @@ using UnityEngine;
 public class MeleeComponent : AttackComponent
 {
 
-    public override void Attack()
+    public void Attack()
 
     {
         if (detectionScript.playerDetected)

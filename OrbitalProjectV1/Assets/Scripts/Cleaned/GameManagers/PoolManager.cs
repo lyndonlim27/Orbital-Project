@@ -1,0 +1,127 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Pool;
+
+public class PoolManager : MonoBehaviour
+{
+    [SerializeField] RangedBehaviour[] entityPrefabs;
+    //[SerializeField] GameObject prefab;
+    //private ObjectPool<EntityBehaviour> entities;
+    /**
+     * ObjectPools
+     */
+    private Dictionary<EntityData.TYPE, ObjectPool<EntityBehaviour>> objectPools = new Dictionary<EntityData.TYPE, ObjectPool<EntityBehaviour>>();
+
+
+
+
+    private void Awake()
+    {
+        InitializePool();
+    }
+        
+
+
+    private void OnGetEntity(EntityBehaviour instance)
+    {
+      
+    }
+
+    private void OnReleaseEntity(EntityBehaviour instance)
+    {
+        instance.transform.SetParent(transform);
+        instance.gameObject.SetActive(false);
+    }
+
+    private void OnDestroyEntity(EntityBehaviour instance)
+    {
+        Destroy(instance.gameObject);
+    }
+
+    private EntityBehaviour CreatePooledEntity(EntityBehaviour entity)
+    {
+        Debug.Log("Dafug>");
+        EntityBehaviour e1 = Instantiate(entity, transform.position, Quaternion.identity);
+        e1.gameObject.transform.SetParent(transform);
+        e1.gameObject.SetActive(false);
+        return e1;
+
+    }
+
+    public EntityBehaviour GetObject(EntityData.TYPE _type)
+    {
+        return objectPools[_type].Get();
+    }
+
+    public RangedBehaviour GetProjectile(RangedData rangedData, GameObject target, GameObject go)
+    {
+        
+        RangedBehaviour ranged = objectPools[rangedData._type].Get() as RangedBehaviour;
+        Debug.Log(target);
+        Debug.Log(rangedData);
+        ranged.TargetEntity(target);
+        ranged.SetEntityStats(rangedData);
+        ranged.GetComponent<SpriteRenderer>().sprite = rangedData.sprite;
+        if (rangedData._type == EntityData.TYPE.PROJECTILE)
+        {
+            ranged.transform.SetParent(null);
+        }
+        else
+        {
+            ranged.transform.SetParent(go.transform);
+        }
+
+
+        return ranged;
+
+        
+        
+    }
+
+    public void ReleaseObject(EntityBehaviour instance)
+    {
+        objectPools[instance.GetData()._type].Release(instance);
+    }
+
+
+    private void InitializePool()
+    {
+        foreach (EntityBehaviour entity in entityPrefabs)
+        {
+            Debug.Log("?????");
+            if (entity.GetType() == typeof(RangedBehaviour))
+            {
+                Debug.Log("entered");
+                Debug.Log(entity);
+                ObjectPool<EntityBehaviour> pool = new ObjectPool<EntityBehaviour>(() => CreatePooledEntity(entity),
+                OnGetEntity, OnReleaseEntity, OnDestroyEntity, false, 10, 1000);
+                Debug.Log(pool.CountAll);
+                objectPools.Add(EntityData.TYPE.CAST_ONTARGET, pool);
+                objectPools.Add(EntityData.TYPE.CAST_SELF, pool);
+                objectPools.Add(EntityData.TYPE.PROJECTILE, pool);
+            }
+            else
+            {
+                objectPools.Add(entity.GetData()._type, new ObjectPool<EntityBehaviour>(() => CreatePooledEntity(entity),
+                OnGetEntity, OnReleaseEntity, OnDestroyEntity, true, 10, 50));
+            }
+
+        }
+    }
+
+    /**
+     * Debugging
+     */
+    private void OnGUI()
+    {
+        GUI.Label(new Rect(10, 10, 150, 50), $"PoolSize:{objectPools[EntityData.TYPE.CAST_SELF].CountAll}");
+        //foreach (EntityData.TYPE entity_type in objectPools.Keys)
+        //{
+        //    GUI.Label(new Rect(10, 10, 150, 50), $"{entity_type}'s PoolSize:{objectPools[entity_type].CountAll}");
+        //    //GUI.Label(new Rect(10, 10, 150, 50), $"{entity_type}'s ActivePoolSize:{objectPools[entity_type].CountActive}");
+        //}
+
+    }
+}
+//}

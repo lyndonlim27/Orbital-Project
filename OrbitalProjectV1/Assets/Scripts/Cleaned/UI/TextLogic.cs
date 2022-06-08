@@ -36,7 +36,6 @@ public abstract class TextLogic : MonoBehaviour
         minDist = parent.GetData().minDist;
         remainingword = "";
         currentword = parent.GetData()._name.ToLower();
-        
     }
     /**
      * Initialize gameObject.

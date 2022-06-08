@@ -12,7 +12,6 @@ public class EliteMonsterA : EnemyBehaviour
     private List<EnemyBehaviour> fodderObjects;
     public HealthBarEnemy hpBarUI;
     public float HardenCooldown = 0;
-    public bool stage2;
 
 
     private void Awake()
@@ -32,43 +31,23 @@ public class EliteMonsterA : EnemyBehaviour
         stateMachine.AddState(StateMachine.STATE.CHASE, new ChaseState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.ATTACK1, new MeleeState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.ATTACK2, new RangedState(this, this.stateMachine));
-        stateMachine.AddState(StateMachine.STATE.ENRAGED1, new HardenStage(this, this.stateMachine));
+        stateMachine.AddState(StateMachine.STATE.RECOVERY, new HardenStage(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.STOP, new StopState(this, this.stateMachine));
 
     }
 
-    public override void Initialize()
-    { 
-        this.animator.SetBool("NotSpawned", true);
-        stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
-        
-    }
-
-    public override bool hasWeapon()
-    {
-        return true;
-    }
 
     public override void Hurt()
     {
-        _flicker.Flicker(this);
         hpBarUI.TakeDamage();
+        base.Hurt();
+ 
     }
 
     public override void Defeated()
-    { 
-        if (hpBarUI.currlength == 0)
-        {
-            isDead = true;
-            animator.SetTrigger("Death");
-            hpBarUI.gameObject.SetActive(false);
-            Debug.Log(hpBarUI.currlength);
-
-        }
-        else
-        {
-            Hurt();
-        }
+    {
+        base.Defeated();
+        hpBarUI.gameObject.SetActive(false);
     }
 
     public override void Update()
@@ -79,10 +58,10 @@ public class EliteMonsterA : EnemyBehaviour
             animator.SetTrigger("Stage2");
         }
 
-        else if (!stage2 && this.hpBarUI.HalfHP() && stateMachine.currState != StateMachine.STATE.ENRAGED1 && HardenCooldown == 0)
+        else if (!stage2 && health <= (0.5*enemyData.words) && stateMachine.currState != StateMachine.STATE.RECOVERY && HardenCooldown == 0)
         {
             
-            this.stateMachine.ChangeState(StateMachine.STATE.ENRAGED1, null);
+            this.stateMachine.ChangeState(StateMachine.STATE.RECOVERY, null);
            
         } else
         {
@@ -109,7 +88,7 @@ public class EliteMonsterA : EnemyBehaviour
 
     public void CheckInteruption()
     {
-        if (stateMachine.currState == StateMachine.STATE.ENRAGED1)
+        if (stateMachine.currState == StateMachine.STATE.RECOVERY)
         {
             Debug.Log(allProps.Count);
             if (allProps.Count == 0 || hpBarUI.HPBarFull())

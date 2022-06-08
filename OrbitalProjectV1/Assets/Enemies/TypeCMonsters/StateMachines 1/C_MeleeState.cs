@@ -41,7 +41,7 @@ class C_MeleeState : StateClass
             {
                 stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
             }
-            else if (!enemy.inAnimation && !enemy.onCooldown())
+            else if (!enemy.inAnimation)
             {
                 enemy.flipFace(enemy.player.transform.position);
                 List<string> meleetriggers = enemy.enemyData.meleetriggers;

@@ -17,7 +17,10 @@ public class EntityData : ScriptableObject
         ITEM,
         ENEMY,
         BOSSPROPS,
-        BOSS
+        BOSS,
+        CAST_ONTARGET,
+        CAST_SELF,
+        PROJECTILE,
     }
     public int condition;
     public TYPE _type;

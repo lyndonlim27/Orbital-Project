@@ -38,8 +38,11 @@ public class C_RangedState : StateClass
         {
             if (!enemy.onCooldown())
             {
-                enemy.ranged.Attack();
-                return;
+
+                List<string> rangedtriggers = enemy.enemyData.rangedtriggers;
+                int random = Random.Range(0, enemy.enemyData.rangedtriggers.Count);
+                enemy.animator.SetTrigger(rangedtriggers[random]);
+                enemy.inAnimation = true;
             }
             else
             {
