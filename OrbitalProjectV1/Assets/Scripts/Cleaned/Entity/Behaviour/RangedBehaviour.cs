@@ -38,7 +38,6 @@ public class RangedBehaviour : EntityBehaviour
     private void Update()
     {
         ReduceLifeSpan();
-        Debug.Log(lifeTime);
     }
 
     protected virtual void FixedUpdate()
@@ -112,11 +111,7 @@ public class RangedBehaviour : EntityBehaviour
 
     public void EnableAnimation()
     {
-        //if (rangedData._type == EntityData.TYPE.PROJECTILE)
-        //{
-        //    _animator.applyRootMotion = true;
-        //}
-        _animator.applyRootMotion = true;
+        //_animator.applyRootMotion = true;
         if (rangedData.loop)
         {
             if (rangedData.trigger != "")
@@ -173,19 +168,15 @@ public class RangedBehaviour : EntityBehaviour
      */
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        //Setting collision to true so that it will trigger the next state
-        //for bullet and thus play the explosion animation
         stopMovement();
         DisableAnimation();
         if (rangedData.impact_trigger != "")
         {
             _animator.SetBool(rangedData.impact_trigger, true);
-        } else
-        {
-            StartCoroutine(FadeOut());
-        }
+        } 
         GameObject go = collision.gameObject;
         ApplyDamage(go);
+        Defeated();
 
     }
 
@@ -257,14 +248,15 @@ public class RangedBehaviour : EntityBehaviour
 
     protected void followTarget()
     {
-        Debug.Log(_target);
         Vector2 point2Target = (Vector2)transform.position - (Vector2)_target.transform.position;
         point2Target.Normalize();
-        float value = Vector3.Cross(point2Target, transform.right).z;
-
-        _rb.angularVelocity = rotateSpeed * value;
+        Vector3 shootpoint = rangedData._type == EntityData.TYPE.PROJECTILE ? transform.right : -point2Target;
+        //float value = Vector3.Cross(point2Target, transform.right).z;
+        //_rb.angularVelocity = rotateSpeed * value;
         //_rb.velocity = transform.right * speed;
-        _rb.velocity = -point2Target * speed; 
+        float value = Vector3.Cross(point2Target, transform.right).z;
+        _rb.angularVelocity = rotateSpeed * value;
+        _rb.velocity = shootpoint* speed;
     }
 
 }

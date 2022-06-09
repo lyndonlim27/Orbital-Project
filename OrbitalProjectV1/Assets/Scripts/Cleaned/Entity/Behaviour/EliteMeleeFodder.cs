@@ -34,7 +34,8 @@ public class EliteMeleeFodder : EnemyBehaviour
 
     public override void resetCooldown()
     {
-        cooldown = 5f;
+        cooldown = 15f;
+        resetPosition();
         inAnimation = false;
        
 
@@ -66,14 +67,30 @@ public class EliteMeleeFodder : EnemyBehaviour
 
     private void DisableAttackComps()
     {
-        melee.gameObject.SetActive(false);
-        ranged.gameObject.SetActive(false);
+        if (melee != null)
+        {
+            melee.gameObject.SetActive(false);
+        }
+
+        if (ranged != null)
+        {
+            ranged.gameObject.SetActive(false);
+        }
+       
+        
     }
 
     private void EnableAttackComps()
     {
-        melee.gameObject.SetActive(true);
-        ranged.gameObject.SetActive(true);
+        if (melee != null)
+        {
+            melee.gameObject.SetActive(true);
+        }
+        if (ranged != null)
+        {
+            ranged.gameObject.SetActive(true);
+        }
+        
     }
 
     public void ResetDash()
@@ -90,8 +107,10 @@ public class EliteMeleeFodder : EnemyBehaviour
     {
         getNewRoamPosition();
         transform.parent.position = roamPos;
+        transform.localPosition = Vector3.zero;
         Dashcooldown = 30f;
         inAnimation = false;
+        EnableAttackComps();
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
     }
 

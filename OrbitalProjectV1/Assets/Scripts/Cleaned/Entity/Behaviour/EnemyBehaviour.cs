@@ -41,7 +41,6 @@ public class EnemyBehaviour : EntityBehaviour
     public int health;
     public float cooldown;
     public bool facingRight;
-    public bool inAnimation;
     public bool stage2;
     private MonsterTextLogic tl;
 
@@ -139,8 +138,13 @@ public class EnemyBehaviour : EntityBehaviour
 
     public virtual void resetPosition()
     {
-        transform.parent.position = transform.position;
-        transform.position = Vector3.zero;
+        if (animator.hasRootMotion)
+        {
+            transform.parent.position = transform.position;
+            transform.position = Vector3.zero;
+
+        }
+        
     }
 
     public virtual void resetCooldown()
@@ -331,6 +335,7 @@ public class EnemyBehaviour : EntityBehaviour
                 flipFace(player.transform.position);
                 break;
             case ANIMATION_CODE.ATTACK_END:
+                resetPosition();
                 stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
                 inAnimation = false;
                 break;
@@ -339,7 +344,8 @@ public class EnemyBehaviour : EntityBehaviour
                 SpellAttack();
                 break;
             case ANIMATION_CODE.SHOOT_START:
-                flipFace(player.transform.position);
+                //flipFace(player.transform.position);
+                //resetPosition();
                 Shoot();
                 break;
             case ANIMATION_CODE.CAST_END:

@@ -4,8 +4,10 @@ using UnityEngine;
 
 public abstract class ActivatorBehaviour : EntityBehaviour
 {
-    [SerializeField] protected SwitchData data;
+    public SwitchData data;
     public LayerMask layerMask;
+    public Animator animator;
+    public DetectionScript detectionScript;
     /*
  
     public abstract void OnTriggerExit2D();

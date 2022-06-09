@@ -34,17 +34,17 @@ class MeleeState : StateClass
     private void triggerAttack()
     {
 
-        EliteMonsterA eliteMonsterA = (EliteMonsterA)enemy;
-        if (eliteMonsterA != null)
-        {
-            if (eliteMonsterA.hpBarUI.HalfHP() && eliteMonsterA.HardenCooldown == 0)
-            {
-                stateMachine.ChangeState(StateMachine.STATE.RECOVERY, null);
-            }
+        //EliteMonsterA eliteMonsterA = (EliteMonsterA)enemy;
+        //if (eliteMonsterA != null)
+        //{
+        //    if (eliteMonsterA.hpBarUI.HalfHP() && eliteMonsterA.HardenCooldown == 0)
+        //    {
+        //        stateMachine.ChangeState(StateMachine.STATE.RECOVERY, null);
+        //    }
 
-        }
+        //}
 
-        else if (enemy.player.isDead())
+        if (enemy.player.isDead())
         {
             stateMachine.ChangeState(StateMachine.STATE.STOP, null);
         }

@@ -19,6 +19,8 @@ public class StateMachine
         ENRAGED3,
         ENRAGED4,
         TELEPORT,
+        TRAPACTIVE,
+        TRAPINACTIVE
 
     }
     public STATE currState { get; private set; }

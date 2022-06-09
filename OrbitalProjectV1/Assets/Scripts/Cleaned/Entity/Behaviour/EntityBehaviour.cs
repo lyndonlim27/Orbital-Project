@@ -10,6 +10,8 @@ public abstract class EntityBehaviour : MonoBehaviour
 
     protected PoolManager poolManager;
 
+    public bool inAnimation;
+
     public abstract void SetEntityStats(EntityData stats);
 
     public abstract void Defeated();

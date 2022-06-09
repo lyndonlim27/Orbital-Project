@@ -23,6 +23,12 @@ public class EliteRangedFodder : EnemyBehaviour
         stateMachine.Init(StateMachine.STATE.IDLE, null);
     }
 
+    public override void Update()
+    {
+        base.Update();
+        Debug.Log("this is state: " + stateMachine.currState);
+    }
+
     public override void resetCooldown()
     {
         cooldown = 5f;
