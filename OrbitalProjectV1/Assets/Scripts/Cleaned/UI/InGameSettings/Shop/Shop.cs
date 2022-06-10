@@ -10,6 +10,7 @@ public class Shop : MenuBehaviour
     private TextMeshProUGUI _promptText;
     private DebuffBehaviour _debuffSkill;
     private BuffBehaviour _buffSkill;
+    private AttackSkillBehaviour _attackSkill;
     private bool Unlocked;
     private Player _player;
     private AudioSource _audioSource;
@@ -20,6 +21,7 @@ public class Shop : MenuBehaviour
     {
         _debuffSkill = FindObjectOfType<DebuffBehaviour>();
         _buffSkill = FindObjectOfType<BuffBehaviour>();
+        _attackSkill = FindObjectOfType<AttackSkillBehaviour>();
         _player = FindObjectOfType<Player>();
         _promptText = _promptImage.GetComponentInChildren<TextMeshProUGUI>();
         _promptText.text = "";
@@ -102,6 +104,26 @@ public class Shop : MenuBehaviour
             _promptText.text = "Skill purchased";
             _buffSkill.ChangeSkill(buffSkillName);
             _player.UseGold(Resources.Load<SkillData>("Data/SkillData/" + buffSkillName).goldCost);
+            _audioSource.Play();
+        }
+        StartCoroutine(UpdateText());
+    }
+
+    public void AddAttackSkill(string attackSkillName)
+    {
+        if (_attackSkill.GetSkillData() != null && attackSkillName == _attackSkill.GetSkillData().skillName)
+        {
+            _promptText.text = "Skill has already been purchased";
+        }
+        else if (Resources.Load<SkillData>("Data/SkillData/" + attackSkillName).goldCost > _player.currGold)
+        {
+            _promptText.text = "Not enough gold";
+        }
+        else
+        {
+            _promptText.text = "Skill purchased";
+            _attackSkill.ChangeSkill(attackSkillName);
+            _player.UseGold(Resources.Load<SkillData>("Data/SkillData/" + attackSkillName).goldCost);
             _audioSource.Play();
         }
         StartCoroutine(UpdateText());

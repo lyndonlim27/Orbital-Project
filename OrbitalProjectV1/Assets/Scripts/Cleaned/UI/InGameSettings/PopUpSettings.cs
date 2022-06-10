@@ -7,11 +7,17 @@ public class PopUpSettings : MenuBehaviour
 
     private Player _player;
     private SkillManager _skillManager;
+    private AttackSkillBehaviour _attackSkillBehaviour;
+    private DebuffBehaviour _debuffBehaviour;
+    private BuffBehaviour _buffBehaviour;
 
     private void Awake()
     {
         _player = FindObjectOfType<Player>(true);
         _skillManager = FindObjectOfType<SkillManager>(true);
+        _debuffBehaviour = FindObjectOfType<DebuffBehaviour>(true);
+        _buffBehaviour = FindObjectOfType<BuffBehaviour>(true);
+        _attackSkillBehaviour = FindObjectOfType<AttackSkillBehaviour>(true);
     }
 
 
@@ -25,6 +31,9 @@ public class PopUpSettings : MenuBehaviour
         this.transform.GetComponentInChildren<Shop>(true).Inactive();
         _player.GetCurrentRoom().PauseGame();
         _skillManager.enabled = false;
+        _debuffBehaviour.enabled = false;
+        _buffBehaviour.enabled = false;
+        _attackSkillBehaviour.enabled = false;
     }
 
     public override void Inactive()
@@ -32,5 +41,8 @@ public class PopUpSettings : MenuBehaviour
         this.gameObject.SetActive(false);
         _player.GetCurrentRoom().ResumeGame();
         _skillManager.enabled = true;
+        _debuffBehaviour.enabled = true;
+        _buffBehaviour.enabled = true;
+        _attackSkillBehaviour.enabled = true;
     }
 }

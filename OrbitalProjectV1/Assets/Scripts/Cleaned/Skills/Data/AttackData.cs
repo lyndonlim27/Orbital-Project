@@ -2,21 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu]
 public class AttackData :SkillData
 {
+    public int numOfProjectiles;
+    public int damage;
 
-    /*
-     * Not implemented yet
-     */
-    // Start is called before the first frame update
-    void Start()
+    public enum ATTACK_TYPE
     {
-        
+        FIRE,
+        SPINNING_DAGGER
     }
+    public ATTACK_TYPE attackType;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
+
