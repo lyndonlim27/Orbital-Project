@@ -576,6 +576,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -1.2036133
       objectReference: {fileID: 0}
+    - target: {fileID: 8815217350466204732, guid: 88365c6661b4948548575e15e51f0204, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 58.102726
+      objectReference: {fileID: 0}
     - target: {fileID: 8815217350946591050, guid: 88365c6661b4948548575e15e51f0204, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -8443,7 +8447,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7777778, y: 1}
+    m_SensorSize: {x: 1.7781403, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -18522,8 +18526,12 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1924427488}
-    - target: {fileID: 263835013, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
-      propertyPath: m_PlayOnAwake
+    - target: {fileID: 951484425, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 951484425, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4374332775865201289, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
@@ -18586,12 +18594,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5212798172772644133, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
-      propertyPath: m_PlayOnAwake
+    - target: {fileID: 9015927139262890778, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+      propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6312702700468204076, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
-      propertyPath: m_PlayOnAwake
+    - target: {fileID: 9015927139262890778, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

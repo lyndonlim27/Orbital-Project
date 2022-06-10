@@ -141,4 +141,10 @@ public class Shop : MenuBehaviour
         _promptImage.gameObject.SetActive(false);
     }
 
+
+    public override void Active()
+    {
+        base.Active();
+        _promptImage.gameObject.SetActive(false);
+    }
 }

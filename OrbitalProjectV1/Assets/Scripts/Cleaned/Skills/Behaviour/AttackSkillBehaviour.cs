@@ -77,7 +77,7 @@ public class AttackSkillBehaviour : SkillBehaviour
         Vector3 direction1 = new Vector3(0, -1, 0);
         Vector3 direction2 = new Vector3(-1, 1, 0);
         Vector3 direction3 = new Vector3(1, 1, 0);
-        GameObject fire1 = Instantiate(_lightningPrefab, _player.transform.position + direction1 * 1, Quaternion.Euler(0, 0, 90));
+        GameObject fire1 = Instantiate(_lightningPrefab, _player.transform.position + direction1 * 1, Quaternion.Euler(0, 0, 270));
         GameObject fire2 = Instantiate(_lightningPrefab, _player.transform.position + direction2 * 1, Quaternion.Euler(0, 0, 135));
         GameObject fire3 = Instantiate(_lightningPrefab, _player.transform.position + direction3 * 1, Quaternion.Euler(0, 0, 45));
         fire1.GetComponent<Rigidbody2D>().velocity = direction1 * 3;

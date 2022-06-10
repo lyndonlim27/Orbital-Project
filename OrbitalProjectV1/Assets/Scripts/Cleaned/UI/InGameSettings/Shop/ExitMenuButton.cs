@@ -10,6 +10,6 @@ public class ExitMenuButton : MonoBehaviour
     void Start()
     {
         _popUpSettings = GetComponentInParent<PopUpSettings>();
-        GetComponent<Button>().onClick.AddListener(_popUpSettings.Inactive);
+        GetComponent<Button>().onClick.AddListener(_popUpSettings.Inactive);;
     }
 }

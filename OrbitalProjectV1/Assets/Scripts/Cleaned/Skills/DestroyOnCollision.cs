@@ -31,6 +31,6 @@ public class DestroyOnCollision : MonoBehaviour
                 collision.gameObject.GetComponent<EnemyBehaviour>().Defeated();
             }
         }
-        Destroy(this.gameObject);
+        GetComponent<Animator>().SetBool("Explode", true);
     }
 }
