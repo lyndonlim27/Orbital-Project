@@ -13,4 +13,5 @@ public class DebuffData : SkillData
         STUN
     }
     public DEBUFF_TYPE debuffType;
+    public ParticleSystem particleSystem;
 }

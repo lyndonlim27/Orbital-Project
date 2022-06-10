@@ -6,8 +6,6 @@ using UnityEngine.UI;
 public class DebuffBehaviour : SkillBehaviour
 {
     private DebuffData _debuffData;
-    private ParticleSystem _slowParticle;
-    private ParticleSystem _stunParticle;
     private Animator _debuffAnimator;
 
     // Start is called before the first frame update
@@ -16,9 +14,6 @@ public class DebuffBehaviour : SkillBehaviour
         base.Start();
         _debuffAnimator = GameObject.Find("DebuffAnimator").GetComponent<Animator>();
         _debuffData = (DebuffData)_skillData;
-        _slowParticle = Resources.Load<ParticleSystem>("ParticlePrefab/SlowDebuff");
-        _stunParticle = Resources.Load<ParticleSystem>("ParticlePrefab/StunDebuff");
-
     }
 
     // Update is called once per frame
@@ -60,7 +55,7 @@ public class DebuffBehaviour : SkillBehaviour
         {
             enemy.rb.constraints = RigidbodyConstraints2D.FreezeAll;
             enemy.GetComponent<EnemyBehaviour>().enabled = false;
-            Instantiate(_stunParticle, enemy.transform);
+            Instantiate(_debuffData.particleSystem, enemy.transform);
         }
         yield return new WaitForSeconds(_debuffData.duration);
         foreach (EnemyBehaviour enemy in _player.GetCurrentRoom().GetComponentsInChildren<EnemyBehaviour>())
@@ -89,7 +84,7 @@ public class DebuffBehaviour : SkillBehaviour
                 //enemy.GetComponentInChildren<RangedComponent>().spell.rangedData.speed *= 
                // enemy.GetComponentInChildren<RangedComponent>().bullet.rangedData.speed *= _debuffData.slowAmount;
             }
-            Instantiate(_slowParticle, enemy.transform);
+            Instantiate(_debuffData.particleSystem, enemy.transform);
             Debug.Log("SLOW");
         }
     }

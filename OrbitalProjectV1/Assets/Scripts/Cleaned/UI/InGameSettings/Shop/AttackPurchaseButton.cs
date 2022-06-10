@@ -29,8 +29,8 @@ public class AttackPurchaseButton : SkillPurchaseButton
             case "Fireball1Data":
                 if (!player.GetPlayerData().ranged)
                 {
-                    _attackData = Resources.Load<AttackData>("Data/SkillData/Speed1Data");
-                    _skillTitle = "Dagger Spin  (Level 1)";
+                    _attackData = Resources.Load<AttackData>("Data/SkillData/Shuriken1Data");
+                    _skillTitle = "Shuriken (Level 1)";
                 }
                 else
                 {
@@ -40,8 +40,8 @@ public class AttackPurchaseButton : SkillPurchaseButton
             case "Fireball2Data":
                 if (!player.GetPlayerData().ranged)
                 {
-                    _attackData = Resources.Load<AttackData>("Data/SkillData/Speed2Data");
-                    _skillTitle = "Dagger Spin (Level 2)";
+                    _attackData = Resources.Load<AttackData>("Data/SkillData/Shuriken2Data");
+                    _skillTitle = "Shuriken (Level 2)";
                 }
                 else
                 {
@@ -51,8 +51,8 @@ public class AttackPurchaseButton : SkillPurchaseButton
             case "Fireball3Data":
                 if (!player.GetPlayerData().ranged)
                 {
-                    _attackData = Resources.Load<AttackData>("Data/SkillData/Speed3Data");
-                    _skillTitle = "Dagger Spin (Level 3)";
+                    _attackData = Resources.Load<AttackData>("Data/SkillData/Shuriken3Data");
+                    _skillTitle = "Shuriken (Level 3)";
                 }
                 else
                 {
@@ -68,17 +68,18 @@ public class AttackPurchaseButton : SkillPurchaseButton
         {
             textDisplay.text = _skillTitle + "\n" +
                 "Damage: - " + _attackData.damage + " HP" + "\n" +
-                "Fireballs + " + _attackData.numOfProjectiles + "\n" +
+                "Fireballs: " + _attackData.numOfProjectiles + "\n" +
                 "Cooldown: " + _attackData.cooldown + " sec" + "\n" +
                 "Mana Cost: " + _attackData.manaCost + " MP" + "\n" +
                 "Cost: " + _attackData.goldCost + " gold" + "\n" +
                 "-Shoots out " + _attackData.numOfProjectiles + " fireballs-";
         }
-        else if (_skillTitle.Contains("Dagger"))
+        else if (_skillTitle.Contains("Shuriken"))
         {
             textDisplay.text = _skillTitle + "\n" +
                 "Damage: + " + _attackData.damage + " HP" + "\n" +
-                "Fireballs + " + _attackData.numOfProjectiles + "\n" +
+                "Shurikens: " + _attackData.numOfProjectiles + "\n" +
+                "Duration: " + _attackData.duration + "\n" +
                 "Cooldown: " + _attackData.cooldown + " sec" + "\n" +
                 "Mana Cost: " + _attackData.manaCost + " MP" + "\n" +
                 "Cost: " + _attackData.goldCost + " gold" + "\n" +
