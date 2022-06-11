@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TheEnd : MonoBehaviour
 {
-    [SerializeField] private LoadProjMainScene _loadMainMenu;
+    [SerializeField] private LoadMainScene _loadMainMenu;
 
     private void OnTriggerEnter2D()
     {

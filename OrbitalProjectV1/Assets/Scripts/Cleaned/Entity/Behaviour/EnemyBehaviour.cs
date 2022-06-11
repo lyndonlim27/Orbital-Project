@@ -6,6 +6,7 @@ using Pathfinding;
 //[RequireComponent(typeof(EnemyData), typeof(ConsumableItemData))]
 public class EnemyBehaviour : EntityBehaviour
 {
+    [SerializeField] private FodderHealthBar _healthBar;
 
     //animation handler;
     public enum ANIMATION_CODE
@@ -104,7 +105,6 @@ public class EnemyBehaviour : EntityBehaviour
         }
         stateMachine.Update();
         tick();
-
     }
 
     void OnPathComplete(Pathfinding.Path p)
@@ -290,6 +290,17 @@ public class EnemyBehaviour : EntityBehaviour
         _tf.x *= -1;
         tl.transform.localScale = _tf;
         facingRight = !facingRight;
+
+        Vector3 scale = GetComponentInChildren<MonsterTextLogic>().transform.localScale;
+        scale.x *= -1;
+        GetComponentInChildren<MonsterTextLogic>().transform.localScale = scale;
+        if(_healthBar != null)
+        {
+            Vector3 scaleHealthBar = _healthBar.transform.localScale;
+            scaleHealthBar.x *= -1;
+            _healthBar.transform.localScale = scaleHealthBar;
+        }
+
     }
 
     //public void RotateTowardsTarget(Vector3 pos)
@@ -387,6 +398,7 @@ public class EnemyBehaviour : EntityBehaviour
 
     public override void TakeDamage(int damage)
     {
+        health--;
         _flicker.Flicker(this);
         base.TakeDamage(damage);
         animator.SetTrigger("Hurt");
@@ -462,7 +474,7 @@ public class EnemyBehaviour : EntityBehaviour
 
     public override void SetEntityStats(EntityData stats)
     {
-        this.enemyData = (EnemyData)stats;
+        this.enemyData = Instantiate((EnemyData) stats);
     }
 
     public override EntityData GetData()

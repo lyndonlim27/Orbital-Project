@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f6d1944a4910414d97139ecd48b6ad4, type: 3}
+  m_Name: Heal1Data
+  m_EditorClassIdentifier: 
+  skillType: 1
+  cooldown: 20
+  duration: 0
+  manaCost: 20
+  sprite: {fileID: 21300000, guid: 02eee9b648b64420c9ffc01b9304dde4, type: 3}
+  skillName: Heal1Data
+  goldCost: 20
+  speedAmount: 0
+  speedDuration: 0
+  healAmount: 20
+  buffType: 1

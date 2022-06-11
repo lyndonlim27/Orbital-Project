@@ -1,0 +1,150 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
+
+public class Shop : MenuBehaviour
+{
+    [SerializeField] private Image _promptImage;
+    private TextMeshProUGUI _promptText;
+    private DebuffBehaviour _debuffSkill;
+    private BuffBehaviour _buffSkill;
+    private AttackSkillBehaviour _attackSkill;
+    private bool Unlocked;
+    private Player _player;
+    private AudioSource _audioSource;
+
+
+    // Start is called before the first frame update
+    protected override void Start()
+    {
+        _debuffSkill = FindObjectOfType<DebuffBehaviour>();
+        _buffSkill = FindObjectOfType<BuffBehaviour>();
+        _attackSkill = FindObjectOfType<AttackSkillBehaviour>();
+        _player = FindObjectOfType<Player>();
+        _promptText = _promptImage.GetComponentInChildren<TextMeshProUGUI>();
+        _promptText.text = "";
+        _promptImage.gameObject.SetActive(false);
+        _audioSource = GetComponent<AudioSource>();
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    /** 
+     * Player Upgrades.
+     */
+    private void AddHealth()
+    {
+        
+    }
+
+
+    private void AddSpeed()
+    {
+       
+    }
+
+    public void AddDebuffSkill(string debuffSkillName)
+    {
+        if (_debuffSkill.GetSkillData() != null && debuffSkillName == _debuffSkill.GetSkillData().skillName)
+        {
+            _promptText.text = "Skill has already been purchased";
+        }
+        else if (Resources.Load<SkillData>("Data/SkillData/" + debuffSkillName).goldCost > _player.currGold)
+        {
+            _promptText.text = "Not enough gold";
+        }
+        else
+        {
+            _promptText.text = "Skill purchased";
+            _debuffSkill.ChangeSkill(debuffSkillName);
+            _player.UseGold(Resources.Load<SkillData>("Data/SkillData/" + debuffSkillName).goldCost);
+            _audioSource.Play();
+            foreach (DebuffPurchaseButton debuff in GetComponentsInChildren<DebuffPurchaseButton>())
+            {
+                if (debuffSkillName.Contains("Slow"))
+                {
+                    if (debuff.GetDebuffName().Contains("Stun"))
+                    { 
+                        debuff.GetComponent<Image>().color = new Color32(96, 96, 96, 255);
+                        debuff.GetComponent<Button>().enabled = false;
+                    }
+                }
+                else
+                {
+                    if (debuff.GetDebuffName().Contains("Slow"))
+                    {
+                        debuff.GetComponent<Image>().color = new Color32(96, 96, 96, 255);
+                        debuff.GetComponent<Button>().enabled = false;
+                    }
+                }
+            }
+        }
+        StartCoroutine(UpdateText());
+    }
+
+    public void AddBuffSkill(string buffSkillName)
+    {
+        if (_buffSkill.GetSkillData() != null && buffSkillName == _buffSkill.GetSkillData().skillName)
+        {
+            _promptText.text = "Skill has already been purchased";
+        }
+        else if (Resources.Load<SkillData>("Data/SkillData/" + buffSkillName).goldCost > _player.currGold)
+        {
+            _promptText.text = "Not enough gold";
+        }
+        else
+        {
+            _promptText.text = "Skill purchased";
+            _buffSkill.ChangeSkill(buffSkillName);
+            _player.UseGold(Resources.Load<SkillData>("Data/SkillData/" + buffSkillName).goldCost);
+            _audioSource.Play();
+        }
+        StartCoroutine(UpdateText());
+    }
+
+    public void AddAttackSkill(string attackSkillName)
+    {
+        if (_attackSkill.GetSkillData() != null && attackSkillName == _attackSkill.GetSkillData().skillName)
+        {
+            _promptText.text = "Skill has already been purchased";
+        }
+        else if (Resources.Load<SkillData>("Data/SkillData/" + attackSkillName).goldCost > _player.currGold)
+        {
+            _promptText.text = "Not enough gold";
+        }
+        else
+        {
+            _promptText.text = "Skill purchased";
+            _attackSkill.ChangeSkill(attackSkillName);
+            _player.UseGold(Resources.Load<SkillData>("Data/SkillData/" + attackSkillName).goldCost);
+            _audioSource.Play();
+        }
+        StartCoroutine(UpdateText());
+    }
+
+    private void AddMana()
+    {
+
+    }
+
+    private IEnumerator UpdateText()
+    {
+        _promptImage.gameObject.SetActive(true);
+        yield return new WaitForSeconds(1);
+        _promptImage.gameObject.SetActive(false);
+    }
+
+
+    public override void Active()
+    {
+        base.Active();
+        _promptImage.gameObject.SetActive(false);
+    }
+}

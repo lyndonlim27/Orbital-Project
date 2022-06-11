@@ -9,7 +9,10 @@ public class PlayerData : EntityData
 
     [Header("Player properties")]
     public int maxHealth;
+    public int maxMana;
     public int selfDamage;
+    public int gold;
+    public bool ranged;
 
     [Header("Movement")]
     public float _moveSpeed;

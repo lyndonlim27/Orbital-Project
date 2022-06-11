@@ -9,8 +9,8 @@ public class PCRoom1 : RoomManager
     // Start is called before the first frame update
     void Start()
     {
-        FindObjectOfType<PopUpSettings>(true).PopUpSettingsActive();
-        FindObjectOfType<SubMenu>().ControlMenuActive();
+        FindObjectOfType<PopUpSettings>(true).Active();
+        FindObjectOfType<ControlMenu>().Active();
         _tl = GameObject.FindObjectOfType<TypingTestTL>(true);
     }
 

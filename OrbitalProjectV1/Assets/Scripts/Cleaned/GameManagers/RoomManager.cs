@@ -101,6 +101,7 @@ public abstract class RoomManager : MonoBehaviour
             {
                 activated = true;
                 dialMgr.SetCurrentRoom(this);
+                player.SetCurrentRoom(this);
                 SpawnObjects(_EntityData);
                 InitializeAStar();
                 //AddConditionalNPCS();
@@ -443,10 +444,8 @@ public abstract class RoomManager : MonoBehaviour
      */
     public void PauseGame()
     {
-
         foreach (EnemyBehaviour _enemy in enemies)
         {
-
             _enemy.enabled = false;
             _enemy.animator.enabled = false;
         }

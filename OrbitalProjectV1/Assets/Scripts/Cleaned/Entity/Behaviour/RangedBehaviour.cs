@@ -142,7 +142,7 @@ public class RangedBehaviour : EntityBehaviour
         {
             this.rangedData = rangedD;
         }
-    }
+    } 
 
     public override void Defeated()
     {

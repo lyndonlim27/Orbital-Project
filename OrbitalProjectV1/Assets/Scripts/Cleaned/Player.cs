@@ -18,15 +18,19 @@ public class Player : EntityBehaviour
     private float _timeDelay = 0;
     private DialogueManager dialMgr;
     private int _currHealth;
+    public int currMana { get; private set;}
     private Weapon _currWeapon;
     private WeaponPickup _weaponManager;
     private DamageFlicker _flicker;
-    private int _currGold;
+    private GoldCounter _goldCounter;
+    public int currGold { get; private set;}
+    private float _moveSpeed;
 
 
     [Header("Player UI")]
     [SerializeField] private GameOver _gameOver;
-    [SerializeField] private HealthBar healthBar;
+    [SerializeField] private HealthBar _healthBar;
+    [SerializeField] private ManaBar _manaBar;
     public bool inCombat { get; private set; }
 
     protected override void Awake()
@@ -46,7 +50,11 @@ public class Player : EntityBehaviour
     void Start()
     {
         _currHealth = playerData.maxHealth;
-        healthBar.SetMaxHealth(playerData.maxHealth);
+        currMana = playerData.maxMana;
+        currGold = playerData.gold;
+        _healthBar.SetMaxHealth(playerData.maxHealth);
+        _manaBar.SetMaxMana(playerData.maxMana);
+        _moveSpeed = playerData._moveSpeed;
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _weaponManager = this.gameObject.GetComponentInChildren<WeaponPickup>();
@@ -54,6 +62,8 @@ public class Player : EntityBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _flicker = GameObject.FindObjectOfType<DamageFlicker>();
         dialMgr = GameObject.FindObjectOfType<DialogueManager>();
+        _goldCounter = FindObjectOfType<GoldCounter>(true);
+        _goldCounter.GoldUpdate();
     }
 
     // Update is called once per frame
@@ -114,7 +124,7 @@ public class Player : EntityBehaviour
         }*/
 
         
-        transform.position = (Vector2) transform.position +_movement.normalized * playerData._moveSpeed * Time.fixedDeltaTime;
+        transform.position = (Vector2) transform.position +_movement.normalized * _moveSpeed * Time.fixedDeltaTime;
         //_rb.MovePosition(_rb.position + _movement.normalized * _moveSpeed * Time.fixedDeltaTime);
     }
 
@@ -123,7 +133,7 @@ public class Player : EntityBehaviour
     public override void TakeDamage(int damageTaken)
     {
         _currHealth -= damageTaken;
-        healthBar.SetHealth(_currHealth);
+        _healthBar.SetHealth(_currHealth);
         _flicker.Flicker(this);
         if (_currHealth <= 0)
         {
@@ -135,13 +145,20 @@ public class Player : EntityBehaviour
     {
       
         _currHealth = Math.Min(_currHealth+health,100);
-        healthBar.SetHealth(_currHealth);
+        _healthBar.SetHealth(_currHealth);
         
     }
 
     public void AddGold(int gold)
     {
-        _currGold += gold;
+        currGold += gold;
+        _goldCounter.GoldUpdate();
+    }
+
+    public void UseGold(int gold)
+    {
+        currGold -= gold;
+        _goldCounter.GoldUpdate();
     }
 
     //When player shoot, player direction faces the target enemy
@@ -190,4 +207,30 @@ public class Player : EntityBehaviour
     }
 
 
+    public void UseMana(int manaCost)
+    {
+        currMana -= manaCost;
+        _manaBar.SetMana(currMana);
+    }
+
+    public void AddMana(int mana)
+    {
+        currMana += mana;
+        _manaBar.SetMana(currMana);
+    }
+
+    public void SetSpeed(float speed)
+    {
+        _moveSpeed += speed;
+    }
+
+    public PlayerData GetPlayerData()
+    {
+        return playerData;
+    }
+
+    public RoomManager GetCurrentRoom()
+    {
+        return currentRoom;
+    }
 }
