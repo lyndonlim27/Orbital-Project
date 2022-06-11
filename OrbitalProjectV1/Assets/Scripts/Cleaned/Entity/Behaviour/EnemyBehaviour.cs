@@ -26,7 +26,7 @@ public class EnemyBehaviour : EntityBehaviour
     public StateMachine stateMachine { get; protected set; }
     public MeleeComponent melee { get; protected set; }
     public RangedComponent ranged { get; protected set; }
-    public Rigidbody2D _rb { get; private set; }
+    public Rigidbody2D rb { get; protected set; }
     public Animator animator { get; protected set; }
     public bool stage2;
  
@@ -177,8 +177,8 @@ public class EnemyBehaviour : EntityBehaviour
 
     public void getNewRoamPosition()
     {
-        roamPos = new Vector2(Random.Range(-5f, 5f), Random.Range(-5f, 5f));
-        //roamPos = this.currentRoom.GetRandomPoint();
+        //roamPos = new Vector2(Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+        roamPos = this.currentRoom.GetRandomPoint();
 
 
     }

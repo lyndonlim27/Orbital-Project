@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7356103435668591650}
   - component: {fileID: -3729032315079892033}
   - component: {fileID: 6009919396608444390}
+  - component: {fileID: 4807834317116913561}
   m_Layer: 0
   m_Name: Unlockable Door
   m_TagString: Untagged
@@ -222,6 +223,7 @@ MonoBehaviour:
   _ac3: {fileID: 0}
   _ac4: {fileID: 0}
   _ac5: {fileID: 0}
+  audios: []
 --- !u!82 &6009919396608444390
 AudioSource:
   m_ObjectHideFlags: 0
@@ -318,3 +320,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4807834317116913561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8705168760857146373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d41e625bb5df48a293a47824284fe3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDead: 0
+  inAnimation: 0

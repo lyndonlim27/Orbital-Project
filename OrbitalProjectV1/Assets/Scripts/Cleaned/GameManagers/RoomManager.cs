@@ -39,11 +39,12 @@ public abstract class RoomManager : MonoBehaviour
     //[SerializeField] GameObject[] enemyPrefabs;
     //[SerializeField] EntityBehaviour[] entityPrefabs;
  //   [SerializeField] NPCBehaviour NPCPrefab;
-    [SerializeField] protected GameObject[] doors;
+    [SerializeField] protected DoorBehaviour[] doors;
     [SerializeField] protected LayerMask layerMask;
     [SerializeField] protected Vector2 roomSize;
     [SerializeField] private Color _colour;
-    
+    protected DoorManager doorManager;
+
 
     /**
      * Data.
@@ -62,6 +63,7 @@ public abstract class RoomManager : MonoBehaviour
     protected DialogueManager dialMgr;
     private TypingTestTL typingTestTL;
     private Collider2D _collider;
+    
     //private AstarPath AstarGraph;
 
 
@@ -89,6 +91,7 @@ public abstract class RoomManager : MonoBehaviour
         typingTestTL = GameObject.FindObjectOfType<TypingTestTL>(true);
         popUpSettings = FindObjectOfType<PopUpSettings>(true);
         poolManager = FindObjectOfType<PoolManager>(true);
+        doorManager = FindObjectOfType<DoorManager>(true);
 
     }
 
@@ -106,7 +109,9 @@ public abstract class RoomManager : MonoBehaviour
                 InitializeAStar();
                 //AddConditionalNPCS();
             }
-        } 
+        }
+
+        Debug.Log(player.GetCurrentRoom());
     }
     private void DeActivateAStar()
     {
@@ -151,25 +156,15 @@ public abstract class RoomManager : MonoBehaviour
 
     protected virtual void RoomChecker()
     {
-        Debug.Log(CheckEnemiesDead());
-        if (conditions.Count == 0 && CheckEnemiesDead() && _collider != null)
+        if (CanProceed())
         {
-            foreach (GameObject door in doors)
+            for (int i = 0; i < doors.Length; i++)
             {
-                door.GetComponent<Animator>().enabled = true;
-                door.GetComponent<Animator>().SetBool(door.name.Substring(0,4), true);
-                door.GetComponent<Collider2D>().enabled = false;
-            }
-        }
-        else
-        {
-            foreach (GameObject door in doors)
-            {
-                door.GetComponent<Animator>().enabled = false;
-                door.GetComponent<Collider2D>().enabled = true;
+                doorManager.clearDoor(this,i);
             }
         }
     }
+
 
     /** 
      * Get a random position inside the room.
@@ -267,56 +262,7 @@ public abstract class RoomManager : MonoBehaviour
         Vector2 pos = data.random ? GetRandomPoint() : data.pos;
         EntityBehaviour entity = poolManager.GetObject(data._type);
         InitializeEntity(data, pos, entity);
-        //switch (data._type)
-        //{
-        //    default:
-        //    case EntityData.TYPE.OBJECT:
-
-        //        entityPrefabs[0].SetEntityStats(data);
-        //        entityPrefabs[0].GetComponent<SpriteRenderer>().sprite = data.sprite;
-        //        Instantiate(entityPrefabs[0], pos, Quaternion.identity).SetCurrentRoom(this);
-        //        break;
-        //    case EntityData.TYPE.ITEM:
-        //        entityPrefabs[1].SetEntityStats(data);
-        //        entityPrefabs[1].GetComponent<SpriteRenderer>().sprite = data.sprite;
-        //        Instantiate(entityPrefabs[1], pos, Quaternion.identity).SetCurrentRoom(this);
-        //        break;
-        //    case EntityData.TYPE.PRESSURE_SWITCH:
-        //        entityPrefabs[2].SetEntityStats(data);
-        //        entityPrefabs[2].GetComponent<SpriteRenderer>().sprite = data.sprite;
-        //        Instantiate(entityPrefabs[2], pos, Quaternion.identity).SetCurrentRoom(this);
-        //        break;
-        //    case EntityData.TYPE.SWITCH:
-        //        entityPrefabs[3].SetEntityStats(data);
-        //        entityPrefabs[3].GetComponent<SpriteRenderer>().sprite = data.sprite;
-        //        Instantiate(entityPrefabs[3], pos, Quaternion.identity).SetCurrentRoom(this);
-        //        break;
-        //    case EntityData.TYPE.NPC:
-        //        entityPrefabs[4].SetEntityStats(data);
-        //        entityPrefabs[4].GetComponent<SpriteRenderer>().sprite = data.sprite;
-        //        NPCBehaviour npc = (NPCBehaviour)Instantiate(entityPrefabs[4], pos, Quaternion.identity);
-        //        npc.SetCurrentRoom(this);
-        //        npcs.Add(npc);
-        //        break;
-        //    case EntityData.TYPE.ENEMY:
-        //        Debug.Log("hmm");
-        //        Debug.Log("enemy pos" + pos);
-        //        enemyPrefabs[0].SetEntityStats(data);
-        //        enemyPrefabs[0].GetComponent<SpriteRenderer>().sprite = data.sprite;
-        //        EnemyBehaviour emf = Instantiate(enemyPrefabs[0], Vector3.zero, Quaternion.identity);
-        //        emf.SetCurrentRoom(this);
-        //        SettingUpEnemy(data, pos, emf);
-        //        break;
-        //    case EntityData.TYPE.BOSS:
-        //        enemyPrefabs[1].GetComponent<EnemyBehaviour>().SetEntityStats(data);
-        //        enemyPrefabs[1].GetComponent<SpriteRenderer>().sprite = data.sprite;
-        //        EliteMonsterA emA = (EliteMonsterA)Instantiate(enemyPrefabs[1], data.pos, Quaternion.identity);
-        //        emA.SetCurrentRoom(this);
-        //        enemies.Add(emA);
-        //        break;
-
-
-        //}
+        
     }
 
     private void SettingUpEnemy(EnemyData data, Vector2 pos, EnemyBehaviour emf)
@@ -361,6 +307,10 @@ public abstract class RoomManager : MonoBehaviour
         entity.SetCurrentRoom(this);
     }
 
+    public DoorBehaviour[] GetDoors()
+    {
+        return this.doors;
+    }
 
 
     /**
@@ -476,19 +426,32 @@ public abstract class RoomManager : MonoBehaviour
         
     }*/
 
-    
 
-
-    private void OnTriggerExit2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log(collision.tag);
         if (collision.CompareTag("Player"))
         {
-            if (conditions.Count == 0)
-            {
-                this.enabled = false;
-            }
+            doorManager.LockDoorsOnAllLevels();
         }
     }
+
+    //private void OnTriggerExit2D(Collider2D collision)
+    //{
+    //    if (collision.CompareTag("Player"))
+    //    {
+    //        playerInRoom = false;
+    //        if (CanProceed())
+    //        {
+    //            Debug.Log("DAFuq?");
+    //            foreach(DoorBehaviour door in doors)
+    //            {
+    //                door.LockDoor();
+    //            }
+    //            this.enabled = false;
+    //        }
+    //    }
+    //}
 
     private void OnDrawGizmos()
     {

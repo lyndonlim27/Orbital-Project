@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class EntityBehaviour : MonoBehaviour
 {
-    protected SpriteRenderer spriteRenderer;
+    public SpriteRenderer spriteRenderer { get; protected set; }
 
     protected RoomManager currentRoom;
 

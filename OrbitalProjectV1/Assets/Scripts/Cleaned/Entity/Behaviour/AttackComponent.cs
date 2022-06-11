@@ -18,20 +18,13 @@ public abstract class AttackComponent : MonoBehaviour
     {
         target = GameObject.FindObjectOfType<Player>();
         poolManager = FindObjectOfType<PoolManager>(true);
-        
-    }
-
-    public virtual void Start()
-    {
-        //call our init function whenever Start is called;
         detectionScript = GetComponent<DetectionScript>();
         parent = transform.parent.GetComponent<EnemyBehaviour>();
         if (parent != null)
         {
             enemyData = parent.enemyData;
         }
-        
-        
+
     }
 
     void OnDrawGizmos()

@@ -78,11 +78,11 @@ public class EliteMeleeFodder : EnemyBehaviour
     {
         if (melee != null)
         {
-            melee.gameObject.SetActive(true);
+            melee.gameObject.SetActive(enemyData.meleetriggers.Count > 0);
         }
         if (ranged != null)
         {
-            ranged.gameObject.SetActive(true);
+            ranged.gameObject.SetActive(enemyData.rangedtriggers.Count > 0);
         }
         
     }

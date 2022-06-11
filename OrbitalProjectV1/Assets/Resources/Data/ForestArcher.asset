@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: ForestArcher
   m_EditorClassIdentifier: 
   _name: ForestArcher
-  minDist: 0
+  minDist: 4
   sprite: {fileID: -1943885830, guid: afd163eebdc4c4c0dbe4ef8acf43cbf1, type: 3}
   condition: 0
   _type: 5
-  random: 0
+  random: 1
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
-  spawnAtStart: 0
-  scale: 3
+  spawnAtStart: 1
+  scale: 2
   damageValue: 1
   moveSpeed: 1
   chaseSpeed: 1
@@ -35,4 +35,5 @@ MonoBehaviour:
   - Jump
   rangedtriggers: []
   animatorname: AC_ForestArcher
-  words: 100
+  words: 1
+  rangedcooldown: 2

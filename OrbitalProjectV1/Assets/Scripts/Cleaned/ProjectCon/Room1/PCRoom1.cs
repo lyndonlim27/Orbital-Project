@@ -35,7 +35,7 @@ public class PCRoom1 : RoomManager
 
         if (conditions.Count == 0 && !_tl.gameObject.activeInHierarchy)
         {
-            foreach (GameObject door in doors)
+            foreach (DoorBehaviour door in doors)
             {
                 door.GetComponent<Animator>().SetBool("Open", true);
                 door.GetComponent<Collider2D>().enabled = false;

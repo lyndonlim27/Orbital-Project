@@ -17,11 +17,11 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: d8b53f057f9cc4d97ac151235543eea3, type: 3}
   condition: 0
   _type: 5
-  random: 0
+  random: 1
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
-  spawnAtStart: 0
-  scale: 0
+  spawnAtStart: 1
+  scale: 3
   damageValue: 1
   moveSpeed: 1.5
   chaseSpeed: 2.5
@@ -40,3 +40,4 @@ MonoBehaviour:
   - Ulti
   animatorname: AC_WaterMage
   words: 1
+  rangedcooldown: 10

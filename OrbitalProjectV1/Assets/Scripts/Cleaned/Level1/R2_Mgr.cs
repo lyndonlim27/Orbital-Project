@@ -27,7 +27,10 @@ public class R2_Mgr : RoomManager
 
     protected override void RoomChecker()
     {
-        base.RoomChecker();
+        if (CanProceed())
+        {
+            doorManager.clearDoor(this, 0);
+        }
 
     }
 
