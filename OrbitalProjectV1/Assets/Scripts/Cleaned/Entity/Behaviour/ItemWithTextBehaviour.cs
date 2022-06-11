@@ -8,23 +8,35 @@ public class ItemWithTextBehaviour : EntityBehaviour
     private Animator _animator;
     
 
-    void Awake()
+    protected override void Awake()
     {
-        this.spriteRenderer = GetComponent<SpriteRenderer>();
+        base.Awake();
         _animator = GetComponent<Animator>();
-        
     }
 
-     void Start()
+    private void OnEnable()
     {
-        spriteRenderer.sprite = data.sprite;
-        _animator.runtimeAnimatorController =
-            Resources.Load(string.Format("Animations/AnimatorControllers/{0}", data.ac_name)) as RuntimeAnimatorController;
+        isDead = false;
+
+    }
+
+    protected void OnDisable()
+    {
+        Color c = spriteRenderer.material.color;
+        c.a = 1;
+        spriteRenderer.material.color = c;
+
+    }
+
+    void Start()
+    {
+        
 
     }
 
     public override void Defeated()
     {
+        isDead = true;
         foreach (EntityData entityData in data.entityDatas)
         {
             Debug.Log(entityData.sprite);
@@ -37,9 +49,6 @@ public class ItemWithTextBehaviour : EntityBehaviour
             {
                 currentRoom.UnfulfillCondition(entityData._name);
             }
-            // entity.SetEntityStats(entityData);
-            // entity.GetComponent<SpriteRenderer>().sprite = entityData.sprite;
-            //Debug.Log(entity.GetData());
 
         }
 
@@ -62,9 +71,6 @@ public class ItemWithTextBehaviour : EntityBehaviour
             _animator.SetTrigger(data._trigger);
         }
         
-        
-
-        
     }
 
     public override EntityData GetData()
@@ -83,17 +89,17 @@ public class ItemWithTextBehaviour : EntityBehaviour
         }
     }
 
-    IEnumerator FadeOut()
-    {
-        for (float f = 1f; f >= -0.05f; f -= 0.05f)
-        {
-            Color c = spriteRenderer.material.color;
-            c.a = f;
-            spriteRenderer.material.color = c;
-            yield return new WaitForSeconds(0.05f);
-        }
-        Destroy(this.gameObject);
-    }
+    //IEnumerator FadeOut()
+    //{
+    //    for (float f = 1f; f >= -0.05f; f -= 0.05f)
+    //    {
+    //        Color c = spriteRenderer.material.color;
+    //        c.a = f;
+    //        spriteRenderer.material.color = c;
+    //        yield return new WaitForSeconds(0.05f);
+    //    }
+    //    Destroy(this.gameObject);
+    //}
 }
 
 

@@ -18,10 +18,6 @@ public class RangedState : StateClass
 
     public override void Update()
     {
-        //if (!enemy.player.isDead())
-        //{
-        //    enemy.flipFace(enemy.player.transform.position);
-        //}
 
     }
 
@@ -42,7 +38,7 @@ public class RangedState : StateClass
 
         //}
 
-        if (enemy.player.isDead())
+        if (enemy.player.IsDead())
         {
             stateMachine.ChangeState(StateMachine.STATE.STOP, null);
         }

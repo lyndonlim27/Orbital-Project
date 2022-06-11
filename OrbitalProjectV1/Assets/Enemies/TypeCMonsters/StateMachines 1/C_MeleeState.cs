@@ -37,7 +37,7 @@ class C_MeleeState : StateClass
         }
         else
         {
-            if (enemy.player.isDead())
+            if (enemy.player.IsDead())
             {
                 stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
             }

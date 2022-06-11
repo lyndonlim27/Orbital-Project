@@ -5,7 +5,7 @@ using UnityEngine.Pool;
 
 public class PoolManager : MonoBehaviour
 {
-    [SerializeField] RangedBehaviour[] entityPrefabs;
+    [SerializeField] EntityBehaviour[] entityPrefabs;
     //[SerializeField] GameObject prefab;
     //private ObjectPool<EntityBehaviour> entities;
     /**
@@ -58,8 +58,6 @@ public class PoolManager : MonoBehaviour
     {
         
         RangedBehaviour ranged = objectPools[rangedData._type].Get() as RangedBehaviour;
-        Debug.Log(target);
-        Debug.Log(rangedData);
         ranged.TargetEntity(target);
         ranged.SetEntityStats(rangedData);
         ranged.GetComponent<SpriteRenderer>().sprite = rangedData.sprite;
@@ -81,6 +79,7 @@ public class PoolManager : MonoBehaviour
 
     public void ReleaseObject(EntityBehaviour instance)
     {
+        instance.StopAllCoroutines();
         objectPools[instance.GetData()._type].Release(instance);
     }
 
@@ -103,8 +102,9 @@ public class PoolManager : MonoBehaviour
             }
             else
             {
+                Debug.Log(entity.GetData()._type);
                 objectPools.Add(entity.GetData()._type, new ObjectPool<EntityBehaviour>(() => CreatePooledEntity(entity),
-                OnGetEntity, OnReleaseEntity, OnDestroyEntity, true, 10, 50));
+                OnGetEntity, OnReleaseEntity, OnDestroyEntity, false, 10, 50));
             }
 
         }
@@ -115,12 +115,11 @@ public class PoolManager : MonoBehaviour
      */
     private void OnGUI()
     {
-        GUI.Label(new Rect(10, 10, 150, 50), $"PoolSize:{objectPools[EntityData.TYPE.CAST_SELF].CountAll}");
-        //foreach (EntityData.TYPE entity_type in objectPools.Keys)
-        //{
-        //    GUI.Label(new Rect(10, 10, 150, 50), $"{entity_type}'s PoolSize:{objectPools[entity_type].CountAll}");
-        //    //GUI.Label(new Rect(10, 10, 150, 50), $"{entity_type}'s ActivePoolSize:{objectPools[entity_type].CountActive}");
-        //}
+        foreach(EntityData.TYPE type in objectPools.Keys)
+        {
+            GUI.Label(new Rect(10, 10, 150, 50), $"PoolSize: {type} = {objectPools[type].CountAll}");
+        }
+        
 
     }
 }

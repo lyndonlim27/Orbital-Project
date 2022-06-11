@@ -16,7 +16,7 @@ class MeleeState : StateClass
 
     public override void Update()
     {
-
+   
     }
 
     public override void Exit()
@@ -44,7 +44,7 @@ class MeleeState : StateClass
 
         //}
 
-        if (enemy.player.isDead())
+        if (enemy.player.IsDead())
         {
             stateMachine.ChangeState(StateMachine.STATE.STOP, null);
         }

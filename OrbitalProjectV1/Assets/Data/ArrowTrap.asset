@@ -16,12 +16,13 @@ MonoBehaviour:
   minDist: 5
   sprite: {fileID: 0}
   condition: 0
-  _type: 0
-  random: 0
+  _type: 1
+  random: 1
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
-  spawnAtStart: 0
-  scale: 0
+  spawnAtStart: 1
+  scale: 1
   duration: 0
   triggername: ArrowTrap
   onetime: 1
+  damage: 1

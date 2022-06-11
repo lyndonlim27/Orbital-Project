@@ -21,7 +21,7 @@ public class Fist : Weapon
         //Destroy(entity.gameObject, 0.5f);
         if (target.GetComponent<EntityBehaviour>() != null)
         {
-            target.GetComponent<EntityBehaviour>().Defeated();
+            target.GetComponent<EntityBehaviour>().TakeDamage(1);
         }
         
         

@@ -5,6 +5,7 @@ using UnityEngine;
 public class WordBank : MonoBehaviour
 {
     public TextAsset file;
+    public string passcode;
     List<string> wordBank = new List<string>();
     //List<string> originalwords = new List<string>()
     //{
@@ -16,12 +17,20 @@ public class WordBank : MonoBehaviour
     private void Awake()
     {
         var content = file.text;
-        var AllWords = content.Split('\n',' ','.','!','?',';',':');
+        var AllWords = content.Split('\n', ' ', '.', '!', '?', ';', ':');
         wordBank.AddRange(AllWords);
         //wordBank.AddRange(originalwords);
         Shuffle();
         ToLower();
-   
+        GeneratePassCode();
+    }
+
+    private void GeneratePassCode()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            passcode += GetWord().ToLower();
+        }
     }
 
     private void Shuffle()
@@ -59,6 +68,8 @@ public class WordBank : MonoBehaviour
             return "";
         }
     }
+
+    
 
   
     // Update is called once per frame

@@ -21,6 +21,7 @@ public class EntityData : ScriptableObject
         CAST_ONTARGET,
         CAST_SELF,
         PROJECTILE,
+        CONSUMABLE_ITEM,
     }
     public int condition;
     public TYPE _type;

@@ -29,14 +29,15 @@ public class Player : EntityBehaviour
     [SerializeField] private HealthBar healthBar;
     public bool inCombat { get; private set; }
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         col = GetComponent<Collider2D>();
         inCombat = false;
         
     }
 
-    public bool isDead()
+    public bool IsDead()
     {
         return this._currHealth <= 0;
     }
@@ -119,7 +120,7 @@ public class Player : EntityBehaviour
 
 
     //When player takes damage, reduce current health and flicker sprite
-    public void TakeDamage(int damageTaken)
+    public override void TakeDamage(int damageTaken)
     {
         _currHealth -= damageTaken;
         healthBar.SetHealth(_currHealth);
@@ -159,7 +160,7 @@ public class Player : EntityBehaviour
 
 
     //Fades sprite
-    IEnumerator FadeOut()
+    protected override IEnumerator FadeOut()
     {
         for(float f = 1f; f >= -0.05f; f -= 0.05f)
         {

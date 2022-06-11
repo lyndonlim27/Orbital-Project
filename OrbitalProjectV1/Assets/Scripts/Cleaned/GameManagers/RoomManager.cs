@@ -28,7 +28,7 @@ public abstract class RoomManager : MonoBehaviour
     public List<string> conditions { get; protected set; }
     public List<EntityBehaviour> items { get; protected set; }
     public List<EnemyBehaviour> enemies { get; protected set; }
-    
+    public LayerMask CollisionObjects;
     public List<NPCBehaviour> npcs { get; protected set; }
     protected ROOMTYPE roomtype;
 
@@ -41,7 +41,6 @@ public abstract class RoomManager : MonoBehaviour
  //   [SerializeField] NPCBehaviour NPCPrefab;
     [SerializeField] protected GameObject[] doors;
     [SerializeField] protected LayerMask layerMask;
-    [SerializeField] protected LayerMask CollisionObjects;
     [SerializeField] protected Vector2 roomSize;
     [SerializeField] private Color _colour;
     
@@ -95,11 +94,10 @@ public abstract class RoomManager : MonoBehaviour
 
     protected virtual void Update()
     {
-        _collider = Physics2D.OverlapBox(transform.position, roomSize, 0, LayerMask.GetMask("Player"));
-        if (_collider != null)
+        if (activated == false)
         {
-
-            if (activated == false)
+            _collider = Physics2D.OverlapBox(transform.position, roomSize, 0, LayerMask.GetMask("Player"));
+            if (_collider != null)
             {
                 activated = true;
                 dialMgr.SetCurrentRoom(this);
@@ -107,14 +105,7 @@ public abstract class RoomManager : MonoBehaviour
                 InitializeAStar();
                 //AddConditionalNPCS();
             }
-        } else
-        {
-            Debug.Log(_collider);
-            if (activated)
-            {
-                DeActivateAStar();
-            }
-        }
+        } 
     }
     private void DeActivateAStar()
     {
@@ -139,10 +130,11 @@ public abstract class RoomManager : MonoBehaviour
         GridGraph gg = astarData.AddGraph(typeof(GridGraph)) as GridGraph;
         gg.center = transform.position;
         gg.is2D = true;
-        gg.SetDimensions((int)roomSize.x, (int)roomSize.y, 1f);
+        gg.SetDimensions((int)(areamaxBound.x - areaminBound.x), (int) (areamaxBound.y - areaminBound.y), 1f);
         gg.collision.use2D = true;
         gg.collision.mask = CollisionObjects;
         AstarPath.active.Scan(gg);
+        
     }
 
 
@@ -158,13 +150,13 @@ public abstract class RoomManager : MonoBehaviour
 
     protected virtual void RoomChecker()
     {
-
+        Debug.Log(CheckEnemiesDead());
         if (conditions.Count == 0 && CheckEnemiesDead() && _collider != null)
         {
             foreach (GameObject door in doors)
             {
                 door.GetComponent<Animator>().enabled = true;
-                door.GetComponent<Animator>().SetBool(door.name, true);
+                door.GetComponent<Animator>().SetBool(door.name.Substring(0,4), true);
                 door.GetComponent<Collider2D>().enabled = false;
             }
         }
@@ -198,7 +190,8 @@ public abstract class RoomManager : MonoBehaviour
             randomPoint = new Vector2(
             Random.Range(areaminBound.x, areamaxBound.x),
             Random.Range(areaminBound.y, areamaxBound.y));
-        } while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
+        } while (!roomArea.OverlapPoint(randomPoint));
+        //while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
         return randomPoint;
     }
 
@@ -222,7 +215,8 @@ public abstract class RoomManager : MonoBehaviour
             randomPoint = new Vector2(
             Random.Range(minArea.x, maxArea.x),
             Random.Range(minArea.y, maxArea.y));
-        } while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
+        } while (!roomArea.OverlapPoint(randomPoint));
+        //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
         return randomPoint;
     }
 
@@ -270,7 +264,6 @@ public abstract class RoomManager : MonoBehaviour
 
 
         Vector2 pos = data.random ? GetRandomPoint() : data.pos;
-        Debug.Log(pos);
         EntityBehaviour entity = poolManager.GetObject(data._type);
         InitializeEntity(data, pos, entity);
         //switch (data._type)
@@ -325,7 +318,7 @@ public abstract class RoomManager : MonoBehaviour
         //}
     }
 
-    private void SettingUpEnemy(EntityData data, Vector2 pos, EnemyBehaviour emf)
+    private void SettingUpEnemy(EnemyData data, Vector2 pos, EnemyBehaviour emf)
     {
         GameObject go = new GameObject(data._name);
         go.layer = LayerMask.NameToLayer("enemy");
@@ -333,32 +326,41 @@ public abstract class RoomManager : MonoBehaviour
         emf.transform.SetParent(go.transform);
         emf.transform.localScale = new Vector2(data.scale, data.scale);
         emf.transform.localPosition = Vector3.zero;
+        emf.animator.runtimeAnimatorController = Resources.Load(string.Format("Animations/AnimatorControllers/{0}", data.animatorname)) as RuntimeAnimatorController;
         go.transform.SetParent(transform);
+        enemies.Add(emf);
     }
 
     private void InitializeEntity(EntityData data, Vector2 pos, EntityBehaviour entity)
     {
-        entity.SetEntityStats(data);
-        entity.GetComponent<SpriteRenderer>().sprite = data.sprite;
-        entity.transform.position = pos;
-        entity.gameObject.SetActive(true);
-        entity.SetCurrentRoom(this);
+        SettingDefaults(data, pos, entity);
         switch (data._type)
         {
             default:
                 entity.transform.SetParent(transform);
                 break;
             case EntityData.TYPE.NPC:
-                npcs.Add((NPCBehaviour) entity);
+                npcs.Add((NPCBehaviour)entity);
                 entity.transform.SetParent(transform);
                 break;
             case EntityData.TYPE.ENEMY:
             case EntityData.TYPE.BOSS:
-                SettingUpEnemy(data, pos, (EnemyBehaviour)entity);
+                SettingUpEnemy((EnemyData) data, pos, (EnemyBehaviour)entity);
                 break;
 
-        } 
+        }
     }
+
+    private void SettingDefaults(EntityData data, Vector2 pos, EntityBehaviour entity)
+    {
+        entity.SetEntityStats(data);
+        entity.GetComponent<SpriteRenderer>().sprite = data.sprite;
+        entity.transform.position = pos;
+        entity.gameObject.SetActive(true);
+        entity.SetCurrentRoom(this);
+    }
+
+
 
     /**
      * Storing conditional NPCs.

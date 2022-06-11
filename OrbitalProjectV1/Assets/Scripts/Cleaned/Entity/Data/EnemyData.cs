@@ -15,4 +15,5 @@ public class EnemyData : EntityData
     public List<string> rangedtriggers;
     public string animatorname;
     public int words;
+    public float rangedcooldown;
 }

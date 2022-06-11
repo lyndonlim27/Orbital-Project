@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 
+//[RequireComponent(typeof(EnemyData), typeof(ConsumableItemData))]
 public class EnemyBehaviour : EntityBehaviour
 {
 
@@ -19,30 +20,28 @@ public class EnemyBehaviour : EntityBehaviour
     }
 
     //data;
+
     public EnemyData enemyData;
-    public StateMachine stateMachine;
-    //private int cooldown;
-    protected DamageFlicker _flicker;
-    public bool isDead;
-
-    [Header("Entity Position")]
-    public Vector2 roamPos;
-    public float maxDist;
-
-    public MeleeComponent melee { get; private set; }
-    public RangedComponent ranged { get; private set; }
-
-    public Rigidbody2D rb { get; private set; }
+    public StateMachine stateMachine { get; protected set; }
+    public MeleeComponent melee { get; protected set; }
+    public RangedComponent ranged { get; protected set; }
+    public Rigidbody2D _rb { get; private set; }
     public Animator animator { get; protected set; }
-
-    public DetectionScript detectionScript;
-    public Vector2 startingpos;
-    public Player player;
-    public int health;
-    public float cooldown;
-    public bool facingRight;
     public bool stage2;
+ 
+
+    [SerializeField] protected List<ConsumableItemData> consumableItemDatas;
+
+    public Vector2 roamPos { get; protected set; }
+    public float maxDist { get; protected set; }
+    public Vector2 startingpos { get; protected set; }
+    public Player player { get; protected set; }
+    protected float cooldown;
+    protected bool facingRight;
     private MonsterTextLogic tl;
+    protected Transform _transform;
+    protected DamageFlicker _flicker;
+    public DetectionScript detectionScript;
 
     /** Pathfinding
      * 
@@ -50,41 +49,59 @@ public class EnemyBehaviour : EntityBehaviour
     private Seeker seeker;
     private Path path;
     private int currentWaypoint = 0;
-    public float repathRate = 0.5f;
+    private float repathRate = 0.5f;
     private float lastRepath = float.NegativeInfinity;
-    public float nextWaypointDistance = 1f;
-    public bool reachedEndOfPath;
+    private float nextWaypointDistance = 1f;
+    private bool reachedEndOfPath;
+
+
+
+    protected override void Awake()
+    {
+        base.Awake();
+        player = GameObject.FindObjectOfType<Player>(true);
+        animator = GetComponent<Animator>();
+        animator.keepAnimatorControllerStateOnDisable = false;
+        melee = GetComponentInChildren<MeleeComponent>(true);
+        ranged = GetComponentInChildren<RangedComponent>(true);
+        _flicker = GameObject.FindObjectOfType<DamageFlicker>();
+        seeker = GetComponent<Pathfinding.Seeker>();
+        tl = GetComponentInChildren<MonsterTextLogic>(true);
+        
+    }
 
     public virtual void Start()
     {
-
-        player = GameObject.FindObjectOfType<Player>(true);
-        rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
-        animator.runtimeAnimatorController = Resources.Load(string.Format("Animations/AnimatorControllers/{0}", enemyData.animatorname)) as RuntimeAnimatorController;
-        animator.keepAnimatorControllerStateOnDisable = false; 
-        melee = GetComponentInChildren<MeleeComponent>();
-        ranged = GetComponentInChildren<RangedComponent>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        tl = GetComponentInChildren<MonsterTextLogic>();
-        spriteRenderer.sprite = enemyData.sprite;
-        startingpos = GetComponent<Transform>().position;
-        _flicker = GameObject.FindObjectOfType<DamageFlicker>();
-        isDead = false;
-        seeker = GetComponent<Pathfinding.Seeker>();
-        health = enemyData.words;
+        _transform = GetComponent<Transform>().parent.transform;
+        maxDist = 100f;
     }
 
+    private void OnEnable()
+    { 
+        //animator.runtimeAnimatorController = Resources.Load(string.Format("Animations/AnimatorControllers/{0}", enemyData.animatorname)) as RuntimeAnimatorController;
+    }
+
+    // can use this to replace onenable.
     public virtual void Initialize() {
+        isDead = false;
         animator.SetBool("isAlive", true);
         animator.SetBool("NotSpawned", true);
-        transform.parent.position = transform.position;
-        transform.position = Vector3.zero;
+        //_rb.WakeUp();
+        //transform.parent.position = transform.position;
+        //transform.position = Vector3.zero;
         cooldown = 2.5f;
+        health = enemyData.words;
+        startingpos = _transform.position;
+        ranged.gameObject.SetActive(enemyData.rangedtriggers.Count > 0);
+        melee.gameObject.SetActive(enemyData.meleetriggers.Count > 0);
     }
 
     public virtual void Update()
     {
+        if (isDead)
+        {
+            return;
+        }
         stateMachine.Update();
         tick();
 
@@ -138,9 +155,11 @@ public class EnemyBehaviour : EntityBehaviour
 
     public virtual void resetPosition()
     {
-        if (animator.hasRootMotion)
+        Debug.Log("entered");
+        if (animator.applyRootMotion == true)
         {
-            transform.parent.position = transform.position;
+            Debug.Log("Dafuq");
+            _transform.position = transform.position;
             transform.position = Vector3.zero;
 
         }
@@ -149,8 +168,10 @@ public class EnemyBehaviour : EntityBehaviour
 
     public virtual void resetCooldown()
     {
+        // use enemydata.rangedcooldown, nexttime then i add numbers to the enemy datas. for now just use 10.
         this.cooldown = 10;
         inAnimation = false;
+        resetPosition();
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
     }
 
@@ -165,7 +186,6 @@ public class EnemyBehaviour : EntityBehaviour
     public void moveToRoam()
     {
         AStarMove(roamPos, enemyData.moveSpeed);
-        //transform.position = Vector3.MoveTowards(transform.position, roamPos, steps);
         flipFace(roamPos);
     }
 
@@ -176,7 +196,7 @@ public class EnemyBehaviour : EntityBehaviour
             lastRepath = Time.time;
             // Start a new path to the targetPosition, call the the OnPathComplete function
             // when the path has been calculated (which may take a few frames depending on the complexity)
-            seeker.StartPath(transform.parent.position, destination, OnPathComplete);
+            seeker.StartPath(_transform.position, destination, OnPathComplete);
         }
         if (path == null)
         {
@@ -193,7 +213,7 @@ public class EnemyBehaviour : EntityBehaviour
         {
             // If you want maximum performance you can check the squared distance instead to get rid of a
             // square root calculation. But that is outside the scope of this tutorial.
-            distanceToWaypoint = Vector3.Distance(transform.parent.position, path.vectorPath[currentWaypoint]);
+            distanceToWaypoint = Vector3.Distance(_transform.position, path.vectorPath[currentWaypoint]);
             if (distanceToWaypoint < nextWaypointDistance)
             {
                 // Check if there is another waypoint or if we have reached the end of the path
@@ -219,13 +239,13 @@ public class EnemyBehaviour : EntityBehaviour
         var speedFactor = reachedEndOfPath ? Mathf.Sqrt(distanceToWaypoint / nextWaypointDistance) : 1f;
         // Direction to the next waypoint
         // Normalize it so that it has a length of 1 world unit
-        Vector3 dir = (path.vectorPath[currentWaypoint] - transform.parent.position).normalized;
+        Vector3 dir = (path.vectorPath[currentWaypoint] - _transform.position).normalized;
         // Multiply the direction by our desired speed to get a velocity
         Vector3 velocity = dir * speed * speedFactor;
         // Move the agent using the CharacterController component
         // Note that SimpleMove takes a velocity in meters/second, so we should not multiply by Time.deltaTime
         // If you are writing a 2D game you may want to remove the CharacterController and instead modify the position directly
-        transform.parent.position += velocity * Time.deltaTime;
+        _transform.position += velocity * Time.deltaTime;
     }
 
 
@@ -239,7 +259,6 @@ public class EnemyBehaviour : EntityBehaviour
     public void moveToStartPos()
     {
         AStarMove(startingpos, enemyData.moveSpeed);
-        //transform.position = Vector3.MoveTowards(transform.position, startingpos, steps);
         flipFace(startingpos);
     }
 
@@ -250,15 +269,13 @@ public class EnemyBehaviour : EntityBehaviour
 
     public void flipFace(Vector2 target)
     {
-        Vector2 dir = (target - (Vector2)transform.parent.position).normalized;
+        Vector2 dir = (target - (Vector2)_transform.position).normalized;
         if (dir.x < 0 && !facingRight)
         {
-            Debug.Log("shud be right");
             Flip();
         }
         else if (dir.x > 0 && facingRight)
         {
-            Debug.Log("shud be left");
             Flip();
         }
 
@@ -266,9 +283,9 @@ public class EnemyBehaviour : EntityBehaviour
 
     private void Flip()
     {
-        Vector3 currentFace = transform.parent.localScale;
+        Vector3 currentFace = _transform.localScale;
         currentFace.x *= -1;
-        transform.parent.localScale = currentFace;
+        _transform.localScale = currentFace;
         Vector3 _tf = tl.transform.localScale;
         _tf.x *= -1;
         tl.transform.localScale = _tf;
@@ -298,7 +315,7 @@ public class EnemyBehaviour : EntityBehaviour
 
     public virtual void Teleport()
     {
-        this.transform.parent.position = roamPos;
+        _transform.position = roamPos;
         this.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
     }
 
@@ -344,12 +361,12 @@ public class EnemyBehaviour : EntityBehaviour
                 SpellAttack();
                 break;
             case ANIMATION_CODE.SHOOT_START:
-                //flipFace(player.transform.position);
+                flipFace(player.transform.position);
                 //resetPosition();
                 Shoot();
                 break;
             case ANIMATION_CODE.CAST_END:
-                resetCooldown();
+                //resetCooldown();
                 stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
                 break;
             case ANIMATION_CODE.WEAP_TRIGGER:
@@ -368,71 +385,79 @@ public class EnemyBehaviour : EntityBehaviour
         ranged.ShootSingle();
     }
 
-    public virtual void Hurt()
+    public override void TakeDamage(int damage)
     {
         _flicker.Flicker(this);
-        health--;
-        if (health == 0)
-        {
-            Defeated();
-        } 
-
+        base.TakeDamage(damage);
+        animator.SetTrigger("Hurt");
     }
 
+    private void SpawnCorpse()
+    {
+        //corpses wont be disabled, so no need to use objectpooling
+        GameObject corpse = new GameObject("Corpse");
+        SpriteRenderer corpseRenderer = corpse.AddComponent<SpriteRenderer>();
+        var sprite = Resources.Load<Sprite>("Sprites/corpse");
+        Debug.Log(sprite);
+        corpseRenderer.sprite = sprite;
+        corpse.transform.position = transform.position;
+        corpse.layer = 1;
+        corpse.transform.SetParent(_transform);
+        
+    }
+
+    private void SpawnDrops()
+    {
+        int rand = Random.Range(0, 5);
+        Debug.Log(rand);
+        for (int i = 0; i < rand; i ++)
+        {
+            Debug.Log("This is drop" + i);
+            int rand2 = Random.Range(0, consumableItemDatas.Count);
+            ConsumableItemBehaviour con = poolManager.GetObject(EntityData.TYPE.CONSUMABLE_ITEM) as ConsumableItemBehaviour;
+            ConsumableItemData condata = consumableItemDatas[rand2];
+            if (condata._consumableType == ConsumableItemData.CONSUMABLE.LETTER)
+            {
+                ConsumableItemData temp = condata;
+                string passcode = FindObjectOfType<WordBank>().passcode;
+                Debug.Log(passcode);
+                int randomnum = Random.Range(0, passcode.Length);
+                temp.letter = passcode[randomnum];            
+                passcode = passcode.Substring(0, randomnum) + passcode.Substring(randomnum, passcode.Length - (randomnum+1));
+                temp.sprite = temp.letters[(int) temp.letter - 81];
+            }
+
+            con.SetEntityStats(condata);
+            con.transform.position = transform.position + new Vector3(Random.Range(-0.5f,0.5f),Random.Range(-0.5f,0.5f));
+            con.SetTarget(player.gameObject);
+            con.gameObject.SetActive(true);
+        }
+    }
+
+    
     public override void Defeated()
     {
-        //StartCoroutine(Wait());
-        if (health == 0)
-        {
-            isDead = true;
-            animator.SetBool("isAlive",false);
-        } else
-        {
-            Hurt();
-        }
+        Debug.Log("Dafuq?");
+        isDead = true;
+        animator.SetBool("isAlive", false);
+        StartCoroutine(FadeOut());
+       
 
     }
 
-    ////default fade animation;
-    //IEnumerator FadeOut()
-    //{
-    //    for (float f = 1f; f >= -0.05f; f -= 0.05f)
-    //    {
-    //        Color c = spriteRenderer.material.color;
-    //        c.a = f;
-    //        spriteRenderer.material.color = c;
-    //        yield return new WaitForSeconds(0.05f);
-    //    }
-    //    this.gameObject.SetActive(false);
-    //}
-
-    // use for enemies with death default states.
-    private void DisableEnemy()
+    protected override IEnumerator FadeOut()
     {
-        foreach (Transform tf in transform.GetComponentsInChildren<Transform>())
+        for (float f = 1f; f >= -0.05f; f -= 0.05f)
         {
-            //disable colliders
-            Collider2D[] cols = tf.GetComponents<Collider2D>();
-            foreach (Collider2D col in cols)
-            {
-                col.enabled = false;
-            }
-
-            //disable scripts;
-            MonoBehaviour[] scripts = tf.GetComponents<MonoBehaviour>();
-            foreach (MonoBehaviour script in scripts)
-            {
-                script.enabled = false;
-            }
-
-            this.animator.enabled = false;
-
+            Color c = spriteRenderer.material.color;
+            c.a = f;
+            spriteRenderer.material.color = c;
+            yield return new WaitForSeconds(0.05f);
         }
-    }
-
-    private IEnumerator Wait()
-    {
-        yield return new WaitForSeconds(1f);
+        SpawnCorpse();
+        SpawnDrops();
+        poolManager.ReleaseObject(this);
+        
     }
 
     public override void SetEntityStats(EntityData stats)
@@ -452,11 +477,7 @@ public class EnemyBehaviour : EntityBehaviour
 
     public bool TravelToofar()
     {
-        return Vector2.Distance(transform.position, startingpos) >= maxDist;
+        return Vector2.Distance(_transform.position, startingpos) >= maxDist;
     }
 
-    //public void OnDrawGizmos()
-    //{
-    //    Gizmos.DrawWireSphere(transform.position,2f);
-    //}
 }

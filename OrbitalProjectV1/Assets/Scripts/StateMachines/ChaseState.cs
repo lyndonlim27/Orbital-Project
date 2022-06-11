@@ -36,7 +36,7 @@ public class ChaseState : StateClass
     public void ChaseEnemy()
     {
 
-        //if object detected but is not player, 
+        //if object detected but is not player,
         if (!enemy.detectionScript.playerDetected)
         {
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);

@@ -70,21 +70,21 @@ public class EliteMonsterS : EnemyBehaviour
         return base.hasWeapon();
     }
 
-    public override void Defeated()
-    {
-        if (hpBarUI.currlength == 0)
-        {
-            isDead = true;
-            animator.SetTrigger("Death");
-            hpBarUI.gameObject.SetActive(false);
-            Debug.Log(hpBarUI.currlength);
+    //public override void Defeated()
+    //{
+    //    if (hpBarUI.currlength == 0)
+    //    {
+    //        isDead = true;
+    //        animator.SetTrigger("Death");
+    //        hpBarUI.gameObject.SetActive(false);
+    //        Debug.Log(hpBarUI.currlength);
 
-        }
-        else
-        {
-            Hurt();
-        }
-    }
+    //    }
+    //    else
+    //    {
+    //        Hurt();
+    //    }
+    //}
 
 
     private void SpawnProps()
@@ -213,7 +213,7 @@ public class EliteMonsterS : EnemyBehaviour
 
     public IEnumerator triggerAttack(int roll)
     {
-        if (player.isDead())
+        if (player.IsDead())
         {
             stateMachine.ChangeState(StateMachine.STATE.STOP, null);
         }

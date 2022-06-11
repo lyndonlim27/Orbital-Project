@@ -32,15 +32,6 @@ public class EliteMeleeFodder : EnemyBehaviour
     }
 
 
-    public override void resetCooldown()
-    {
-        cooldown = 15f;
-        resetPosition();
-        inAnimation = false;
-       
-
-    }
-
     public void resetUltCooldown()
     {
         UltCooldown = 30f;
@@ -53,11 +44,14 @@ public class EliteMeleeFodder : EnemyBehaviour
         if (Dashcooldown <= 0 && !inAnimation)
         {
             List<string> dodges = enemyData.defends;
-            int random = Random.Range(0, dodges.Count);
-
-            animator.SetTrigger(dodges[random]);
-            DisableAttackComps();
-            inAnimation = true;
+            if(dodges.Count != 0)
+            {
+                int random = Random.Range(0, dodges.Count);
+                animator.SetTrigger(dodges[random]);
+                DisableAttackComps();
+                inAnimation = true;
+            }
+            
         }
         else
         {
@@ -97,8 +91,9 @@ public class EliteMeleeFodder : EnemyBehaviour
     {
         Dashcooldown = 15f;
         inAnimation = false;
-        transform.parent.position = transform.position;
-        transform.localPosition = Vector3.zero;
+        //transform.parent.position = transform.position;
+        //transform.localPosition = Vector3.zero;
+        resetPosition();
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
         EnableAttackComps();
     }

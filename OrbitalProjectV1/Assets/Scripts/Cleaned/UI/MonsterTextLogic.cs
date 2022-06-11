@@ -29,6 +29,7 @@ public class MonsterTextLogic : TextLogic{
 
     protected override void PerformAction()
     {
+        Debug.Log("This is the target gameobject: " + parent.gameObject);
         player.Shoot(parent.gameObject);
     }
 }

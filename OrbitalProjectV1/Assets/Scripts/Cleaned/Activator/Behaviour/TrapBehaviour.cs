@@ -7,9 +7,9 @@ public class TrapBehaviour : ActivatorBehaviour
     StateMachine stateMachine;
     RangedComponent ranged;
  
-    private void Awake()
+    protected override void Awake()
     {
-
+        base.Awake();
         detectionScript = GetComponentInChildren<DetectionScript>();
         animator = GetComponent<Animator>();
         animator.runtimeAnimatorController = Resources.Load("Animations/AnimatorControllers/AC_Trap") as RuntimeAnimatorController;
@@ -30,7 +30,6 @@ public class TrapBehaviour : ActivatorBehaviour
     void Update()
     {
         stateMachine.Update();
-        Debug.Log(stateMachine.currState);
     }
 
     public void ActivateRangedComponents()

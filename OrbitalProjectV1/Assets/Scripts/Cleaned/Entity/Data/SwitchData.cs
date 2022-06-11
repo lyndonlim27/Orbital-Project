@@ -9,4 +9,5 @@ public class SwitchData : EntityData
     public string triggername;
     public bool onetime;
     public int damage;
+    public Quaternion quaternion;
 }

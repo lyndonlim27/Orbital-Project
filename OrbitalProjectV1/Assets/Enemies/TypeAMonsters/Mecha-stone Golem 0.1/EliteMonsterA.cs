@@ -37,12 +37,12 @@ public class EliteMonsterA : EnemyBehaviour
     }
 
 
-    public override void Hurt()
-    {
-        hpBarUI.TakeDamage();
-        base.Hurt();
+    //public override void Hurt()
+    //{
+    //    hpBarUI.TakeDamage();
+    //    base.Hurt();
  
-    }
+    //}
 
     public override void Defeated()
     {

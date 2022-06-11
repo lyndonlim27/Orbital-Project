@@ -15,14 +15,6 @@ public class DamageApplier : MonoBehaviour
     private void Awake()
     {
         CheckingParent();
-        //if (transform.parent.GetComponent<EnemyBehaviour>() != null)
-        //{
-        //    parent = transform.parent.GetComponent<EnemyBehaviour>();
-        //} else
-        //{
-        //    parent = transform.parent.GetComponent<TrapBehaviour>();
-        //}
-        //enemyData = parent == null ? null : parent.enemyData;
     }
 
     private void CheckingParent()
@@ -51,7 +43,7 @@ public class DamageApplier : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Player target = collision.gameObject.GetComponent<Player>();
-        if (target != null && parent.inAnimation)
+        if (target != null && parent.inAnimation && !parent.isDead)
         {
 
             Vector2 direction = ((Vector2)target.transform.position - (Vector2)transform.position).normalized;
@@ -64,7 +56,7 @@ public class DamageApplier : MonoBehaviour
     private void OnTriggerStay2D(Collider2D collision)
     {
         Player target = collision.gameObject.GetComponent<Player>();
-        if (target != null && parent.inAnimation)
+        if (target != null && parent.inAnimation && !parent.isDead)
         {
 
             Vector2 direction = ((Vector2)target.transform.position - (Vector2)transform.position).normalized;
@@ -82,10 +74,10 @@ public class DamageApplier : MonoBehaviour
 
     private IEnumerator DoDamage(Player player)
     {
-        while(player != null && parent.inAnimation)
+        while(player != null && parent.inAnimation && !parent.isDead)
         {
             player.TakeDamage(damage);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1f);
         }
     }
 

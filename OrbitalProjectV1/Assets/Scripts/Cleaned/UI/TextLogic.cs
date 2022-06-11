@@ -29,22 +29,27 @@ public abstract class TextLogic : MonoBehaviour
     protected virtual void Awake()
     {
         Textdisplayer = GetComponent<TextMeshPro>();
-        Textdisplayer.enabled = !outOfRange();
         player = GameObject.FindObjectOfType<Player>(true);
         parent = this.gameObject.transform.parent.GetComponent<EntityBehaviour>();
-        Debug.Log(parent);
-        minDist = parent.GetData().minDist;
-        remainingword = "";
-        currentword = parent.GetData()._name.ToLower();
+        
+        
     }
     /**
      * Initialize gameObject.
      */
     protected virtual void Start()
     {
+        
+
+    }
+
+    protected virtual void OnEnable()
+    {
+        Textdisplayer.enabled = !outOfRange() && !parent.isDead;
+        remainingword = "";
         GenerateNewWord();
         InstantiateAudio();
-
+        minDist = parent.GetData().minDist;
     }
 
     protected void InstantiateAudio()
@@ -78,7 +83,7 @@ public abstract class TextLogic : MonoBehaviour
      */
     protected virtual void Update()
     {
-        Textdisplayer.enabled = (!outOfRange());
+        Textdisplayer.enabled = (!outOfRange()) && !parent.isDead;
         CheckInput();
     }
 
@@ -94,21 +99,28 @@ public abstract class TextLogic : MonoBehaviour
      */
     protected virtual void CheckInput()
     {
-        if (!CheckInternalInput())
+        if (Textdisplayer.enabled)
         {
-            return;
-        }
+            if (!CheckInternalInput())
+            {
+                return;
+            }
 
-        
 
-        for (int i = (int)KeyCode.A; i <= (int)KeyCode.Z; i++)
-        {
-            if (Input.GetKeyDown((KeyCode)i)) {
-                audioSources[(KeyCode)i].Play();
-                Validator((char)i);
+
+            for (int i = (int)KeyCode.A; i <= (int)KeyCode.Z; i++)
+            {
+                if (Input.GetKeyDown((KeyCode)i))
+                {
+                    audioSources[(KeyCode)i].Play();
+                    Validator((char)i);
+                }
+
             }
 
         }
+
+        
 
     }
 

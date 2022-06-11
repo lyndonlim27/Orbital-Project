@@ -11,8 +11,9 @@ public class NPCMovableBehaviour : NPCBehaviour
     private Collider2D _col;
     // Start is called before the first frame update
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _animator = GetComponent<Animator>();
         _detectionScript = GetComponentInChildren<DetectionScript>();
         _col = GetComponent<Collider2D>();

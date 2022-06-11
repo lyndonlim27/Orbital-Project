@@ -10,13 +10,34 @@ public abstract class EntityBehaviour : MonoBehaviour
 
     protected PoolManager poolManager;
 
+    protected int health;
+
+    public bool isDead;
+
     public bool inAnimation;
+
+    protected virtual void Awake()
+    {
+        poolManager = FindObjectOfType<PoolManager>(true);
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
 
     public abstract void SetEntityStats(EntityData stats);
 
     public abstract void Defeated();
 
+    public virtual void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0 && !isDead)
+        {
+            isDead = true;
+            Defeated();
+        }
+    }
+
     public abstract EntityData GetData();
+
 
     protected virtual IEnumerator FadeOut()
     {
@@ -28,7 +49,7 @@ public abstract class EntityBehaviour : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
         //this.gameObject.SetActive(false);
-        Defeated();
+        poolManager.ReleaseObject(this);
     }
 
     public void SetCurrentRoom(RoomManager roomManager)

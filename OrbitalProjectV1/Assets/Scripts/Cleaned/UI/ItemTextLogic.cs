@@ -13,7 +13,7 @@ public class ItemTextLogic : TextLogic
 
     protected override void GenerateNewWord()
     {
-        this.remainingword = currentword;
+        this.remainingword = parent.GetData()._name.ToLower();
     }
 
     protected override void PerformAction()

@@ -10,7 +10,7 @@ public class MeleeComponent : AttackComponent
     {
         if (detectionScript.playerDetected)
         {
-            if (target.isDead())
+            if (target.IsDead())
             {
                 return;
             }

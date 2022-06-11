@@ -19,14 +19,13 @@ public class RangedBehaviour : EntityBehaviour
     [Header("Movement")]
     [SerializeField] private float rotateSpeed = 200.0f;
 
-    protected virtual void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         player = GameObject.FindObjectOfType<Player>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
         _animator.keepAnimatorControllerStateOnDisable = false;
         _rb = GetComponent<Rigidbody2D>();
-        poolManager = FindObjectOfType<PoolManager>(true);
         _collider = GetComponent<BoxCollider2D>();
     }
 
@@ -58,6 +57,9 @@ public class RangedBehaviour : EntityBehaviour
         EnableAnimation();
         SettingUpCollider();
         transform.localScale = new Vector2(rangedData.scale, rangedData.scale);
+        Color c = spriteRenderer.material.color;
+        c.a = 1;
+        spriteRenderer.material.color = c;
         rotateSpeed = rangedData.rotation;
         speed = rangedData.speed;
 
@@ -65,9 +67,7 @@ public class RangedBehaviour : EntityBehaviour
 
     protected void OnDisable()
     {
-        Color c = spriteRenderer.material.color;
-        c.a = 1;
-        spriteRenderer.material.color = c;
+        
 
     }
 
@@ -137,7 +137,6 @@ public class RangedBehaviour : EntityBehaviour
 
     public override void SetEntityStats(EntityData stats)
     {
-        Debug.Log("What stats is this ? : " + stats);
         RangedData rangedD = (RangedData)stats;
         if (rangedD != null)
         {
@@ -147,10 +146,10 @@ public class RangedBehaviour : EntityBehaviour
 
     public override void Defeated()
     {
+        Debug.Log(_firer);
         if (_firer != null)
         {
             EnemyBehaviour enemy = _firer.GetComponent<EnemyBehaviour>();
-            Debug.Log("entered");
             enemy.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
             enemy.resetCooldown();
         }
@@ -170,25 +169,27 @@ public class RangedBehaviour : EntityBehaviour
     {
         stopMovement();
         DisableAnimation();
+        GameObject go = collision.gameObject;
+        ApplyDamage(go);
         if (rangedData.impact_trigger != "")
         {
             _animator.SetBool(rangedData.impact_trigger, true);
-        } 
-        GameObject go = collision.gameObject;
-        ApplyDamage(go);
-        Defeated();
+        } else
+        {
+            Defeated();
+        }
 
     }
 
     private void ApplyDamage(GameObject go)
     {
-        
         if (ReferenceEquals(go, _target))
         {
+            Debug.Log("??? wtf?");
             if (go.CompareTag("Player"))
             {
                 Player player = go.GetComponent<Player>();
-                if (!player.isDead()) {
+                if (!player.IsDead()) {
                     player.TakeDamage(rangedData.damage);
                 }
                 
@@ -196,9 +197,12 @@ public class RangedBehaviour : EntityBehaviour
             else
             {
                 EnemyBehaviour enemy = go.GetComponent<EnemyBehaviour>();
+                Debug.Log("NANI??");
+    
                 if (enemy != null)
                 {
-                    enemy.Defeated();
+                    enemy.TakeDamage(rangedData.damage);
+                    Debug.Log(enemy.isDead);
                 }
             }
         }

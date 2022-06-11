@@ -8,11 +8,6 @@ public class NPCBehaviour : EntityBehaviour
     [SerializeField] private NPCData data;
     protected bool fulfilled;
 
-    private void Awake()
-    {
-        this.spriteRenderer = GetComponent<SpriteRenderer>();
-        
-    }
     void Start()
     {
         this.spriteRenderer.sprite = data.sprite;

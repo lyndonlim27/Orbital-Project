@@ -10,7 +10,17 @@ public class ConsumableItemData : EntityData
     public enum CONSUMABLE
     {
         HEALTH,
-        GOLD
+        GOLD,
+        LETTER
     }
     public CONSUMABLE _consumableType;
+    public Sprite[] letters;
+    public char letter;
+
+
+    private void Awake()
+    {
+        letters = Resources.LoadAll<Sprite>("Sprites/keyboardletters");
+    }
+
 }

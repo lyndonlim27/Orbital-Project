@@ -43,7 +43,6 @@ public class R1_Mgr : RoomManager
             //}
            
         }
-        Debug.Log(conditions.Count);
         base.RoomChecker();
 
     }
