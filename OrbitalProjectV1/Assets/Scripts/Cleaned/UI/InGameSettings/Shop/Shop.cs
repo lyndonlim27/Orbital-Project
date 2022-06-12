@@ -105,6 +105,25 @@ public class Shop : MenuBehaviour
             _buffSkill.ChangeSkill(buffSkillName);
             _player.UseGold(Resources.Load<SkillData>("Data/SkillData/" + buffSkillName).goldCost);
             _audioSource.Play();
+            foreach (BuffPurchaseButton buff in GetComponentsInChildren<BuffPurchaseButton>())
+            {
+                if (buffSkillName.Contains("Heal") || buffSkillName.Contains("Speed"))
+                {
+                    if (buff.GetBuffName().Contains("Invulnerable") || buff.GetBuffName().Contains("Stealth"))
+                    {
+                        buff.GetComponent<Image>().color = new Color32(96, 96, 96, 255);
+                        buff.GetComponent<Button>().enabled = false;
+                    }
+                }
+                else
+                {
+                    if (buff.GetBuffName().Contains("Heal") || buff.GetBuffName().Contains("Speed"))
+                    {
+                        buff.GetComponent<Image>().color = new Color32(96, 96, 96, 255);
+                        buff.GetComponent<Button>().enabled = false;
+                    }
+                }
+            }
         }
         StartCoroutine(UpdateText());
     }

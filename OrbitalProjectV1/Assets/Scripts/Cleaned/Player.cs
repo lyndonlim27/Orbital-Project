@@ -25,6 +25,8 @@ public class Player : EntityBehaviour
     private GoldCounter _goldCounter;
     public int currGold { get; private set;}
     private float _moveSpeed;
+    private BuffBehaviour _buffBehaviour;
+    private bool _invulnerable;
 
 
     [Header("Player UI")]
@@ -63,6 +65,8 @@ public class Player : EntityBehaviour
         dialMgr = GameObject.FindObjectOfType<DialogueManager>();
         _goldCounter = FindObjectOfType<GoldCounter>(true);
         _goldCounter.GoldUpdate();
+        _buffBehaviour = FindObjectOfType<BuffBehaviour>(true);
+        _invulnerable = false;
     }
 
     // Update is called once per frame
@@ -95,6 +99,15 @@ public class Player : EntityBehaviour
             _timeDelay = 0;
         }
 
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            this.tag = "Stealth";
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            this.tag = "Player";
+        }
     }
 
     private void CheckCombat()
@@ -131,12 +144,16 @@ public class Player : EntityBehaviour
     //When player takes damage, reduce current health and flicker sprite
     public void TakeDamage(int damageTaken)
     {
-        _currHealth -= damageTaken;
-        _healthBar.SetHealth(_currHealth);
-        _flicker.Flicker(this);
-        if (_currHealth <= 0)
+        Debug.Log(_invulnerable);
+        if (!_invulnerable)
         {
-            Defeated();
+            _currHealth -= damageTaken;
+            _healthBar.SetHealth(_currHealth);
+            _flicker.Flicker(this);
+            if (_currHealth <= 0)
+            {
+                Defeated();
+            }
         }
     }
 
@@ -163,6 +180,10 @@ public class Player : EntityBehaviour
     //When player shoot, player direction faces the target enemy
     public void Shoot(EntityBehaviour entity)
     {
+        if (_buffBehaviour.inStealth)
+        {
+            StartCoroutine(_buffBehaviour.Unstealth());
+        }
         _timeDelay = 0.5f;
         //Debug.Log(enemy);
         Vector2 point2Target = (Vector2)transform.position - (Vector2)entity.transform.position;
@@ -231,5 +252,10 @@ public class Player : EntityBehaviour
     public RoomManager GetCurrentRoom()
     {
         return currentRoom;
+    }
+
+    public void SetInvulnerability(bool state)
+    {
+        _invulnerable = state;
     }
 }

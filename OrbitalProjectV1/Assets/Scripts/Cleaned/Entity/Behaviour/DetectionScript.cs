@@ -16,7 +16,8 @@ public class DetectionScript : MonoBehaviour
  
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.GetComponent<Player>() != null)
+     //   if (collision.gameObject.GetComponent<Player>() != null)
+        if(collision.gameObject.CompareTag("Player"))
         {
             playerDetected = true;
         }
@@ -24,9 +25,22 @@ public class DetectionScript : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.GetComponent<Player>() != null)
+        //if (collision.gameObject.GetComponent<Player>() != null)
+        if (collision.gameObject.CompareTag("Player"))
         {
             playerDetected = false;
         }
     }
-};
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        //if (collision.gameObject.GetComponent<Player>() != null)
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            playerDetected = true;
+        }
+        else if (collision.gameObject.CompareTag("Stealth"))
+        {
+            playerDetected = false;
+        }
+    }
+}

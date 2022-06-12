@@ -10,7 +10,9 @@ public class BuffData : SkillData
     public enum BUFF_TYPE
     {
         SPEED,
-        HEAL
+        HEAL,
+        STEALTH,
+        INVULNERABLE
     }
 
     public BUFF_TYPE buffType;

@@ -6,6 +6,8 @@ public class BuffBehaviour : SkillBehaviour
 {
     private BuffData _buffData;
     private Animator _buffAnimator;
+    private WeaponPickup weaponManager;
+    public bool inStealth;
 
     // Start is called before the first frame update
     public override void Start()
@@ -13,6 +15,8 @@ public class BuffBehaviour : SkillBehaviour
         base.Start();
         _buffAnimator = GameObject.Find("BuffAnimator").GetComponent<Animator>();
         _buffData = (BuffData)_skillData;
+        inStealth = false;
+        weaponManager = FindObjectOfType<WeaponPickup>();
     }
 
     // Update is called once per frame
@@ -41,19 +45,30 @@ public class BuffBehaviour : SkillBehaviour
                     _buffAnimator.SetBool("Activate", true);
                     StartCoroutine(Speed());
                     break;
+                case BuffData.BUFF_TYPE.STEALTH:
+                    _buffAnimator.runtimeAnimatorController =
+                        Resources.Load<RuntimeAnimatorController>("Animations/AnimatorControllers/StealthBuffVFX");
+                    _buffAnimator.SetTrigger("Activate");
+                    StartCoroutine(Stealth());
+                    break;
+                case BuffData.BUFF_TYPE.INVULNERABLE:
+                    _buffAnimator.runtimeAnimatorController =
+                        Resources.Load<RuntimeAnimatorController>("Animations/AnimatorControllers/InvulnerableBuffVFX");
+                    _buffAnimator.SetBool("Activate", true);
+                    StartCoroutine(Invulnerable());
+                    break;
             }
+            ResetCooldown();
         }
     }
 
     private void Heal()
     {
-        ResetCooldown();
         _player.AddHealth(_buffData.healAmount);
     }
 
     private IEnumerator Speed()
     {
-        ResetCooldown();
         _player.SetSpeed(_buffData.speedAmount);
         yield return new WaitForSeconds(_buffData.duration);
         _buffAnimator.SetBool("Activate", false);
@@ -64,5 +79,36 @@ public class BuffBehaviour : SkillBehaviour
     {
         base.ChangeSkill(skillName);
         this._buffData = (BuffData)_skillData;
+    }
+
+    private IEnumerator Stealth()
+    {
+        yield return new WaitForSeconds(0.3f);
+        _player.tag = "Stealth";
+        inStealth = true;
+        _player.GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 80);
+        weaponManager.ActiveWeapon().GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 80);
+        yield return new WaitForSeconds(_buffData.duration);
+        StartCoroutine(Unstealth());
+    }
+
+    public IEnumerator Unstealth()
+    {
+        _buffAnimator.SetTrigger("Activate");
+        yield return new WaitForSeconds(0.3f);
+        _player.tag = "Player";
+        _player.GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
+        weaponManager.ActiveWeapon().GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
+        inStealth = false;
+    }
+
+    private IEnumerator Invulnerable()
+    {
+        yield return new WaitForSeconds(1.583f);
+        Debug.Log("YAS");
+        _player.SetInvulnerability(true);
+        yield return new WaitForSeconds(_buffData.duration);
+        _player.SetInvulnerability(false);
+        _buffAnimator.SetBool("Activate", false);
     }
 }

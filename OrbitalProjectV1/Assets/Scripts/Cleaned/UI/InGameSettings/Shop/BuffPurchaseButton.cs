@@ -60,6 +60,39 @@ public class BuffPurchaseButton : SkillPurchaseButton
                     _skillTitle = "Heal (Level 3)";
                 }
                 break;
+            case "Invulnerable1Data":
+                if (!player.GetPlayerData().ranged)
+                {
+                    _buffData = Resources.Load<BuffData>("Data/SkillData/Stealth1Data");
+                    _skillTitle = "Stealth (Level 1)";
+                }
+                else
+                {
+                    _skillTitle = "Invulnerable (Level 1)";
+                }
+                break;
+            case "Invulnerable2Data":
+                if (!player.GetPlayerData().ranged)
+                {
+                    _buffData = Resources.Load<BuffData>("Data/SkillData/Stealth2Data");
+                    _skillTitle = "Stealth (Level 2)";
+                }
+                else
+                {
+                    _skillTitle = "Invulnerable (Level 2)";
+                }
+                break;
+            case "Invulnerable3Data":
+                if (!player.GetPlayerData().ranged)
+                {
+                    _buffData = Resources.Load<BuffData>("Data/SkillData/Stealth3Data");
+                    _skillTitle = "Stealth (Level 3)";
+                }
+                else
+                {
+                    _skillTitle = "Invulnerable (Level 3)";
+                }
+                break;
         }
 
 
@@ -85,13 +118,36 @@ public class BuffPurchaseButton : SkillPurchaseButton
                 "Mana Cost: " + _buffData.manaCost + " MP" + "\n" +
                 "Cost: " + _buffData.goldCost + " gold";
         }
+        else if (_skillTitle.Contains("Stealth"))
+        {
+            textDisplay.text = _skillTitle + "\n" +
+                "Duration: " + _buffData.duration + " sec" + "\n" +
+                "Cooldown: " + _buffData.cooldown + " sec" + "\n" +
+                "Mana Cost: " + _buffData.manaCost + " MP" + "\n" +
+                "Cost: " + _buffData.goldCost + " gold" + "\n" +
+                "-Becomes invisible for " + _buffData.duration + " sec until you attack or duration ended-";
+        }
+        else if (_skillTitle.Contains("Invulnerable"))
+        {
+            textDisplay.text = _skillTitle + "\n" +
+                "Duration: " + _buffData.duration + " sec" + "\n" +
+                "Cooldown: " + _buffData.cooldown + " sec" + "\n" +
+                "Mana Cost: " + _buffData.manaCost + " MP" + "\n" +
+                "Cost: " + _buffData.goldCost + " gold" + "\n" +
+                "-Becomes invincible for " + _buffData.duration + " sec-";
+        }
 
-            
+
     }
 
     public void PurchaseBuffSkill()
     {
         Debug.Log(_buffData.skillName);
         shop.AddBuffSkill(_buffData.skillName);
+    }
+
+    public string GetBuffName()
+    {
+        return _buffData.skillName;
     }
 }

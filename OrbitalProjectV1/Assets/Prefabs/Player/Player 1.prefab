@@ -711,7 +711,7 @@ GameObject:
   - component: {fileID: 951484425}
   - component: {fileID: 951484427}
   - component: {fileID: 951484426}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: BuffAnimator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -726,7 +726,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 951484424}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.04, y: 0.0546, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 3.6357462, y: 3.92052, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -779,7 +779,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.49, y: 0.38}
+  m_Size: {x: 0.51666665, y: 0.51666665}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
@@ -1304,6 +1304,7 @@ MonoBehaviour:
   imageCooldown: {fileID: 2847225970737379234}
   textCooldown: {fileID: 6545408041130620230}
   manaCostText: {fileID: 4477478536114969182}
+  inStealth: 0
 --- !u!1 &2644618067163994234
 GameObject:
   m_ObjectHideFlags: 0
@@ -3500,7 +3501,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9015927139262890777}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.49, y: -0.49, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
