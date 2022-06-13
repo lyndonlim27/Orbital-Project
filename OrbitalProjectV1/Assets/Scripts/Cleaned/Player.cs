@@ -258,4 +258,9 @@ public class Player : EntityBehaviour
     {
         _invulnerable = state;
     }
+
+    public Vector2 GetDirection()
+    {
+        return _movement;
+    }
 }

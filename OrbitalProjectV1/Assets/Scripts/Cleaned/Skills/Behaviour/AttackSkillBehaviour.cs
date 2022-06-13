@@ -7,13 +7,16 @@ public class AttackSkillBehaviour : SkillBehaviour
 
     public AttackData _attackData { get; private set; }
     private Animator _attackAnimator;
-
+    private Rigidbody2D _playerRb;
+    private TrailRenderer _playerTr;
 
     // Start is called before the first frame update
     public override void Start()
     {
         base.Start();
         _attackData = (AttackData)_skillData;
+        _playerRb = _player.GetComponent<Rigidbody2D>();
+        _playerTr = _player.GetComponent<TrailRenderer>();
     }
 
     public override void Update()
@@ -35,15 +38,17 @@ public class AttackSkillBehaviour : SkillBehaviour
                 case AttackData.ATTACK_TYPE.SHURIKEN:
                     Shuriken();
                     break;
+                case AttackData.ATTACK_TYPE.DASH:
+                    StartCoroutine(Dash());
+                    break;
             }
-
+            ResetCooldown();
 
         }
     }
     private void Fire()
     {
         Debug.Log("FIRE");
-        ResetCooldown();
         if (_attackData.numOfProjectiles == 3)
         {
             FireAttack1();
@@ -100,7 +105,6 @@ public class AttackSkillBehaviour : SkillBehaviour
 
     private void Shuriken()
     {
-        ResetCooldown();
         if (_attackData.numOfProjectiles == 2)
         {
             ShurikenAttack1();
@@ -161,5 +165,23 @@ public class AttackSkillBehaviour : SkillBehaviour
     {
         base.ChangeSkill(skillName);
         this._attackData = (AttackData)_skillData;
+    }
+
+    private IEnumerator Dash()
+    {
+        Vector2 dir = _player.GetDirection();
+        if (dir == new Vector2(0, 0))
+        {
+            dir = new Vector2(0, -1);
+        }
+        _playerRb.velocity = dir * 10;
+        _playerTr.emitting = true;
+        yield return new WaitForSeconds(0.2f);
+        _playerTr.emitting = false;
+        yield return new WaitForSeconds(0.1f);
+        _playerRb.constraints = RigidbodyConstraints2D.FreezeAll;
+        Instantiate(_attackData.prefab, _player.transform);
+        yield return new WaitForSeconds(0.5f);
+        _playerRb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 }
