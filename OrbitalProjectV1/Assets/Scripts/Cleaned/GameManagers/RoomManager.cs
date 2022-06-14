@@ -267,7 +267,6 @@ public abstract class RoomManager : MonoBehaviour
        
 
         Vector2 pos = data.random ? GetRandomPoint() : data.pos;
-        Debug.Log(pos);
       
         switch (data._type)
         {
@@ -300,8 +299,6 @@ public abstract class RoomManager : MonoBehaviour
                 npcs.Add(npc);
                 break;
             case EntityData.TYPE.ENEMY:
-                Debug.Log("hmm");
-                Debug.Log("enemy pos" + pos);
                 enemyPrefabs[0].SetEntityStats(data);
                 enemyPrefabs[0].GetComponent<SpriteRenderer>().sprite = data.sprite;
                 EnemyBehaviour emf = Instantiate(enemyPrefabs[0], Vector3.zero, Quaternion.identity);

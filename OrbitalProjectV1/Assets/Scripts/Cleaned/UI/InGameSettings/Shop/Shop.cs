@@ -144,6 +144,25 @@ public class Shop : MenuBehaviour
             _attackSkill.ChangeSkill(attackSkillName);
             _player.UseGold(Resources.Load<SkillData>("Data/SkillData/" + attackSkillName).goldCost);
             _audioSource.Play();
+            foreach (AttackPurchaseButton attack in GetComponentsInChildren<AttackPurchaseButton>())
+            {
+                if (attackSkillName.Contains("Fireball") || attackSkillName.Contains("Shuriken"))
+                {
+                    if (attack.GetAttackName().Contains("Shockwave") || attack.GetAttackName().Contains("Dash"))
+                    {
+                        attack.GetComponent<Image>().color = new Color32(96, 96, 96, 255);
+                        attack.GetComponent<Button>().enabled = false;
+                    }
+                }
+                else
+                {
+                    if (attack.GetAttackName().Contains("Fireball") || attack.GetAttackName().Contains("Shuriken"))
+                    {
+                        attack.GetComponent<Image>().color = new Color32(96, 96, 96, 255);
+                        attack.GetComponent<Button>().enabled = false;
+                    }
+                }
+            }
         }
         StartCoroutine(UpdateText());
     }

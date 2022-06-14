@@ -12,7 +12,8 @@ public class AttackData :SkillData
     {
         FIRE,
         SHURIKEN,
-        DASH
+        DASH,
+        SHOCKWAVE
     }
     public ATTACK_TYPE attackType;
     public GameObject prefab;

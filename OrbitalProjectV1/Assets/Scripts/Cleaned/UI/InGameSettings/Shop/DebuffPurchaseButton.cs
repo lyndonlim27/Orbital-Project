@@ -16,12 +16,6 @@ public class DebuffPurchaseButton : SkillPurchaseButton
         Initialise();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void PurchaseDebuffSkill()
     {
         shop.AddDebuffSkill(_debuffData.skillName);
@@ -29,56 +23,27 @@ public class DebuffPurchaseButton : SkillPurchaseButton
 
     private void Initialise()
     {
-        switch (_debuffData.skillName)
-        {
-            default:
-            case "Stun1Data":
-                _skillTitle = "Stun (Level 1)";
-                break;
-            case "Stun2Data":
-                _skillTitle = "Stun (Level 2)";
-                break;
-            case "Stun3Data":
-                _skillTitle = "Stun (Level 3)";
-                break;
-            case "Slow1Data":
-                _skillTitle = "Slow (Level 1)";
-                break;
-            case "Slow2Data":
-                _skillTitle = "Slow (Level 2)";
-                break;
-            case "Slow3Data":
-                _skillTitle = "Slow (Level 3)";
-                break;
-        }
-        _debuffData = Resources.Load<DebuffData>("Data/SkillData/" + _debuffData.skillName);
-        GetComponent<Image>().overrideSprite = _debuffData.sprite;
-        TextMeshProUGUI textDisplay = GetComponentInChildren<TextMeshProUGUI>(true);
 
-        if (_skillTitle.Contains("Stun"))
+        _skillTitle = _debuffData.skillName.Substring(0, 4) + " (Level " +
+            _debuffData.skillName.Substring(4, 1) + ")";
+
+        image.overrideSprite = _debuffData.sprite;
+
+        textDisplay.text = _skillTitle + "\n";
+
+        if (_skillTitle.Contains("Slow"))
         {
-            textDisplay.text = _skillTitle + "\n" +
-                "Duration: + " + _debuffData.duration + " SEC" + "\n" +
-                "Cooldown: " + _debuffData.cooldown + " sec" + "\n" +
-                "Mana Cost: " + _debuffData.manaCost + " MP" + "\n" +
-                "Cost: " + _debuffData.goldCost + " gold";
+            textDisplay.text += "Slow: - " + _debuffData.slowAmount + " MS" + "\n";
         }
-        else
-        {
-            textDisplay.text = _skillTitle + "\n" +
-                "Slow: - " +_debuffData.slowAmount + " MS" + "\n" +
-                "Duration: + " + _debuffData.duration + " SEC" + "\n" +
-                "Cooldown: " + _debuffData.cooldown + " sec" + "\n" +
-                "Mana Cost: " + _debuffData.manaCost + " MP" + "\n" +
-                "Cost: " + _debuffData.goldCost + " gold";
-        }
+
+        textDisplay.text += "Duration: + " + _debuffData.duration + " SEC" + "\n" +
+            "Cooldown: " + _debuffData.cooldown + " sec" + "\n" +
+            "Mana Cost: " + _debuffData.manaCost + " MP" + "\n" +
+            "Cost: " + _debuffData.goldCost + " gold";
     }
 
     public string GetDebuffName()
     {
         return _debuffData.skillName;
     }
-
-
-
 }

@@ -8,6 +8,11 @@ public class BuffBehaviour : SkillBehaviour
     private Animator _buffAnimator;
     private WeaponPickup weaponManager;
     public bool inStealth;
+    private RuntimeAnimatorController _healBuffVFX;
+    private RuntimeAnimatorController _speedBuffVFX;
+    private RuntimeAnimatorController _stealthBuffVFX;
+    private RuntimeAnimatorController _invulnerableBuffVFX;
+    private SpriteRenderer _playerSpriteRenderer;
 
     // Start is called before the first frame update
     public override void Start()
@@ -17,6 +22,11 @@ public class BuffBehaviour : SkillBehaviour
         _buffData = (BuffData)_skillData;
         inStealth = false;
         weaponManager = FindObjectOfType<WeaponPickup>();
+        _healBuffVFX = Resources.Load<AnimatorOverrideController>("Animations/AnimatorControllers/HealBuffVFX");
+        _speedBuffVFX = Resources.Load<RuntimeAnimatorController>("Animations/AnimatorControllers/SpeedBuffVFX");
+        _stealthBuffVFX = Resources.Load<RuntimeAnimatorController>("Animations/AnimatorControllers/StealthBuffVFX");
+        _invulnerableBuffVFX = Resources.Load<RuntimeAnimatorController>("Animations/AnimatorControllers/InvulnerableBuffVFX");
+        _playerSpriteRenderer = _player.GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -34,26 +44,22 @@ public class BuffBehaviour : SkillBehaviour
             {
                 default:
                 case BuffData.BUFF_TYPE.HEAL:
-                    _buffAnimator.runtimeAnimatorController =
-                        Resources.Load<AnimatorOverrideController>("Animations/AnimatorControllers/HealBuffVFX");
+                    _buffAnimator.runtimeAnimatorController = _healBuffVFX;
                     _buffAnimator.SetTrigger("Activate");
                     Heal();
                     break;
                 case BuffData.BUFF_TYPE.SPEED:
-                    _buffAnimator.runtimeAnimatorController =
-                        Resources.Load<RuntimeAnimatorController>("Animations/AnimatorControllers/SpeedBuffVFX");
+                    _buffAnimator.runtimeAnimatorController = _speedBuffVFX;  
                     _buffAnimator.SetBool("Activate", true);
                     StartCoroutine(Speed());
                     break;
                 case BuffData.BUFF_TYPE.STEALTH:
-                    _buffAnimator.runtimeAnimatorController =
-                        Resources.Load<RuntimeAnimatorController>("Animations/AnimatorControllers/StealthBuffVFX");
+                    _buffAnimator.runtimeAnimatorController = _stealthBuffVFX;
                     _buffAnimator.SetTrigger("Activate");
                     StartCoroutine(Stealth());
                     break;
                 case BuffData.BUFF_TYPE.INVULNERABLE:
-                    _buffAnimator.runtimeAnimatorController =
-                        Resources.Load<RuntimeAnimatorController>("Animations/AnimatorControllers/InvulnerableBuffVFX");
+                    _buffAnimator.runtimeAnimatorController = _invulnerableBuffVFX;
                     _buffAnimator.SetBool("Activate", true);
                     StartCoroutine(Invulnerable());
                     break;
@@ -86,7 +92,7 @@ public class BuffBehaviour : SkillBehaviour
         yield return new WaitForSeconds(0.3f);
         _player.tag = "Stealth";
         inStealth = true;
-        _player.GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 80);
+        _playerSpriteRenderer.color = new Color32(255, 255, 255, 80);
         weaponManager.ActiveWeapon().GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 80);
         yield return new WaitForSeconds(_buffData.duration);
         StartCoroutine(Unstealth());
@@ -97,7 +103,7 @@ public class BuffBehaviour : SkillBehaviour
         _buffAnimator.SetTrigger("Activate");
         yield return new WaitForSeconds(0.3f);
         _player.tag = "Player";
-        _player.GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
+        _playerSpriteRenderer.color = new Color32(255, 255, 255, 255);
         weaponManager.ActiveWeapon().GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
         inStealth = false;
     }

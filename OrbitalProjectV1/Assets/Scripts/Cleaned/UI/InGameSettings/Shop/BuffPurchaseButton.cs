@@ -8,11 +8,23 @@ public class BuffPurchaseButton : SkillPurchaseButton
 {
     [SerializeField] private BuffData _buffData;
     private string _skillTitle;
+    private List<BuffData> _speedDatas;
+    private List<BuffData> _stealthDatas;
 
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
+        _speedDatas = new List<BuffData>();
+        _stealthDatas = new List<BuffData>();
+        for(int i = 1; i < 4; i++)
+        {
+            _speedDatas.Add(Resources.Load<BuffData>("Data/SkillData/Speed" + i + "Data"));
+        }
+        for (int i = 1; i < 4; i++)
+        {
+            _stealthDatas.Add(Resources.Load<BuffData>("Data/SkillData/Stealth" + i + "Data"));
+        }
         Initialise();
     }
 
@@ -24,121 +36,73 @@ public class BuffPurchaseButton : SkillPurchaseButton
 
     private void Initialise()
     {
-        switch (_buffData.skillName)
+        if (!player.GetPlayerData().ranged)
         {
-            default:
-            case "Heal1Data":
-                if (!player.GetPlayerData().ranged)
-                {
-                    _buffData = Resources.Load<BuffData>("Data/SkillData/Speed1Data");
-                    _skillTitle = "Speed (Level 1)";
-                }
-                else
-                {
-                    _skillTitle = "Heal (Level 1)";
-                }
-                break;
-            case "Heal2Data":
-                if (!player.GetPlayerData().ranged)
-                {
-                    _buffData = Resources.Load<BuffData>("Data/SkillData/Speed2Data");
-                    _skillTitle = "Speed (Level 2)";
-                }
-                else
-                {
-                    _skillTitle = "Heal (Level 2)";
-                }
-                break;
-            case "Heal3Data":
-                if (!player.GetPlayerData().ranged)
-                {
-                    _buffData = Resources.Load<BuffData>("Data/SkillData/Speed3Data");
-                    _skillTitle = "Speed (Level 3)";
-                }
-                else
-                {
-                    _skillTitle = "Heal (Level 3)";
-                }
-                break;
-            case "Invulnerable1Data":
-                if (!player.GetPlayerData().ranged)
-                {
-                    _buffData = Resources.Load<BuffData>("Data/SkillData/Stealth1Data");
-                    _skillTitle = "Stealth (Level 1)";
-                }
-                else
-                {
-                    _skillTitle = "Invulnerable (Level 1)";
-                }
-                break;
-            case "Invulnerable2Data":
-                if (!player.GetPlayerData().ranged)
-                {
-                    _buffData = Resources.Load<BuffData>("Data/SkillData/Stealth2Data");
-                    _skillTitle = "Stealth (Level 2)";
-                }
-                else
-                {
-                    _skillTitle = "Invulnerable (Level 2)";
-                }
-                break;
-            case "Invulnerable3Data":
-                if (!player.GetPlayerData().ranged)
-                {
-                    _buffData = Resources.Load<BuffData>("Data/SkillData/Stealth3Data");
-                    _skillTitle = "Stealth (Level 3)";
-                }
-                else
-                {
-                    _skillTitle = "Invulnerable (Level 3)";
-                }
-                break;
+            if (_buffData.skillName.Contains("Heal"))
+            {
+                int level = int.Parse(_buffData.skillName.Substring(4, 1));
+                _skillTitle = "Speed (Level " +  level + ")";
+                _buffData = _speedDatas[level - 1];
+            }
+            else
+            {
+                int level = int.Parse(_buffData.skillName.Substring(12, 1));
+                _skillTitle = "Stealth (Level " + level + ")";
+                _buffData = _stealthDatas[level - 1];
+            }
+        }
+        else
+        {
+            if (_buffData.skillName.Contains("Heal"))
+            {
+                _skillTitle = "Heal (Level " + _buffData.skillName.Substring(4, 1) + ")";
+            }
+            else
+            {
+                _skillTitle = "Invulnerable (Level " + _buffData.skillName.Substring(12, 1) + ")";
+            }
+                
         }
 
-
-
-
-        GetComponent<Image>().overrideSprite = _buffData.sprite;
-        TextMeshProUGUI textDisplay = GetComponentInChildren<TextMeshProUGUI>(true);
+        image.overrideSprite = _buffData.sprite;
+        textDisplay.text = _skillTitle + "\n";
 
         if (_skillTitle.Contains("Heal"))
         {
-            textDisplay.text = _skillTitle + "\n" +
-                "Heal: + " + _buffData.healAmount + " HP" + "\n" +
-                "Cooldown: " + _buffData.cooldown + " sec" + "\n" +
+            textDisplay.text += "Heal: + " + _buffData.healAmount + " HP" + "\n";
+        }
+        else
+        {
+            if (_skillTitle.Contains("Speed"))
+            {
+                textDisplay.text += "Speed: + " + _buffData.speedAmount + " ms" + "\n";
+            }
+            textDisplay.text += "Duration: " + _buffData.duration + " sec" + "\n";
+        }
+
+        textDisplay.text += "Cooldown: " + _buffData.cooldown + " sec" + "\n" +
                 "Mana Cost: " + _buffData.manaCost + " MP" + "\n" +
-                "Cost: " + _buffData.goldCost + " gold";
+                "Cost: " + _buffData.goldCost + " gold" + "\n";
+
+        if (_skillTitle.Contains("Heal"))
+        {
+            textDisplay.text += "-Heal " + _buffData.healAmount + " Health-";
         }
         else if (_skillTitle.Contains("Speed"))
         {
-            textDisplay.text = _skillTitle + "\n" +
-                "Speed: + " + _buffData.speedAmount + " ms" + "\n" +
-                "Duration: " + _buffData.duration + " sec" + "\n" +
-                "Cooldown: " + _buffData.cooldown + " sec" + "\n" +
-                "Mana Cost: " + _buffData.manaCost + " MP" + "\n" +
-                "Cost: " + _buffData.goldCost + " gold";
+            textDisplay.text += "_Increase speed by " + _buffData.speedAmount +
+                " for " + _buffData.duration + " sec-";
         }
         else if (_skillTitle.Contains("Stealth"))
         {
-            textDisplay.text = _skillTitle + "\n" +
-                "Duration: " + _buffData.duration + " sec" + "\n" +
-                "Cooldown: " + _buffData.cooldown + " sec" + "\n" +
-                "Mana Cost: " + _buffData.manaCost + " MP" + "\n" +
-                "Cost: " + _buffData.goldCost + " gold" + "\n" +
-                "-Becomes invisible for " + _buffData.duration + " sec until you attack or duration ended-";
+            textDisplay.text += "-Becomes invisible for " + _buffData.duration +
+                " sec until you attack or duration ended-";
         }
-        else if (_skillTitle.Contains("Invulnerable"))
+        else
         {
-            textDisplay.text = _skillTitle + "\n" +
-                "Duration: " + _buffData.duration + " sec" + "\n" +
-                "Cooldown: " + _buffData.cooldown + " sec" + "\n" +
-                "Mana Cost: " + _buffData.manaCost + " MP" + "\n" +
-                "Cost: " + _buffData.goldCost + " gold" + "\n" +
-                "-Becomes invincible for " + _buffData.duration + " sec-";
+            textDisplay.text += "-Becomes invincible for " + _buffData.duration + " sec-";
         }
-
-
-    }
+   }
 
     public void PurchaseBuffSkill()
     {
