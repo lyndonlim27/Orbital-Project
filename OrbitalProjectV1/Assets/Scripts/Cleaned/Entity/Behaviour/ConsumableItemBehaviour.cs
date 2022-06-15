@@ -14,12 +14,14 @@ public class ConsumableItemBehaviour : EntityBehaviour
     private Vector3 angularVelocity;
     private Vector3 startingpos;
     private bool finishedBouncing;
+    private WordStorageManagerUI wordStorageManager;
 
     protected override void Awake()
     {
         base.Awake();
         animator = GetComponent<Animator>();
         _tf = GetComponent<Transform>();
+        wordStorageManager = FindObjectOfType<WordStorageManagerUI>(true);
     }
 
     void Start()
@@ -50,7 +52,7 @@ public class ConsumableItemBehaviour : EntityBehaviour
             float dist = jumpvelocity.magnitude * Time.deltaTime;
             RaycastHit hit;
             Ray ray = new Ray(transform.position, jumpvelocity);
-            Debug.Log("This is raycast: " + Physics.Raycast(ray, out hit, dist, LayerMask.GetMask("Obstacles")));
+            //Debug.Log("This is raycast: " + Physics.Raycast(ray, out hit, dist, LayerMask.GetMask("Obstacles")));
             if (Physics.Raycast(ray, out hit, dist, LayerMask.GetMask("Obstacles")) || transform.position.y <= startingpos.y)
             {
                 // if we hit something then set the transform to the hit point.
@@ -137,7 +139,6 @@ public class ConsumableItemBehaviour : EntityBehaviour
         }
 
         AddLetterToStorage();
-
         Defeated();
     }
 
@@ -145,7 +146,7 @@ public class ConsumableItemBehaviour : EntityBehaviour
     {
         if (_itemData._consumableType == ConsumableItemData.CONSUMABLE.LETTER)
         {
-
+            WordStorageManagerUI.instance.AddItem(_itemData);
         }
     }
 

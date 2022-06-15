@@ -79,6 +79,7 @@ public class PoolManager : MonoBehaviour
 
     public void ReleaseObject(EntityBehaviour instance)
     {
+        Debug.Log(instance);
         instance.StopAllCoroutines();
         objectPools[instance.GetData()._type].Release(instance);
     }
@@ -108,6 +109,7 @@ public class PoolManager : MonoBehaviour
             }
 
         }
+
     }
 
     /**

@@ -31,7 +31,7 @@ public abstract class TextLogic : MonoBehaviour
         Textdisplayer = GetComponent<TextMeshPro>();
         player = GameObject.FindObjectOfType<Player>(true);
         parent = this.gameObject.transform.parent.GetComponent<EntityBehaviour>();
-        
+        //Textdisplayer.alignment = TextAlignmentOptions.Center;
         
     }
     /**

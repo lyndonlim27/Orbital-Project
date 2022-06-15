@@ -31,13 +31,15 @@ public class TrapInActiveState : StateClass
 
     private void CheckIfActivated()
     {
-        if (trap.detectionScript.playerDetected && !trap.inAnimation)
+
+        if (trap.detectionScript.playerDetected || !trap.trapData.ontrigger)
         {
             stateMachine.ChangeState(StateMachine.STATE.TRAPACTIVE, null);
         }
         else
         {
             trap.animator.enabled = false;
+            trap.spriteRenderer.sprite = null;
         }
     }
 }

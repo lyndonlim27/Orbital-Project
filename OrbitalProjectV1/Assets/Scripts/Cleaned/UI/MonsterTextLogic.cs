@@ -17,7 +17,14 @@ public class MonsterTextLogic : TextLogic{
     protected override bool CheckInternalInput()
     {
         StateMachine stateMachine = parent.gameObject.GetComponent<EnemyBehaviour>().stateMachine;
-        return (!stateMachine.currState.Equals(StateMachine.STATE.STOP)) && (!stateMachine.currState.Equals(StateMachine.STATE.RECOVERY));
+        if (stateMachine != null)
+        {
+            return (!stateMachine.currState.Equals(StateMachine.STATE.STOP)) && (!stateMachine.currState.Equals(StateMachine.STATE.RECOVERY));
+        } else
+        {
+            return true;
+        }
+        
     }
 
     protected override void GenerateNewWord()

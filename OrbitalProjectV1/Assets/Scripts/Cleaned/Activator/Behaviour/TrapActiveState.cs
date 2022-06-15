@@ -14,7 +14,7 @@ public class TrapActiveState : StateClass
     {
         trap.animator.enabled = true;
         CheckForActivation();
-    }
+    } 
 
     public override void Exit()
     {
@@ -25,47 +25,49 @@ public class TrapActiveState : StateClass
     {
         base.FixedUpdate();
     }
-
+    
     public override void Update()
     {
-        CheckIfTrapExpired();
+        //CheckIfTrapExpired();
         CheckForActivation();
     }
 
     private void CheckIfTrapExpired()
     {
-        if (!trap.data.onetime)
+        if (Time.time >= activatedTime + trap.trapData.duration)
         {
-            if (Time.time >= activatedTime + trap.data.duration)
-            {
 
-                trap.animator.SetBool(trap.data.triggername, false);
-                trap.inAnimation = false;
-            }
+            trap.animator.SetBool(trap.trapData.triggername, false);
+            trap.inAnimation = false;
         }
-        
     }
 
     private void CheckForActivation()
     {
-        if (!trap.detectionScript.playerDetected && !trap.inAnimation )
+        if (!trap.inAnimation)
         {
-            stateMachine.ChangeState(StateMachine.STATE.TRAPINACTIVE, null);
-           
-        } else if (!trap.inAnimation)
-        {
-            if (trap.data.onetime)
+
+            if (!trap.trapData.ontrigger)
             {
                 trap.inAnimation = true;
-                trap.animator.SetTrigger(trap.data.triggername);
-            }
-            else
-            {
-                activatedTime = Time.time;
-                trap.animator.SetBool(trap.data.triggername, true);
-                
+                trap.animator.SetTrigger(trap.trapData.triggername);
             }
             
+            else if (trap.detectionScript.playerDetected)
+            {
+                trap.inAnimation = true;
+                trap.animator.SetTrigger(trap.trapData.triggername);
+
+                //activatedTime = Time.time;
+                //trap.animator.SetBool(trap.trapData.triggername, true);
+
+            } else
+            {
+                stateMachine.ChangeState(StateMachine.STATE.TRAPINACTIVE, null);
+                
+            }
         }
-    }
+
+    }     
+    
 }

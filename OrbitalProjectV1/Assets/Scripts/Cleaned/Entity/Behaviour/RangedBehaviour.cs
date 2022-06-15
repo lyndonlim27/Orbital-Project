@@ -57,12 +57,17 @@ public class RangedBehaviour : EntityBehaviour
         EnableAnimation();
         SettingUpCollider();
         transform.localScale = new Vector2(rangedData.scale, rangedData.scale);
-        Color c = spriteRenderer.material.color;
-        c.a = 1;
-        spriteRenderer.material.color = c;
+        ResttingColor();
         rotateSpeed = rangedData.rotation;
         speed = rangedData.speed;
 
+    }
+
+    private void ResttingColor()
+    {
+        Color c = spriteRenderer.material.color;
+        c.a = 1;
+        spriteRenderer.material.color = c;
     }
 
     protected void OnDisable()
@@ -76,7 +81,8 @@ public class RangedBehaviour : EntityBehaviour
         lifeTime -= Time.deltaTime;
         if (lifeTime <= 0)
         {
-            StartCoroutine(FadeOut());
+            Debug.Log(lifeTime);
+            Defeated();
         }
     }
 
@@ -146,11 +152,11 @@ public class RangedBehaviour : EntityBehaviour
 
     public override void Defeated()
     {
-        Debug.Log(_firer);
+        Debug.Log("We entered !");
         if (_firer != null)
         {
             EnemyBehaviour enemy = _firer.GetComponent<EnemyBehaviour>();
-            enemy.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+            //enemy.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
             enemy.resetCooldown();
         }
         Debug.Log(lifeTime);
@@ -167,9 +173,17 @@ public class RangedBehaviour : EntityBehaviour
      */
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
+        Debug.Log(collision.gameObject);
+        Debug.Log(_target.gameObject);
+        
         stopMovement();
         DisableAnimation();
         GameObject go = collision.gameObject;
+        //if (go.layer == LayerMask.NameToLayer("enemy") && _firer.laye == "enemy"))
+        //{
+        //    return;
+
+        //}
         ApplyDamage(go);
         if (rangedData.impact_trigger != "")
         {
@@ -185,7 +199,7 @@ public class RangedBehaviour : EntityBehaviour
     {
         if (ReferenceEquals(go, _target))
         {
-            Debug.Log("??? wtf?");
+            //Debug.Log("??? wtf?");
             if (go.CompareTag("Player"))
             {
                 Player player = go.GetComponent<Player>();
@@ -196,7 +210,7 @@ public class RangedBehaviour : EntityBehaviour
             }
             else
             {
-                EnemyBehaviour enemy = go.GetComponent<EnemyBehaviour>();
+                EnemyBehaviour enemy = go.GetComponentInChildren<EnemyBehaviour>();
                 Debug.Log("NANI??");
     
                 if (enemy != null)
@@ -212,21 +226,27 @@ public class RangedBehaviour : EntityBehaviour
     {
         //Setting collision to true so that it will trigger the next state
         //for bullet and thus play the explosion animation
-        GameObject go = collision.gameObject;
-
-        ApplyDamage(go);
-        ApplyForce(go);
+        GameObject go = collision.gameObject.transform.root.gameObject;
+        if (rangedData._type != EntityData.TYPE.PROJECTILE)
+        {
+            ApplyDamage(go);
+            ApplyForce(go);
+        }
+        
 
     }
 
     protected void OnTriggerStay2D(Collider2D collision)
     {
-        
-        GameObject go = collision.gameObject;
-        Debug.Log(go);
 
-        ApplyDamage(go);
-        ApplyForce(go);
+        GameObject go = collision.gameObject;
+        //Debug.Log(go);
+
+        if (rangedData._type != EntityData.TYPE.PROJECTILE)
+        {
+            ApplyDamage(go);
+            ApplyForce(go);
+        }
 
     }
 

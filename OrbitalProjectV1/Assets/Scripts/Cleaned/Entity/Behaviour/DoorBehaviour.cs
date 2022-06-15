@@ -6,11 +6,14 @@ using UnityEngine;
 public class DoorBehaviour : EntityBehaviour
 {
     private Animator animator;
-    private bool unlocked;
+    public bool unlocked;
+    private HashSet<RoomManager> roomManagers;
+    private List<string> conditions;
     protected override void Awake()
     {
         base.Awake();
         animator = GetComponent<Animator>();
+        roomManagers = new HashSet<RoomManager>();
         Debug.Log(animator);
     }
 
@@ -19,9 +22,22 @@ public class DoorBehaviour : EntityBehaviour
         unlocked = false;
     }
 
+    private void Update()
+    {
+        if (unlocked)
+        {
+            UnlockDoor();
+        }
+        else
+        {
+            LockDoor();
+        }
+
+    }
+
     public override void Defeated()
     {
-      
+        
     }
 
     public override EntityData GetData()
@@ -36,38 +52,18 @@ public class DoorBehaviour : EntityBehaviour
 
     public void UnlockDoor()
     {
-        if (!unlocked)
-        {
-            unlocked = true;
-            if (animator.runtimeAnimatorController != null)
-            {
-                animator.SetBool(gameObject.name.Substring(0, 4), true);
-            }
-            else
-            {
-                StartCoroutine(FadeOut());
-
-            }
-            GetComponent<Collider2D>().enabled = false;
-        }
+       
+        animator.SetBool(gameObject.name.Substring(0, 4), true);
+        GetComponent<Collider2D>().enabled = false;
+        
         
     }
 
     public void LockDoor()
     {
-        if (unlocked)
-        {
-            unlocked = false;
-            if (animator.runtimeAnimatorController != null)
-            {
-                animator.SetBool(gameObject.name.Substring(0, 4), false);
-            }
-            else
-            {
-                StartCoroutine(FadeIn());
-            }
-            GetComponent<Collider2D>().enabled = true;
-        }
+        
+        animator.SetBool(gameObject.name.Substring(0, 4), false);
+        GetComponent<Collider2D>().enabled = true;
     }
         
 
@@ -81,6 +77,7 @@ public class DoorBehaviour : EntityBehaviour
             spriteRenderer.material.color = c;
             yield return new WaitForSeconds(0.05f);
         }
+        inAnimation = false;
     }
 
     protected IEnumerator FadeIn()
@@ -92,7 +89,17 @@ public class DoorBehaviour : EntityBehaviour
             spriteRenderer.material.color = c;
             yield return new WaitForSeconds(0.05f);
         }
+
+        inAnimation = false;
     }
 
+    public void SetRoomControllers(RoomManager room)
+    {
+        roomManagers.Add(room);
+    }
 
+    public HashSet<RoomManager> GetRoomManagers()
+    {
+        return roomManagers;
+    }
 }

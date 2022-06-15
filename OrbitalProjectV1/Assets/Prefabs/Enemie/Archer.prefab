@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 8256497466722005491}
   - component: {fileID: 3158100394252031132}
   - component: {fileID: 3158100394252031133}
-  - component: {fileID: 3158100394252031130}
   - component: {fileID: 3158100394252031129}
-  - component: {fileID: 3158100394252031131}
+  - component: {fileID: 2972232413046819136}
+  - component: {fileID: 7699734044698431969}
   m_Layer: 0
   m_Name: Archer
   m_TagString: Untagged
@@ -111,33 +111,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3158100394252031130
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8256497466722005488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6621d27a14dfb424daa6cccc1581faa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inAnimation: 0
-  enemyData: {fileID: 11400000, guid: e2ba91a99bfb84c05b594010d3bf8927, type: 2}
-  isDead: 0
-  roamPos: {x: 0, y: 0}
-  maxDist: 100
-  detectionScript: {fileID: 8256497466902239055}
-  startingpos: {x: 0, y: 0}
-  player: {fileID: 0}
-  health: 0
-  cooldown: 0
-  facingRight: 0
-  stage2: 0
-  repathRate: 0.5
-  nextWaypointDistance: 1
-  reachedEndOfPath: 0
 --- !u!114 &3158100394252031129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,8 +139,27 @@ MonoBehaviour:
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
---- !u!61 &3158100394252031131
-BoxCollider2D:
+--- !u!114 &2972232413046819136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8256497466722005488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c4d8d1790a5a4d9c94ac6f5e6ecd31d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDead: 0
+  inAnimation: 0
+  _healthBar: {fileID: 0}
+  enemyData: {fileID: 11400000, guid: e2ba91a99bfb84c05b594010d3bf8927, type: 2}
+  stage2: 0
+  consumableItemDatas: []
+  detectionScript: {fileID: 8256497466902239055}
+--- !u!70 &7699734044698431969
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -179,19 +171,9 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.4, y: 0.4}
-  m_EdgeRadius: 0
+  m_Offset: {x: 0.0026952028, y: -0.013192564}
+  m_Size: {x: 0.37, y: 0.37}
+  m_Direction: 0
 --- !u!1 &8256497466902239050
 GameObject:
   m_ObjectHideFlags: 0

@@ -20,6 +20,7 @@ public abstract class EntityBehaviour : MonoBehaviour
     {
         poolManager = FindObjectOfType<PoolManager>(true);
         spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.sortingOrder = 1;
     }
 
     public abstract void SetEntityStats(EntityData stats);
@@ -29,11 +30,21 @@ public abstract class EntityBehaviour : MonoBehaviour
     public virtual void TakeDamage(int damage)
     {
         health -= damage;
+        Debug.Log(damage);
+        Debug.Log(health);
         if (health <= 0 && !isDead)
         {
             isDead = true;
             Defeated();
         }
+    }
+
+    protected virtual void ResettingColor()
+    {
+        Color c = spriteRenderer.material.color;
+        c.a = 1;
+        spriteRenderer.material.color = c;
+
     }
 
     public abstract EntityData GetData();

@@ -121,7 +121,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f92cf1485cb84591a09ccee8a8f7615, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead: 0
+  inAnimation: 0
   data: {fileID: 11400000, guid: d6d87f42ba1984f5a93f3dc29ff9f954, type: 2}
+  consumableItemDatas:
+  - {fileID: 11400000, guid: 23532790317044ebe8de1e951381e273, type: 2}
 --- !u!82 &98932954468447521
 AudioSource:
   m_ObjectHideFlags: 0

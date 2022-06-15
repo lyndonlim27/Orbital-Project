@@ -7,11 +7,38 @@ public class NPCBehaviour : EntityBehaviour
 {
     [SerializeField] private NPCData data;
     protected bool fulfilled;
+    Animator animator;
+    DialogueDetection dialogueDetection;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        animator = GetComponent<Animator>();
+        dialogueDetection = GetComponentInChildren<DialogueDetection>();
+    }
     void Start()
     {
-        this.spriteRenderer.sprite = data.sprite;
+        
 
+
+    }
+
+    private void OnEnable()
+    {
+        this.spriteRenderer.sprite = data.sprite;
+        if (data._animator != "")
+        {
+            animator.runtimeAnimatorController = Resources.Load($"Animations/AnimatorController/{data._animator}") as RuntimeAnimatorController;
+        }
+        fulfilled = data.condition == 0;
+        
+ 
+        
+    }
+
+    private void OnDisable()
+    {
+        animator.runtimeAnimatorController = null;
     }
 
     // Update is called once per frame
@@ -24,10 +51,10 @@ public class NPCBehaviour : EntityBehaviour
     {
         if (!fulfilled)
         {
-            this.GetComponentInChildren<DialogueDetection>(true).gameObject.SetActive(true);
+            dialogueDetection.gameObject.SetActive(true);
         } else
         {
-            this.GetComponentInChildren<DialogueDetection>(true).gameObject.SetActive(false);
+            dialogueDetection.gameObject.SetActive(false);
         }
         
     }
@@ -35,8 +62,9 @@ public class NPCBehaviour : EntityBehaviour
     internal virtual void Fulfill()
     {
         fulfilled = true;
-        this.GetComponentInChildren<DialogueDetection>().gameObject.SetActive(false);
-        this.GetComponent<Animator>().enabled = false;
+        this.gameObject.SetActive(false);
+        dialogueDetection.enabled = false;
+        animator.enabled = false;
         if (data.condition == 1)
         {
             currentRoom.conditions.Remove(data._name);

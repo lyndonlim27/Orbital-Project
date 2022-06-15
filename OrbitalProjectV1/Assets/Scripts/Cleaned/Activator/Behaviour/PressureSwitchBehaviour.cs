@@ -1,115 +1,141 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PressureSwitchBehaviour : ActivatorBehaviour
-{
-    private Animator _animator;
+{ 
     //private bool _status;
     private List<Collider2D> colliders;
     private Coroutine _coroutine = null;
-    /*
-    private void Update()
+    private float activatedTime;
+
+    void OnDrawGizmos() { Gizmos.DrawWireSphere(transform.position, 1); }
+
+    protected override void Awake()
     {
-        Collider2D col = Physics2D.OverlapCircle(transform.position, 1, layerMask);
-        Debug.Log(col);
-        if (Physics2D.OverlapCircle(transform.position, 1, layerMask) != null)
-        {
-            OnSwitch();
-        }
-        else
-        {
-            StartCoroutine(offDelay());
-        }
+        base.Awake();
+        
+        colliders = new List<Collider2D>();
+
     }
 
-    void OnDrawGizmos() { Gizmos.DrawWireSphere(transform.position, 1); }*/
+    private void OnEnable()
+    {
+        ResettingColor();
+        SettingUpColliders();
+    }
+
+    private void SettingUpColliders()
+    {
+        CircleCollider2D body = GetComponent<CircleCollider2D>();
+        if (data != null)
+        {
+            body.radius = data.sprite.bounds.max.x - data.sprite.bounds.center.x;
+            body.offset = new Vector2(0f, 0f);
+
+        }
+        
+    }
+
     private void Start()
     {
-        _animator = GetComponent<Animator>();
-        colliders = new List<Collider2D>();
+        
     }
     public override EntityData GetData()
     {
         return data;
     }
 
-
-    /*
-    private void FixedUpdate()
+    public void Update()
     {
-        Debug.Log(colliders.Count);
-        if(colliders.Count == 0)
+        if (!IsOn())
         {
-            StopAllCoroutines();
-            StartCoroutine(offDelay());
-          //offSwitch();
-        }
-        else
+            currentRoom.UnfulfillCondition(data._name);
+            spriteRenderer.color = data.defaultcolor;
+
+        } else
         {
-            OnSwitch();
+            
+            currentRoom.FulfillCondition(data._name);
+            spriteRenderer.color = data.activatedcolor;
         }
-    }*/
+
+        //Debug.Log("Activatedtime =" + activatedTime);
+        //Debug.Log("Currenttime =" + Time.time);
+    }
+
+    
     public bool IsOn()
     {
-        return _animator.GetBool("Collision");
+        
+        return Time.time <= activatedTime + data.duration;
     }
     
     public void OnTriggerEnter2D(Collider2D collider)
     {
-        colliders.Add(collider);
-        if (colliders.Count == 1)
-        {
-            OnSwitch();
-            if (_coroutine != null)
-            {
-                StopCoroutine(_coroutine);
-            }
-        }
+
+        
+        activatedTime = Time.time;
+        //colliders.Add(collider);
+        //if (colliders.Count == 1)
+        //{
+        //    OnSwitch();
+        //    if (_coroutine != null)
+        //    {
+        //        StopCoroutine(_coroutine);
+        //    }
+        //}
     }
 
-
- 
-    public void OnTriggerExit2D(Collider2D collider)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-
-        colliders.Remove(collider);
-        if (colliders.Count == 0)
-        {
-            _coroutine = StartCoroutine(offDelay());
-        }
-        //OffSwitch();
-      //  StartCoroutine(offDelay());
+        activatedTime = Time.time;
     }
+
+    //public void OnTriggerExit2D(Collider2D collider)
+    //{
+
+    //    colliders.Remove(collider);
+    //    if (colliders.Count == 0)
+    //    {
+    //        _coroutine = StartCoroutine(offDelay());
+    //    }
+    //}
 
     public override void SetEntityStats(EntityData stats)
     {
         this.data = (SwitchData) stats;
     }
 
- 
-
-    private IEnumerator offDelay()
-    {
-        yield return new WaitForSeconds(data.duration);
-        OffSwitch();
-
-    }
-
-    private void OnSwitch()
-    {
-        _animator.SetBool("Collision", true);
-        currentRoom.FulfillCondition(data._name);
-    }
-
-    private void OffSwitch()
-    {
-        _animator.SetBool("Collision", false);
-        currentRoom.UnfulfillCondition(data._name);
-    }
-
     public override void Defeated()
     {
+        poolManager.ReleaseObject(this);
     }
+
+
+
+    //private IEnumerator offDelay()
+    //{
+    //    yield return new WaitForSeconds(data.duration);
+    //    OffSwitch();
+
+    //}
+
+    //private void OnSwitch()
+    //{
+    //    _animator.SetBool("Collision", true);
+    //    currentRoom.FulfillCondition(data._name);
+    //}
+
+    //private void OffSwitch()
+    //{
+    //    _animator.SetBool("Collision", false);
+    //    currentRoom.UnfulfillCondition(data._name);
+    //}
+
+    //public override void Defeated()
+    //{
+    //}
 
 }

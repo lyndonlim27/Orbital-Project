@@ -8,5 +8,10 @@ public class EditorCode : MonoBehaviour
 
     private void OnEnable()
     {
+        DoorBehaviour[] doors = FindObjectsOfType<DoorBehaviour>();
+        foreach(DoorBehaviour door in doors)
+        {
+            door.tag = "Door";
+        }
     }
 }

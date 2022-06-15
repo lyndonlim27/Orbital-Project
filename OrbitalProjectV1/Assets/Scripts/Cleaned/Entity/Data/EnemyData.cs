@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu]
-public class EnemyData : EntityData
+public class EnemyData : ItemWithTextData
 {
     public int damageValue;
     public float moveSpeed;

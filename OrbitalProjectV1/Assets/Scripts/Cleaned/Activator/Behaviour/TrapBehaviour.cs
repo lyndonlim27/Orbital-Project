@@ -6,14 +6,22 @@ public class TrapBehaviour : ActivatorBehaviour
 {
     StateMachine stateMachine;
     RangedComponent ranged;
- 
+    public TrapData trapData;
+    private BoxCollider2D _boxColl;
+    private Player player;
+    private Transform _transform;
+
+
     protected override void Awake()
     {
         base.Awake();
         detectionScript = GetComponentInChildren<DetectionScript>();
         animator = GetComponent<Animator>();
+        animator.keepAnimatorControllerStateOnDisable = false;
         animator.runtimeAnimatorController = Resources.Load("Animations/AnimatorControllers/AC_Trap") as RuntimeAnimatorController;
         ranged = GetComponentInChildren<RangedComponent>();
+        _boxColl = detectionScript.GetComponent<BoxCollider2D>();
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 
 
     }
@@ -24,6 +32,103 @@ public class TrapBehaviour : ActivatorBehaviour
         stateMachine.AddState(StateMachine.STATE.TRAPINACTIVE, new TrapInActiveState(this, stateMachine));
         stateMachine.AddState(StateMachine.STATE.TRAPACTIVE, new TrapActiveState(this, stateMachine));
         stateMachine.Init(StateMachine.STATE.TRAPINACTIVE, null);
+
+    }
+
+    private void OnEnable()
+    {
+        animator.enabled = false;
+        _transform = transform;
+        SettingUpCollider();
+        SettingUpRotation();
+        spriteRenderer.sprite = null;
+        animator.enabled = true;
+        
+        ranged.enabled = trapData.ranged;
+        
+        
+    }
+
+    private void OnDisable()
+    {
+        
+    }
+
+    private void SettingUpRotation()
+    {
+        transform.rotation = trapData.quaternion;
+        float angle = trapData.quaternion.eulerAngles.z;
+        if (angle > 90f && angle < 270f)
+        {
+            Debug.Log("???");
+            Vector2 scale = transform.localScale;
+            scale.y *= -1;
+            transform.localScale = scale;
+        }
+        
+
+
+    }
+
+    private void SettingUpCollider()
+    {
+
+        if (trapData.ranged)
+        {
+            Vector2 _size = trapData.sprite.bounds.size;
+            _size.x *= 3;
+            _boxColl.size = _size;
+            _boxColl.offset = new Vector2(-trapData.sprite.bounds.size.x, 0);
+        }
+        else
+        {
+            _boxColl.size = trapData.sprite.bounds.size;
+            _boxColl.offset = new Vector2(0, 0);
+        }
+    }
+
+    //private void RandomizePlacement()
+    //{
+    //    if (trapData.horizontal)
+    //    {
+    //        transform.rotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 180));
+    //    }
+    //    List<Vector2> dirs = new List<Vector2> { new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, 1), new Vector2(-1, -1) };
+    //    if (trapData.ranged)
+    //    {
+    //        _boxColl.size = trapData.sprite.bounds.size;
+    //        _boxColl.offset = new Vector2(-trapData.sprite.bounds.size.x, 0);
+
+    //        Vector2 currentface = _transform.localScale;
+    //        do
+    //        {
+    //            Vector2 randdir = dirs[Random.Range(0, dirs.Count - 1)];
+    //            currentface.x *= randdir.x;
+    //            currentface.y *= randdir.y;
+    //            _transform.localScale = currentface;
+    //        } while (CheckIfOutsideBounds());
+
+    //    }
+    //    else
+    //    {
+    //        _boxColl.size = trapData.sprite.bounds.size;
+    //        _boxColl.offset = new Vector2(0, 0);
+    //    }
+    //}
+
+    private bool CheckIfOutsideBounds()
+    {
+        if (currentRoom != null)
+        {
+            Bounds roombounds = currentRoom.GetRoomAreaBounds();
+            Debug.Log(_boxColl.bounds.size);
+            return _boxColl.bounds.max.x > roombounds.max.x || _boxColl.bounds.max.x < roombounds.min.x ||
+                _boxColl.bounds.max.y > roombounds.max.y || _boxColl.bounds.max.y < roombounds.min.y;
+        } else
+        {
+            return false;
+        }
+       
     }
 
     // Update is called once per frame
@@ -47,20 +152,23 @@ public class TrapBehaviour : ActivatorBehaviour
 
     public override void SetEntityStats(EntityData stats)
     {
-        SwitchData temp = (SwitchData)stats;
+        TrapData temp = (TrapData)stats;
         if(stats != null)
         {
-            data = temp;
+            trapData = temp;
         }
     }
 
     public override void Defeated()
     {
+
         poolManager.ReleaseObject(this);
+        
+        
     }
 
     public override EntityData GetData()
     {
-        return data;
+        return trapData;
     }
 }

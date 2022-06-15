@@ -22,9 +22,25 @@ public class EntityData : ScriptableObject
         CAST_SELF,
         PROJECTILE,
         CONSUMABLE_ITEM,
+        TRAP
     }
+    public enum PATTERN
+    {
+        SIMPLE_DIAG,
+        ZIG_ZAG,
+        CROSS,
+        CIRCLE,
+        BOX_LINE,
+        PATTERN1,
+        PATTERN2,
+        PATTERN3
+    }
+    public PATTERN pattern;
     public int condition;
     public TYPE _type;
+    public bool multispawns;
+    public Vector2 startPos;
+    public Vector2 endPos;
     public bool random;
     public Vector2 pos;
     public GameObject damageFlicker;

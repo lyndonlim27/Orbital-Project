@@ -8,9 +8,10 @@ public class DamageApplier : MonoBehaviour
     protected DetectionScript detectionScript;
     protected EntityBehaviour parent;
     protected EnemyData enemyData;
-    protected SwitchData switchData;
+    protected TrapData trapData;
     protected float attackSpeed;
     protected int damage;
+    protected bool damaging;
 
     private void Awake()
     {
@@ -21,7 +22,7 @@ public class DamageApplier : MonoBehaviour
     {
         parent = transform.parent.GetComponent<EntityBehaviour>();
         enemyData = parent.GetData() as EnemyData;
-        switchData = parent.GetData() as SwitchData;
+        trapData = parent.GetData() as TrapData;
         SettingUpDamageVals();
     }
 
@@ -32,10 +33,10 @@ public class DamageApplier : MonoBehaviour
             attackSpeed = enemyData.attackSpeed;
             damage = enemyData.damageValue;
         }
-        else if (switchData != null)
+        else if (trapData != null)
         {
             attackSpeed = 1f;
-            damage = switchData.damage;
+            damage = trapData.damage;
 
         }
     }
@@ -56,9 +57,8 @@ public class DamageApplier : MonoBehaviour
     private void OnTriggerStay2D(Collider2D collision)
     {
         Player target = collision.gameObject.GetComponent<Player>();
-        if (target != null && parent.inAnimation && !parent.isDead)
+        if (target != null && parent.inAnimation && !parent.isDead && !damaging) 
         {
-
             Vector2 direction = ((Vector2)target.transform.position - (Vector2)transform.position).normalized;
             StartCoroutine(DoDamage(target));
             //target.GetComponent<Rigidbody2D>().AddForce(direction * enemyData.attackSpeed, ForceMode2D.Impulse);
@@ -74,11 +74,13 @@ public class DamageApplier : MonoBehaviour
 
     private IEnumerator DoDamage(Player player)
     {
+        damaging = true;
         while(player != null && parent.inAnimation && !parent.isDead)
         {
             player.TakeDamage(damage);
             yield return new WaitForSeconds(1f);
         }
+        damaging = false;
     }
 
 

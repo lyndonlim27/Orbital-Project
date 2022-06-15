@@ -17,11 +17,15 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 67ca0236004ce47bcad724ef37b3bc22, type: 3}
   condition: 1
   _type: 4
-  random: 0
-  pos: {x: -25.81, y: 32.55}
-  gold: 0
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
+  random: 1
+  pos: {x: -11.684865, y: -14.152245}
   damageFlicker: {fileID: 0}
-  entityDatas: []
+  spawnAtStart: 1
+  scale: 1
+  itemTextDatas: []
   ac_name: ItemFadeOnly
   _trigger: Fade
   isAWeapon: 1

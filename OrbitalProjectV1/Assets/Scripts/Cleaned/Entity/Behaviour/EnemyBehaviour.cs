@@ -4,7 +4,7 @@ using UnityEngine;
 using Pathfinding;
 
 //[RequireComponent(typeof(EnemyData), typeof(ConsumableItemData))]
-public class EnemyBehaviour : EntityBehaviour
+public class EnemyBehaviour : ItemWithTextBehaviour 
 {
     [SerializeField] private FodderHealthBar _healthBar;
 
@@ -29,9 +29,6 @@ public class EnemyBehaviour : EntityBehaviour
     public Rigidbody2D rb { get; protected set; }
     public Animator animator { get; protected set; }
     public bool stage2;
- 
-
-    [SerializeField] protected List<ConsumableItemData> consumableItemDatas;
 
     public Vector2 roamPos { get; protected set; }
     public float maxDist { get; protected set; }
@@ -44,7 +41,7 @@ public class EnemyBehaviour : EntityBehaviour
     protected DamageFlicker _flicker;
     public DetectionScript detectionScript;
 
-    /** Pathfinding
+    /** Pathfinding Movement
      * 
      */
     private Seeker seeker;
@@ -69,32 +66,65 @@ public class EnemyBehaviour : EntityBehaviour
         seeker = GetComponent<Pathfinding.Seeker>();
         tl = GetComponentInChildren<MonsterTextLogic>(true);
         
+        
     }
 
     public virtual void Start()
     {
-        _transform = GetComponent<Transform>().parent.transform;
+        _transform = transform.parent;
         maxDist = 100f;
+        
     }
 
     private void OnEnable()
-    { 
-        //animator.runtimeAnimatorController = Resources.Load(string.Format("Animations/AnimatorControllers/{0}", enemyData.animatorname)) as RuntimeAnimatorController;
+    {
+        health = enemyData.words;
+        isDead = false;
+        DisableAnimator();
+        EnableAnimator();
+        
+        ResettingColor();
+        
     }
 
-    // can use this to replace onenable.
+    private void EnableAnimator()
+    {
+        animator.enabled = true;
+        animator.runtimeAnimatorController = Resources.Load(string.Format("Animations/AnimatorControllers/{0}", enemyData.animatorname)) as RuntimeAnimatorController;
+    }
+
+    private void DisableAnimator()
+    {
+        animator.enabled = false;
+        animator.runtimeAnimatorController = null;
+    }
+
+    private void SettingUpColliders()
+    {
+        CapsuleCollider2D body = GetComponentInParent<CapsuleCollider2D>();
+        body.size = enemyData.sprite.bounds.size;
+        body.offset = new Vector2(0, 0);
+        BoxCollider2D coll = melee.GetComponent<BoxCollider2D>();
+        coll.size = new Vector2(enemyData.sprite.bounds.size.x, enemyData.sprite.bounds.size.y);
+        coll.offset = new Vector2(0.2f, 0);
+    }
+
+    // later than onenable, making use of spawning window time.
     public virtual void Initialize() {
-        isDead = false;
+        
+        
+        SettingUpColliders();
         animator.SetBool("isAlive", true);
         animator.SetBool("NotSpawned", true);
         //_rb.WakeUp();
         //transform.parent.position = transform.position;
         //transform.position = Vector3.zero;
         cooldown = 2.5f;
-        health = enemyData.words;
         startingpos = _transform.position;
         ranged.gameObject.SetActive(enemyData.rangedtriggers.Count > 0);
         melee.gameObject.SetActive(enemyData.meleetriggers.Count > 0);
+       
+        
     }
 
     public virtual void Update()
@@ -169,22 +199,27 @@ public class EnemyBehaviour : EntityBehaviour
     public virtual void resetCooldown()
     {
         // use enemydata.rangedcooldown, nexttime then i add numbers to the enemy datas. for now just use 10.
-        this.cooldown = 10;
+        this.cooldown = 4;
         inAnimation = false;
-        resetPosition();
+        //resetPosition();
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+        Debug.Log(stateMachine.currState);
     }
 
     public void getNewRoamPosition()
     {
-        //roamPos = new Vector2(Random.Range(-5f, 5f), Random.Range(-5f, 5f));
-        roamPos = this.currentRoom.GetRandomPoint();
+        roamPos = new Vector2(Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+        //roamPos = this.currentRoom.GetRandomPoint();
 
 
     }
 
     public void moveToRoam()
     {
+        if (!reachedEndOfPath)
+        {
+
+        }
         AStarMove(roamPos, enemyData.moveSpeed);
         flipFace(roamPos);
     }
@@ -264,7 +299,7 @@ public class EnemyBehaviour : EntityBehaviour
 
     public bool isReached()
     {
-        return Vector2.Distance(roamPos, transform.parent.position) <= 0.1f;
+        return Vector2.Distance(roamPos, _transform.position) <= 0.1f;
     }
 
     public void flipFace(Vector2 target)
@@ -282,7 +317,7 @@ public class EnemyBehaviour : EntityBehaviour
     }
 
     private void Flip()
-    {
+    { 
         Vector3 currentFace = _transform.localScale;
         currentFace.x *= -1;
         _transform.localScale = currentFace;
@@ -291,10 +326,7 @@ public class EnemyBehaviour : EntityBehaviour
         tl.transform.localScale = _tf;
         facingRight = !facingRight;
 
-        Vector3 scale = GetComponentInChildren<MonsterTextLogic>().transform.localScale;
-        scale.x *= -1;
-        GetComponentInChildren<MonsterTextLogic>().transform.localScale = scale;
-        if(_healthBar != null)
+        if (_healthBar != null)
         {
             Vector3 scaleHealthBar = _healthBar.transform.localScale;
             scaleHealthBar.x *= -1;
@@ -363,7 +395,6 @@ public class EnemyBehaviour : EntityBehaviour
                 flipFace(player.transform.position);
                 break;
             case ANIMATION_CODE.ATTACK_END:
-                resetPosition();
                 stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
                 inAnimation = false;
                 break;
@@ -372,6 +403,7 @@ public class EnemyBehaviour : EntityBehaviour
                 SpellAttack();
                 break;
             case ANIMATION_CODE.SHOOT_START:
+                //animator.applyRootMotion = false;
                 flipFace(player.transform.position);
                 //resetPosition();
                 Shoot();
@@ -398,7 +430,9 @@ public class EnemyBehaviour : EntityBehaviour
 
     public override void TakeDamage(int damage)
     {
-        health--;
+        //Debug.Log(damage);
+        //health--;
+        //Debug.Log(health);
         _flicker.Flicker(this);
         base.TakeDamage(damage);
         animator.SetTrigger("Hurt");
@@ -412,45 +446,44 @@ public class EnemyBehaviour : EntityBehaviour
         var sprite = Resources.Load<Sprite>("Sprites/corpse");
         Debug.Log(sprite);
         corpseRenderer.sprite = sprite;
-        corpse.transform.position = transform.position;
+        corpse.transform.position = animator.transform.position;
         corpse.layer = 1;
         corpse.transform.SetParent(_transform);
         
     }
 
-    private void SpawnDrops()
-    {
-        int rand = Random.Range(0, 5);
-        Debug.Log(rand);
-        for (int i = 0; i < rand; i ++)
-        {
-            Debug.Log("This is drop" + i);
-            int rand2 = Random.Range(0, consumableItemDatas.Count);
-            ConsumableItemBehaviour con = poolManager.GetObject(EntityData.TYPE.CONSUMABLE_ITEM) as ConsumableItemBehaviour;
-            ConsumableItemData condata = consumableItemDatas[rand2];
-            if (condata._consumableType == ConsumableItemData.CONSUMABLE.LETTER)
-            {
-                ConsumableItemData temp = condata;
-                string passcode = FindObjectOfType<WordBank>().passcode;
-                Debug.Log(passcode);
-                int randomnum = Random.Range(0, passcode.Length);
-                temp.letter = passcode[randomnum];            
-                passcode = passcode.Substring(0, randomnum) + passcode.Substring(randomnum, passcode.Length - (randomnum+1));
-                temp.sprite = temp.letters[(int) temp.letter - 81];
-            }
+    //private void SpawnDrops()
+    //{
+    //    int rand = Random.Range(0, 5);
+    //    Debug.Log(rand);
+    //    for (int i = 0; i < rand; i ++)
+    //    {
+    //        Debug.Log("This is drop" + i);
+    //        int rand2 = Random.Range(0, consumableItemDatas.Count);
+    //        ConsumableItemBehaviour con = poolManager.GetObject(EntityData.TYPE.CONSUMABLE_ITEM) as ConsumableItemBehaviour;
+    //        ConsumableItemData condata = consumableItemDatas[rand2];
+    //        if (condata._consumableType == ConsumableItemData.CONSUMABLE.LETTER)
+    //        {
+    //            ConsumableItemData temp = condata;
+    //            string passcode = FindObjectOfType<WordBank>().passcode;
+    //            Debug.Log(passcode);
+    //            int randomnum = Random.Range(0, passcode.Length);
+    //            temp.letter = passcode[randomnum];            
+    //            passcode = passcode.Substring(0, randomnum) + passcode.Substring(randomnum, passcode.Length - (randomnum+1));
+    //            temp.sprite = temp.letters[(int) temp.letter - 81];
+    //        }
 
-            con.SetEntityStats(condata);
-            con.transform.position = transform.position + new Vector3(Random.Range(-0.5f,0.5f),Random.Range(-0.5f,0.5f));
-            con.SetTarget(player.gameObject);
-            con.gameObject.SetActive(true);
-        }
-    }
+    //        con.SetEntityStats(condata);
+    //        con.transform.position = transform.position + new Vector3(Random.Range(-0.5f,0.5f),Random.Range(-0.5f,0.5f));
+    //        con.SetTarget(player.gameObject);
+    //        con.gameObject.SetActive(true);
+    //    }
+    //}
 
     
     public override void Defeated()
     {
         Debug.Log("Dafuq?");
-        isDead = true;
         animator.SetBool("isAlive", false);
         StartCoroutine(FadeOut());
        

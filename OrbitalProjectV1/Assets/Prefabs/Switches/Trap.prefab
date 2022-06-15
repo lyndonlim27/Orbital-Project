@@ -170,13 +170,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d326dcc04b934a76bf873bdf9d9c0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead: 0
   inAnimation: 0
-  data: {fileID: 11400000, guid: f004122737f5e482887ee4562d8977ca, type: 2}
+  data: {fileID: 0}
   layerMask:
     serializedVersion: 2
     m_Bits: 32768
   animator: {fileID: 3539920906336780348}
   detectionScript: {fileID: 3539920907257776502}
+  trapData: {fileID: 11400000, guid: ee6b6bd74ddb24ab7a4c65d3c5664541, type: 2}
 --- !u!1 &3539920907257776500
 GameObject:
   m_ObjectHideFlags: 0

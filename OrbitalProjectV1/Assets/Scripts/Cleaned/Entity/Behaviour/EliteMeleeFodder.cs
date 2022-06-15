@@ -29,6 +29,7 @@ public class EliteMeleeFodder : EnemyBehaviour
     {
         base.Update();
         Dodge();
+
     }
 
 

@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu]
 public class ItemWithTextData : EntityData
 {
-    public List<EntityData> entityDatas;
+    public ItemWithTextData[] itemTextDatas;
     public string ac_name;
     public string _trigger;
     public bool isAWeapon;

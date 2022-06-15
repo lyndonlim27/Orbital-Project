@@ -5,6 +5,7 @@ using UnityEngine;
 public class R2_Mgr : RoomManager
 {
     private bool added;
+    private PressureSwitchBehaviour[] pressureSwitchBehaviours;
 
     protected override void Awake()
     {
@@ -13,9 +14,9 @@ public class R2_Mgr : RoomManager
 
     }
 
-    private void Start()
+    protected void Start()
     {
-        added = false;
+        
     }
 
     protected override void Update()
@@ -23,14 +24,29 @@ public class R2_Mgr : RoomManager
         base.Update();
         RoomChecker();
         CheckRunningEvents();
+        if (player.GetCurrentRoom() != this && player.GetCurrentRoom() != null)
+        {
+            items.RemoveAll((a) => a.GetType() == typeof(PressureSwitchBehaviour));
+        }
+
     }
 
     protected override void RoomChecker()
     {
-        if (CanProceed())
+        
+        if (activated && conditions.Count == 0 && items.Count != 0)
         {
-            doorManager.clearDoor(this, 0);
-        }
+            doors[0].unlocked = true;
+        } 
+
+        if (CheckEnemiesDead())
+        {
+            foreach(DoorBehaviour door in doors)
+            {
+                door.unlocked = true;
+            }
+            this.enabled = false;
+        } 
 
     }
 
@@ -45,6 +61,11 @@ public class R2_Mgr : RoomManager
             ResumeGame();
         }
 
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        
     }
 
 }

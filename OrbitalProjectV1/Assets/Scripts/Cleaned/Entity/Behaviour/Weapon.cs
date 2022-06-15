@@ -64,7 +64,7 @@ public class Weapon : EntityBehaviour
         bullet.gameObject.transform.rotation = angle;
         bullet.SetEntityStats(rangedData);
         bullet.GetComponent<SpriteRenderer>().sprite = rangedData.sprite;
-        bullet.TargetEntity(target);
+        bullet.TargetEntity(target.transform.parent.gameObject);
         bullet.gameObject.SetActive(true);
     }
 

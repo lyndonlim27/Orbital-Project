@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 796981598516887648}
   - component: {fileID: 796981598516887655}
-  - component: {fileID: 796981598516887650}
   - component: {fileID: 796981598516887649}
   - component: {fileID: 796981598516887651}
   - component: {fileID: 8212455274303573591}
@@ -78,8 +77,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1999106071, guid: 926457695c2e44d8284e7ad030a4e3e4, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: -600609, guid: 13e558047fd98415e8df01fb9168e7b8, type: 3}
+  m_Color: {r: 0.6698113, g: 0.5718672, b: 0.5718672, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -89,26 +88,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &796981598516887650
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 796981598516887654}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 1317d63ef6d5e4df0badf00941f4aa18, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!58 &796981598516887649
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -137,10 +116,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9823cd341a7d341d1aee58845c6818b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead: 0
+  inAnimation: 0
   data: {fileID: 11400000, guid: 5c2af697b66464728ac04ce0287fc693, type: 2}
   layerMask:
     serializedVersion: 2
     m_Bits: 98295
+  animator: {fileID: 0}
+  detectionScript: {fileID: 0}
 --- !u!114 &8212455274303573591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,6 +142,7 @@ MonoBehaviour:
   _ac3: {fileID: 0}
   _ac4: {fileID: 0}
   _ac5: {fileID: 0}
+  audios: []
 --- !u!82 &2098085031516162915
 AudioSource:
   m_ObjectHideFlags: 0

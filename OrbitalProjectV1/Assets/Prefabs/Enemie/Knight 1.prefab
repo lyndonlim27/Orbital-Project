@@ -211,8 +211,8 @@ BoxCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: -0.05}
   m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
+    border: {x: 0.25, y: 0.09375, z: 0.25, w: 0.203125}
+    pivot: {x: 0.49854282, y: 0.4939284}
     oldSize: {x: 0.78125, y: 0.75}
     newSize: {x: 0.78125, y: 0.75}
     adaptiveTilingThreshold: 0.5
@@ -234,21 +234,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7d41660f484242dd9190d66bb6317d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inAnimation: 0
-  enemyData: {fileID: 11400000, guid: 73f722faef2ce453e8d41437bb6b2083, type: 2}
   isDead: 0
-  roamPos: {x: 0, y: 0}
-  maxDist: 100
-  detectionScript: {fileID: 3693773785348804951}
-  startingpos: {x: 0, y: 0}
-  player: {fileID: 0}
-  health: 0
-  cooldown: 0
-  facingRight: 0
+  inAnimation: 0
+  _healthBar: {fileID: 0}
+  enemyData: {fileID: 11400000, guid: 73f722faef2ce453e8d41437bb6b2083, type: 2}
   stage2: 0
-  repathRate: 0.5
-  nextWaypointDistance: 1
-  reachedEndOfPath: 0
+  consumableItemDatas: []
+  detectionScript: {fileID: 3693773785348804951}
 --- !u!114 &3693773784661720791
 MonoBehaviour:
   m_ObjectHideFlags: 0
