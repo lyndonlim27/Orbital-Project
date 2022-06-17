@@ -19,7 +19,8 @@ public class BuffBehaviour : SkillBehaviour
     {
         base.Start();
         _buffAnimator = GameObject.Find("BuffAnimator").GetComponent<Animator>();
-        _buffData = (BuffData)_skillData;
+        _buffData = _player.GetBuffData();
+        _skillData = _buffData;
         inStealth = false;
         weaponManager = FindObjectOfType<WeaponPickup>();
         _healBuffVFX = Resources.Load<AnimatorOverrideController>("Animations/AnimatorControllers/HealBuffVFX");
@@ -27,6 +28,7 @@ public class BuffBehaviour : SkillBehaviour
         _stealthBuffVFX = Resources.Load<RuntimeAnimatorController>("Animations/AnimatorControllers/StealthBuffVFX");
         _invulnerableBuffVFX = Resources.Load<RuntimeAnimatorController>("Animations/AnimatorControllers/InvulnerableBuffVFX");
         _playerSpriteRenderer = _player.GetComponent<SpriteRenderer>();
+        SetData();
     }
 
     // Update is called once per frame

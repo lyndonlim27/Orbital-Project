@@ -36,7 +36,7 @@ public class BuffPurchaseButton : SkillPurchaseButton
 
     private void Initialise()
     {
-        if (!player.GetPlayerData().ranged)
+        if (!player.IsRanged())
         {
             if (_buffData.skillName.Contains("Heal"))
             {

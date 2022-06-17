@@ -35,7 +35,7 @@ public class AttackPurchaseButton : SkillPurchaseButton
 
     private void Initialise()
     {
-        if (!player.GetPlayerData().ranged)
+        if (!player.IsRanged())
         {
             if (_attackData.skillName.Contains("Fireball"))
             {

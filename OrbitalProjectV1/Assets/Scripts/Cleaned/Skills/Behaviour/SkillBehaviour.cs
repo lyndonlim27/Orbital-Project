@@ -7,15 +7,14 @@ using TMPro;
 public abstract class SkillBehaviour : MonoBehaviour
 {
     [SerializeField] protected SkillData _skillData;
-    [SerializeField] private Image imageCooldown;
-    [SerializeField] private TextMeshProUGUI textCooldown;
-    [SerializeField] private TextMeshProUGUI manaCostText;
+    [SerializeField] protected Image imageCooldown;
+    [SerializeField] protected TextMeshProUGUI textCooldown;
+    [SerializeField] protected TextMeshProUGUI manaCostText;
     private string promptText;
     protected Player _player;
     protected float currCooldown;
     private AudioSource _audioSource;
     public abstract void ActivateSkill();
-
 
     public virtual void Start()
     {
@@ -25,12 +24,6 @@ public abstract class SkillBehaviour : MonoBehaviour
         imageCooldown.fillAmount = 0;
         promptText = "";
         _audioSource = GetComponent<AudioSource>();
-        if(_skillData != null)
-        {
-            manaCostText.gameObject.SetActive(true);
-            manaCostText.text = _skillData.manaCost.ToString();
-            GetComponent<Image>().overrideSprite = _skillData.sprite;
-        }
     }
 
     public virtual void Update()
@@ -55,6 +48,17 @@ public abstract class SkillBehaviour : MonoBehaviour
             imageCooldown.fillAmount = currCooldown / _skillData.cooldown;
         }
     }
+
+    protected void SetData()
+    {
+        if (_skillData != null)
+        {
+            manaCostText.gameObject.SetActive(true);
+            manaCostText.text = _skillData.manaCost.ToString();
+            GetComponent<Image>().overrideSprite = _skillData.sprite;
+        }
+    }
+
 
     public virtual void ChangeSkill(string skillName)
     {

@@ -22,9 +22,11 @@ MonoBehaviour:
   damageFlicker: {fileID: 672315831686351503, guid: 287fa61315c39429e8235e664399d8cc, type: 3}
   spawnAtStart: 0
   scale: 0
-  maxHealth: 100
-  maxMana: 100
-  selfDamage: 0
+  maxHealth: 110
+  maxMana: 110
   gold: 100
   ranged: 1
+  debuffData: {fileID: 11400000, guid: 5e31ab52052bb4195b400cf2e7a632e2, type: 2}
+  buffData: {fileID: 11400000, guid: 3af8d0230977d45e39ad618f66cc9d90, type: 2}
+  attackData: {fileID: 11400000, guid: 2354f420a0ee94b3eacee6ea3a793100, type: 2}
   _moveSpeed: 5

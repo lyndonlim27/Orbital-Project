@@ -18,7 +18,8 @@ public class AttackSkillBehaviour : SkillBehaviour
     public override void Start()
     {
         base.Start();
-        _attackData = (AttackData)_skillData;
+        _attackData = _player.GetAttackData();
+        _skillData = _attackData;
         _playerRb = _player.GetComponent<Rigidbody2D>();
         _playerTr = _player.GetComponent<TrailRenderer>();
         _attackAnimator = GameObject.Find("AttackSkillAnimator").GetComponent<Animator>();
@@ -26,6 +27,7 @@ public class AttackSkillBehaviour : SkillBehaviour
         _shockwaveAttackVFX = Resources.Load<RuntimeAnimatorController>("Animations/AnimatorControllers/ShockwaveAttackVFX");
         _collider = _attackAnimator.GetComponent<Collider2D>();
         _soundEffect = _attackAnimator.GetComponent<SoundEffect>();
+        SetData();
     }
 
     public override void Update()

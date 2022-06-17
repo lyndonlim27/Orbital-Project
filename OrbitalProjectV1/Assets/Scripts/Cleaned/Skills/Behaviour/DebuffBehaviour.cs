@@ -15,9 +15,12 @@ public class DebuffBehaviour : SkillBehaviour
     {
         base.Start();
         _debuffAnimator = GameObject.Find("DebuffAnimator").GetComponent<Animator>();
-        _debuffData = (DebuffData)_skillData;
+        _debuffData = _player.GetDebuffData();
+        _skillData = _debuffData;
         _stunDebuffVFX = Resources.Load<AnimatorOverrideController>("Animations/AnimatorControllers/StunDebuffVFX");
         _slowDebuffVFX = Resources.Load<RuntimeAnimatorController>("Animations/AnimatorControllers/SlowDebuffVFX");
+        SetData();
+
     }
 
     // Update is called once per frame
@@ -123,5 +126,6 @@ public class DebuffBehaviour : SkillBehaviour
         base.ChangeSkill(skillName);
         this._debuffData = (DebuffData)_skillData;
     }
+
 
 }

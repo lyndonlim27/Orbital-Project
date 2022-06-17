@@ -5,9 +5,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class Player : EntityBehaviour
+public class Player : EntityBehaviour, ISaveable
 {
-    [SerializeField] private PlayerData playerData;
 
     private Vector2 _movement;
     private Rigidbody2D _rb;
@@ -24,9 +23,18 @@ public class Player : EntityBehaviour
     private DamageFlicker _flicker;
     private GoldCounter _goldCounter;
     public int currGold { get; private set;}
-    private float _moveSpeed;
     private BuffBehaviour _buffBehaviour;
     private bool _invulnerable;
+
+
+    [Header("Player Data")]
+    [SerializeField] private int maxMana;
+    [SerializeField] private int maxHealth;
+    [SerializeField] private float _moveSpeed;
+    [SerializeField] private bool ranged;
+    [SerializeField] private BuffData _buffData;
+    [SerializeField] private DebuffData _debuffData;
+    [SerializeField] private AttackData _attackData;
 
 
     [Header("Player UI")]
@@ -50,12 +58,11 @@ public class Player : EntityBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _currHealth = playerData.maxHealth;
-        currMana = playerData.maxMana;
-        currGold = playerData.gold;
-        _healthBar.SetMaxHealth(playerData.maxHealth);
-        _manaBar.SetMaxMana(playerData.maxMana);
-        _moveSpeed = playerData._moveSpeed;
+        currGold = 100;
+        currMana = maxMana;
+        _currHealth = maxHealth;
+        _healthBar.SetMaxHealth(maxHealth);
+        _manaBar.SetMaxMana(maxMana);
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _weaponManager = this.gameObject.GetComponentInChildren<WeaponPickup>();
@@ -82,11 +89,6 @@ public class Player : EntityBehaviour
 
         CheckCombat();
 
-        if (_currHealth > 100)
-        {
-            _currHealth = 100;
-        }
-
         if (_time >= _timeDelay)
         {
             _movement.x = Input.GetAxisRaw("Horizontal");
@@ -97,16 +99,6 @@ public class Player : EntityBehaviour
             _currWeapon.TurnWeapon(_movement);
             _time = 0;
             _timeDelay = 0;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha0))
-        {
-            this.tag = "Stealth";
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha9))
-        {
-            this.tag = "Player";
         }
     }
 
@@ -159,10 +151,15 @@ public class Player : EntityBehaviour
 
     public void AddHealth(int health)
     {
-      
-        _currHealth = Math.Min(_currHealth+health,100);
+      if(_currHealth + health > maxHealth)
+        {
+            _currHealth = maxHealth;
+        }
+        else
+        {
+            _currHealth = Math.Min(_currHealth + health, 100);
+        }
         _healthBar.SetHealth(_currHealth);
-        
     }
 
     public void AddGold(int gold)
@@ -175,6 +172,25 @@ public class Player : EntityBehaviour
     {
         currGold -= gold;
         _goldCounter.GoldUpdate();
+    }
+
+    public void UseMana(int manaCost)
+    {
+        currMana -= manaCost;
+        _manaBar.SetMana(currMana);
+    }
+
+    public void AddMana(int mana)
+    {
+        if(currMana + mana > maxMana)
+        {
+            currMana = maxMana;
+        }
+        else
+        {
+            currMana += mana;
+        }
+        _manaBar.SetMana(currMana);
     }
 
     //When player shoot, player direction faces the target enemy
@@ -218,25 +234,11 @@ public class Player : EntityBehaviour
 
     public override void SetEntityStats(EntityData stats)
     {
-        this.playerData = (PlayerData) stats;
     }
 
     public override EntityData GetData()
     {
-        return playerData;
-    }
-
-
-    public void UseMana(int manaCost)
-    {
-        currMana -= manaCost;
-        _manaBar.SetMana(currMana);
-    }
-
-    public void AddMana(int mana)
-    {
-        currMana += mana;
-        _manaBar.SetMana(currMana);
+        throw new NotImplementedException();
     }
 
     public void SetSpeed(float speed)
@@ -244,10 +246,6 @@ public class Player : EntityBehaviour
         _moveSpeed += speed;
     }
 
-    public PlayerData GetPlayerData()
-    {
-        return playerData;
-    }
 
     public RoomManager GetCurrentRoom()
     {
@@ -262,5 +260,53 @@ public class Player : EntityBehaviour
     public Vector2 GetDirection()
     {
         return _movement;
+    }
+
+    /*
+     * Getters
+     */
+
+    public DebuffData GetDebuffData()
+    {
+        return _debuffData;
+    }
+
+    public BuffData GetBuffData()
+    {
+        return _buffData;
+    }
+
+    public AttackData GetAttackData()
+    {
+        return _attackData;
+    }
+
+    public bool IsRanged()
+    {
+        return ranged;
+    }
+
+    public object SaveState()
+    {
+        return new SaveData()
+        {
+            health = this._currHealth,
+            maxHealth = this.maxHealth,
+         };
+    }
+
+    public void LoadState(object state)
+    {
+        var saveData = (SaveData)state;
+        _currHealth = saveData.health;
+        maxHealth = saveData.maxHealth;
+        _healthBar.SetHealth(_currHealth);
+    }
+
+    [Serializable]
+    private struct SaveData
+    {
+        public int health;
+        public int maxHealth;
     }
 }
