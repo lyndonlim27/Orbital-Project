@@ -1381,26 +1381,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 808239389}
-  - component: {fileID: 808239388}
+  - component: {fileID: 808239390}
   m_Layer: 0
-  m_Name: SaveLoadSystem
+  m_Name: DataPersistenceManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &808239388
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 808239387}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72e195713883d4ef2a1210d02c836639, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &808239389
 Transform:
   m_ObjectHideFlags: 0
@@ -1416,6 +1404,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &808239390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 808239387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7270a7e9787f4f8bba72199a76d2526, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fileName: test2
+  useEncryption: 1
 --- !u!1 &850215390 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8815217351272720892, guid: 88365c6661b4948548575e15e51f0204, type: 3}
@@ -8513,7 +8515,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7779479, y: 1}
+    m_SensorSize: {x: 1.7783251, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -18680,7 +18682,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5772658070408478858, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
 --- !u!4 &4374332775066565745 stripped
 Transform:

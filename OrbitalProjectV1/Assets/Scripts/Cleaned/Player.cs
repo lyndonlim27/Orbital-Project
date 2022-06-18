@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class Player : EntityBehaviour, ISaveable
+public class Player : EntityBehaviour, IDataPersistence
 {
 
     private Vector2 _movement;
@@ -136,7 +136,6 @@ public class Player : EntityBehaviour, ISaveable
     //When player takes damage, reduce current health and flicker sprite
     public void TakeDamage(int damageTaken)
     {
-        Debug.Log(_invulnerable);
         if (!_invulnerable)
         {
             _currHealth -= damageTaken;
@@ -286,27 +285,27 @@ public class Player : EntityBehaviour, ISaveable
         return ranged;
     }
 
-    public object SaveState()
+    public void LoadData(GameData data)
     {
-        return new SaveData()
-        {
-            health = this._currHealth,
-            maxHealth = this.maxHealth,
-         };
-    }
-
-    public void LoadState(object state)
-    {
-        var saveData = (SaveData)state;
-        _currHealth = saveData.health;
-        maxHealth = saveData.maxHealth;
+        this._currHealth = data.currHealth;
+        this.maxHealth = data.maxHealth;
+        this.maxMana = data.maxMana;
+        this.currMana = data.currMana;
+        this.currGold = data.currGold;
+        this.transform.position = data.currPos;
+        _weaponManager.Swap(data.currWeapon);
         _healthBar.SetHealth(_currHealth);
+        _manaBar.SetMana(currMana);
     }
 
-    [Serializable]
-    private struct SaveData
+    public void SaveData(ref GameData data)
     {
-        public int health;
-        public int maxHealth;
+        data.currHealth = this._currHealth;
+        data.maxHealth = this.maxHealth;
+        data.maxMana = this.maxMana;
+        data.currMana = this.currMana;
+        data.currGold = this.currGold;
+        data.currWeapon = _weaponManager.ActiveWeapon().name;
+        data.currPos = this.transform.position;
     }
 }

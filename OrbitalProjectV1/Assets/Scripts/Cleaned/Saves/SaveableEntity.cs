@@ -19,6 +19,7 @@ public class SaveableEntity : MonoBehaviour
         var state = new Dictionary<string, object>();
         foreach (var saveable in GetComponents<ISaveable>())
         {
+            Debug.Log("SAVE");
             state[saveable.GetType().ToString()] = saveable.SaveState();
         }
         return state;

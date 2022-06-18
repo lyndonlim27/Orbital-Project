@@ -26,29 +26,39 @@ public class SaveLoadSystem : MonoBehaviour
 
     public void SaveFile(object state)
     {
-        using (var stream = File.Open(SavePath, FileMode.Create))
+        //using (var stream = File.Open(SavePath, FileMode.Create))
+        //{
+        //    var formatter = new BinaryFormatter();
+        //    formatter.Serialize(stream, state);
+        //}
+
+        using (StreamWriter writer = new StreamWriter(SavePath))
         {
-            var formatter = new BinaryFormatter();
-            formatter.Serialize(stream, state);
+            writer.Write(JsonUtility.ToJson(state));
         }
     }
 
-    public Dictionary<string, object> LoadFile()
+    public SerializableDictionary<string, object> LoadFile()
     {
         if (!File.Exists(SavePath))
         {
             Debug.Log("No save file found");
-            return new Dictionary<string, object>();
+            return new SerializableDictionary<string, object>();
+
         }
 
-        using (FileStream stream = File.Open(SavePath, FileMode.Open))
+        //using (FileStream stream = File.Open(SavePath, FileMode.Open))
+        //{
+        //    var formatter = new BinaryFormatter();
+        //    return (Dictionary<string, object>)formatter.Deserialize(stream);
+        //}
+        using (StreamReader reader = new StreamReader(SavePath))
         {
-            var formatter = new BinaryFormatter();
-            return (Dictionary<string, object>)formatter.Deserialize(stream);
+            return JsonUtility.FromJson<SerializableDictionary<string, object>>(reader.ReadToEnd());
         }
     }
 
-    void SaveState(Dictionary<string, object> state)
+    void SaveState(SerializableDictionary<string, object> state)
     {
         foreach(var saveable in FindObjectsOfType<SaveableEntity>())
         {
@@ -56,7 +66,7 @@ public class SaveLoadSystem : MonoBehaviour
         }
     }
 
-    void LoadState(Dictionary<string, object> state)
+    void LoadState(SerializableDictionary<string, object> state)
     {
         foreach (var saveable in FindObjectsOfType<SaveableEntity>())
         {
