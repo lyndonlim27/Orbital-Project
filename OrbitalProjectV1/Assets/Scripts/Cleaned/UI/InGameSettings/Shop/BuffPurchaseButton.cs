@@ -11,6 +11,16 @@ public class BuffPurchaseButton : SkillPurchaseButton
     private List<BuffData> _speedDatas;
     private List<BuffData> _stealthDatas;
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        Debug.Log(player);
+        if(player.GetBuffData() != null)
+        {
+            shop.SetBuffButtons(player.GetBuffData().skillName);
+        }
+    }
+
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -106,7 +116,6 @@ public class BuffPurchaseButton : SkillPurchaseButton
 
     public void PurchaseBuffSkill()
     {
-        Debug.Log(_buffData.skillName);
         shop.AddBuffSkill(_buffData.skillName);
     }
 

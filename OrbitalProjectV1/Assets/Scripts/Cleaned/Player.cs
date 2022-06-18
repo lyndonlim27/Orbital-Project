@@ -23,9 +23,16 @@ public class Player : EntityBehaviour, IDataPersistence
     private DamageFlicker _flicker;
     private GoldCounter _goldCounter;
     public int currGold { get; private set;}
-    private BuffBehaviour _buffBehaviour;
+
     private bool _invulnerable;
 
+    /*
+     * Player skills/data
+     */
+    private BuffBehaviour _buffBehaviour;
+    private DebuffBehaviour _debuffBehaviour;
+    private AttackSkillBehaviour _attackBehaviour;
+    private Shop _shop;
 
     [Header("Player Data")]
     [SerializeField] private int maxMana;
@@ -73,6 +80,9 @@ public class Player : EntityBehaviour, IDataPersistence
         _goldCounter = FindObjectOfType<GoldCounter>(true);
         _goldCounter.GoldUpdate();
         _buffBehaviour = FindObjectOfType<BuffBehaviour>(true);
+        _debuffBehaviour = FindObjectOfType<DebuffBehaviour>(true);
+        _attackBehaviour = FindObjectOfType<AttackSkillBehaviour>(true);
+        _shop = FindObjectOfType<Shop>(true);
         _invulnerable = false;
     }
 
@@ -280,6 +290,21 @@ public class Player : EntityBehaviour, IDataPersistence
         return _attackData;
     }
 
+    public void SetDebuffData(DebuffData debuffData)
+    {
+        this._debuffData = debuffData;
+    }
+
+    public void SetBuffData(BuffData buffData)
+    {
+        this._buffData = buffData;
+    }
+
+    public void SetAttackData(AttackData attackData)
+    {
+        this._attackData = attackData;
+    }
+
     public bool IsRanged()
     {
         return ranged;
@@ -293,6 +318,31 @@ public class Player : EntityBehaviour, IDataPersistence
         this.currMana = data.currMana;
         this.currGold = data.currGold;
         this.transform.position = data.currPos;
+        _goldCounter.GoldUpdate();
+        if(data.debuffDataName != null)
+        {
+            _debuffBehaviour.ChangeSkill(data.debuffDataName);
+        }
+
+        if (data.attackDataName != null)
+        {
+            _attackBehaviour.ChangeSkill(data.attackDataName);
+        }
+
+        if (data.buffDataName != null)
+        {
+            _buffBehaviour.ChangeSkill(data.buffDataName);
+        }
+
+        //if (data.buffDataName != null)
+        //{
+        //    _shop.SetBuffButtons(data.buffDataName);
+        //}
+
+        //if (data.attackDataName != null)
+        //{
+        //    _shop.SetAttackButtons(data.attackDataName);
+        //}
         _weaponManager.Swap(data.currWeapon);
         _healthBar.SetHealth(_currHealth);
         _manaBar.SetMana(currMana);
@@ -307,5 +357,8 @@ public class Player : EntityBehaviour, IDataPersistence
         data.currGold = this.currGold;
         data.currWeapon = _weaponManager.ActiveWeapon().name;
         data.currPos = this.transform.position;
+        data.debuffDataName = _debuffData != null ? _debuffData.skillName : null;
+        data.buffDataName = _buffData != null ? _buffData.skillName : null;
+        data.attackDataName = _attackData != null ? _attackData.skillName : null;
     }
 }

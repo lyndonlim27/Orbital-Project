@@ -14,9 +14,13 @@ public class SkillPurchaseButton : MonoBehaviour, IPointerEnterHandler, IPointer
     protected Image image;
     protected TextMeshProUGUI textDisplay;
 
-    protected virtual void Start()
+    protected virtual void OnEnable()
     {
         player = FindObjectOfType<Player>();
+    }
+
+    protected virtual void Start()
+    {
         shop = FindObjectOfType<Shop>(true);
         spriteRenderer = GetComponent<SpriteRenderer>();
         _text = GetComponentInChildren<ToggleOnOff>(true);

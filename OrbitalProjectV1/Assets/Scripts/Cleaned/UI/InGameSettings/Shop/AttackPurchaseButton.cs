@@ -11,6 +11,16 @@ public class AttackPurchaseButton : SkillPurchaseButton
     private List<AttackData> _shurikenDatas;
     private List<AttackData> _dashDatas;
     // Start is called before the first frame update
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        if (player.GetAttackData() != null)
+        {
+            shop.SetAttackButtons(player.GetAttackData().skillName);
+        }
+    }
+
     protected override void Start()
     {
         base.Start();

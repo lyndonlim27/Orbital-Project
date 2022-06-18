@@ -19,9 +19,9 @@ public class Shop : MenuBehaviour
     // Start is called before the first frame update
     protected override void Start()
     {
-        _debuffSkill = FindObjectOfType<DebuffBehaviour>();
-        _buffSkill = FindObjectOfType<BuffBehaviour>();
-        _attackSkill = FindObjectOfType<AttackSkillBehaviour>();
+        _debuffSkill = FindObjectOfType<DebuffBehaviour>(true);
+        _buffSkill = FindObjectOfType<BuffBehaviour>(true);
+        _attackSkill = FindObjectOfType<AttackSkillBehaviour>(true);
         _player = FindObjectOfType<Player>();
         _promptText = _promptImage.GetComponentInChildren<TextMeshProUGUI>();
         _promptText.text = "";
@@ -63,30 +63,35 @@ public class Shop : MenuBehaviour
         else
         {
             _promptText.text = "Skill purchased";
-            _debuffSkill.ChangeSkill(debuffSkillName);
             _player.UseGold(Resources.Load<SkillData>("Data/SkillData/" + debuffSkillName).goldCost);
             _audioSource.Play();
-            foreach (DebuffPurchaseButton debuff in GetComponentsInChildren<DebuffPurchaseButton>())
+            SetDebuffButtons(debuffSkillName);
+        }
+        StartCoroutine(UpdateText());
+    }
+
+    public void SetDebuffButtons(string debuffSkillName)
+    {
+        _debuffSkill.ChangeSkill(debuffSkillName);
+        foreach (DebuffPurchaseButton debuff in GetComponentsInChildren<DebuffPurchaseButton>())
+        {
+            if (debuffSkillName.Contains("Slow"))
             {
-                if (debuffSkillName.Contains("Slow"))
+                if (debuff.GetDebuffName().Contains("Stun"))
                 {
-                    if (debuff.GetDebuffName().Contains("Stun"))
-                    { 
-                        debuff.GetComponent<Image>().color = new Color32(96, 96, 96, 255);
-                        debuff.GetComponent<Button>().enabled = false;
-                    }
+                    debuff.GetComponent<Image>().color = new Color32(96, 96, 96, 255);
+                    debuff.GetComponent<Button>().enabled = false;
                 }
-                else
+            }
+            else
+            {
+                if (debuff.GetDebuffName().Contains("Slow"))
                 {
-                    if (debuff.GetDebuffName().Contains("Slow"))
-                    {
-                        debuff.GetComponent<Image>().color = new Color32(96, 96, 96, 255);
-                        debuff.GetComponent<Button>().enabled = false;
-                    }
+                    debuff.GetComponent<Image>().color = new Color32(96, 96, 96, 255);
+                    debuff.GetComponent<Button>().enabled = false;
                 }
             }
         }
-        StartCoroutine(UpdateText());
     }
 
     public void AddBuffSkill(string buffSkillName)
@@ -102,30 +107,35 @@ public class Shop : MenuBehaviour
         else
         {
             _promptText.text = "Skill purchased";
-            _buffSkill.ChangeSkill(buffSkillName);
             _player.UseGold(Resources.Load<SkillData>("Data/SkillData/" + buffSkillName).goldCost);
             _audioSource.Play();
-            foreach (BuffPurchaseButton buff in GetComponentsInChildren<BuffPurchaseButton>())
+            SetBuffButtons(buffSkillName);
+        }
+        StartCoroutine(UpdateText());
+    }
+
+    public void SetBuffButtons(string buffSkillName)
+    {
+        _buffSkill.ChangeSkill(buffSkillName);
+        foreach (BuffPurchaseButton buff in GetComponentsInChildren<BuffPurchaseButton>())
+        {
+            if (buffSkillName.Contains("Heal") || buffSkillName.Contains("Speed"))
             {
-                if (buffSkillName.Contains("Heal") || buffSkillName.Contains("Speed"))
+                if (buff.GetBuffName().Contains("Invulnerable") || buff.GetBuffName().Contains("Stealth"))
                 {
-                    if (buff.GetBuffName().Contains("Invulnerable") || buff.GetBuffName().Contains("Stealth"))
-                    {
-                        buff.GetComponent<Image>().color = new Color32(96, 96, 96, 255);
-                        buff.GetComponent<Button>().enabled = false;
-                    }
+                    buff.GetComponent<Image>().color = new Color32(96, 96, 96, 255);
+                    buff.GetComponent<Button>().enabled = false;
                 }
-                else
+            }
+            else
+            {
+                if (buff.GetBuffName().Contains("Heal") || buff.GetBuffName().Contains("Speed"))
                 {
-                    if (buff.GetBuffName().Contains("Heal") || buff.GetBuffName().Contains("Speed"))
-                    {
-                        buff.GetComponent<Image>().color = new Color32(96, 96, 96, 255);
-                        buff.GetComponent<Button>().enabled = false;
-                    }
+                    buff.GetComponent<Image>().color = new Color32(96, 96, 96, 255);
+                    buff.GetComponent<Button>().enabled = false;
                 }
             }
         }
-        StartCoroutine(UpdateText());
     }
 
     public void AddAttackSkill(string attackSkillName)
@@ -141,30 +151,35 @@ public class Shop : MenuBehaviour
         else
         {
             _promptText.text = "Skill purchased";
-            _attackSkill.ChangeSkill(attackSkillName);
             _player.UseGold(Resources.Load<SkillData>("Data/SkillData/" + attackSkillName).goldCost);
             _audioSource.Play();
-            foreach (AttackPurchaseButton attack in GetComponentsInChildren<AttackPurchaseButton>())
+            SetAttackButtons(attackSkillName);
+        }
+        StartCoroutine(UpdateText());
+    }
+
+    public void SetAttackButtons(string attackSkillName)
+    {
+        _attackSkill.ChangeSkill(attackSkillName);
+        foreach (AttackPurchaseButton attack in GetComponentsInChildren<AttackPurchaseButton>())
+        {
+            if (attackSkillName.Contains("Fireball") || attackSkillName.Contains("Shuriken"))
             {
-                if (attackSkillName.Contains("Fireball") || attackSkillName.Contains("Shuriken"))
+                if (attack.GetAttackName().Contains("Shockwave") || attack.GetAttackName().Contains("Dash"))
                 {
-                    if (attack.GetAttackName().Contains("Shockwave") || attack.GetAttackName().Contains("Dash"))
-                    {
-                        attack.GetComponent<Image>().color = new Color32(96, 96, 96, 255);
-                        attack.GetComponent<Button>().enabled = false;
-                    }
+                    attack.GetComponent<Image>().color = new Color32(96, 96, 96, 255);
+                    attack.GetComponent<Button>().enabled = false;
                 }
-                else
+            }
+            else
+            {
+                if (attack.GetAttackName().Contains("Fireball") || attack.GetAttackName().Contains("Shuriken"))
                 {
-                    if (attack.GetAttackName().Contains("Fireball") || attack.GetAttackName().Contains("Shuriken"))
-                    {
-                        attack.GetComponent<Image>().color = new Color32(96, 96, 96, 255);
-                        attack.GetComponent<Button>().enabled = false;
-                    }
+                    attack.GetComponent<Image>().color = new Color32(96, 96, 96, 255);
+                    attack.GetComponent<Button>().enabled = false;
                 }
             }
         }
-        StartCoroutine(UpdateText());
     }
 
     private void AddMana()

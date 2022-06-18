@@ -10,6 +10,16 @@ public class DebuffPurchaseButton : SkillPurchaseButton
     [SerializeField] private DebuffData _debuffData;
     private string _skillTitle;
     // Start is called before the first frame update
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        if (player.GetDebuffData() != null)
+        {
+            shop.SetDebuffButtons(player.GetDebuffData().skillName);
+        }
+    }
+
     protected override void Start()
     {
         base.Start();

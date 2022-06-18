@@ -181,6 +181,7 @@ public class AttackSkillBehaviour : SkillBehaviour
     {
         base.ChangeSkill(skillName);
         this._attackData = (AttackData)_skillData;
+        _player.SetAttackData(this._attackData);
     }
 
     private IEnumerator Dash()

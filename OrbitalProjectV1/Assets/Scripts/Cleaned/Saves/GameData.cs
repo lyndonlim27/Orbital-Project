@@ -23,6 +23,9 @@ public class GameData
     public int currGold;
     public string currWeapon;
     public Vector2 currPos;
+    public string debuffDataName;
+    public string buffDataName;
+    public string attackDataName;
 
     /*
      * Room Data

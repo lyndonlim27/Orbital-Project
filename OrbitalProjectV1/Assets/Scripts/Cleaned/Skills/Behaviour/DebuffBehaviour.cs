@@ -125,7 +125,6 @@ public class DebuffBehaviour : SkillBehaviour
     {
         base.ChangeSkill(skillName);
         this._debuffData = (DebuffData)_skillData;
+        _player.SetDebuffData(this._debuffData);
     }
-
-
 }

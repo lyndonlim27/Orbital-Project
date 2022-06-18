@@ -87,6 +87,7 @@ public class BuffBehaviour : SkillBehaviour
     {
         base.ChangeSkill(skillName);
         this._buffData = (BuffData)_skillData;
+        _player.SetBuffData(this._buffData);
     }
 
     private IEnumerator Stealth()
