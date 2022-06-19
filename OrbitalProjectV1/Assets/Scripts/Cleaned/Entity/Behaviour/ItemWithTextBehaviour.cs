@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 public class ItemWithTextBehaviour : EntityBehaviour
 {
-   [SerializeField] private ItemWithTextData data;
+   [SerializeField] protected ItemWithTextData data;
    [SerializeField] protected List<ConsumableItemData> consumableItemDatas;
     Player player;
     private Animator _animator;
@@ -88,19 +88,20 @@ public class ItemWithTextBehaviour : EntityBehaviour
             Debug.Log("This is drop" + i);
             int rand2 = Random.Range(0, consumableItemDatas.Count);
             ConsumableItemBehaviour con = poolManager.GetObject(EntityData.TYPE.CONSUMABLE_ITEM) as ConsumableItemBehaviour;
+            con.gameObject.SetActive(false);
             ConsumableItemData condata = consumableItemDatas[rand2];
             if (condata._consumableType == ConsumableItemData.CONSUMABLE.LETTER)
             {
-                ConsumableItemData temp = condata;
-                string passcode = FindObjectOfType<WordBank>().passcode;
+                ConsumableItemData temp = Instantiate(condata);
+                WordBank wordBank = FindObjectOfType<WordBank>();
+                string passcode = wordBank.passcode;
                 Debug.Log(passcode);
                 int randomnum = Random.Range(0, passcode.Length);
                 temp.letter = passcode[randomnum];
-                passcode = passcode.Substring(0, randomnum) + passcode.Substring(randomnum, passcode.Length - (randomnum + 1));
-                temp.sprite = temp.letters[(int)temp.letter - 81];
+                temp.sprite = condata.letters[(int)temp.letter - 81];
+                wordBank.passcode = passcode.Substring(0, randomnum) + passcode.Substring(randomnum, passcode.Length - (randomnum + 1));
+                con.SetEntityStats(temp);
             }
-
-            con.SetEntityStats(condata);
             con.transform.position = transform.position + new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f));
             con.SetTarget(player.gameObject);
             con.gameObject.SetActive(true);
@@ -119,7 +120,7 @@ public class ItemWithTextBehaviour : EntityBehaviour
         }
     }
 
-    private void FullFillCondition()
+    protected void FullFillCondition()
     {
         if (data.condition == 1)
         {

@@ -59,7 +59,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -153,10 +153,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDead: 0
   inAnimation: 0
+  data: {fileID: 0}
+  consumableItemDatas: []
   _healthBar: {fileID: 0}
   enemyData: {fileID: 11400000, guid: e2ba91a99bfb84c05b594010d3bf8927, type: 2}
   stage2: 0
-  consumableItemDatas: []
   detectionScript: {fileID: 8256497466902239055}
 --- !u!70 &7699734044698431969
 CapsuleCollider2D:

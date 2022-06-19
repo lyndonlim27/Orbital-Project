@@ -28,6 +28,7 @@ public abstract class RoomManager : MonoBehaviour
     public HashSet<string> conditions { get; protected set; }
     public List<EntityBehaviour> items { get; protected set; }
     public List<EnemyBehaviour> enemies { get; protected set; }
+    public List<PressureSwitchBehaviour> pressureitems;
     public LayerMask CollisionObjects;
     public List<NPCBehaviour> npcs { get; protected set; }
     protected ROOMTYPE roomtype;
@@ -52,9 +53,7 @@ public abstract class RoomManager : MonoBehaviour
     /**
      * Data.
      */
-    public EntityData[] _EntityData;
-    // public NPCData[] _npcData;
-    public EnemyData[] _enemyData;
+    public EntityData[] _EntityDatas;
 
     /**
      * Room.
@@ -67,6 +66,7 @@ public abstract class RoomManager : MonoBehaviour
     private TypingTestTL typingTestTL;
     protected Collider2D _collider;
     private HashSet<Vector3> safeRoute;
+
 
     //private AstarPath AstarGraph;
 
@@ -109,7 +109,7 @@ public abstract class RoomManager : MonoBehaviour
 
     private void Start()
     { 
-        SafePath();
+        //SafePath();
         
     }
 
@@ -126,10 +126,12 @@ public abstract class RoomManager : MonoBehaviour
             _collider = Physics2D.OverlapBox(transform.position, roomSize, 0, LayerMask.GetMask("Player"));
             if (_collider != null)
             {
+                
                 activated = true;
                 dialMgr.SetCurrentRoom(this);
                 player.SetCurrentRoom(this);
-                SpawnObjects(_EntityData);
+                
+                SpawnObjects(_EntityDatas);
                 //InitializeAStar();
                 //AddConditionalNPCS();
             }
@@ -172,12 +174,19 @@ public abstract class RoomManager : MonoBehaviour
 
     public virtual void FulfillCondition(string key)
     {
-        conditions.Remove(key);
+        if (conditions.Contains(key))
+        {
+            conditions.Remove(key);
+        }
     }
 
     public virtual void UnfulfillCondition(string key)
     {
-        conditions.Add(key);
+        if (!conditions.Contains(key))
+        {
+            conditions.Add(key);
+        }
+        
     }
 
     protected virtual void RoomChecker()
@@ -277,6 +286,7 @@ public abstract class RoomManager : MonoBehaviour
     {
         if (entityDatas == null)
         {
+            Debug.Log(this);
             return;
         }
         for (int i = 0; i < entityDatas.Length; i++)
@@ -284,6 +294,7 @@ public abstract class RoomManager : MonoBehaviour
 
             EntityData _item = entityDatas[i];
             //EntityBehaviour initprop;
+            Debug.Log("This is :" + _item);
             if (_item.condition == 1)
             {
                 conditions.Add(_item._name);
@@ -291,9 +302,11 @@ public abstract class RoomManager : MonoBehaviour
 
             if (!_item.spawnAtStart)
             {
+                Debug.Log("??????");
                 continue;
             } else
             {
+                Debug.Log("WTF? this is item:" + _item);
                 if (_item.multispawns)
                 {
                     InstantiateMultiPosition(_item);
@@ -312,7 +325,7 @@ public abstract class RoomManager : MonoBehaviour
         }
     }
 
-    private void InstantiateMultiPosition(EntityData item)
+    protected void InstantiateMultiPosition(EntityData item)
     {
         Debug.Log("Entered Multi");
         List<Vector2> points;
@@ -408,6 +421,7 @@ public abstract class RoomManager : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.gravityScale = 0f;
         rb.drag = 1.5f;
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.freezeRotation = true;
         emf.transform.SetParent(go.transform);
         emf.transform.localScale = new Vector2(data.scale, data.scale);
@@ -426,8 +440,11 @@ public abstract class RoomManager : MonoBehaviour
                 entity.transform.SetParent(transform);
                 items.Add(entity);
                 break;
+            case EntityData.TYPE.PRESSURE_SWITCH:
+                entity.transform.SetParent(transform);
+                pressureitems.Add((PressureSwitchBehaviour)entity);
+                break;
             case EntityData.TYPE.NPC:
-                npcs.Add((NPCBehaviour)entity);
                 entity.transform.SetParent(transform);
                 npcs.Add((NPCBehaviour) entity);
                 break;

@@ -105,7 +105,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -169,9 +169,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4d5422ff862349c9bbd8cc069801737, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead: 0
+  inAnimation: 0
   playerData: {fileID: 11400000, guid: 52d3d41ae346c4067a279a5cac48cf9d, type: 2}
   _gameOver: {fileID: 274189744813628576, guid: 9276f5277cc0e41268306463d096f8b7, type: 3}
-  healthBar: {fileID: 6949540926944273115, guid: 9a5265e357b8f4fed890c939ec3714e6, type: 3}
+  _healthBar: {fileID: 0}
+  _manaBar: {fileID: 0}
 --- !u!50 &2132566638482456379
 Rigidbody2D:
   serializedVersion: 4

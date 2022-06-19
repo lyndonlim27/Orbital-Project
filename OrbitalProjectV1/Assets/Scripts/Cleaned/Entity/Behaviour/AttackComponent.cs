@@ -9,12 +9,12 @@ public abstract class AttackComponent : MonoBehaviour
 {
     
     protected DetectionScript detectionScript;
-    protected EnemyBehaviour parent;
+    public EnemyBehaviour parent { get; protected set; }
     protected Player target;
     protected EnemyData enemyData;
     protected PoolManager poolManager;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         target = GameObject.FindObjectOfType<Player>();
         poolManager = FindObjectOfType<PoolManager>(true);

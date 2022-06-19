@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10a1c4479d5574dac908b62726c971cb, type: 3}
+  m_Name: MonsterTrapR14
+  m_EditorClassIdentifier: 
+  _name: Chest
+  minDist: 3
+  sprite: {fileID: 1533358200, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
+  pattern: 0
+  condition: 1
+  _type: 4
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
+  random: 0
+  pos: {x: 62, y: -67}
+  damageFlicker: {fileID: 0}
+  spawnAtStart: 1
+  scale: 3
+  itemTextDatas:
+  - {fileID: 11400000, guid: e2ba91a99bfb84c05b594010d3bf8927, type: 2}
+  - {fileID: 11400000, guid: 97f7cb48e946b40f7812bd1a12e17289, type: 2}
+  - {fileID: 11400000, guid: 73f722faef2ce453e8d41437bb6b2083, type: 2}
+  - {fileID: 11400000, guid: e2ba91a99bfb84c05b594010d3bf8927, type: 2}
+  ac_name: Chest
+  _trigger: Open
+  isAWeapon: 0

@@ -22,7 +22,8 @@ public class EntityData : ScriptableObject
         CAST_SELF,
         PROJECTILE,
         CONSUMABLE_ITEM,
-        TRAP
+        TRAP,
+        PUZZLEBOX
     }
     public enum PATTERN
     {

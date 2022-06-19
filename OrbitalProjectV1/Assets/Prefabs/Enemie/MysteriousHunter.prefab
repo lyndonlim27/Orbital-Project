@@ -60,7 +60,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -128,8 +128,8 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.78125, y: 0.578125}
+    pivot: {x: 0.517593, y: 0.5618802}
+    oldSize: {x: 0.265625, y: 0.453125}
     newSize: {x: 0.78125, y: 0.578125}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -178,21 +178,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cf843b8afbd24f09be1cf074fc361ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inAnimation: 0
-  enemyData: {fileID: 11400000, guid: 97f7cb48e946b40f7812bd1a12e17289, type: 2}
   isDead: 0
-  roamPos: {x: 0, y: 0}
-  maxDist: 100
-  detectionScript: {fileID: 3284008313328785335}
-  startingpos: {x: 0, y: 0}
-  player: {fileID: 0}
-  health: 0
-  cooldown: 0
-  facingRight: 0
+  inAnimation: 0
+  data: {fileID: 0}
+  consumableItemDatas: []
+  _healthBar: {fileID: 0}
+  enemyData: {fileID: 11400000, guid: 97f7cb48e946b40f7812bd1a12e17289, type: 2}
   stage2: 0
-  repathRate: 0.5
-  nextWaypointDistance: 1
-  reachedEndOfPath: 0
+  detectionScript: {fileID: 3284008313328785335}
 --- !u!1 &3284008313328785332
 GameObject:
   m_ObjectHideFlags: 0

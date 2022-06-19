@@ -15,9 +15,13 @@ MonoBehaviour:
   _name: Archer
   minDist: 10
   sprite: {fileID: -1560866690, guid: 1ab00e31be2ef4978bbb4df111a31b42, type: 3}
+  pattern: 0
   condition: 0
   _type: 5
-  random: 0
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
+  random: 1
   pos: {x: -51.790764, y: -62.261185}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
@@ -35,6 +39,10 @@ MonoBehaviour:
   defends: []
   rangedtriggers:
   - Arrow
+  rangedDatas:
+  - {fileID: 11400000, guid: 1fd8220190ddf4b02bd257a8bbf4c48a, type: 2}
   animatorname: AC_OneStateRanged
   words: 100
-  rangedcooldown: 15
+  rangedcooldown: 4
+  stage2: 0
+  enragedColor: {r: 0, g: 0, b: 0, a: 0}

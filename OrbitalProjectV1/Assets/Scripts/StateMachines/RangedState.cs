@@ -46,13 +46,43 @@ public class RangedState : StateClass
         {
             if (!enemy.onCooldown())
             {
+                //if (enemy.CheckDistance())
+                //{
                 List<string> rangedtriggers = enemy.enemyData.rangedtriggers;
-                int random = Random.Range(0,enemy.enemyData.rangedtriggers.Count);
+                //List<string> dashattacks = enemy.enemyData.dashattacks;
+                //if (dashattacks.Count == 0)
+                //{
+                int random = Random.Range(0, enemy.enemyData.rangedtriggers.Count);
+                Debug.Log(rangedtriggers.Count);
                 enemy.flipFace(enemy.player.transform.position);
                 enemy.animator.SetTrigger(rangedtriggers[random]);
-                enemy.inAnimation = true;
-
             }
+
+            //    }
+            //    else
+            //    {
+            //        int r1 = Random.Range(0, 2);
+            //        if (r1 == 1 && enemy.CheckInsideRoom())
+            //        {
+            //            enemy.Dodge();
+            //            int random = Random.Range(0, enemy.enemyData.dashattacks.Count);
+            //            enemy.flipFace(enemy.player.transform.position);
+            //            enemy.animator.SetTrigger(dashattacks[random]);
+
+            //        }
+            //        else
+            //        {
+            //            int random = Random.Range(0, enemy.enemyData.rangedtriggers.Count);
+            //            Debug.Log(rangedtriggers.Count);
+            //            enemy.flipFace(enemy.player.transform.position);
+            //            enemy.animator.SetTrigger(rangedtriggers[random]);
+
+            //        }
+            //    }
+            //    enemy.inAnimation = true;
+            //}
+
+
             else
             {
                 stateMachine.ChangeState(StateMachine.STATE.IDLE, null);

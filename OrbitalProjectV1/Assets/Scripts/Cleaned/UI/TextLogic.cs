@@ -31,8 +31,9 @@ public abstract class TextLogic : MonoBehaviour
         Textdisplayer = GetComponent<TextMeshPro>();
         player = GameObject.FindObjectOfType<Player>(true);
         parent = this.gameObject.transform.parent.GetComponent<EntityBehaviour>();
+        InstantiateAudio();
         //Textdisplayer.alignment = TextAlignmentOptions.Center;
-        
+
     }
     /**
      * Initialize gameObject.
@@ -48,7 +49,7 @@ public abstract class TextLogic : MonoBehaviour
         Textdisplayer.enabled = !outOfRange() && !parent.isDead;
         remainingword = "";
         GenerateNewWord();
-        InstantiateAudio();
+        //InstantiateAudio();
         minDist = parent.GetData().minDist;
     }
 

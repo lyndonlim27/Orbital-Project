@@ -145,7 +145,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -226,21 +226,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c9b809ce1a14c64bada2deeb29847e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyData: {fileID: 11400000, guid: 7c18992022d21482285e42cae6d4a2cd, type: 2}
   isDead: 0
-  roamPos: {x: 0, y: 0}
-  maxDist: 10
-  detectionScript: {fileID: 6762626419530351819}
-  startingpos: {x: 0, y: 0}
-  player: {fileID: 0}
-  health: 0
-  cooldown: 0
-  facingRight: 0
   inAnimation: 0
+  data: {fileID: 0}
+  consumableItemDatas: []
+  _healthBar: {fileID: 0}
+  enemyData: {fileID: 11400000, guid: 7c18992022d21482285e42cae6d4a2cd, type: 2}
   stage2: 0
-  repathRate: 0.5
-  nextWaypointDistance: 3
-  reachedEndOfPath: 0
+  detectionScript: {fileID: 6762626419530351819}
   stageProp: {fileID: 4787399030627389434, guid: c7a80671574be4bad9fcf27d9c1d51c4, type: 3}
   propsData:
   - {fileID: 11400000, guid: 9cefff5005f2c4309ba081714b1a62dc, type: 2}
@@ -255,7 +248,6 @@ MonoBehaviour:
   fodderType: {fileID: 4431353508152069340, guid: 896b235e0f2974ac7a44bb24b9c34c37, type: 3}
   hpBarUI: {fileID: 4296577664212013763, guid: 07008e977ca9b4c16868836d66557380, type: 3}
   HardenCooldown: 0
-  stage2: 0
 --- !u!114 &6461034160846565744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -550,8 +542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 448b01d7349624fffa2f740233108a1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spell: {fileID: 7209955310949163474, guid: f8bee11cb544943c09df639e76497e56, type: 3}
-  bullet: {fileID: 1215365519537057854, guid: 2d431e00bb0be46d8b719dd29172aecb, type: 3}
+  rangedBehaviour: {fileID: 0}
   rangeds:
   - {fileID: 11400000, guid: a427c93a36bb6426998f9edc14cae61a, type: 2}
   - {fileID: 11400000, guid: 8f104031de1404436866443573a46aaa, type: 2}

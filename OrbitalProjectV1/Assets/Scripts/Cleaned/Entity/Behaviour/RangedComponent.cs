@@ -1,12 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class RangedComponent : AttackComponent
 {
     public RangedBehaviour rangedBehaviour;
     public List<RangedData> rangeds;
+    private LineController lineController;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        lineController = GetComponentInChildren<LineController>();
+    }
+
+    public void LaserAttack()
+    {
+        lineController.StartCoroutine(lineController.AnimateLine());
+    }
     public void SpellAttackSingle()
     {
         List<RangedData> spells = rangeds.FindAll(ranged => !ranged._type.Equals(EntityData.TYPE.PROJECTILE));
@@ -34,11 +47,49 @@ public class RangedComponent : AttackComponent
         SettingUpProjectile(selectedAttack, quaternion, pos);
     }
 
-    public void SpiralAttack()
+    public void ShootSingleSphere()
     {
+        List<RangedData> bullets = rangeds.FindAll(ranged => ranged._type.Equals(EntityData.TYPE.PROJECTILE));
+        Debug.Log("THis is bullets: " + bullets);
+        Debug.Log(bullets[0]);
+        int random = Random.Range(0, bullets.Count);
+        RangedData selectedAttack = bullets[random];
+        StartCoroutine(RadialAttack());
+        
+    }
+        
+
+    public void SummonProjectiles(RangedData selectedAttack)
+    {
+
+        int rand = Random.Range(9, 12);
+        for (int i = 0; i < rand; i ++)
+        {
+            Vector2 dir = (Vector2)(target.transform.position - transform.position).normalized;
+            Quaternion quaternion = selectedAttack._type == RangedData.TYPE.CAST_SELF ? Quaternion.identity : Quaternion.Euler(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+            transform.rotation = quaternion;
+            Vector2 pos = (Vector2)transform.position + dir * 1.5f;
+            SettingUpProjectile(selectedAttack, quaternion, pos);
+        }
+        parent.resetCooldown();
+
+    }
+
+    public IEnumerator RadialAttack()
+    {
+        float angle = 0f;
         List<RangedData> bullets = rangeds.FindAll(ranged => ranged._type == EntityData.TYPE.PROJECTILE);
         int random = Random.Range(0, bullets.Count);
         RangedData selectedAttack = bullets[random];
+        while(angle < 360f)
+        {
+            Vector2 pos = (Vector2)transform.position;
+            Vector2 dir = (Vector2)(target.transform.position - transform.position).normalized;
+            SettingUpProjectile(selectedAttack, Quaternion.Euler(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + angle), pos);
+            angle += 10f;
+            yield return new WaitForSeconds(0.2f);
+        }
+        parent.resetCooldown();
 
     }
 

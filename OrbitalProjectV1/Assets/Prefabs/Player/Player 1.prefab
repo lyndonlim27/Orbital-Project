@@ -753,7 +753,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2224,6 +2224,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b02b12bb7e1e49c49847e5266dc5551, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead: 0
+  inAnimation: 0
   WeaponName: 
   range: 200
   _bulletPrefab: {fileID: 0}
@@ -2284,7 +2286,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2395,6 +2397,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc6cebcd4946d4a8f92dc022e78a012f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead: 0
+  inAnimation: 0
   WeaponName: spazer
   range: 200
   _bulletPrefab: {fileID: 3089234856021374640, guid: a698d700626ce4b438d5075d3b9599e6, type: 3}
@@ -2460,7 +2464,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2555,6 +2559,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4d5422ff862349c9bbd8cc069801737, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead: 0
+  inAnimation: 0
   playerData: {fileID: 11400000, guid: 52d3d41ae346c4067a279a5cac48cf9d, type: 2}
   _gameOver: {fileID: 0}
   _healthBar: {fileID: 0}
@@ -2651,7 +2657,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2741,6 +2747,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc6cebcd4946d4a8f92dc022e78a012f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead: 0
+  inAnimation: 0
   WeaponName: spazer
   range: 200
   _bulletPrefab: {fileID: 4506963531214061242, guid: 00394412e84604e1ba021c2a4f9ca94c, type: 3}
@@ -2821,7 +2829,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2911,6 +2919,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc6cebcd4946d4a8f92dc022e78a012f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead: 0
+  inAnimation: 0
   WeaponName: cannon
   range: 200
   _bulletPrefab: {fileID: 1215365519537057854, guid: 2d431e00bb0be46d8b719dd29172aecb, type: 3}
@@ -3527,7 +3537,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

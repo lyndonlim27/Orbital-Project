@@ -152,7 +152,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &214306072
 GameObject:
@@ -184,18 +184,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1728368eaf2640b196401298af35dbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefabs: []
-  itemPrefab: {fileID: 841166507}
-  itemStats:
-  - {fileID: 11400000, guid: 95699fdfdd44f44f48c605e5f16e09d7, type: 2}
-  npcPrefabs: []
-  spawnMask:
+  CollisionObjects:
     serializedVersion: 2
     m_Bits: 0
-  Enemyspawns: 0
-  maxEnemies: 0
-  minRadius: 0
-  maxRadius: 0
+  entryDoor: {fileID: 0}
+  doors: []
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  roomSize: {x: 0, y: 0}
+  _colour: {r: 0, g: 0, b: 0, a: 0}
+  _EntityData: []
+  _enemyData: []
 --- !u!61 &214306074
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -235,7 +235,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &261848409
 GameObject:
@@ -283,7 +283,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &271325916
 GameObject:
@@ -356,7 +356,7 @@ Transform:
   m_Children:
   - {fileID: 2140874826}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &602521484
 GameObject:
@@ -402,7 +402,7 @@ Transform:
   - {fileID: 2014783225}
   - {fileID: 635752532}
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &622966021
 PrefabInstance:
@@ -548,7 +548,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -580,17 +580,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &841166507 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3638017618797928873, guid: 908be503fa7784c9481fd91d609d8667, type: 3}
-  m_PrefabInstance: {fileID: 401910957932636352}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edb22204958fc4844a6e89da4924f29d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1024683219
 GameObject:
   m_ObjectHideFlags: 0
@@ -749,7 +738,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1647076209 stripped
 MonoBehaviour:
@@ -852,6 +841,44 @@ TilemapCollider2D:
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0.00001
+--- !u!1839735485 &1749632843
+Tilemap:
+  m_ObjectHideFlags: 8
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1749632840}
+  m_Enabled: 1
+  m_Tiles: {}
+  m_AnimatedTiles: {}
+  m_TileAssetArray: []
+  m_TileSpriteArray: []
+  m_TileMatrixArray: []
+  m_TileColorArray: []
+  m_TileObjectToInstantiateArray: []
+  m_AnimationFrameRate: 1
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Origin: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0, y: 0, z: 1}
+  m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
+  m_TileOrientation: 0
+  m_TileOrientationMatrix:
+    e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
 --- !u!114 &1859692575 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8026378421457628148, guid: f969a9f4f9c4d4f2896959b18610079c, type: 3}
@@ -936,7 +963,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1953687388
 GameObject:
@@ -1000,7 +1027,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1995008122
 PrefabInstance:
@@ -1222,7 +1249,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1284,18 +1311,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1728368eaf2640b196401298af35dbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefabs: []
-  itemPrefab: {fileID: 841166507}
-  itemStats:
-  - {fileID: 11400000, guid: 95699fdfdd44f44f48c605e5f16e09d7, type: 2}
-  npcPrefabs: []
-  spawnMask:
+  CollisionObjects:
     serializedVersion: 2
     m_Bits: 0
-  Enemyspawns: 0
-  maxEnemies: 0
-  minRadius: 0
-  maxRadius: 0
+  entryDoor: {fileID: 0}
+  doors: []
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  roomSize: {x: 0, y: 0}
+  _colour: {r: 0, g: 0, b: 0, a: 0}
+  _EntityData: []
+  _enemyData: []
 --- !u!61 &2054591980
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1335,7 +1362,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2114167226
 GameObject:
@@ -1383,7 +1410,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2140874825
 GameObject:
@@ -1476,7 +1503,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -15,14 +15,18 @@ MonoBehaviour:
   _name: key
   minDist: 2
   sprite: {fileID: 170574505, guid: b1d431202be5043a2a9304e0cda5f151, type: 3}
+  pattern: 0
   condition: 1
   _type: 4
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
   random: 1
   pos: {x: -4.88, y: -0.78}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
-  scale: 0
-  entityDatas: []
+  scale: 1
+  itemTextDatas: []
   ac_name: 
   _trigger: 
   isAWeapon: 0

@@ -144,7 +144,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -212,7 +212,7 @@ BoxCollider2D:
   m_Offset: {x: 0, y: -0.05}
   m_SpriteTilingProperty:
     border: {x: 0.25, y: 0.09375, z: 0.25, w: 0.203125}
-    pivot: {x: 0.49854282, y: 0.4939284}
+    pivot: {x: 0.48, y: 0.42}
     oldSize: {x: 0.78125, y: 0.75}
     newSize: {x: 0.78125, y: 0.75}
     adaptiveTilingThreshold: 0.5
@@ -236,10 +236,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDead: 0
   inAnimation: 0
+  data: {fileID: 0}
+  consumableItemDatas: []
   _healthBar: {fileID: 0}
   enemyData: {fileID: 11400000, guid: 73f722faef2ce453e8d41437bb6b2083, type: 2}
   stage2: 0
-  consumableItemDatas: []
   detectionScript: {fileID: 3693773785348804951}
 --- !u!114 &3693773784661720791
 MonoBehaviour:

@@ -50,16 +50,16 @@ public class ChaseState : StateClass
         else
         {
 
-            if (enemy.ranged != null && enemy.ranged.detected() && !enemy.onCooldown())
-            {
-                stateMachine.ChangeState(StateMachine.STATE.ATTACK2, null);
-            }
-            else if (enemy.melee != null && enemy.melee.detected())
+            if (enemy.melee.isActiveAndEnabled && enemy.melee.detected())
             {
 
                 stateMachine.ChangeState(StateMachine.STATE.ATTACK1, null);
             }
-
+            else if (enemy.ranged.isActiveAndEnabled && enemy.ranged.detected() && !enemy.onCooldown()) //&& enemy.CheckInsideRoom()
+            {
+                stateMachine.ChangeState(StateMachine.STATE.ATTACK2, null);
+            }
+          
             else
             {
                 if (enemy.melee == null)

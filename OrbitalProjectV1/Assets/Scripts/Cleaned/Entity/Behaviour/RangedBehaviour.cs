@@ -10,7 +10,10 @@ public class RangedBehaviour : EntityBehaviour
     public GameObject _firer;
     private Rigidbody2D _rb;
     protected GameObject _target;
+    protected Vector2 currenttargetposition;
     protected BoxCollider2D _collider;
+    protected TrailRenderer _trailRenderer;
+    protected RuntimeAnimatorController runtimeAnimator;
 
     [Header("Bullet properties")]
     [SerializeField] private float speed = 6.0f;
@@ -25,8 +28,10 @@ public class RangedBehaviour : EntityBehaviour
         player = GameObject.FindObjectOfType<Player>();
         _animator = GetComponent<Animator>();
         _animator.keepAnimatorControllerStateOnDisable = false;
+        runtimeAnimator = _animator.runtimeAnimatorController;
         _rb = GetComponent<Rigidbody2D>();
         _collider = GetComponent<BoxCollider2D>();
+        //_trailRenderer = GetComponentInChildren<TrailRenderer>();
     }
 
     protected virtual void Start()
@@ -41,26 +46,40 @@ public class RangedBehaviour : EntityBehaviour
 
     protected virtual void FixedUpdate()
     {
-
-        if (rangedData.followTarget)
+        if (rangedData._type != EntityData.TYPE.CAST_ONTARGET)
         {
-            followTarget();
-        } else
-        {
-            _rb.velocity = transform.forward * 200f;
+            ShootAtTarget();
         }
+        
 
     }
 
     protected void OnEnable()
     {
-        EnableAnimation();
+        DisableAnimator();
         SettingUpCollider();
+        EnableAnimator();
+        EnableAnimation();
+        //_trailRenderer.enabled = true;
         transform.localScale = new Vector2(rangedData.scale, rangedData.scale);
         ResttingColor();
         rotateSpeed = rangedData.rotation;
         speed = rangedData.speed;
+        gameObject.layer = _firer == null ? LayerMask.NameToLayer("PlayerProjectile") : LayerMask.NameToLayer("EnemyProjectile");
 
+    }
+
+    private void EnableAnimator()
+    {
+        _animator.enabled = true;
+        _animator.runtimeAnimatorController = runtimeAnimator;
+
+    }
+
+    private void DisableAnimator()
+    {
+        _animator.enabled = false;
+        _animator.runtimeAnimatorController = null;
     }
 
     private void ResttingColor()
@@ -68,11 +87,13 @@ public class RangedBehaviour : EntityBehaviour
         Color c = spriteRenderer.material.color;
         c.a = 1;
         spriteRenderer.material.color = c;
+        //_trailRenderer.startColor = spriteRenderer.color;
+        
     }
 
     protected void OnDisable()
     {
-        
+        _firer = null;
 
     }
 
@@ -89,6 +110,7 @@ public class RangedBehaviour : EntityBehaviour
     public void TargetEntity(GameObject target)
     {
         _target = target;
+        currenttargetposition = target.transform.position;
         if (!_target.CompareTag("Player"))
         {
             lifeTime = 999f;
@@ -156,8 +178,12 @@ public class RangedBehaviour : EntityBehaviour
         if (_firer != null)
         {
             EnemyBehaviour enemy = _firer.GetComponent<EnemyBehaviour>();
+            if (!enemy.insideStage2)
+            {
+                enemy.resetCooldown();
+            }
             //enemy.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
-            enemy.resetCooldown();
+            
         }
         Debug.Log(lifeTime);
         poolManager.ReleaseObject(this);
@@ -175,7 +201,7 @@ public class RangedBehaviour : EntityBehaviour
     {
         Debug.Log(collision.gameObject);
         Debug.Log(_target.gameObject);
-        
+        //_trailRenderer.enabled = false;
         stopMovement();
         DisableAnimation();
         GameObject go = collision.gameObject;
@@ -244,8 +270,8 @@ public class RangedBehaviour : EntityBehaviour
 
         if (rangedData._type != EntityData.TYPE.PROJECTILE)
         {
-            ApplyDamage(go);
-            ApplyForce(go);
+            //ApplyDamage(go);
+            //ApplyForce(go);
         }
 
     }
@@ -270,9 +296,10 @@ public class RangedBehaviour : EntityBehaviour
         
     }
 
-    protected void followTarget()
+    protected void ShootAtTarget()
     {
-        Vector2 point2Target = (Vector2)transform.position - (Vector2)_target.transform.position;
+        Vector2 targetpos = rangedData.followTarget ? _target.transform.position : transform.right;
+        Vector2 point2Target = (Vector2)transform.position - targetpos;
         point2Target.Normalize();
         Vector3 shootpoint = rangedData._type == EntityData.TYPE.PROJECTILE ? transform.right : -point2Target;
         //float value = Vector3.Cross(point2Target, transform.right).z;
@@ -280,7 +307,19 @@ public class RangedBehaviour : EntityBehaviour
         //_rb.velocity = transform.right * speed;
         float value = Vector3.Cross(point2Target, transform.right).z;
         _rb.angularVelocity = rotateSpeed * value;
-        _rb.velocity = shootpoint* speed;
-    }
+        if (rangedData.followTarget)
+        {
+            _rb.velocity = shootpoint * speed;
+        } else
+        {
+           
+            _rb.AddForce(shootpoint, ForceMode2D.Impulse);
+            
+        }
+            
+
+            //_rb.AddForce(shootpoint*speed, rangedData.followTarget ? ForceMode2D.Force : ForceMode2D.Impulse);
+            //_rb.velocity = shootpoint* speed;
+        }
 
 }

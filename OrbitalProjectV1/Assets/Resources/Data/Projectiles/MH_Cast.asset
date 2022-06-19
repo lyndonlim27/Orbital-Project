@@ -15,16 +15,20 @@ MonoBehaviour:
   _name: mh_cast
   minDist: 0
   sprite: {fileID: -1756327598, guid: 4a28da376072740bfb1eb84e68a5a160, type: 3}
+  pattern: 0
   condition: 0
   _type: 8
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
   random: 0
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
   spawnAtStart: 0
   scale: 1
   damage: 1
-  speed: 1
-  rotation: 1
+  speed: 0
+  rotation: 0
   lifetime: 1
   trigger: LightningBolt
   followTarget: 0

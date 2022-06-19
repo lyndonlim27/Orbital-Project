@@ -15,7 +15,7 @@ public class LetterSlotUI : MonoBehaviour, IDropHandler
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
-        dragAndDrop = GetComponentInChildren<DragAndDrop>();
+        dragAndDrop = GetComponentInChildren<DragAndDrop>(true);
        
 
     }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using Pathfinding;
 
 //[RequireComponent(typeof(EnemyData), typeof(ConsumableItemData))]
@@ -23,23 +24,27 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     //data;
 
     public EnemyData enemyData;
-    public StateMachine stateMachine { get; protected set; }
+    //public StateMachine stateMachine { get; protected set; }
+    public StateMachine stateMachine;
+    public StateMachine.STATE currstate;
     public MeleeComponent melee { get; protected set; }
     public RangedComponent ranged { get; protected set; }
     public Rigidbody2D rb { get; protected set; }
     public Animator animator { get; protected set; }
-    public bool stage2;
+    public bool insideStage2;
 
     public Vector2 roamPos { get; protected set; }
     public float maxDist { get; protected set; }
     public Vector2 startingpos { get; protected set; }
     public Player player { get; protected set; }
-    protected float cooldown;
+    
     protected bool facingRight;
     private MonsterTextLogic tl;
     protected Transform _transform;
     protected DamageFlicker _flicker;
     public DetectionScript detectionScript;
+    private Light2D light2D;
+    private CapsuleCollider2D body;
 
     /** Pathfinding Movement
      * 
@@ -53,6 +58,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     private bool reachedEndOfPath;
 
 
+    [Header("Cooldowns")]
+    [SerializeField] protected float Dashcooldown;
+    [SerializeField] protected float cooldown;
 
     protected override void Awake()
     {
@@ -65,25 +73,35 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         _flicker = GameObject.FindObjectOfType<DamageFlicker>();
         seeker = GetComponent<Pathfinding.Seeker>();
         tl = GetComponentInChildren<MonsterTextLogic>(true);
+        light2D = GetComponentInChildren<Light2D>(true);
         
         
     }
 
     public virtual void Start()
     {
-        _transform = transform.parent;
+       
         maxDist = 100f;
         
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         health = enemyData.words;
         isDead = false;
+        _transform = transform.parent;
         DisableAnimator();
+        SettingUpColliders();
         EnableAnimator();
-        
+        ranged.gameObject.SetActive(enemyData.rangedtriggers.Count > 0);
+        ranged.rangeds = enemyData.rangedDatas;
+        melee.gameObject.SetActive(enemyData.meleetriggers.Count > 0);
         ResettingColor();
+        light2D.color = spriteRenderer.color;
+        light2D.pointLightOuterRadius = enemyData.scale * 2;
+        insideStage2 = false;
+        rb = GetComponentInParent<Rigidbody2D>();
+        
         
     }
 
@@ -91,6 +109,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     {
         animator.enabled = true;
         animator.runtimeAnimatorController = Resources.Load(string.Format("Animations/AnimatorControllers/{0}", enemyData.animatorname)) as RuntimeAnimatorController;
+        
     }
 
     private void DisableAnimator()
@@ -101,19 +120,26 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     private void SettingUpColliders()
     {
-        CapsuleCollider2D body = GetComponentInParent<CapsuleCollider2D>();
-        body.size = enemyData.sprite.bounds.size;
-        body.offset = new Vector2(0, 0);
-        BoxCollider2D coll = melee.GetComponent<BoxCollider2D>();
-        coll.size = new Vector2(enemyData.sprite.bounds.size.x, enemyData.sprite.bounds.size.y);
-        coll.offset = new Vector2(0.2f, 0);
+        Debug.Log(enemyData.sprite);
+        Debug.Log(enemyData.sprite.bounds.size);
+        
+        body = GetComponentInParent<CapsuleCollider2D>();
+        if (body!=null)
+        {
+            body.size = enemyData.sprite.bounds.size * enemyData.scale;
+            body.offset = new Vector2(0, 0);
+            BoxCollider2D coll = melee.GetComponent<BoxCollider2D>();
+            coll.size = new Vector2(enemyData.sprite.bounds.size.x * 0.8f, enemyData.sprite.bounds.size.y * 0.8f);
+            coll.offset = new Vector2(0.2f, 0);
+        }
+        
     }
 
     // later than onenable, making use of spawning window time.
     public virtual void Initialize() {
         
         
-        SettingUpColliders();
+        
         animator.SetBool("isAlive", true);
         animator.SetBool("NotSpawned", true);
         //_rb.WakeUp();
@@ -121,19 +147,21 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         //transform.position = Vector3.zero;
         cooldown = 2.5f;
         startingpos = _transform.position;
-        ranged.gameObject.SetActive(enemyData.rangedtriggers.Count > 0);
-        melee.gameObject.SetActive(enemyData.meleetriggers.Count > 0);
+        
        
         
     }
 
     public virtual void Update()
     {
+        currstate = stateMachine.currState;
         if (isDead)
         {
             return;
         }
+        CheckForStage2();
         stateMachine.Update();
+        
         tick();
     }
 
@@ -189,9 +217,27 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         if (animator.applyRootMotion == true)
         {
             Debug.Log("Dafuq");
-            _transform.position = transform.position;
-            transform.position = Vector3.zero;
+            //_transform.position = transform.position;
+            //transform.position = Vector3.zero;
+            //if (transform.position.x > currentRoom.GetRoomAreaBounds().max.x || transform.position.y > currentRoom.GetRoomAreaBounds().max.y)
+            //{
+            //    var minX = Mathf.Min(transform.position.x, currentRoom.GetRoomAreaBounds().max.x - 1.5f);
+            //    var minY = Mathf.Min(transform.position.y, currentRoom.GetRoomAreaBounds().max.y - 1.5f);
+            //    _transform.position = new Vector2(minX, minY);
+            //}
 
+            //else if (transform.position.x < currentRoom.GetRoomAreaBounds().min.x || transform.position.y < currentRoom.GetRoomAreaBounds().min.y)
+            //{
+            //    var maxX = Mathf.Max(transform.position.x, currentRoom.GetRoomAreaBounds().min.x + 1.5f);
+            //    var maxY = Mathf.Max(transform.position.y, currentRoom.GetRoomAreaBounds().min.y + 1.5f);
+            //    _transform.position = new Vector2(maxX, maxY);
+            //} else
+            //{
+            _transform.position = transform.position;
+            //melee.GetComponent<BoxCollider2D>().bounds.
+            transform.position = Vector3.zero;
+            //GetComponentInParent<Rigidbody2D>().MovePosition(transform.position);
+            
         }
         
     }
@@ -199,7 +245,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     public virtual void resetCooldown()
     {
         // use enemydata.rangedcooldown, nexttime then i add numbers to the enemy datas. for now just use 10.
-        this.cooldown = 4;
+        this.cooldown = enemyData.rangedcooldown;
         inAnimation = false;
         //resetPosition();
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
@@ -208,8 +254,8 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     public void getNewRoamPosition()
     {
-        roamPos = new Vector2(Random.Range(-5f, 5f), Random.Range(-5f, 5f));
-        //roamPos = this.currentRoom.GetRandomPoint();
+        //roamPos = new Vector2(Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+        roamPos = this.currentRoom.GetRandomPoint();
 
 
     }
@@ -231,7 +277,8 @@ public class EnemyBehaviour : ItemWithTextBehaviour
             lastRepath = Time.time;
             // Start a new path to the targetPosition, call the the OnPathComplete function
             // when the path has been calculated (which may take a few frames depending on the complexity)
-            seeker.StartPath(_transform.position, destination, OnPathComplete);
+            //seeker.StartPath(_transform.position, destination, OnPathComplete);
+            seeker.StartPath(transform.position, destination, OnPathComplete);
         }
         if (path == null)
         {
@@ -280,7 +327,8 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         // Move the agent using the CharacterController component
         // Note that SimpleMove takes a velocity in meters/second, so we should not multiply by Time.deltaTime
         // If you are writing a 2D game you may want to remove the CharacterController and instead modify the position directly
-        _transform.position += velocity * Time.deltaTime;
+        //_transform.position += velocity * Time.deltaTime;
+        rb.velocity += (Vector2) velocity * Time.deltaTime;
     }
 
 
@@ -299,12 +347,23 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     public bool isReached()
     {
-        return Vector2.Distance(roamPos, _transform.position) <= 0.1f;
+        //return Vector2.Distance(roamPos, _transform.position) <= 0.1f;
+        return Vector2.Distance(roamPos, transform.position) <= 0.1f;
     }
 
     public void flipFace(Vector2 target)
     {
-        Vector2 dir = (target - (Vector2)_transform.position).normalized;
+        //Vector2 dir = (target - (Vector2)_transform.position).normalized;
+        //if (dir.x < 0 && !facingRight)
+        //{
+        //    Flip();
+        //}
+        //else if (dir.x > 0 && facingRight)
+        //{
+        //    Flip();
+        //}
+
+        Vector2 dir = (target - (Vector2)transform.position).normalized;
         if (dir.x < 0 && !facingRight)
         {
             Flip();
@@ -317,10 +376,25 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     }
 
     private void Flip()
-    { 
-        Vector3 currentFace = _transform.localScale;
+    {
+        //Vector3 currentFace = _transform.localScale;
+        //currentFace.x *= -1;
+        //_transform.localScale = currentFace;
+        //Vector3 _tf = tl.transform.localScale;
+        //_tf.x *= -1;
+        //tl.transform.localScale = _tf;
+        //facingRight = !facingRight;
+
+        //if (_healthBar != null)
+        //{
+        //    Vector3 scaleHealthBar = _healthBar.transform.localScale;
+        //    scaleHealthBar.x *= -1;
+        //    _healthBar.transform.localScale = scaleHealthBar;
+        //}
+
+        Vector3 currentFace = transform.localScale;
         currentFace.x *= -1;
-        _transform.localScale = currentFace;
+        transform.localScale = currentFace;
         Vector3 _tf = tl.transform.localScale;
         _tf.x *= -1;
         tl.transform.localScale = _tf;
@@ -358,8 +432,25 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     public virtual void Teleport()
     {
-        _transform.position = roamPos;
+        //_transform.position = currentRoom.GetRandomPoint();
+        transform.localPosition = Vector3.zero;
+        Dashcooldown = 30f;
+        inAnimation = false;
+        EnableAttackComps();
+        stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
         this.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+    }
+
+    public void CheckForStage2()
+    {
+        if (!insideStage2 && enemyData.stage2 && health <= (0.5f * enemyData.words) &&!inAnimation)
+        {
+            animator.SetTrigger("stage2intro");
+            animator.SetBool("stage2", true);
+            insideStage2 = true;
+            spriteRenderer.material.color = enemyData.enragedColor;
+            light2D.color = enemyData.enragedColor;
+        }
     }
 
     public void meleeAttack()
@@ -395,8 +486,11 @@ public class EnemyBehaviour : ItemWithTextBehaviour
                 flipFace(player.transform.position);
                 break;
             case ANIMATION_CODE.ATTACK_END:
-                stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+                
+                resetPosition();
                 inAnimation = false;
+                stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+                
                 break;
             case ANIMATION_CODE.CAST_START:
                 flipFace(player.transform.position);
@@ -405,12 +499,23 @@ public class EnemyBehaviour : ItemWithTextBehaviour
             case ANIMATION_CODE.SHOOT_START:
                 //animator.applyRootMotion = false;
                 flipFace(player.transform.position);
-                //resetPosition();
-                Shoot();
+                if (insideStage2)
+                {
+                    RandomShoot();
+                } else
+                {
+                    Shoot();
+                }
+                resetPosition();
+
                 break;
             case ANIMATION_CODE.CAST_END:
                 //resetCooldown();
-                stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+                //resetPosition();
+                resetPosition();
+                resetCooldown();
+                //inAnimation = false;
+                //stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
                 break;
             case ANIMATION_CODE.WEAP_TRIGGER:
                 WeapAttack();
@@ -524,5 +629,100 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     {
         return Vector2.Distance(_transform.position, startingpos) >= maxDist;
     }
+
+    //to prevent the object from jumping outside. technically shudnt happen when there are colliders but well.
+    public bool CheckInsideRoom()
+    {
+        bool insidex = Mathf.Abs(_transform.position.x - currentRoom.GetRoomAreaBounds().max.x) > 2.5f && Mathf.Abs(_transform.position.x - currentRoom.GetRoomAreaBounds().min.x) > 2.5f;
+        bool insidey = Mathf.Abs(_transform.position.y - currentRoom.GetRoomAreaBounds().max.y) > 2.5f&& Mathf.Abs(_transform.position.y - currentRoom.GetRoomAreaBounds().min.y) > 2.5f;
+        Debug.Log(insidex);
+        Debug.Log(insidey);
+        return insidex && insidey;
+    }
+
+
+    public void Dodge()
+    {
+        if (!inAnimation && CheckInsideRoom())
+        {
+            flipFace(-player.transform.position);
+            inAnimation = true;
+            List<string> dodges = enemyData.defends;
+            if (dodges.Count != 0)
+            {
+                int random = Random.Range(0, dodges.Count);
+                animator.SetTrigger(dodges[random]);
+                DisableAttackComps();
+
+            }
+
+        }
+        else
+        {
+            stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+
+        }
+    }
+
+    private void DisableAttackComps()
+    {
+        if (melee != null)
+        {
+            melee.gameObject.SetActive(false);
+        }
+
+        if (ranged != null)
+        {
+            ranged.gameObject.SetActive(false);
+        }
+
+
+    }
+
+    private void EnableAttackComps()
+    {
+        if (melee != null)
+        {
+            melee.gameObject.SetActive(enemyData.meleetriggers.Count > 0);
+        }
+        if (ranged != null)
+        {
+            ranged.gameObject.SetActive(enemyData.rangedtriggers.Count > 0);
+        }
+
+    }
+
+    public void ResetDash()
+    {
+        Dashcooldown = 15f;
+        inAnimation = false;
+        //transform.parent.position = transform.position;
+        //transform.localPosition = Vector3.zero;
+        resetPosition();
+        stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+        EnableAttackComps();
+    }
+
+    public bool CheckDistance()
+    {
+        return Vector2.Distance(_transform.position, player.transform.position) > 3f;
+    }
+
+
+    public void RandomShoot()
+    {
+        
+
+        ranged.ShootSingleSphere();
+        
+
+    }
+
+    //public void CastSpell()
+    //{
+    //    List<string> spellcasts = enemyData.rangedtriggers;
+    //    int rand = Random.Range(0, spellcasts.Count);
+    //    GetComponent<Animator>().Play(spellcasts[rand]);
+    //}
 
 }

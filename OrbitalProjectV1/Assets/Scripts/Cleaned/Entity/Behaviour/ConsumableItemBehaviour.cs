@@ -77,6 +77,7 @@ public class ConsumableItemBehaviour : EntityBehaviour
         }
         spriteRenderer.sprite = _itemData.sprite;
         finishedBouncing = false;
+        GetComponent<TrailRenderer>().startColor = spriteRenderer.color;
         SetUpDropArea();
     }
 

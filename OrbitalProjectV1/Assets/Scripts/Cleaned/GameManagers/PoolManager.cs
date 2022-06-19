@@ -95,7 +95,7 @@ public class PoolManager : MonoBehaviour
                 Debug.Log("entered");
                 Debug.Log(entity);
                 ObjectPool<EntityBehaviour> pool = new ObjectPool<EntityBehaviour>(() => CreatePooledEntity(entity),
-                OnGetEntity, OnReleaseEntity, OnDestroyEntity, false, 10, 1000);
+                OnGetEntity, OnReleaseEntity, OnDestroyEntity, false, 100, 1000);
                 Debug.Log(pool.CountAll);
                 objectPools.Add(EntityData.TYPE.CAST_ONTARGET, pool);
                 objectPools.Add(EntityData.TYPE.CAST_SELF, pool);

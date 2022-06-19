@@ -17,9 +17,7 @@ public class NPCBehaviour : EntityBehaviour
         dialogueDetection = GetComponentInChildren<DialogueDetection>();
     }
     void Start()
-    {
-        
-
+    { 
 
     }
 

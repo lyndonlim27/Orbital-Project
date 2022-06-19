@@ -15,9 +15,13 @@ MonoBehaviour:
   _name: Chest
   minDist: 3
   sprite: {fileID: 1533358200, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
+  pattern: 0
   condition: 1
   _type: 4
-  random: 1
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
+  random: 0
   pos: {x: -25.81, y: 33.55}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1

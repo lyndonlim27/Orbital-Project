@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class R15_Mgr : RoomManager
 {
+    protected override void Awake()
+    {
+        roomtype = ROOMTYPE.TREASURE_ROOM;
+        base.Awake();
+    }
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
-        
+        base.Update();
+        Debug.Log(CanProceed());
+        RoomChecker();
+        CheckRunningEvents();
     }
+
+
 }

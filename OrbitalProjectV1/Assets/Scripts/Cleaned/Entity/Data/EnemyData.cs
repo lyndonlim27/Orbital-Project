@@ -13,7 +13,11 @@ public class EnemyData : ItemWithTextData
     public List<string> meleetriggers;
     public List<string> defends;
     public List<string> rangedtriggers;
+    public List<string> dashattacks;
+    public List<RangedData> rangedDatas;
     public string animatorname;
     public int words;
     public float rangedcooldown;
+    public bool stage2;
+    public Color enragedColor;
 }

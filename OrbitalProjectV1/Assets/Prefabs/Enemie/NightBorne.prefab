@@ -45,8 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 448b01d7349624fffa2f740233108a1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spell: {fileID: 7209955310949163474, guid: f8bee11cb544943c09df639e76497e56, type: 3}
-  bullet: {fileID: 1215365519537057854, guid: 2d431e00bb0be46d8b719dd29172aecb, type: 3}
+  rangedBehaviour: {fileID: 0}
   rangeds:
   - {fileID: 11400000, guid: 3d1be60a14467487aa1246dc39aed1e9, type: 2}
   - {fileID: 11400000, guid: 3af965bb715474046afdab6247dc63eb, type: 2}
@@ -224,7 +223,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -288,27 +287,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 853ada5831b444984a4eaca6989fa5fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyData: {fileID: 11400000, guid: e95faa15c5889493cabbc4690eeaaf05, type: 2}
   isDead: 0
-  roamPos: {x: 0, y: 0}
-  maxDist: 100
+  inAnimation: 0
+  data: {fileID: 0}
+  consumableItemDatas: []
+  _healthBar: {fileID: 0}
+  enemyData: {fileID: 11400000, guid: e95faa15c5889493cabbc4690eeaaf05, type: 2}
+  stage2: 0
   detectionScript: {fileID: 336360057852655179}
-  startingpos: {x: 0, y: 0}
-  player: {fileID: 0}
-  health: 0
-  cooldown: 0
-  repathRate: 1
-  nextWaypointDistance: 0.5
-  reachedEndOfPath: 0
+  castingpos: {x: 0, y: 0}
+  dice: {fileID: 0}
+  roll: 0
+  playing: 0
+  transformed: 0
+  hpBarUI: {fileID: 0}
+  HardenCooldown: 0
   stageProp: {fileID: 0}
   propsData: []
   allProps: []
   fodderData: []
   fodderType: {fileID: 0}
-  hpBarUI: {fileID: 0}
-  HardenCooldown: 0
-  stage2: 0
-  dice: {fileID: 0}
 --- !u!50 &336360058297073688
 Rigidbody2D:
   serializedVersion: 4

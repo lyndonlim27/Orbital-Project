@@ -14,8 +14,9 @@ public class EliteMonsterA : EnemyBehaviour
     public float HardenCooldown = 0;
 
 
-    private void Awake()
-    { 
+    protected override void Awake()
+    {
+        base.Awake();
         hpBarUI = GameObject.FindObjectOfType<HealthBarEnemy>(true);
         hpBarUI.gameObject.SetActive(true);
         fodderObjects = new List<EnemyBehaviour>();
@@ -53,12 +54,12 @@ public class EliteMonsterA : EnemyBehaviour
     public override void Update()
     {
 
-        if (this.hpBarUI.QuarterHP() && !stage2)
+        if (this.hpBarUI.QuarterHP() && !insideStage2)
         {
             animator.SetTrigger("Stage2");
         }
 
-        else if (!stage2 && health <= (0.5*enemyData.words) && stateMachine.currState != StateMachine.STATE.RECOVERY && HardenCooldown == 0)
+        else if (!insideStage2 && health <= (0.5*enemyData.words) && stateMachine.currState != StateMachine.STATE.RECOVERY && HardenCooldown == 0)
         {
             
             this.stateMachine.ChangeState(StateMachine.STATE.RECOVERY, null);
@@ -82,7 +83,7 @@ public class EliteMonsterA : EnemyBehaviour
     
     public void ActivateStage2()
     {
-        stage2 = true;
+        insideStage2 = true;
         this.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
     }
 

@@ -14,7 +14,6 @@ public class DoorBehaviour : EntityBehaviour
         base.Awake();
         animator = GetComponent<Animator>();
         roomManagers = new HashSet<RoomManager>();
-        Debug.Log(animator);
     }
 
     private void Start()

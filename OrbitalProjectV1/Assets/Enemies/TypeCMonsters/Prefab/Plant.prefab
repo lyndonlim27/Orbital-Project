@@ -195,8 +195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 448b01d7349624fffa2f740233108a1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spell: {fileID: 0}
-  bullet: {fileID: 1215365519537057854, guid: 2d431e00bb0be46d8b719dd29172aecb, type: 3}
+  rangedBehaviour: {fileID: 0}
   rangeds:
   - {fileID: 11400000, guid: 40027b5c9fcc549d7a142481eecf21f0, type: 2}
 --- !u!1 &3610515853028118298
@@ -257,7 +256,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -321,15 +320,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e626cd40a81444e36920c0eee511c906, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead: 0
+  inAnimation: 0
+  data: {fileID: 0}
+  consumableItemDatas: []
+  _healthBar: {fileID: 0}
   enemyData: {fileID: 11400000, guid: 3019d5a6b61d94ac6971eabced6cdc52, type: 2}
-  roamPos: {x: 0, y: 0}
-  maxDist: 5
+  stage2: 0
   detectionScript: {fileID: 1369033993}
-  startingpos: {x: 0, y: 0}
-  player: {fileID: 0}
-  health: 0
-  cooldown: 0
-  hpBarUI: {fileID: 0}
 --- !u!1001 &1726916563025564605
 PrefabInstance:
   m_ObjectHideFlags: 0

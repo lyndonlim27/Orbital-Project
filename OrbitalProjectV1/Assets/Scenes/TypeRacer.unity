@@ -213,13 +213,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c9b809ce1a14c64bada2deeb29847e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead: 0
+  inAnimation: 0
+  data: {fileID: 0}
+  consumableItemDatas: []
+  _healthBar: {fileID: 0}
   enemyData: {fileID: 11400000, guid: 7c18992022d21482285e42cae6d4a2cd, type: 2}
-  roamPos: {x: 0, y: 0}
-  maxDist: 5
+  stage2: 0
   detectionScript: {fileID: 0}
-  startingpos: {x: 0, y: 0}
-  player: {fileID: 0}
-  health: 0
+  stageProp: {fileID: 0}
+  propsData: []
+  allProps: []
+  fodderData: []
+  fodderType: {fileID: 0}
+  hpBarUI: {fileID: 0}
+  HardenCooldown: 0
 --- !u!4 &285099699
 Transform:
   m_ObjectHideFlags: 0
@@ -234,7 +242,7 @@ Transform:
   m_Children:
   - {fileID: 774709418}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!70 &285099700
 CapsuleCollider2D:
@@ -293,7 +301,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -532,7 +540,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &990743343
 GameObject:
@@ -564,7 +572,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &990743345
 MonoBehaviour:
@@ -814,7 +822,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &6948312179396465333
 PrefabInstance:

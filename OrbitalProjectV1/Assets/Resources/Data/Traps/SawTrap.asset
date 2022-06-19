@@ -15,16 +15,23 @@ MonoBehaviour:
   _name: SawTrap
   minDist: 0
   sprite: {fileID: -1840471301, guid: cd4287f7866bf4c3fa022617653088f8, type: 3}
+  pattern: 0
   condition: 0
   _type: 12
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
   random: 1
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 3
   duration: 0
-  triggername: SawTrap
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  activatedcolor: {r: 0, g: 0, b: 0, a: 0}
+  triggername: SawTrap1
   ontrigger: 0
   damage: 1
   quaternion: {x: 0, y: 0, z: 0, w: 0}
   ranged: 0
+  horizontal: 0

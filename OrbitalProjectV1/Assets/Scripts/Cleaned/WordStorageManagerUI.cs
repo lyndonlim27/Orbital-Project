@@ -18,7 +18,8 @@ public class WordStorageManagerUI : MenuBehaviour
         }
 
         inventoryslots = new Dictionary<LetterSlotUI, ConsumableItemData>();
-        foreach (LetterSlotUI slot in GetComponentsInChildren<LetterSlotUI>())
+        LetterSlotUI[] slots = FindObjectsOfType<LetterSlotUI>(true);
+        foreach (LetterSlotUI slot in slots)
         {
             inventoryslots[slot] = null;
         }
@@ -33,16 +34,20 @@ public class WordStorageManagerUI : MenuBehaviour
             cons.sprite = Resources.Load<Sprite>("Sprites/corpse");
             AddItem(cons);
         }
-        Debug.Log(NotFull());
-        Debug.Log(inventoryslots.Values.ToList().Count);
+        //Debug.Log(NotFull());
+        //Debug.Log(inventoryslots.Values.ToList().Count);
     }
 
     public void AddItem(ConsumableItemData data)
     {
+        Debug.Log("This is itemdata" + data);
         foreach(LetterSlotUI letterSlot in inventoryslots.Keys)
         {
+            Debug.Log(letterSlot);
+            Debug.Log(data.sprite);
             if (inventoryslots[letterSlot] == null)
             {
+                Debug.Log("What?");
                 UpdateItem(letterSlot, data);
                 return;
             }

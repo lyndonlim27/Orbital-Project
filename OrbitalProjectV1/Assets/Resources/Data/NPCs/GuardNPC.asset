@@ -15,13 +15,18 @@ MonoBehaviour:
   _name: guardnpc
   minDist: 5
   sprite: {fileID: -912726738, guid: 3d0edb390cea44b59aca161dcb2fb1f7, type: 3}
+  pattern: 0
   condition: 1
   _type: 3
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
   random: 0
-  pos: {x: -4.5, y: -3.05}
+  pos: {x: -4.5, y: -5.5}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
+  scale: 1
   story: {fileID: 4900000, guid: 769fca554659b41448a65682236006be, type: 3}
-  _animator: {fileID: 0}
+  _animator: 
   dropData:
   - {fileID: 11400000, guid: 95699fdfdd44f44f48c605e5f16e09d7, type: 2}

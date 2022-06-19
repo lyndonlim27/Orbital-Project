@@ -15,21 +15,36 @@ MonoBehaviour:
   _name: StoneGolem
   minDist: 20
   sprite: {fileID: 1558316739, guid: 1ed8b26f1c2354608b32d925213c28da, type: 3}
+  pattern: 0
   condition: 0
-  _type: 7
-  random: 0
-  pos: {x: -22, y: 55}
+  _type: 5
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
+  random: 1
+  pos: {x: 0, y: 0}
   damageFlicker: {fileID: 672315831686351503, guid: 287fa61315c39429e8235e664399d8cc, type: 3}
   spawnAtStart: 1
-  scale: 0
+  scale: 2
+  itemTextDatas: []
+  ac_name: 
+  _trigger: 
+  isAWeapon: 0
   damageValue: 5
   moveSpeed: 1
   chaseSpeed: 1
   attackRange: 5
   attackSpeed: 3
-  meleetriggers: []
+  meleetriggers:
+  - Melee
   defends: []
-  spelltriggers: []
-  rangeds: []
+  rangedtriggers:
+  - Laser
+  - Cast
+  rangedDatas:
+  - {fileID: 11400000, guid: 8f104031de1404436866443573a46aaa, type: 2}
   animatorname: AC_Golem
   words: 10
+  rangedcooldown: 15
+  stage2: 1
+  enragedColor: {r: 0.2784314, g: 0.16402636, b: 0.16402636, a: 1}
