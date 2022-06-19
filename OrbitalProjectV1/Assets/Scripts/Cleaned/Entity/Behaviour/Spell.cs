@@ -41,7 +41,7 @@ public class Spell : RangedBehaviour
             Player player = collision.GetComponent<Player>();
             if (player != null)
             {
-                if (player.isDead())
+                if (player.IsDead())
                 {
                     return;
                 }

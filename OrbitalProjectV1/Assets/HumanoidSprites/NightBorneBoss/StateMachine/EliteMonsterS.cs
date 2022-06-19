@@ -213,7 +213,7 @@ public class EliteMonsterS : EnemyBehaviour
 
     public IEnumerator triggerAttack(int roll)
     {
-        if (player.isDead())
+        if (player.IsDead())
         {
             stateMachine.ChangeState(StateMachine.STATE.STOP, null);
         }

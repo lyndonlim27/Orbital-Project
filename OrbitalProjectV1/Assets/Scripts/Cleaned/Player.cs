@@ -48,16 +48,15 @@ public class Player : EntityBehaviour, IDataPersistence
     [SerializeField] private GameOver _gameOver;
     [SerializeField] private HealthBar _healthBar;
     [SerializeField] private ManaBar _manaBar;
-    public bool inCombat { get; private set; }
+    public bool InCombat { get; private set; }
 
     private void Awake()
     {
         col = GetComponent<Collider2D>();
-        inCombat = false;
-        
+        InCombat = false;
     }
 
-    public bool isDead()
+    public bool IsDead()
     {
         return this._currHealth <= 0;
     }
@@ -118,11 +117,11 @@ public class Player : EntityBehaviour, IDataPersistence
         {
             if (Input.GetKeyDown((KeyCode)i))
             {
-                inCombat = true;
+                InCombat = true;
             }
             else
             {
-                inCombat = false;
+                InCombat = false;
             }
         }
     }
@@ -333,19 +332,10 @@ public class Player : EntityBehaviour, IDataPersistence
         {
             _buffBehaviour.ChangeSkill(data.buffDataName);
         }
-
-        //if (data.buffDataName != null)
-        //{
-        //    _shop.SetBuffButtons(data.buffDataName);
-        //}
-
-        //if (data.attackDataName != null)
-        //{
-        //    _shop.SetAttackButtons(data.attackDataName);
-        //}
         _weaponManager.Swap(data.currWeapon);
         _healthBar.SetHealth(_currHealth);
         _manaBar.SetMana(currMana);
+        _moveSpeed = data.moveSpeed;
     }
 
     public void SaveData(ref GameData data)
@@ -360,5 +350,6 @@ public class Player : EntityBehaviour, IDataPersistence
         data.debuffDataName = _debuffData != null ? _debuffData.skillName : null;
         data.buffDataName = _buffData != null ? _buffData.skillName : null;
         data.attackDataName = _attackData != null ? _attackData.skillName : null;
+        data.moveSpeed = this._moveSpeed;
     }
 }

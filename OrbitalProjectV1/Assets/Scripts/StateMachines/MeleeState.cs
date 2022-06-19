@@ -46,7 +46,7 @@ class MeleeState : StateClass
         //    stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
 
         //}
-        else if (enemy.player.isDead())
+        else if (enemy.player.IsDead())
         {
             stateMachine.ChangeState(StateMachine.STATE.STOP, null);
         }

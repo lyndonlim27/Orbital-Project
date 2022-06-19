@@ -29,7 +29,7 @@ public class RangedComponent : AttackComponent
         if (detectionScript.playerDetected)
         {
 
-            if (target.isDead() || !abletoAttack)
+            if (target.IsDead() || !abletoAttack)
             {
                 parent.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
             }
