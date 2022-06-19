@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Pool;
 
 /**
@@ -9,8 +10,19 @@ using UnityEngine.Pool;
  * Manage all entities in the room.
  */
 
+
 public abstract class RoomManager : MonoBehaviour
 {
+
+    /**
+     * Data Generation
+     */
+    [SerializeField] private string id;
+    [ContextMenu("Generate id")]
+    private void GenerateGuid()
+    {
+        id = System.Guid.NewGuid().ToString();
+    }
 
     protected Player player;
     protected enum ROOMTYPE
@@ -28,10 +40,12 @@ public abstract class RoomManager : MonoBehaviour
     public HashSet<string> conditions { get; protected set; }
     public List<EntityBehaviour> items { get; protected set; }
     public List<EnemyBehaviour> enemies { get; protected set; }
+    public List<EntityData> spawnlater { get; protected set; }
     public List<PressureSwitchBehaviour> pressureitems;
     public LayerMask CollisionObjects;
     public List<NPCBehaviour> npcs { get; protected set; }
     protected ROOMTYPE roomtype;
+    public Light2D[] lights;
 
     /**
      * Prefabs.
@@ -98,7 +112,11 @@ public abstract class RoomManager : MonoBehaviour
         poolManager = FindObjectOfType<PoolManager>(true);
         //doorManager = FindObjectOfType<DoorManager>(true);
         astarPath = FindObjectOfType<AstarPath>(true);
-        
+        spawnlater = new List<EntityData>(); 
+        foreach(Light2D light in lights)
+        {
+            light.GetComponent<Animator>().SetBool(light.name, true);
+        }
 
     }
 
@@ -302,7 +320,7 @@ public abstract class RoomManager : MonoBehaviour
 
             if (!_item.spawnAtStart)
             {
-                Debug.Log("??????");
+                spawnlater.Add(_item);
                 continue;
             } else
             {
@@ -602,7 +620,7 @@ public abstract class RoomManager : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("Still called");
-        if (collision.CompareTag("Player") || collision.CompareTag("PlayerStealth"))
+        if (collision.CompareTag("Player") || collision.CompareTag("Stealth"))
         {
             player.SetCurrentRoom(this);
             // maybe we need to use this in the future, dk
@@ -631,7 +649,7 @@ public abstract class RoomManager : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") || collision.CompareTag("PlayerStealth"))
+        if (collision.CompareTag("Player") || collision.CompareTag("Stealth"))
         {
             player.SetCurrentRoom(null);
         }

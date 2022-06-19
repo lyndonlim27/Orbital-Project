@@ -19,29 +19,7 @@ public class RangedComponent : AttackComponent
     public void LaserAttack()
     {
 
-        if (detectionScript.playerDetected)
-        {
-
-            if (target.IsDead() || !abletoAttack)
-            {
-                parent.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
-            }
-
-            abletoAttack = false;
-            int random = Random.Range(0, rangeds.Count);
-            RangedData rangeddata = rangeds[random];
-            if (rangeddata.type == RangedData.Type.CAST_ONTARGET ||
-                rangeddata.type == RangedData.Type.CAST_SELF)
-            {
-                StartCoroutine(Cast(rangeddata));
-                return;
-            }
-            else if (rangeddata.type == RangedData.Type.PROJECTILE)
-            {
-                StartCoroutine(Shoot(rangeddata));
-                return;
-            }
-        }
+        lineController.StartCoroutine(lineController.AnimateLine());
         
     }
     public void SpellAttackSingle()

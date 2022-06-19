@@ -63,7 +63,10 @@ public abstract class SkillBehaviour : MonoBehaviour
     public virtual void ChangeSkill(string skillName)
     {
         this._skillData = Resources.Load<SkillData>("Data/SkillData/" + skillName);
-        GetComponent<Image>().overrideSprite = _skillData.sprite;
+        Debug.Log("Image is : " + GetComponent<Image>());
+        //GetComponent<Image>().overrideSprite = _skillData.sprite;
+        GetComponent<Image>().sprite = _skillData.sprite;
+
         manaCostText.text = _skillData.manaCost.ToString();
         manaCostText.gameObject.SetActive(true);
     }

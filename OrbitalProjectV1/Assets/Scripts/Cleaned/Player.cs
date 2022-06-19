@@ -84,6 +84,8 @@ public class Player : EntityBehaviour, IDataPersistence
         _attackBehaviour = FindObjectOfType<AttackSkillBehaviour>(true);
         _shop = FindObjectOfType<Shop>(true);
         _invulnerable = false;
+        isDead = false;
+        inAnimation = false;
     }
 
     // Update is called once per frame
@@ -319,17 +321,17 @@ public class Player : EntityBehaviour, IDataPersistence
         this.currGold = data.currGold;
         this.transform.position = data.currPos;
         _goldCounter.GoldUpdate();
-        if(data.debuffDataName != null)
+        if(data.debuffDataName != "")
         {
             _debuffBehaviour.ChangeSkill(data.debuffDataName);
         }
 
-        if (data.attackDataName != null)
+        if (data.attackDataName != "")
         {
             _attackBehaviour.ChangeSkill(data.attackDataName);
         }
 
-        if (data.buffDataName != null)
+        if (data.buffDataName != "")
         {
             _buffBehaviour.ChangeSkill(data.buffDataName);
         }

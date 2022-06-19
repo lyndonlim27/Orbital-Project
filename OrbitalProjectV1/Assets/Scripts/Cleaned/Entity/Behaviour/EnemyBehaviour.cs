@@ -633,11 +633,34 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     //to prevent the object from jumping outside. technically shudnt happen when there are colliders but well.
     public bool CheckInsideRoom()
     {
-        bool insidex = Mathf.Abs(_transform.position.x - currentRoom.GetRoomAreaBounds().max.x) > 2.5f && Mathf.Abs(_transform.position.x - currentRoom.GetRoomAreaBounds().min.x) > 2.5f;
-        bool insidey = Mathf.Abs(_transform.position.y - currentRoom.GetRoomAreaBounds().max.y) > 2.5f&& Mathf.Abs(_transform.position.y - currentRoom.GetRoomAreaBounds().min.y) > 2.5f;
-        Debug.Log(insidex);
-        Debug.Log(insidey);
-        return insidex && insidey;
+        //bool insidex = Mathf.Abs(_transform.position.x - currentRoom.GetRoomAreaBounds().max.x) > 2.5f && Mathf.Abs(_transform.position.x - currentRoom.GetRoomAreaBounds().min.x) > 2.5f;
+        //bool insidey = Mathf.Abs(_transform.position.y - currentRoom.GetRoomAreaBounds().max.y) > 2.5f&& Mathf.Abs(_transform.position.y - currentRoom.GetRoomAreaBounds().min.y) > 2.5f;
+        Debug.Log("This is face" + facingRight);
+        if (transform.localScale.x > 0) // facing left, 
+        {
+            RaycastHit2D hit = Physics2D.Linecast(transform.position, new Vector2(transform.position.x + 12f, transform.position.y), LayerMask.GetMask("Obstacles"));
+            if (hit)
+            {
+                Debug.Log("Check inside room hit "+ hit.collider);
+            } else
+            {
+                Debug.Log("Nothing hit");
+            }
+
+            return !hit;
+        } else
+        {
+            RaycastHit2D hit = Physics2D.Linecast(transform.position, new Vector2(transform.position.x - 12f, transform.position.y), LayerMask.GetMask("Obstacles"));
+            if (hit)
+            {
+                Debug.Log("Check inside room hit " + hit.collider);
+            }
+            else
+            {
+                Debug.Log("Nothing hit");
+            }
+            return !hit;
+        }
     }
 
 

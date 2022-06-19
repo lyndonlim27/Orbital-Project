@@ -114,7 +114,13 @@ public class PuzzleInputManager : MonoBehaviour
     public void OnButtonClicked()
     {
         guessed = true;
-        Debug.Log("Dafuq bro");
+        
+        for (int i = 0; i < letterSlots.Length; i++)
+        {
+            letterSlots[i].ClearData();
+        }
+        currindex = 0;
+        FindObjectOfType<SkillManager>().enabled = true;
         this.gameObject.SetActive(false);
         
     }
@@ -122,6 +128,7 @@ public class PuzzleInputManager : MonoBehaviour
     public void ResetGuess()
     {
         guessed = false;
+        
     }
 
     public LetterSlotNoDnD[] GetCurrentGuess()

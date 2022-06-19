@@ -31,6 +31,7 @@ public class DataPersistenceManager : MonoBehaviour
     private void Start()
     {
         this._dataPersistences = FindAllDataPersistenceObjects();
+        Login();
         //LoadGame();
 
     }

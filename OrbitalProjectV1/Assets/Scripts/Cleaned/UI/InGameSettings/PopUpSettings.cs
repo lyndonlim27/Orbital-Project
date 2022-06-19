@@ -29,6 +29,7 @@ public class PopUpSettings : MenuBehaviour
         this.transform.GetComponentInChildren<WarningMenu>(true).Inactive();
         this.transform.GetComponentInChildren<ControlMenu>(true).Inactive();
         this.transform.GetComponentInChildren<Shop>(true).Inactive();
+        this.transform.GetComponentInChildren<StorageMenu>(true).Inactive();
         _player.GetCurrentRoom().PauseGame();
         _skillManager.enabled = false;
         _debuffBehaviour.enabled = false;

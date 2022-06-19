@@ -5,6 +5,7 @@ using UnityEngine;
 public class PressurePlateRoom_Mgr : RoomManager
 {   
     public DoorBehaviour pressureSwitchDoor;
+    private bool spawned;
 
     protected override void Awake()
     {
@@ -15,6 +16,7 @@ public class PressurePlateRoom_Mgr : RoomManager
 
     protected void Start()
     {
+        spawned = false;
         
     }
 
@@ -32,6 +34,7 @@ public class PressurePlateRoom_Mgr : RoomManager
         {
             Debug.Log(pressureitems.Count);
             
+            
             if (pressureitems.Count != 0 && pressureitems.TrueForAll(item => item.IsOn()))
             {
                 Debug.Log("entered");
@@ -39,9 +42,18 @@ public class PressurePlateRoom_Mgr : RoomManager
                 StartCoroutine(OpenDoorsTemp(duration));
             }
 
-            if (conditions.Count == 0 && player.GetCurrentRoom() != this)
+            Debug.Log(conditions.Count);
+            if (conditions.Count == 0 && player.GetCurrentRoom() != this && !spawned)
             {
+                spawnlater.ForEach(spawn =>
+                {
+                    EntityData ed = Instantiate(spawn);
+                    ed.spawnAtStart = true;
+                    SpawnObject(ed);
+                });
+                //SpawnObjects(spawnlater.ToArray());
                 pressureSwitchDoor.unlocked = true;
+                spawned = true;
             }
         }
         
@@ -73,7 +85,7 @@ public class PressurePlateRoom_Mgr : RoomManager
     {
         pressureSwitchDoor.unlocked = true;
         yield return duration;
-        pressureSwitchDoor.unlocked = false;
+        pressureSwitchDoor.unlocked = conditions.Count == 0;
     }
 
 }

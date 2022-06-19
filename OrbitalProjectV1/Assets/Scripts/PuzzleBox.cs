@@ -33,6 +33,7 @@ public class PuzzleBox : ItemWithTextBehaviour
         //pull up puzzlemenu;
         puzzleInputManager.SetUp(lightSwitchSystem.GetCurrentSeq().Count);
         puzzleInputManager.gameObject.SetActive(true);
+        FindObjectOfType<SkillManager>().enabled = false;
         //set up current seq and numofcandles for setting letterslots
         
     }

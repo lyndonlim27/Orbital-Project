@@ -28,7 +28,7 @@ public class DestroyOnCollision : MonoBehaviour
         {
             for (int i = 0; i < _attackSkill._attackData.damage; i++)
             {
-                collision.gameObject.GetComponent<EnemyBehaviour>().Defeated();
+                collision.gameObject.GetComponent<EnemyBehaviour>().TakeDamage(attackData.damage);
             }
         }
         GetComponent<Animator>().SetBool("Explode", true);

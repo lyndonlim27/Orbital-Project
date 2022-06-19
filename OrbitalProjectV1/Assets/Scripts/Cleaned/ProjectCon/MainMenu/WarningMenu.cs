@@ -12,7 +12,7 @@ public class WarningMenu : MenuBehaviour
     protected override void Start()
     {
         base.Start();
-        _buttons = GetComponentsInChildren<Button>();
+        _buttons = GetComponentsInChildren<Button>(true);
         _loadMainScene = FindObjectOfType<LoadMainScene>(true);
         _mainSettings = popUpSettings.GetComponentInChildren<MainSettings>(true);
         _buttons[0].onClick.AddListener(_loadMainScene.LoadScene);

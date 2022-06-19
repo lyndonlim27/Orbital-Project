@@ -2,25 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using Random = UnityEngine.Random;
+using System.Reflection;
 
 public class ItemWithTextBehaviour : EntityBehaviour
 {
    [SerializeField] protected ItemWithTextData data;
    [SerializeField] protected List<ConsumableItemData> consumableItemDatas;
+    //private FieldInfo _LightCookieSprite = typeof(Light2D).GetField("m_LightCookieSprite", BindingFlags.NonPublic | BindingFlags.Instance);
     Player player;
+    Light2D light2D;
     private Animator _animator;
     
 
     protected override void Awake()
     {
         base.Awake();
+        light2D = GetComponent<Light2D>();
         _animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
     private void OnEnable()
     {
+        //_LightCookieSprite.SetValue(light2D, data.sprite);
         Color c = spriteRenderer.material.color;
         c.a = 1;
         spriteRenderer.material.color = c;
@@ -110,7 +116,7 @@ public class ItemWithTextBehaviour : EntityBehaviour
 
     private void HandleAnimation()
     {
-        if (_animator.runtimeAnimatorController == null)
+        if (data.ac_name == "")
         {
             StartCoroutine(FadeOut());
         }

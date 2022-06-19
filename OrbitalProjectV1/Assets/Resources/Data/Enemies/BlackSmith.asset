@@ -22,7 +22,7 @@ MonoBehaviour:
   startPos: {x: 0, y: 0}
   endPos: {x: 0, y: 0}
   random: 1
-  pos: {x: 0, y: 0}
+  pos: {x: 27, y: -91}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 5
@@ -41,15 +41,13 @@ MonoBehaviour:
   defends:
   - Dash
   rangedtriggers:
-  - MultiAttack1
-  - LaserShoot
+  - ShootLaser
   dashattacks:
   - LeapAttack
-  - JumpAttack
   rangedDatas:
   - {fileID: 11400000, guid: fd44465a58f324a7c916d0a7e9e2c9b4, type: 2}
   animatorname: AC_BlackSmith
   words: 100
-  rangedcooldown: 15
+  rangedcooldown: 2
   stage2: 1
   enragedColor: {r: 0.5568628, g: 0.32941177, b: 0.32941177, a: 1}
