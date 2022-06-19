@@ -7,13 +7,20 @@ public class DebuffBehaviour : SkillBehaviour
 {
     private DebuffData _debuffData;
     private Animator _debuffAnimator;
+    private AnimatorOverrideController _stunDebuffVFX;
+    private RuntimeAnimatorController _slowDebuffVFX;
 
     // Start is called before the first frame update
     public override void Start()
     {
         base.Start();
         _debuffAnimator = GameObject.Find("DebuffAnimator").GetComponent<Animator>();
-        _debuffData = (DebuffData)_skillData;
+        _debuffData = _player.GetDebuffData();
+        _skillData = _debuffData;
+        _stunDebuffVFX = Resources.Load<AnimatorOverrideController>("Animations/AnimatorControllers/StunDebuffVFX");
+        _slowDebuffVFX = Resources.Load<RuntimeAnimatorController>("Animations/AnimatorControllers/SlowDebuffVFX");
+        SetData();
+
     }
 
     // Update is called once per frame
@@ -31,14 +38,12 @@ public class DebuffBehaviour : SkillBehaviour
             {
                 default:
                 case DebuffData.DEBUFF_TYPE.STUN:
-                    _debuffAnimator.runtimeAnimatorController =
-                        Resources.Load<AnimatorOverrideController>("Animations/AnimatorControllers/StunDebuffVFX");
+                    _debuffAnimator.runtimeAnimatorController = _stunDebuffVFX;
                     _debuffAnimator.SetTrigger("Activate");
                     StartCoroutine(Stun());
                     break;
                 case DebuffData.DEBUFF_TYPE.SLOW:
-                    _debuffAnimator.runtimeAnimatorController =
-                        Resources.Load<RuntimeAnimatorController>("Animations/AnimatorControllers/SlowDebuffVFX");
+                    _debuffAnimator.runtimeAnimatorController = _slowDebuffVFX;
                     _debuffAnimator.SetTrigger("Activate");
                     StartCoroutine(Slow());
                     break;
@@ -81,8 +86,6 @@ public class DebuffBehaviour : SkillBehaviour
                 {
                     rangedData.speed *= _debuffData.slowAmount;
                 }
-                //enemy.GetComponentInChildren<RangedComponent>().spell.rangedData.speed *= 
-               // enemy.GetComponentInChildren<RangedComponent>().bullet.rangedData.speed *= _debuffData.slowAmount;
             }
             Instantiate(_debuffData.particleSystem, enemy.transform);
             Debug.Log("SLOW");
@@ -103,8 +106,6 @@ public class DebuffBehaviour : SkillBehaviour
                 {
                     rangedData.speed /= _debuffData.slowAmount;
                 }
-                //enemy.GetComponentInChildren<RangedComponent>().spell.rangedData.speed /= _debuffData.slowAmount;
-                //enemy.GetComponentInChildren<RangedComponent>().bullet.rangedData.speed /= _debuffData.slowAmount;
             }
             Debug.Log("STOP SLOW");
             Destroy(enemy.transform.Find("SlowDebuff(Clone)").gameObject);
@@ -124,6 +125,6 @@ public class DebuffBehaviour : SkillBehaviour
     {
         base.ChangeSkill(skillName);
         this._debuffData = (DebuffData)_skillData;
+        _player.SetDebuffData(this._debuffData);
     }
-
 }

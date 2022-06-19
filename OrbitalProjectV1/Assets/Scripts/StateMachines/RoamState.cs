@@ -39,7 +39,6 @@ class RoamState : StateClass
         } else if (enemy.isReached())
 
         {
-
             stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
 
         }

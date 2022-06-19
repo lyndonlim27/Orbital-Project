@@ -7,9 +7,11 @@ using TMPro;
 public class SkillManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _promptText;
+    private Player _player;
     private void Start()
     {
         _promptText.gameObject.SetActive(false);
+        _player = FindObjectOfType<Player>();
     }
 
     // Update is called once per frame
@@ -52,4 +54,5 @@ public class SkillManager : MonoBehaviour
         _promptText.gameObject.SetActive(false);
     }
 
+ 
 }

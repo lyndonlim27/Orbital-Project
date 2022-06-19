@@ -7,13 +7,27 @@ public class AttackSkillBehaviour : SkillBehaviour
 
     public AttackData _attackData { get; private set; }
     private Animator _attackAnimator;
-
+    private Rigidbody2D _playerRb;
+    private TrailRenderer _playerTr;
+    private RuntimeAnimatorController _dashAttackVFX;
+    private RuntimeAnimatorController _shockwaveAttackVFX;
+    private Collider2D _collider;
+    private SoundEffect _soundEffect;
 
     // Start is called before the first frame update
     public override void Start()
     {
         base.Start();
-        _attackData = (AttackData)_skillData;
+        _attackData = _player.GetAttackData();
+        _skillData = _attackData;
+        _playerRb = _player.GetComponent<Rigidbody2D>();
+        _playerTr = _player.GetComponent<TrailRenderer>();
+        _attackAnimator = GameObject.Find("AttackSkillAnimator").GetComponent<Animator>();
+        _dashAttackVFX = Resources.Load<RuntimeAnimatorController>("Animations/AnimatorControllers/DashAttackVFX");
+        _shockwaveAttackVFX = Resources.Load<RuntimeAnimatorController>("Animations/AnimatorControllers/ShockwaveAttackVFX");
+        _collider = _attackAnimator.GetComponent<Collider2D>();
+        _soundEffect = _attackAnimator.GetComponent<SoundEffect>();
+        SetData();
     }
 
     public override void Update()
@@ -35,15 +49,22 @@ public class AttackSkillBehaviour : SkillBehaviour
                 case AttackData.ATTACK_TYPE.SHURIKEN:
                     Shuriken();
                     break;
+                case AttackData.ATTACK_TYPE.DASH:
+                    _attackAnimator.runtimeAnimatorController = _dashAttackVFX;
+                    StartCoroutine(Dash());
+                    break;
+                case AttackData.ATTACK_TYPE.SHOCKWAVE:
+                    _attackAnimator.runtimeAnimatorController = _shockwaveAttackVFX;
+                    Shockwave();
+                    break;
             }
-
+            ResetCooldown();
 
         }
     }
     private void Fire()
     {
         Debug.Log("FIRE");
-        ResetCooldown();
         if (_attackData.numOfProjectiles == 3)
         {
             FireAttack1();
@@ -100,7 +121,6 @@ public class AttackSkillBehaviour : SkillBehaviour
 
     private void Shuriken()
     {
-        ResetCooldown();
         if (_attackData.numOfProjectiles == 2)
         {
             ShurikenAttack1();
@@ -161,5 +181,31 @@ public class AttackSkillBehaviour : SkillBehaviour
     {
         base.ChangeSkill(skillName);
         this._attackData = (AttackData)_skillData;
+        _player.SetAttackData(this._attackData);
+    }
+
+    private IEnumerator Dash()
+    {
+        Vector2 dir = _player.GetDirection();
+        if (dir == new Vector2(0, 0))
+        {
+            dir = new Vector2(0, -1);
+        }
+        //_playerRb.velocity = dir * 10;
+        _soundEffect.AudioClip1();
+        yield return new WaitForSeconds(0.1f);
+        _playerRb.AddForce(dir * 10000);
+        _playerTr.emitting = true;
+        _collider.enabled = true;
+        yield return new WaitForSeconds(0.2f);
+        _playerTr.emitting = false;
+        yield return new WaitForSeconds(0.1f);
+        _attackAnimator.SetTrigger("Trigger");
+        _collider.enabled = false;
+    }
+
+    private void Shockwave()
+    {
+        _attackAnimator.SetTrigger("Trigger" + _attackData.numOfProjectiles);
     }
 }

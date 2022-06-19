@@ -45,7 +45,7 @@ public class DialogueDetection : MonoBehaviour
         CheckForInteractionButton();*/
         if (detectionScript.playerDetected && !dialMgr.playing)
         {
-            if (player != null && !player.IsDead() && !player.inCombat)
+            if (player != null && !player.IsDead() && !player.InCombat)
             {
                 Debug.Log("Entered npc detection");
 //                Debug.Log("We are in this detection");

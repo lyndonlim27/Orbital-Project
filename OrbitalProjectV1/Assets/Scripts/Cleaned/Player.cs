@@ -5,9 +5,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class Player : EntityBehaviour
+public class Player : EntityBehaviour, IDataPersistence
 {
-    [SerializeField] private PlayerData playerData;
 
     private Vector2 _movement;
     private Rigidbody2D _rb;
@@ -24,21 +23,38 @@ public class Player : EntityBehaviour
     private DamageFlicker _flicker;
     private GoldCounter _goldCounter;
     public int currGold { get; private set;}
-    private float _moveSpeed;
+
+    private bool _invulnerable;
+
+    /*
+     * Player skills/data
+     */
+    private BuffBehaviour _buffBehaviour;
+    private DebuffBehaviour _debuffBehaviour;
+    private AttackSkillBehaviour _attackBehaviour;
+    private Shop _shop;
+
+    [Header("Player Data")]
+    [SerializeField] private int maxMana;
+    [SerializeField] private int maxHealth;
+    [SerializeField] private float _moveSpeed;
+    [SerializeField] private bool ranged;
+    [SerializeField] private BuffData _buffData;
+    [SerializeField] private DebuffData _debuffData;
+    [SerializeField] private AttackData _attackData;
 
 
     [Header("Player UI")]
     [SerializeField] private GameOver _gameOver;
     [SerializeField] private HealthBar _healthBar;
     [SerializeField] private ManaBar _manaBar;
-    public bool inCombat { get; private set; }
+    public bool InCombat { get; private set; }
 
     protected override void Awake()
     {
         base.Awake();
         col = GetComponent<Collider2D>();
-        inCombat = false;
-        
+        InCombat = false;
     }
 
     public bool IsDead()
@@ -49,12 +65,11 @@ public class Player : EntityBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _currHealth = playerData.maxHealth;
-        currMana = playerData.maxMana;
-        currGold = playerData.gold;
-        _healthBar.SetMaxHealth(playerData.maxHealth);
-        _manaBar.SetMaxMana(playerData.maxMana);
-        _moveSpeed = playerData._moveSpeed;
+        currGold = 100;
+        currMana = maxMana;
+        _currHealth = maxHealth;
+        _healthBar.SetMaxHealth(maxHealth);
+        _manaBar.SetMaxMana(maxMana);
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _weaponManager = this.gameObject.GetComponentInChildren<WeaponPickup>();
@@ -64,6 +79,11 @@ public class Player : EntityBehaviour
         dialMgr = GameObject.FindObjectOfType<DialogueManager>();
         _goldCounter = FindObjectOfType<GoldCounter>(true);
         _goldCounter.GoldUpdate();
+        _buffBehaviour = FindObjectOfType<BuffBehaviour>(true);
+        _debuffBehaviour = FindObjectOfType<DebuffBehaviour>(true);
+        _attackBehaviour = FindObjectOfType<AttackSkillBehaviour>(true);
+        _shop = FindObjectOfType<Shop>(true);
+        _invulnerable = false;
     }
 
     // Update is called once per frame
@@ -79,11 +99,6 @@ public class Player : EntityBehaviour
 
         CheckCombat();
 
-        if (_currHealth > 100)
-        {
-            _currHealth = 100;
-        }
-
         if (_time >= _timeDelay)
         {
             _movement.x = Input.GetAxisRaw("Horizontal");
@@ -95,7 +110,6 @@ public class Player : EntityBehaviour
             _time = 0;
             _timeDelay = 0;
         }
-
     }
 
     private void CheckCombat()
@@ -104,11 +118,11 @@ public class Player : EntityBehaviour
         {
             if (Input.GetKeyDown((KeyCode)i))
             {
-                inCombat = true;
+                InCombat = true;
             }
             else
             {
-                inCombat = false;
+                InCombat = false;
             }
         }
     }
@@ -124,29 +138,37 @@ public class Player : EntityBehaviour
         }*/
 
         
-        transform.position = (Vector2) transform.position +_movement.normalized * _moveSpeed * Time.fixedDeltaTime;
-        //_rb.MovePosition(_rb.position + _movement.normalized * _moveSpeed * Time.fixedDeltaTime);
+        //transform.position = (Vector2) transform.position +_movement.normalized * _moveSpeed * Time.fixedDeltaTime;
+        _rb.MovePosition(_rb.position + _movement.normalized * _moveSpeed * Time.fixedDeltaTime);
     }
 
 
     //When player takes damage, reduce current health and flicker sprite
     public override void TakeDamage(int damageTaken)
     {
-        _currHealth -= damageTaken;
-        _healthBar.SetHealth(_currHealth);
-        _flicker.Flicker(this);
-        if (_currHealth <= 0)
+        if (!_invulnerable)
         {
-            Defeated();
+            _currHealth -= damageTaken;
+            _healthBar.SetHealth(_currHealth);
+            _flicker.Flicker(this);
+            if (_currHealth <= 0)
+            {
+                Defeated();
+            }
         }
     }
 
     public void AddHealth(int health)
     {
-      
-        _currHealth = Math.Min(_currHealth+health,100);
+      if(_currHealth + health > maxHealth)
+        {
+            _currHealth = maxHealth;
+        }
+        else
+        {
+            _currHealth = Math.Min(_currHealth + health, 100);
+        }
         _healthBar.SetHealth(_currHealth);
-        
     }
 
     public void AddGold(int gold)
@@ -161,9 +183,32 @@ public class Player : EntityBehaviour
         _goldCounter.GoldUpdate();
     }
 
+    public void UseMana(int manaCost)
+    {
+        currMana -= manaCost;
+        _manaBar.SetMana(currMana);
+    }
+
+    public void AddMana(int mana)
+    {
+        if(currMana + mana > maxMana)
+        {
+            currMana = maxMana;
+        }
+        else
+        {
+            currMana += mana;
+        }
+        _manaBar.SetMana(currMana);
+    }
+
     //When player shoot, player direction faces the target enemy
     public void Shoot(GameObject target)
     {
+        if (_buffBehaviour.inStealth)
+        {
+            StartCoroutine(_buffBehaviour.Unstealth());
+        }
         _timeDelay = 0.5f;
         //Debug.Log(enemy);
         Vector2 point2Target = (Vector2)transform.position - (Vector2)target.transform.position;
@@ -198,25 +243,11 @@ public class Player : EntityBehaviour
 
     public override void SetEntityStats(EntityData stats)
     {
-        this.playerData = (PlayerData) stats;
     }
 
     public override EntityData GetData()
     {
-        return playerData;
-    }
-
-
-    public void UseMana(int manaCost)
-    {
-        currMana -= manaCost;
-        _manaBar.SetMana(currMana);
-    }
-
-    public void AddMana(int mana)
-    {
-        currMana += mana;
-        _manaBar.SetMana(currMana);
+        throw new NotImplementedException();
     }
 
     public void SetSpeed(float speed)
@@ -224,13 +255,102 @@ public class Player : EntityBehaviour
         _moveSpeed += speed;
     }
 
-    public PlayerData GetPlayerData()
-    {
-        return playerData;
-    }
 
     public RoomManager GetCurrentRoom()
     {
         return currentRoom;
+    }
+
+    public void SetInvulnerability(bool state)
+    {
+        _invulnerable = state;
+    }
+
+    public Vector2 GetDirection()
+    {
+        return _movement;
+    }
+
+    /*
+     * Getters
+     */
+
+    public DebuffData GetDebuffData()
+    {
+        return _debuffData;
+    }
+
+    public BuffData GetBuffData()
+    {
+        return _buffData;
+    }
+
+    public AttackData GetAttackData()
+    {
+        return _attackData;
+    }
+
+    public void SetDebuffData(DebuffData debuffData)
+    {
+        this._debuffData = debuffData;
+    }
+
+    public void SetBuffData(BuffData buffData)
+    {
+        this._buffData = buffData;
+    }
+
+    public void SetAttackData(AttackData attackData)
+    {
+        this._attackData = attackData;
+    }
+
+    public bool IsRanged()
+    {
+        return ranged;
+    }
+
+    public void LoadData(GameData data)
+    {
+        this._currHealth = data.currHealth;
+        this.maxHealth = data.maxHealth;
+        this.maxMana = data.maxMana;
+        this.currMana = data.currMana;
+        this.currGold = data.currGold;
+        this.transform.position = data.currPos;
+        _goldCounter.GoldUpdate();
+        if(data.debuffDataName != null)
+        {
+            _debuffBehaviour.ChangeSkill(data.debuffDataName);
+        }
+
+        if (data.attackDataName != null)
+        {
+            _attackBehaviour.ChangeSkill(data.attackDataName);
+        }
+
+        if (data.buffDataName != null)
+        {
+            _buffBehaviour.ChangeSkill(data.buffDataName);
+        }
+        _weaponManager.Swap(data.currWeapon);
+        _healthBar.SetHealth(_currHealth);
+        _manaBar.SetMana(currMana);
+        _moveSpeed = data.moveSpeed;
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.currHealth = this._currHealth;
+        data.maxHealth = this.maxHealth;
+        data.maxMana = this.maxMana;
+        data.currMana = this.currMana;
+        data.currGold = this.currGold;
+        data.currWeapon = _weaponManager.ActiveWeapon().name;
+        data.currPos = this.transform.position;
+        data.debuffDataName = _debuffData != null ? _debuffData.skillName : null;
+        data.buffDataName = _buffData != null ? _buffData.skillName : null;
+        data.attackDataName = _attackData != null ? _attackData.skillName : null;
+        data.moveSpeed = this._moveSpeed;
     }
 }

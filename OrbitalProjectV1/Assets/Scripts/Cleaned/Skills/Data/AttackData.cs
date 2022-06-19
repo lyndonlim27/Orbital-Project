@@ -11,7 +11,9 @@ public class AttackData :SkillData
     public enum ATTACK_TYPE
     {
         FIRE,
-        SHURIKEN
+        SHURIKEN,
+        DASH,
+        SHOCKWAVE
     }
     public ATTACK_TYPE attackType;
     public GameObject prefab;
