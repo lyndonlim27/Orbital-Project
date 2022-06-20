@@ -133,6 +133,9 @@ public class RangedBehaviour : EntityBehaviour
             transform.position = rangedData._type == EntityData.TYPE.CAST_ONTARGET ? player.transform.position : transform.position;
             _collider.isTrigger = true;
         }
+
+        _collider.size = rangedData.sprite.bounds.size * rangedData.scale;
+        _collider.offset = Vector2.zero;
         
         
     }

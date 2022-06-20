@@ -13,6 +13,8 @@ public class ItemWithTextBehaviour : EntityBehaviour
     //private FieldInfo _LightCookieSprite = typeof(Light2D).GetField("m_LightCookieSprite", BindingFlags.NonPublic | BindingFlags.Instance);
     Player player;
     Light2D light2D;
+    Rigidbody2D _rb;
+    CapsuleCollider2D _col;
     private Animator _animator;
     
 
@@ -22,6 +24,8 @@ public class ItemWithTextBehaviour : EntityBehaviour
         light2D = GetComponent<Light2D>();
         _animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        _rb = GetComponent<Rigidbody2D>();
+        _col = GetComponent<CapsuleCollider2D>();
     }
 
     private void OnEnable()
@@ -31,6 +35,44 @@ public class ItemWithTextBehaviour : EntityBehaviour
         c.a = 1;
         spriteRenderer.material.color = c;
         isDead = false;
+        SetItemBody();
+        
+
+    }
+
+    private void SetItemBody()
+    {
+        switch (data.item_type)
+        {
+            default:
+            case ItemWithTextData.ITEM_TYPE.WEAPON:
+                _rb.bodyType = RigidbodyType2D.Kinematic;
+                light2D.enabled = false;
+                break;
+            case ItemWithTextData.ITEM_TYPE.PUSHABLE:
+                _rb.bodyType = RigidbodyType2D.Dynamic;
+                _rb.gravityScale = 0;
+                _rb.drag = 1.5f;
+                _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+                _rb.freezeRotation = true;
+                light2D.enabled = true;
+                break;
+            case ItemWithTextData.ITEM_TYPE.CHEST:
+                light2D.enabled = true;
+                _rb.bodyType = RigidbodyType2D.Kinematic;
+                break;
+        }
+        SettingUpColliders();
+    }
+
+
+    private void SettingUpColliders()
+    {
+
+        _col.isTrigger = false;
+        _col.size = data.sprite.bounds.size * data.scale * 0.8f;
+        _col.offset = new Vector2(0, 0);
+ 
 
     }
 
@@ -49,20 +91,23 @@ public class ItemWithTextBehaviour : EntityBehaviour
     public override void Defeated()
     {
         isDead = true;
-        if (data.isAWeapon)
+        switch (data.item_type)
         {
-            FindObjectOfType<WeaponPickup>().Swap(data._name);
-        } else
-        {
-            SpawnObjects();
-            SpawnDrops();
+            case ItemWithTextData.ITEM_TYPE.WEAPON:
+                FindObjectOfType<WeaponPickup>().Swap(data._name);
+                HandleAnimation();
+                break;
+            case ItemWithTextData.ITEM_TYPE.CHEST:
+                SpawnObjects();
+                SpawnDrops();
+                HandleAnimation();
+                break;
+            case ItemWithTextData.ITEM_TYPE.PUSHABLE:
+                transform.position = data.pos;
+                break;
         }
         
-        
-        
-        
         FullFillCondition();
-        HandleAnimation();
 
     }
 
