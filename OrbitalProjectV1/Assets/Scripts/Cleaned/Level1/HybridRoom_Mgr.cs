@@ -24,9 +24,14 @@ public class HybridRoom_Mgr : RoomManager
     {
         base.Update();
         RoomChecker();
+        Debug.Log(conditions.Count);
         if (activated)
         {
-            traps.SetActive(true);
+            if (traps != null)
+            {
+                traps.SetActive(true);
+            }
+            
         }
         CheckRunningEvents();
     }

@@ -10,24 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cec4b2d638e1942d09ff748bd2d97aa5, type: 3}
-  m_Name: FireBreathTrap
+  m_Name: ArrowTrap 2
   m_EditorClassIdentifier: 
-  _name: FireBreathTrap
+  _name: ArrowTrapR4
   minDist: 0
-  sprite: {fileID: 60879359, guid: 6c967d32f9c2b4162bbb5a633e236df5, type: 3}
+  sprite: {fileID: 1877716438, guid: 015463043f38a47a399b9831a90e3c77, type: 3}
+  pattern: 0
   condition: 0
   _type: 12
-  random: 1
-  pos: {x: 0, y: 0}
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
+  random: 0
+  pos: {x: -36, y: -36}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
-  scale: 3
+  scale: 1.5
   duration: 0
   defaultcolor: {r: 0, g: 0, b: 0, a: 0}
   activatedcolor: {r: 0, g: 0, b: 0, a: 0}
-  triggername: FireBreathTrap
+  triggername: ArrowTrap
   ontrigger: 1
   damage: 1
-  quaternion: {x: 0, y: 0, z: 0, w: 0}
+  quaternion: {x: 0, y: 0, z: 0.38268346, w: 0.9238795}
   ranged: 1
   horizontal: 1
+  flip: 0
+  rangedDatas:
+  - {fileID: 11400000, guid: 1fd8220190ddf4b02bd257a8bbf4c48a, type: 2}

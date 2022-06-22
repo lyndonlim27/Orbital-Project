@@ -8,5 +8,6 @@ public class NPCData : EntityData
     public TextAsset story;
     public string _animator;
     public EntityData[] dropData;
+    public ItemWithTextData prereq;
 
 }

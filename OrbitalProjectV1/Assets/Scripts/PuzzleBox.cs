@@ -42,7 +42,7 @@ public class PuzzleBox : ItemWithTextBehaviour
     {
         puzzleTl = GetComponentInChildren<TextLogic>();
         puzzleTl.enabled = false;
-        lightSwitchSystem.Activate(3);
+        lightSwitchSystem.Activate(1);
         StartCoroutine(lightSwitchSystem.StartLightShow());
     }
 
@@ -71,9 +71,12 @@ public class PuzzleBox : ItemWithTextBehaviour
 
     private void CheckComplete()
     {
+        
         if (lightSwitchSystem.IsComplete())
         {
-            currentRoom.FulfillCondition(data._name);
+            Debug.Log("Complete" + currentRoom.conditions.Count);
+            currentRoom.FulfillCondition(data._name + data.GetInstanceID());
+            poolManager.ReleaseObject(this);
         }
     }
 
@@ -92,14 +95,28 @@ public class PuzzleBox : ItemWithTextBehaviour
 
     private bool CheckInput()
     {
-        puzzleInputManager.ResetGuess();
+        
         List<int> answer = lightSwitchSystem.GetCurrentSeq();
         LetterSlotNoDnD[] guess = puzzleInputManager.GetCurrentGuess();
         if (guess != null)
         {
             //return false;
-            return answer.TrueForAll(index => guess[index].currnum - 1 == answer[index]);
+            foreach (LetterSlotNoDnD d in guess)
+            {
+                Debug.Log("Current num is " + d.currnum);
+            }
+
+            for (int i = 0; i < answer.Count; i++)
+            {
+                if (guess[i].currnum - 1 != answer[i])
+                {
+                    return false;
+                }
+            }
+            puzzleInputManager.ResetGuess();
+            return true;
         }
+        puzzleInputManager.ResetGuess();
         return false;
         
     }

@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class FodderRanged : EnemyBehaviour
 {
-    public override void Start()
+    public void Start()
     {
-        base.Start();
+        
         stateMachine = new StateMachine();
         stateMachine.AddState(StateMachine.STATE.IDLE, new IdleState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.ROAMING, new RoamState(this, this.stateMachine));

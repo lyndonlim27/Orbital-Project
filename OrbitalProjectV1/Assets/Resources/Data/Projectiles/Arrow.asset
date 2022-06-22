@@ -15,8 +15,12 @@ MonoBehaviour:
   _name: Arrow
   minDist: 0
   sprite: {fileID: 1722146800, guid: 5c253c912e3434d9e9451cc3a2cb7ca6, type: 3}
+  pattern: 0
   condition: 0
   _type: 10
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
   random: 0
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
@@ -27,6 +31,6 @@ MonoBehaviour:
   rotation: 200
   lifetime: 3
   trigger: Arrow
-  followTarget: 1
+  followTarget: 0
   loop: 1
   impact_trigger: 

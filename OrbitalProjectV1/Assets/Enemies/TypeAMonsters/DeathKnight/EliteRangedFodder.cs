@@ -10,9 +10,9 @@ public class EliteRangedFodder : EnemyBehaviour
     private bool dashFinished;
     private float UltCooldown;
     // Start is called before the first frame update
-    public override void Start()
+    public void Start()
     {
-        base.Start();
+        
         stateMachine = new StateMachine();
         stateMachine.AddState(StateMachine.STATE.IDLE, new IdleState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.ROAMING, new RoamState(this, this.stateMachine));

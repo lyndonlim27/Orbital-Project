@@ -7,9 +7,9 @@ public class FodderMoving : EnemyBehaviour
     // Start is called before the first frame update
 
 
-    public override void Start()
+    public void Start()
     { 
-        base.Start();
+       
         transform.localScale = new Vector2(enemyData.scale, enemyData.scale);
         stateMachine = new StateMachine();
         stateMachine.AddState(StateMachine.STATE.IDLE, new IdleState(this, this.stateMachine));

@@ -50,7 +50,7 @@ public abstract class EntityBehaviour : MonoBehaviour
     public abstract EntityData GetData();
 
 
-    protected virtual IEnumerator FadeOut()
+    public virtual IEnumerator FadeOut()
     {
         for (float f = 1f; f >= -0.05f; f -= 0.05f)
         {
@@ -67,4 +67,5 @@ public abstract class EntityBehaviour : MonoBehaviour
     {
         currentRoom = roomManager;
     }
+
 }

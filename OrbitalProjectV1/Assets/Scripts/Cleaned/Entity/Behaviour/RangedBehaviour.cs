@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RangedBehaviour : EntityBehaviour
+public class RangedBehaviour : EntityBehaviour, Freezable
 {
     protected Player player;
     public RangedData rangedData;
@@ -50,7 +50,7 @@ public class RangedBehaviour : EntityBehaviour
         {
             ShootAtTarget();
         }
-        
+
 
     }
 
@@ -65,7 +65,11 @@ public class RangedBehaviour : EntityBehaviour
         ResttingColor();
         rotateSpeed = rangedData.rotation;
         speed = rangedData.speed;
-        gameObject.layer = _firer == null ? LayerMask.NameToLayer("PlayerProjectile") : LayerMask.NameToLayer("EnemyProjectile");
+        if (_target != null)
+        {
+            gameObject.layer = _target.GetComponent<Player>() == null ? LayerMask.NameToLayer("PlayerProjectile") : LayerMask.NameToLayer("EnemyProjectile");
+        }
+
 
     }
 
@@ -88,7 +92,7 @@ public class RangedBehaviour : EntityBehaviour
         c.a = 1;
         spriteRenderer.material.color = c;
         //_trailRenderer.startColor = spriteRenderer.color;
-        
+
     }
 
     protected void OnDisable()
@@ -126,7 +130,7 @@ public class RangedBehaviour : EntityBehaviour
         if (rangedData._type == EntityData.TYPE.PROJECTILE)
         {
             _collider.isTrigger = false;
-            
+
         }
         else
         {
@@ -136,8 +140,8 @@ public class RangedBehaviour : EntityBehaviour
 
         _collider.size = rangedData.sprite.bounds.size * rangedData.scale;
         _collider.offset = Vector2.zero;
-        
-        
+
+
     }
 
     public void EnableAnimation()
@@ -163,7 +167,7 @@ public class RangedBehaviour : EntityBehaviour
         {
             _animator.SetBool(rangedData.trigger, false);
         }
-        
+
     }
 
     public override void SetEntityStats(EntityData stats)
@@ -173,7 +177,7 @@ public class RangedBehaviour : EntityBehaviour
         {
             this.rangedData = rangedD;
         }
-    } 
+    }
 
     public override void Defeated()
     {
@@ -186,7 +190,7 @@ public class RangedBehaviour : EntityBehaviour
                 enemy.resetCooldown();
             }
             //enemy.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
-            
+
         }
         Debug.Log(lifeTime);
         poolManager.ReleaseObject(this);
@@ -217,7 +221,8 @@ public class RangedBehaviour : EntityBehaviour
         if (rangedData.impact_trigger != "")
         {
             _animator.SetBool(rangedData.impact_trigger, true);
-        } else
+        }
+        else
         {
             Defeated();
         }
@@ -232,16 +237,17 @@ public class RangedBehaviour : EntityBehaviour
             if (go.CompareTag("Player"))
             {
                 Player player = go.GetComponent<Player>();
-                if (!player.IsDead()) {
+                if (!player.IsDead())
+                {
                     player.TakeDamage(rangedData.damage);
                 }
-                
+
             }
             else
             {
                 EnemyBehaviour enemy = go.GetComponentInChildren<EnemyBehaviour>();
                 Debug.Log("NANI??");
-    
+
                 if (enemy != null)
                 {
                     enemy.TakeDamage(rangedData.damage);
@@ -261,7 +267,7 @@ public class RangedBehaviour : EntityBehaviour
             ApplyDamage(go);
             ApplyForce(go);
         }
-        
+
 
     }
 
@@ -284,8 +290,9 @@ public class RangedBehaviour : EntityBehaviour
         if (ReferenceEquals(go, _target))
         {
             Vector2 dir = (Vector2)(_target.transform.position - transform.position).normalized;
-            go.GetComponent<Rigidbody2D>().AddForce(dir * (rangedData.speed*0.1f), ForceMode2D.Impulse);
-        } else
+            go.GetComponent<Rigidbody2D>().AddForce(dir * (rangedData.speed * 0.1f), ForceMode2D.Impulse);
+        }
+        else
         {
             stopMovement();
         }
@@ -293,15 +300,15 @@ public class RangedBehaviour : EntityBehaviour
 
     protected void stopMovement()
     {
-        
+
         _rb.angularVelocity = 0;
         _rb.velocity = Vector2.zero;
-        
+
     }
 
     protected void ShootAtTarget()
     {
-        Vector2 targetpos = rangedData.followTarget ? _target.transform.position : transform.right;
+        Vector2 targetpos = rangedData.followTarget ? _target.transform.position : currenttargetposition;
         Vector2 point2Target = (Vector2)transform.position - targetpos;
         point2Target.Normalize();
         Vector3 shootpoint = rangedData._type == EntityData.TYPE.PROJECTILE ? transform.right : -point2Target;
@@ -313,16 +320,28 @@ public class RangedBehaviour : EntityBehaviour
         if (rangedData.followTarget)
         {
             _rb.velocity = shootpoint * speed;
-        } else
+        }
+        else
         {
-           
+
             _rb.AddForce(shootpoint, ForceMode2D.Impulse);
-            
-        }
-            
 
-            //_rb.AddForce(shootpoint*speed, rangedData.followTarget ? ForceMode2D.Force : ForceMode2D.Impulse);
-            //_rb.velocity = shootpoint* speed;
         }
 
+
+        //_rb.AddForce(shootpoint*speed, rangedData.followTarget ? ForceMode2D.Force : ForceMode2D.Impulse);
+        //_rb.velocity = shootpoint* speed;
+    }
+
+    public void Freeze()
+    {
+        _rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        _animator.speed = 0;
+    }
+
+    public void UnFreeze()
+    {
+        _rb.constraints = RigidbodyConstraints2D.None;
+        _animator.speed = 1;
+    }
 }

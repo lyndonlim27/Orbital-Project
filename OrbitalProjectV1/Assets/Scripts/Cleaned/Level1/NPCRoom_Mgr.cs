@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,9 +30,9 @@ public class NPCRoom_Mgr : RoomManager
     {
         //check condition 1
 
-        if (activated && !conditions.Contains("booze"))
+        if (activated)
         {
-            npcs[0].Proceed();
+            CheckNPCPrereq();
             //foreach(EntityData entitydata in _EntityData)
             //{
             //    if (entitydata._name == "key")
@@ -43,9 +44,23 @@ public class NPCRoom_Mgr : RoomManager
             //}
            
         }
+        
         base.RoomChecker();
 
     }
+
+    protected void CheckNPCPrereq()
+    {
+        foreach (NPCBehaviour npc in npcs)
+        {
+            NPCData _data = npc.GetData() as NPCData;
+            if (!conditions.Contains(_data.prereq._name + _data.prereq.GetInstanceID()))
+            {
+                npc.Proceed();
+            }
+        }
+    }
+
 
     protected override void CheckRunningEvents()
     {

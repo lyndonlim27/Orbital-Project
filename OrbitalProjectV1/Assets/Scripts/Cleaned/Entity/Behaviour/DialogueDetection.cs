@@ -50,7 +50,7 @@ public class DialogueDetection : MonoBehaviour
                 Debug.Log("Entered npc detection");
 //                Debug.Log("We are in this detection");
                 dialogueAlert.SetActive(true);
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (Input.GetKeyDown(KeyCode.Space) && !dialMgr.playing)
                 {
                     dialMgr.EnterDialogue(currentNPC);
                 }

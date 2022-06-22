@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class Player : EntityBehaviour, IDataPersistence
+public class Player : EntityBehaviour, IDataPersistence, Freezable
 {
 
     private Vector2 _movement;
@@ -223,8 +223,18 @@ public class Player : EntityBehaviour, IDataPersistence
     }
 
 
+    public void FreezeRb()
+    {
+        _rb.constraints = RigidbodyConstraints2D.FreezeAll;
+    }
+
+    public void UnFreezeRb()
+    {
+        _rb.constraints = RigidbodyConstraints2D.None;
+    }
+
     //Fades sprite
-    protected override IEnumerator FadeOut()
+    public override IEnumerator FadeOut()
     {
         for(float f = 1f; f >= -0.05f; f -= 0.05f)
         {
@@ -354,5 +364,17 @@ public class Player : EntityBehaviour, IDataPersistence
         data.buffDataName = _buffData != null ? _buffData.skillName : null;
         data.attackDataName = _attackData != null ? _attackData.skillName : null;
         data.moveSpeed = this._moveSpeed;
+    }
+
+    public void Freeze()
+    {
+        _rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        _animator.speed = 0;
+    }
+
+    public void UnFreeze()
+    {
+        _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        _animator.speed = 1;
     }
 }

@@ -32,8 +32,7 @@ public class PressurePlateRoom_Mgr : RoomManager
     {
         if (activated)
         {
-            Debug.Log(pressureitems.Count);
-            
+           
             
             if (pressureitems.Count != 0 && pressureitems.TrueForAll(item => item.IsOn()))
             {
@@ -43,6 +42,10 @@ public class PressurePlateRoom_Mgr : RoomManager
             }
 
             Debug.Log(conditions.Count);
+            foreach(string s in conditions)
+            {
+                Debug.Log(s);
+            }
             if (conditions.Count == 0 && player.GetCurrentRoom() != this && !spawned)
             {
                 spawnlater.ForEach(spawn =>

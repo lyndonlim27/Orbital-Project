@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 10a1c4479d5574dac908b62726c971cb, type: 3}
-  m_Name: Key
+  m_Name: Key 1
   m_EditorClassIdentifier: 
   _name: key
   minDist: 2
@@ -21,7 +21,7 @@ MonoBehaviour:
   multispawns: 0
   startPos: {x: 0, y: 0}
   endPos: {x: 0, y: 0}
-  random: 1
+  random: 0
   pos: {x: -4.88, y: -0.78}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
@@ -29,4 +29,5 @@ MonoBehaviour:
   itemTextDatas: []
   ac_name: 
   _trigger: 
-  isAWeapon: 0
+  item_type: 3
+  secondarysprite: {fileID: 0}

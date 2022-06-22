@@ -43,7 +43,7 @@ public class TrapBehaviour : ActivatorBehaviour
         SettingUpRotation();
         spriteRenderer.sprite = null;
         animator.enabled = true;
-        
+        ranged.rangeds = trapData.rangedDatas;
         ranged.enabled = trapData.ranged;
         
         
@@ -56,16 +56,25 @@ public class TrapBehaviour : ActivatorBehaviour
 
     private void SettingUpRotation()
     {
-        transform.rotation = trapData.quaternion;
-        float angle = trapData.quaternion.eulerAngles.z;
-        if (angle > 90f && angle < 270f)
+        //if (trapData.flip)
+        //{
+        //    transform.localScale.x *= -1;
+        //}
+        //transform.rotation = trapData.quaternion;
+        //float angle = trapData.quaternion.eulerAngles.z;
+        //if (angle > 90f && angle < 270f)
+        //{
+        //    Debug.Log("???");
+        //    Vector2 scale = transform.localScale;
+        //    scale.y *= -1;
+        //    transform.localScale = scale;
+        //}
+        if (trapData.flip)
         {
-            Debug.Log("???");
             Vector2 scale = transform.localScale;
-            scale.y *= -1;
+            scale.x *= -1;
             transform.localScale = scale;
         }
-        
 
 
     }
@@ -85,6 +94,8 @@ public class TrapBehaviour : ActivatorBehaviour
             _boxColl.size = trapData.sprite.bounds.size;
             _boxColl.offset = new Vector2(0, 0);
         }
+
+        _boxColl.gameObject.transform.rotation = trapData.quaternion;
     }
 
     //private void RandomizePlacement()

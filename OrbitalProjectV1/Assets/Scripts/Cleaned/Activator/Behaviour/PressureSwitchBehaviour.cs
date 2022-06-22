@@ -26,6 +26,7 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
     {
         ResettingColor();
         SettingUpColliders();
+        spriteRenderer.sortingOrder = 0;
     }
     //specifically for this
     private void SettingUpColliders()

@@ -6,9 +6,19 @@ public class ItemTextLogic : TextLogic
 {
     private RoomManager roomManager;
 
+    protected override void Start()
+    {
+        base.Start();
+        currentword = parent.GetData()._name.ToLower();
+    }
     protected override bool CheckInternalInput()
     {
         return true;
+    }
+
+    public void ResetWord()
+    {
+        GenerateNewWord();
     }
 
     protected override void GenerateNewWord()

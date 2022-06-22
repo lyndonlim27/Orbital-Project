@@ -11,5 +11,7 @@ public class TrapData : SwitchData
     public Quaternion quaternion;
     public bool ranged;
     public bool horizontal;
+    public bool flip;
+    public List<RangedData> rangedDatas;
     
 }

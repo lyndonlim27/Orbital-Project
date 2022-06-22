@@ -67,7 +67,7 @@ public class DoorBehaviour : EntityBehaviour
         
 
 
-    protected override IEnumerator FadeOut()
+    public override IEnumerator FadeOut()
     {
         for (float f = 1f; f > 0 ; f -= 0.05f)
         {

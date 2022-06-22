@@ -110,7 +110,7 @@ public class LightSwitchSystem : MonoBehaviour
 
     public bool IsComplete()
     {
-        return currindex == sequence.Count - 1;
+        return currindex == sequence.Count;
     }
 
 }

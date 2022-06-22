@@ -36,9 +36,9 @@ public class EliteMonsterS : EnemyBehaviour
 
     }
 
-    public override void Start()
+    public void Start()
     {
-        base.Start();
+       
         Debug.Log(stateMachine.currState);
         stateMachine.AddState(StateMachine.STATE.IDLE, new IdleState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.ROAMING, new RoamState(this, this.stateMachine));

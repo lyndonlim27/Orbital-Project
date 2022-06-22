@@ -142,7 +142,11 @@ public abstract class TextLogic : MonoBehaviour
             if (isWordComplete())
             {
                 PerformAction();
-                GenerateNewWord();
+                if (!parent.isDead)
+                {
+                    GenerateNewWord();
+                }
+                
                 ResetCounter();
                 
                 
@@ -153,7 +157,8 @@ public abstract class TextLogic : MonoBehaviour
             if (isWordPartialComplete())
             {
                 ResetCounter();
-                GenerateNewWord();
+                //GenerateNewWord();
+                UpdateRemainingWord(currentword);
             }
                
         }
@@ -161,6 +166,8 @@ public abstract class TextLogic : MonoBehaviour
         
 
     }
+
+    
 
     /**
      * Check if player is in range.

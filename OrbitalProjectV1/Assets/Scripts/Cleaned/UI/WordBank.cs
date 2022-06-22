@@ -18,7 +18,14 @@ public class WordBank : MonoBehaviour
     {
         var content = file.text;
         var AllWords = content.Split('\n', ' ', '.', '!', '?', ';', ':');
-        wordBank.AddRange(AllWords);
+        //wordBank.AddRange(AllWords);
+        foreach(string word in AllWords)
+        {
+            if (word.Length < 5)
+            {
+                wordBank.Add(word);
+            }
+        }
         //wordBank.AddRange(originalwords);
         Shuffle();
         ToLower();

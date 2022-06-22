@@ -5,6 +5,7 @@ using Ink.Runtime;
 using System;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using System.Linq;
 
 
 /** 
@@ -27,7 +28,14 @@ public class DialogueManager : MonoBehaviour
 
     private bool fulfilled;
 
+    private Coroutine coroutine;
+
+    private string nextline;
+
     public bool playing { get; private set; }
+
+    private bool inExit;
+
 
     [Header("DialogueUI")]
     [SerializeField] private GameObject dialoguePanel;
@@ -98,7 +106,17 @@ public class DialogueManager : MonoBehaviour
     public void MakeChoice(int choiceIndex)
     {
         currentstory.ChooseChoiceIndex(choiceIndex);
+        //StopCoroutine(coroutine);
+        if (coroutine != null)
+        {
+            StopCoroutine(coroutine);
+            StopCoroutine(SelectFirstChoice());
+            coroutine = null;
+            dialoguetext.text = nextline;
+        }
+        Debug.Log("Make choice");
         ContinueStory();
+        
     }
     
 
@@ -107,12 +125,39 @@ public class DialogueManager : MonoBehaviour
      */
     void Update()
     {
-        if (!playing)
+        if (!playing || inExit)
         {
             return;
-        } else if (Input.GetKeyDown(KeyCode.Space))
+        }
+        else
         {
-            ContinueStory();
+            ////if (coroutine == null && Input.GetKeyDown(KeyCode.Space))
+            ////{
+            ////    ContinueStory();
+            ////} else if (coroutine != null && Input.GetKeyDown(KeyCode.Space))
+            ////{
+            ////    StopCoroutine(coroutine);
+            ////    dialoguetext.text = nextline;
+            //if (Input.GetKeyDown(KeyCode.Space)) {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                if (coroutine != null)
+                {
+                    StopCoroutine(coroutine);
+                    coroutine = null;
+                    dialoguetext.text = nextline;
+                } else
+                {
+                    ContinueStory();
+                }
+                
+            }
+                
+            else if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Debug.Log("exited dialogue");
+                StartCoroutine(ExitDialogue());
+            }
         }
 
     }
@@ -142,8 +187,8 @@ public class DialogueManager : MonoBehaviour
     {
         if (currentstory.canContinue)
         {
-            string nextline = currentstory.Continue();
-            StartCoroutine(TypeSentence(nextline));
+            nextline = currentstory.Continue();
+            coroutine = StartCoroutine(TypeSentence(nextline));
             if (currentstory.currentTags.Count > 0 &&
                 currentstory.currentTags[currentstory.currentTags.Count - 1] == "NPC")
             {
@@ -156,9 +201,11 @@ public class DialogueManager : MonoBehaviour
         }
         else
         {
-            StartCoroutine(ExitDialogue());
-            
-            
+            if (choicesText.ToList().TrueForAll(choice => !choice.gameObject.activeInHierarchy))
+            {
+                StartCoroutine(ExitDialogue());
+            }
+           
         }
     }
 
@@ -167,14 +214,16 @@ public class DialogueManager : MonoBehaviour
      */
     private IEnumerator ExitDialogue()
     {
+        inExit = true;
         yield return new WaitForSeconds(0.5f);
         if (fulfilled)
         {
-            roomManager.FulfillCondition(_npcData._name);
+            roomManager.FulfillCondition(_npcData._name + _npcData.GetInstanceID());
         }
 
         playing = false;
         dialoguePanel.SetActive(false);
+        inExit = false;
     }
 
     /**

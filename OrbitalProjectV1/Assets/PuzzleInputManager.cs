@@ -100,6 +100,7 @@ public class PuzzleInputManager : MonoBehaviour
                 {
                     audioSources[KeyCode.A].Play();
                     int currnum = i - 48;
+                    Debug.Log("Currentn num is :" + currnum);
                     letterSlots[currindex].SetData(letters[currnum], currnum);
                     currindex++;
 
@@ -115,11 +116,7 @@ public class PuzzleInputManager : MonoBehaviour
     {
         guessed = true;
         
-        for (int i = 0; i < letterSlots.Length; i++)
-        {
-            letterSlots[i].ClearData();
-        }
-        currindex = 0;
+        
         FindObjectOfType<SkillManager>().enabled = true;
         this.gameObject.SetActive(false);
         
@@ -128,13 +125,19 @@ public class PuzzleInputManager : MonoBehaviour
     public void ResetGuess()
     {
         guessed = false;
-        
+        for (int i = 0; i < letterSlots.Length; i++)
+        {
+            letterSlots[i].ClearData();
+        }
+        currindex = 0;
+
     }
 
     public LetterSlotNoDnD[] GetCurrentGuess()
     {
         return letterSlots;
     }
+
 
     
 }

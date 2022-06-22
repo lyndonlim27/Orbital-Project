@@ -12,9 +12,13 @@ public class ItemWithTextData : EntityData
     {
         PUSHABLE,
         WEAPON,
-        CHEST
+        CHEST,
+        OTHERS,
+        TOMB,
     }
     public ITEM_TYPE item_type;
+    public Sprite secondarysprite;
+    public string description;
     
 
     // Start is called before the first frame update

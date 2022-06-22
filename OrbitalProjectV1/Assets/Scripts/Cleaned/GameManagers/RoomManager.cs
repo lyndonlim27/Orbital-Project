@@ -38,6 +38,7 @@ public abstract class RoomManager : MonoBehaviour
      * Each room will have their list of 
      */
     public HashSet<string> conditions { get; protected set; }
+    public int conditionSize;
     public List<EntityBehaviour> items { get; protected set; }
     public List<EnemyBehaviour> enemies { get; protected set; }
     public List<EntityData> spawnlater { get; protected set; }
@@ -46,6 +47,7 @@ public abstract class RoomManager : MonoBehaviour
     public List<NPCBehaviour> npcs { get; protected set; }
     protected ROOMTYPE roomtype;
     public Light2D[] lights;
+    private UIObjectivePointer pointer;
 
     /**
      * Prefabs.
@@ -90,7 +92,7 @@ public abstract class RoomManager : MonoBehaviour
      */
     protected PopUpSettings popUpSettings;
     private PoolManager poolManager;
-    private Seeker seeker;
+    
 
     /**
      * Retrieving of Data.
@@ -117,6 +119,7 @@ public abstract class RoomManager : MonoBehaviour
         {
             light.GetComponent<Animator>().SetBool(light.name, true);
         }
+        pointer = FindObjectOfType<UIObjectivePointer>(true);
 
     }
 
@@ -153,7 +156,15 @@ public abstract class RoomManager : MonoBehaviour
                 //InitializeAStar();
                 //AddConditionalNPCS();
             }
+            
         }
+
+        conditionSize = conditions.Count;
+        foreach (DoorBehaviour door in doors)
+        {
+            Debug.Log("Door is unlocked/" + door.unlocked);
+        }
+
         
         
        
@@ -215,13 +226,31 @@ public abstract class RoomManager : MonoBehaviour
             for (int i = 0; i < doors.Length; i++)
             {
                 doors[i].unlocked = true;
-                this.enabled = false;
+
+
             }
-        } else
-        {
-            LockDoorsOnThisLevel();
+            DisableTrapBehaviour();
+            pointToObjective();
+            this.enabled = false;
         }
+        //} else
+        //{
+        //    LockDoorsOnThisLevel();
+        //}
         
+    }
+
+    private void DisableTrapBehaviour()
+    {
+        TrapBehaviour[] trapBehaviours = GetComponentsInChildren<TrapBehaviour>();
+        if (trapBehaviours != null)
+        {
+            foreach(TrapBehaviour trap in trapBehaviours)
+            {
+                trap.enabled = false;
+            }
+        } 
+      
     }
 
 
@@ -285,7 +314,7 @@ public abstract class RoomManager : MonoBehaviour
         {
             if (entitydata.condition == 1)
             {
-                conditions.Add(entitydata._name);
+                conditions.Add(entitydata._name + entitydata.GetInstanceID());
             }
             if (entitydata.spawnAtStart)
             { 
@@ -304,7 +333,7 @@ public abstract class RoomManager : MonoBehaviour
     {
         if (entityDatas == null)
         {
-            Debug.Log(this);
+            
             return;
         }
         for (int i = 0; i < entityDatas.Length; i++)
@@ -315,7 +344,8 @@ public abstract class RoomManager : MonoBehaviour
             Debug.Log("This is :" + _item);
             if (_item.condition == 1)
             {
-                conditions.Add(_item._name);
+                
+                conditions.Add(_item._name + _item.GetInstanceID());
             }
 
             if (!_item.spawnAtStart)
@@ -324,13 +354,13 @@ public abstract class RoomManager : MonoBehaviour
                 continue;
             } else
             {
-                Debug.Log("WTF? this is item:" + _item);
+                
                 if (_item.multispawns)
                 {
                     InstantiateMultiPosition(_item);
                 } else
                 {
-                    Debug.Log("this is item: " +_item);
+                    
                     InstantiateEntity(_item);
                 }
                 
@@ -345,7 +375,6 @@ public abstract class RoomManager : MonoBehaviour
 
     protected void InstantiateMultiPosition(EntityData item)
     {
-        Debug.Log("Entered Multi");
         List<Vector2> points;
         Patterns pattern = Patterns.of(item.startPos, item.endPos);
         switch (item.pattern)
@@ -373,7 +402,6 @@ public abstract class RoomManager : MonoBehaviour
 
         foreach (Vector2 point in points)
         { 
-            Debug.Log("This is entity data" + item);
             EntityData copy = Instantiate(item);
             EntityBehaviour entity = poolManager.GetObject(item._type);
             InitializeEntity(copy, point, entity);
@@ -388,7 +416,7 @@ public abstract class RoomManager : MonoBehaviour
     private void SafePath()
     {
         safeRoute = new HashSet<Vector3>();
-        Debug.Log(entryDoor.transform.position);
+        
         var startPosition = entryDoor.transform.position;
         foreach (DoorBehaviour door in doors)
         {
@@ -422,7 +450,7 @@ public abstract class RoomManager : MonoBehaviour
     {
 
 
-        Debug.Log("This is entity data" + data);
+        
         Vector2 pos = data.random ? GetRandomPoint() : data.pos;
         EntityBehaviour entity = poolManager.GetObject(data._type);
         InitializeEntity(data, pos, entity);
@@ -439,6 +467,7 @@ public abstract class RoomManager : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.gravityScale = 0f;
         rb.drag = 1.5f;
+        rb.mass = 100f;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.freezeRotation = true;
         emf.transform.SetParent(go.transform);
@@ -571,11 +600,14 @@ public abstract class RoomManager : MonoBehaviour
     public void ResumeGame()
     {
 
-        foreach (EnemyBehaviour _enemy in enemies)
+        Freezable[] freezables = GetComponentsInChildren<Freezable>();
+        foreach (Freezable freezable in freezables)
         {
-            _enemy.enabled = true;
-            _enemy.animator.enabled = true;
+            //_enemy.enabled = false;
+            //_enemy.animator.enabled = false;
+            freezable.UnFreeze();
         }
+        player.UnFreeze();
         player.enabled = true;
     }
 
@@ -584,12 +616,14 @@ public abstract class RoomManager : MonoBehaviour
      */
     public void PauseGame()
     {
-        foreach (EnemyBehaviour _enemy in enemies)
+        Freezable[] freezables = GetComponentsInChildren<Freezable>();
+        foreach (Freezable freezable in freezables)
         {
-            _enemy.enabled = false;
-            _enemy.animator.enabled = false;
+            //_enemy.enabled = false;
+            //_enemy.animator.enabled = false;
+            freezable.Freeze();
         }
-
+        player.Freeze();
         player.enabled = false;
     }
 
@@ -619,14 +653,14 @@ public abstract class RoomManager : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Still called");
+        
         if (collision.CompareTag("Player") || collision.CompareTag("Stealth"))
         {
             player.SetCurrentRoom(this);
             // maybe we need to use this in the future, dk
             if (!CanProceed())
             {
-                Debug.Log("Entered here");
+                
                 LockDoorsOnThisLevel();
             }
         }
@@ -635,10 +669,15 @@ public abstract class RoomManager : MonoBehaviour
 
     protected void LockDoorsOnThisLevel()
     {
-        foreach (DoorBehaviour door in doors)
+        if (activated)
         {
-            door.unlocked = false;
+            foreach (DoorBehaviour door in doors)
+            {
+                door.unlocked = false;
+            }
+
         }
+       
     }
 
 
@@ -679,5 +718,29 @@ public abstract class RoomManager : MonoBehaviour
         
 
     }
+
+    private void pointToObjective()
+    {
+        Debug.Log(pointer);
+        pointer.StartNavi(doors[doors.Length - 1].transform.position);
+    }
+
+    /**
+     * ConditionCheckers
+     */
+
+
+    //protected void CheckNPCPrereq()
+    //{
+    //    foreach (NPCBehaviour npc in npcs)
+    //    {
+    //        NPCData _data = npc.GetData() as NPCData;
+    //        if (!conditions.Contains(_data.prereq._name + _data.prereq.GetInstanceID()))
+    //        {
+    //            npc.Proceed();
+    //        }
+    //    }
+    //}
+
 
 }

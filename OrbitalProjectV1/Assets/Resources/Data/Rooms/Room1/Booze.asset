@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Booze
   m_EditorClassIdentifier: 
   _name: booze
-  minDist: 2
-  sprite: {fileID: 2089129738, guid: 7fd973faf79db4de3b759121c67f34b6, type: 3}
+  minDist: 3
+  sprite: {fileID: 1554656945, guid: 9c079d16156a2484b8f87a197c973d59, type: 3}
   pattern: 0
   condition: 1
   _type: 4
@@ -22,11 +22,13 @@ MonoBehaviour:
   startPos: {x: 0, y: 0}
   endPos: {x: 0, y: 0}
   random: 0
-  pos: {x: 1, y: 2}
+  pos: {x: 0, y: 0.5}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 1
   itemTextDatas: []
   ac_name: 
   _trigger: 
-  isAWeapon: 0
+  item_type: 3
+  secondarysprite: {fileID: 0}
+  description: The guard wakes up from its slumber and looks at you

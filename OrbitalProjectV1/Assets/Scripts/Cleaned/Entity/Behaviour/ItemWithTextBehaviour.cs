@@ -3,41 +3,66 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using TMPro;
 using Random = UnityEngine.Random;
 using System.Reflection;
 
-public class ItemWithTextBehaviour : EntityBehaviour
+public class ItemWithTextBehaviour : EntityBehaviour, Freezable
 {
    [SerializeField] protected ItemWithTextData data;
    [SerializeField] protected List<ConsumableItemData> consumableItemDatas;
-    //private FieldInfo _LightCookieSprite = typeof(Light2D).GetField("m_LightCookieSprite", BindingFlags.NonPublic | BindingFlags.Instance);
+    private FieldInfo _LightCookieSprite = typeof(Light2D).GetField("m_LightCookieSprite", BindingFlags.NonPublic | BindingFlags.Instance);
     Player player;
     Light2D light2D;
     Rigidbody2D _rb;
     CapsuleCollider2D _col;
-    private Animator _animator;
+    GameObject secondarylightsource;
+    ItemTextLogic _tl;
+    UITextDescription uITextDescription;
+    public Animator animator { get; private set; }
     
 
     protected override void Awake()
     {
         base.Awake();
         light2D = GetComponent<Light2D>();
-        _animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
+        animator.keepAnimatorControllerStateOnDisable = false;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<CapsuleCollider2D>();
+        _tl = GetComponentInChildren<ItemTextLogic>();
+        uITextDescription = FindObjectOfType<UITextDescription>(true);
+        
+        
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         //_LightCookieSprite.SetValue(light2D, data.sprite);
         Color c = spriteRenderer.material.color;
         c.a = 1;
         spriteRenderer.material.color = c;
         isDead = false;
+        DisableAnimator();
         SetItemBody();
+        EnableAnimator();
+        spriteRenderer.sortingOrder = 2;
         
 
+    }
+
+    protected virtual void EnableAnimator()
+    {
+        animator.enabled = true;
+        animator.runtimeAnimatorController = Resources.Load(string.Format("Animations/AnimatorControllers/{0}", data.ac_name)) as RuntimeAnimatorController;
+
+    }
+
+    protected void DisableAnimator()
+    {
+        animator.enabled = false;
+        animator.runtimeAnimatorController = null;
     }
 
     private void SetItemBody()
@@ -45,32 +70,57 @@ public class ItemWithTextBehaviour : EntityBehaviour
         switch (data.item_type)
         {
             default:
+            case ItemWithTextData.ITEM_TYPE.CHEST:
+                light2D.enabled = true;
+                _rb.bodyType = RigidbodyType2D.Kinematic;
+                break;
             case ItemWithTextData.ITEM_TYPE.WEAPON:
                 _rb.bodyType = RigidbodyType2D.Kinematic;
-                light2D.enabled = false;
+                light2D.enabled = true;
                 break;
             case ItemWithTextData.ITEM_TYPE.PUSHABLE:
                 _rb.bodyType = RigidbodyType2D.Dynamic;
                 _rb.gravityScale = 0;
                 _rb.drag = 1.5f;
+                _rb.mass = 45f;
+
                 _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
                 _rb.freezeRotation = true;
                 light2D.enabled = true;
                 break;
-            case ItemWithTextData.ITEM_TYPE.CHEST:
-                light2D.enabled = true;
+            case ItemWithTextData.ITEM_TYPE.TOMB:
+                secondarylightsource = new GameObject();
+                SpriteRenderer _spr = secondarylightsource.AddComponent<SpriteRenderer>();
+                SettingUpSecondaryLight(secondarylightsource, _spr);
                 _rb.bodyType = RigidbodyType2D.Kinematic;
+                light2D.enabled = false;
                 break;
+
+
+
         }
         SettingUpColliders();
     }
 
+    private void SettingUpSecondaryLight(GameObject go, SpriteRenderer _spr)
+    {
+        _spr.sprite = data.secondarysprite;
+        _spr.sortingOrder = 3;
+        Light2D l2d = go.AddComponent<Light2D>();
+        l2d.lightType = Light2D.LightType.Sprite;
+        l2d.intensity = 0.58f;
+        l2d.shadowIntensity = 0.75f;
+        _LightCookieSprite.SetValue(l2d, data.secondarysprite);
+        go.transform.SetParent(transform);
+        go.transform.localPosition = new Vector2(0, -0.5f);
+        go.SetActive(false);
+    }
 
     private void SettingUpColliders()
     {
-
         _col.isTrigger = false;
-        _col.size = data.sprite.bounds.size * data.scale * 0.8f;
+        
+        _col.size = data.sprite.bounds.size;
         _col.offset = new Vector2(0, 0);
  
 
@@ -91,8 +141,14 @@ public class ItemWithTextBehaviour : EntityBehaviour
     public override void Defeated()
     {
         isDead = true;
+        FullFillCondition();
+        
         switch (data.item_type)
         {
+            default:
+                Debug.Log("Entered here in animation");
+                HandleAnimation();
+                break;
             case ItemWithTextData.ITEM_TYPE.WEAPON:
                 FindObjectOfType<WeaponPickup>().Swap(data._name);
                 HandleAnimation();
@@ -104,23 +160,34 @@ public class ItemWithTextBehaviour : EntityBehaviour
                 break;
             case ItemWithTextData.ITEM_TYPE.PUSHABLE:
                 transform.position = data.pos;
+                _tl.ResetWord();
+                isDead = false;
+                break;
+            case ItemWithTextData.ITEM_TYPE.TOMB:
+                secondarylightsource.SetActive(true);
                 break;
         }
-        
-        FullFillCondition();
+
+        if (data.description != "")
+        {
+            uITextDescription.StartDescription(data.description);
+        }
+
+
+
 
     }
 
     private void SpawnObjects()
     {
         List<ItemWithTextData> edClones = new List<ItemWithTextData>();
-        Debug.Log(data);
+        
         Array.ForEach(data.itemTextDatas, (d) =>
         {
             ItemWithTextData e = Instantiate(d); 
             e.random = false;
             e.spawnAtStart = true;
-            Debug.Log(e);
+            
             e.pos = transform.position + new Vector3(UnityEngine.Random.Range(-2, 2)*data.scale, UnityEngine.Random.Range(-2, 2) * data.scale, 1);
             edClones.Add(e);
             
@@ -133,20 +200,19 @@ public class ItemWithTextBehaviour : EntityBehaviour
     protected void SpawnDrops()
     {
         int rand = Random.Range(0, 5);
-        Debug.Log(rand);
+        
         for (int i = 0; i < rand; i++)
         {
-            Debug.Log("This is drop" + i);
+            
             int rand2 = Random.Range(0, consumableItemDatas.Count);
             ConsumableItemBehaviour con = poolManager.GetObject(EntityData.TYPE.CONSUMABLE_ITEM) as ConsumableItemBehaviour;
             con.gameObject.SetActive(false);
             ConsumableItemData condata = consumableItemDatas[rand2];
-            if (condata._consumableType == ConsumableItemData.CONSUMABLE.LETTER)
+            WordBank wordBank = FindObjectOfType<WordBank>();
+            string passcode = wordBank.passcode;
+            if (condata._consumableType == ConsumableItemData.CONSUMABLE.LETTER && passcode.Length > 0)
             {
                 ConsumableItemData temp = Instantiate(condata);
-                WordBank wordBank = FindObjectOfType<WordBank>();
-                string passcode = wordBank.passcode;
-                Debug.Log(passcode);
                 int randomnum = Random.Range(0, passcode.Length);
                 temp.letter = passcode[randomnum];
                 temp.sprite = condata.letters[(int)temp.letter - 81];
@@ -167,7 +233,7 @@ public class ItemWithTextBehaviour : EntityBehaviour
         }
         else
         {
-            _animator.SetTrigger(data._trigger);
+            animator.SetTrigger(data._trigger);
         }
     }
 
@@ -176,7 +242,7 @@ public class ItemWithTextBehaviour : EntityBehaviour
         if (data.condition == 1)
         {
 
-            currentRoom.FulfillCondition(data._name);
+            currentRoom.FulfillCondition(data._name + data.GetInstanceID());
         }
     }
 
@@ -190,12 +256,26 @@ public class ItemWithTextBehaviour : EntityBehaviour
     {
 
         ItemWithTextData temp = (ItemWithTextData)stats;
-        Debug.Log("TEMP" + temp);
+        
         if (temp != null)
         {
             data = temp;
         }
     }
+
+    public virtual void Freeze()
+    {
+        _rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        animator.speed = 0;
+    }
+
+    public virtual void UnFreeze()
+    {
+        _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        animator.speed = 1;
+    }
+
+    
 
     //IEnumerator FadeOut()
     //{

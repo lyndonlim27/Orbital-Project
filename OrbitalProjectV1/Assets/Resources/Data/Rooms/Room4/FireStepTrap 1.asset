@@ -10,28 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cec4b2d638e1942d09ff748bd2d97aa5, type: 3}
-  m_Name: ArrowTrap
+  m_Name: FireStepTrap 1
   m_EditorClassIdentifier: 
-  _name: ArrowTrapR4
+  _name: FireStepTrap
   minDist: 0
-  sprite: {fileID: 1877716438, guid: 015463043f38a47a399b9831a90e3c77, type: 3}
+  sprite: {fileID: -1131151037, guid: 0f5d963db115941b49b87b9ba1e78229, type: 3}
+  pattern: 4
   condition: 0
   _type: 12
-  multispawns: 0
-  startPos: {x: 0, y: 0}
-  endPos: {x: 0, y: 0}
+  multispawns: 1
+  startPos: {x: -65, y: -69}
+  endPos: {x: -59, y: -66}
   random: 0
-  pos: {x: -38, y: -72}
+  pos: {x: -38, y: 72}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
-  scale: 1.5
+  scale: 1
   duration: 0
   defaultcolor: {r: 0, g: 0, b: 0, a: 0}
   activatedcolor: {r: 0, g: 0, b: 0, a: 0}
-  triggername: ArrowTrap
+  triggername: FireStepTrap
   ontrigger: 1
   damage: 1
-  quaternion: {x: 0, y: 0, z: 0, w: 1}
-  ranged: 1
-  horizontal: 1
-  flipped: 0
+  quaternion: {x: 0, y: 0, z: 0, w: 0}
+  ranged: 0
+  horizontal: 0
+  flip: 0
+  rangedDatas: []

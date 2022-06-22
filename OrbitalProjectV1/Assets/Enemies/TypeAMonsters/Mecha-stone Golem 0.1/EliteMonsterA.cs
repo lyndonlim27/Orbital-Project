@@ -23,9 +23,9 @@ public class EliteMonsterA : EnemyBehaviour
         allProps = new List<BossProps>();
     }
 
-    public override void Start()
+    public void Start()
     {
-        base.Start();
+       
         stateMachine = new StateMachine();
         stateMachine.AddState(StateMachine.STATE.IDLE, new IdleState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.ROAMING, new RoamState(this, this.stateMachine));

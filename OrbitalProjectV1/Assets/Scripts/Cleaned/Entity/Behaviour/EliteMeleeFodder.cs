@@ -7,13 +7,7 @@ public class EliteMeleeFodder : EnemyBehaviour
     private float Teleportcooldown;
     private float UltCooldown;
     // Start is called before the first frame update
-    public override void Start()
-    {
-        base.Start();
-        Dashcooldown = 15f;
-
-    }
-
+   
     private void StartState()
     {
         stateMachine = new StateMachine();

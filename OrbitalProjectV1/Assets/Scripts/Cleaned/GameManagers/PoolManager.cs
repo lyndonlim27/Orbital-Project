@@ -80,7 +80,7 @@ public class PoolManager : MonoBehaviour
     public void ReleaseObject(EntityBehaviour instance)
     {
         Debug.Log(instance);
-        instance.StopAllCoroutines();
+        instance.StopCoroutine(instance.FadeOut());
         objectPools[instance.GetData()._type].Release(instance);
     }
 

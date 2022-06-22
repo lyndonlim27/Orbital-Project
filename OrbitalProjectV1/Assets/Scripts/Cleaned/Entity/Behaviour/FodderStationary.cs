@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class FodderStationary : EnemyBehaviour
 {
-    public override void Start()
+    public void Start()
     {
-        base.Start();
+        
         stateMachine = new StateMachine();
         stateMachine.AddState(StateMachine.STATE.IDLE, new C_IdleState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.ATTACK1, new C_MeleeState(this, this.stateMachine));

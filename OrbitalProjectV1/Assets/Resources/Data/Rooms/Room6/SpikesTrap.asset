@@ -10,28 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cec4b2d638e1942d09ff748bd2d97aa5, type: 3}
-  m_Name: ArrowTrap 1
+  m_Name: SpikesTrap
   m_EditorClassIdentifier: 
-  _name: ArrowTrapR4
+  _name: SpikesTrap
   minDist: 0
-  sprite: {fileID: 1877716438, guid: 015463043f38a47a399b9831a90e3c77, type: 3}
+  sprite: {fileID: 21300000, guid: 0dfb3be63077345c7a3a907e35557746, type: 3}
+  pattern: 0
   condition: 0
   _type: 12
   multispawns: 0
   startPos: {x: 0, y: 0}
   endPos: {x: 0, y: 0}
   random: 0
-  pos: {x: -36, y: -60}
+  pos: {x: -22, y: -104}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
-  scale: 1.5
+  scale: 1
   duration: 0
   defaultcolor: {r: 0, g: 0, b: 0, a: 0}
   activatedcolor: {r: 0, g: 0, b: 0, a: 0}
-  triggername: ArrowTrap
+  triggername: SpikesTrap
   ontrigger: 1
   damage: 1
-  quaternion: {x: 0, y: 0, z: 0.3826835, w: -0.9238795}
-  ranged: 1
-  horizontal: 1
-  flipped: 0
+  quaternion: {x: 0, y: 0, z: 0, w: 0}
+  ranged: 0
+  horizontal: 0
+  flip: 0
+  rangedDatas: []

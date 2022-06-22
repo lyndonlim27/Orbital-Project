@@ -2786,7 +2786,6 @@ GameObject:
   - component: {fileID: 4374332775865201398}
   - component: {fileID: 4374332775865201396}
   - component: {fileID: 4374332775865201291}
-  - component: {fileID: 5772658070408478858}
   - component: {fileID: 4374332775865201290}
   - component: {fileID: 2845914623627805895}
   - component: {fileID: 4374332775066565752}
@@ -2934,7 +2933,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDead: 0
   inAnimation: 0
-  playerData: {fileID: 11400000, guid: 52d3d41ae346c4067a279a5cac48cf9d, type: 2}
   maxMana: 0
   maxHealth: 0
   _moveSpeed: 0
@@ -2945,19 +2943,6 @@ MonoBehaviour:
   _gameOver: {fileID: 0}
   _healthBar: {fileID: 0}
   _manaBar: {fileID: 0}
---- !u!114 &5772658070408478858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4374332775865201289}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5b8fb87b4b7e43a5995853aafdc71ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: 867f4eeb-3649-4576-8597-652aa804f87b
 --- !u!95 &4374332775865201290
 Animator:
   serializedVersion: 4

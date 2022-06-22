@@ -28,7 +28,7 @@ public class NPCBehaviour : EntityBehaviour
         {
             animator.runtimeAnimatorController = Resources.Load($"Animations/AnimatorController/{data._animator}") as RuntimeAnimatorController;
         }
-        fulfilled = data.condition == 0;
+        fulfilled = data.prereq == null;
         
  
         
@@ -65,9 +65,9 @@ public class NPCBehaviour : EntityBehaviour
         animator.enabled = false;
         if (data.condition == 1)
         {
-            currentRoom.conditions.Remove(data._name);
+            currentRoom.conditions.Remove(data._name + data.GetInstanceID());
         }
-        
+        Debug.Log("Drop data = " + data.dropData[0]);
         currentRoom.SpawnObjects(data.dropData);
         
     }

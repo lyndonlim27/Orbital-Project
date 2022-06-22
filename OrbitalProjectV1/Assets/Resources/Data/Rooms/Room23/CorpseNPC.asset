@@ -14,11 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: CorpseNPC
   minDist: 2
-  sprite: {fileID: 21300000, guid: df89fee803a844dcda1cbfcf806db106, type: 3}
-  condition: 0
+  sprite: {fileID: 1846167563, guid: 40cc76fdfa03c415ea08bcd8fa3ec591, type: 3}
+  pattern: 0
+  condition: 1
   _type: 3
-  random: 1
-  pos: {x: 0, y: 0}
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
+  random: 0
+  pos: {x: -14.5, y: 5}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 1
@@ -26,3 +30,4 @@ MonoBehaviour:
   _animator: 
   dropData:
   - {fileID: 11400000, guid: 95699fdfdd44f44f48c605e5f16e09d7, type: 2}
+  noprerequisite: 1

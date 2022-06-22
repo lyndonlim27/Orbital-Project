@@ -30,7 +30,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     public MeleeComponent melee { get; protected set; }
     public RangedComponent ranged { get; protected set; }
     public Rigidbody2D rb { get; protected set; }
-    public Animator animator { get; protected set; }
+    //public Animator animator { get; protected set; }
     public bool insideStage2;
 
     public Vector2 roamPos { get; protected set; }
@@ -66,8 +66,6 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     {
         base.Awake();
         player = GameObject.FindObjectOfType<Player>(true);
-        animator = GetComponent<Animator>();
-        animator.keepAnimatorControllerStateOnDisable = false;
         melee = GetComponentInChildren<MeleeComponent>(true);
         ranged = GetComponentInChildren<RangedComponent>(true);
         _flicker = GameObject.FindObjectOfType<DamageFlicker>();
@@ -78,14 +76,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         
     }
 
-    public virtual void Start()
-    {
-       
-        maxDist = 100f;
-        
-    }
-
-    protected virtual void OnEnable()
+    protected override void OnEnable()
     {
         health = enemyData.words;
         isDead = false;
@@ -100,23 +91,20 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         light2D.color = spriteRenderer.color;
         light2D.pointLightOuterRadius = enemyData.scale * 2;
         insideStage2 = false;
+        maxDist = 15f;
         rb = GetComponentInParent<Rigidbody2D>();
         
         
     }
 
-    private void EnableAnimator()
+    protected override void EnableAnimator()
     {
         animator.enabled = true;
         animator.runtimeAnimatorController = Resources.Load(string.Format("Animations/AnimatorControllers/{0}", enemyData.animatorname)) as RuntimeAnimatorController;
-        
+
     }
 
-    private void DisableAnimator()
-    {
-        animator.enabled = false;
-        animator.runtimeAnimatorController = null;
-    }
+
 
     private void SettingUpColliders()
     {
@@ -590,12 +578,13 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     {
         Debug.Log("Dafuq?");
         animator.SetBool("isAlive", false);
+        body.enabled = false;
         StartCoroutine(FadeOut());
        
 
     }
 
-    protected override IEnumerator FadeOut()
+    public override IEnumerator FadeOut()
     {
         for (float f = 1f; f >= -0.05f; f -= 0.05f)
         {
@@ -635,7 +624,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     {
         //bool insidex = Mathf.Abs(_transform.position.x - currentRoom.GetRoomAreaBounds().max.x) > 2.5f && Mathf.Abs(_transform.position.x - currentRoom.GetRoomAreaBounds().min.x) > 2.5f;
         //bool insidey = Mathf.Abs(_transform.position.y - currentRoom.GetRoomAreaBounds().max.y) > 2.5f&& Mathf.Abs(_transform.position.y - currentRoom.GetRoomAreaBounds().min.y) > 2.5f;
-        Debug.Log("This is face" + facingRight);
+        //Debug.Log("This is face" + facingRight);
         if (transform.localScale.x > 0) // facing left, 
         {
             RaycastHit2D hit = Physics2D.Linecast(transform.position, new Vector2(transform.position.x + 12f, transform.position.y), LayerMask.GetMask("Obstacles"));
@@ -739,6 +728,18 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         ranged.ShootSingleSphere();
         
 
+    }
+
+    public override void Freeze()
+    {
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        animator.speed = 0;
+    }
+
+    public override void UnFreeze()
+    {
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        animator.speed = 1;
     }
 
     //public void CastSpell()
