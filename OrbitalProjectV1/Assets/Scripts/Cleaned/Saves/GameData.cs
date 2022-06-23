@@ -27,6 +27,7 @@ public class GameData
     public string buffDataName;
     public string attackDataName;
     public float moveSpeed;
+    public string currScene;
 
     /*
      * Room Data

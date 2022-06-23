@@ -324,6 +324,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
 
     public void LoadData(GameData data)
     {
+        Debug.Log("HELLPPPP");
         this._currHealth = data.currHealth;
         this.maxHealth = data.maxHealth;
         this.maxMana = data.maxMana;
@@ -364,6 +365,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         data.buffDataName = _buffData != null ? _buffData.skillName : null;
         data.attackDataName = _attackData != null ? _attackData.skillName : null;
         data.moveSpeed = this._moveSpeed;
+        data.currScene = SceneManager.GetActiveScene().name;
     }
 
     public void Freeze()
