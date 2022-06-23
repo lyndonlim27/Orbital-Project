@@ -26,7 +26,7 @@ public class StartButton : MonoBehaviour
     {
         if (_dataManager.loggedIn)
         {
-            FindObjectOfType<LoadProjConScene>().LoadScene();
+            FindObjectOfType<LoadScene>().LoadSceneFromData();
         }
         else
         {

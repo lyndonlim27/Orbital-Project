@@ -51,7 +51,7 @@ public class DataPersistenceManager : MonoBehaviour
     }
 
 
-    [ContextMenu("New Game")]
+
     public void NewGame()
     {
         this._gameData = new GameData();
@@ -83,6 +83,15 @@ public class DataPersistenceManager : MonoBehaviour
         PlayFabClientAPI.UpdateUserData(request, OnDataSend, OnError);
     }
 
+    public void ResetPassword()
+    {
+        var request = new SendAccountRecoveryEmailRequest
+        {
+            Email = GameObject.Find("Email").GetComponent<TMP_InputField>().text,
+            TitleId = "B1035"
+        };
+        PlayFabClientAPI.SendAccountRecoveryEmail(request, OnResetSuccess, OnErrorReset);
+    }
 
     private List<IDataPersistence> FindAllDataPersistenceObjects()
     {
@@ -91,7 +100,6 @@ public class DataPersistenceManager : MonoBehaviour
         return new List<IDataPersistence>(dataPersistences);
     }
 
-    [ContextMenu("Register")]
     public void Register()
     {
         var request = new RegisterPlayFabUserRequest
@@ -103,7 +111,6 @@ public class DataPersistenceManager : MonoBehaviour
         PlayFabClientAPI.RegisterPlayFabUser(request, OnRegisterSuccess, OnErrorRegister);
     }
 
-    [ContextMenu("Login")]
     public void Login()
     {
         var request = new LoginWithEmailAddressRequest
@@ -118,7 +125,14 @@ public class DataPersistenceManager : MonoBehaviour
 
     private void OnRegisterSuccess(RegisterPlayFabUserResult result)
     {
-        Debug.Log("Registered and logged in");
+        SaveGame();
+        //if (SceneManager.GetActiveScene().name == "MainMenu")
+        //{
+        //    FindObjectOfType<LoginMenu>(true).gameObject.SetActive(false);
+        _promptText.text = "Registered successfully. Please login now";
+        StartCoroutine(FlashPrompt());
+        //    LoadGame();
+        //}
     }
 
     private void OnLoginSuccess(LoginResult result)
@@ -134,21 +148,48 @@ public class DataPersistenceManager : MonoBehaviour
             Debug.Log("Logged in");
     }
 
+    private void OnResetSuccess(SendAccountRecoveryEmailResult result)
+    {
+        _promptText.text = "Password reset email sent!";
+        StartCoroutine(FlashPrompt());
+    }
+
+    private void OnErrorReset(PlayFabError error)
+    {
+        _promptText.text = "User does not exist";
+        StartCoroutine(FlashPrompt());
+    }
+
     private void OnErrorLogin(PlayFabError error)
     {
+
         _promptText.text = "Incorrect Email/Password";
         StartCoroutine(FlashPrompt());
     }
 
     private void OnErrorRegister(PlayFabError error)
     {
-        _promptText.text = "Invalid Email/Password must be 6 characters long";
+        //_promptText.text = "Email already exists or invalid/ Password must be 6 characters long";
+        Debug.Log(error.ToString());
+
+        if (error.ToString().Contains("exists"))
+        {
+            _promptText.text = "Email already exists" + "\n";
+        }
+        if (error.ToString().Contains("Email address is not valid"))
+        {
+            _promptText.text += "Email address is not valid" + "\n";
+        }
+        if(error.ToString().Contains("6 and 100"))
+        {
+            _promptText.text += "Password must be at least 6 characters long";
+        }
         StartCoroutine(FlashPrompt());
     }
 
     private void OnError(PlayFabError error)
     {
-        Debug.Log("Cant Load/Save");
+        Debug.Log("Erorr");
     }
 
     private void OnDataSend(UpdateUserDataResult result)
@@ -193,6 +234,7 @@ public class DataPersistenceManager : MonoBehaviour
         yield return new WaitForSeconds(1);
         _promptImage.enabled = false;
         _promptText.gameObject.SetActive(false);
+        _promptText.text = "";
     }
 
     [ContextMenu("Register")]

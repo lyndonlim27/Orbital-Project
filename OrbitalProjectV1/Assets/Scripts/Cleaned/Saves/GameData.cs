@@ -45,6 +45,11 @@ public class GameData
         this.currGold = 0;
         this.currWeapon = "Fists";
         this.currPos = Vector2.zero;
+        this.attackDataName = null;
+        this.buffDataName = null;
+        this.debuffDataName = null;
+        moveSpeed = 5;
+        currScene = "ProjectConceptScene3";
         this.rooms = new SerializableDictionary<string, bool>();
     }
 }

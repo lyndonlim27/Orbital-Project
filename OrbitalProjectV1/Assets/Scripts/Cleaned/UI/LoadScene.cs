@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LoadProjConScene : MonoBehaviour
+
+public class LoadScene : MonoBehaviour
 {
     private DataPersistenceManager _dataManager;
     private Canvas _canvas;
@@ -14,7 +15,7 @@ public class LoadProjConScene : MonoBehaviour
         DontDestroyOnLoad(this);
     }
 
-    public void LoadScene()
+    public void LoadSceneFromData()
     {
         _canvas.gameObject.SetActive(true);
         StartCoroutine(Load());
@@ -30,14 +31,10 @@ public class LoadProjConScene : MonoBehaviour
         }
         _dataManager.LoadGame();
         while (!_dataManager.loaded)
-        { 
+        {
             yield return null;
         }
         _canvas.gameObject.SetActive(false);
-        Destroy(this.gameObject);
-       // SceneManager.LoadScene("Assets/Scenes/"+ _dataManager.currScene + ".unity");
     }
-
-    
-
 }
+

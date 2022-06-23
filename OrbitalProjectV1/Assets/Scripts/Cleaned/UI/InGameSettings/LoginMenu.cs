@@ -18,6 +18,7 @@ public class LoginMenu : MonoBehaviour
         buttons = GetComponentsInChildren<Button>();
         buttons[0].onClick.AddListener(_dataManager.Login);
         buttons[1].onClick.AddListener(_dataManager.Register);
+        buttons[2].onClick.AddListener(_dataManager.ResetPassword);
         _eventSystem = EventSystem.current;
     }
 
