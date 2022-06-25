@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class Player : EntityBehaviour, IDataPersistence, Freezable
-{
+{   
 
     private Vector2 _movement;
     private Rigidbody2D _rb;
@@ -116,6 +116,8 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
             _timeDelay = 0;
         }
     }
+
+
 
     private void CheckCombat()
     {
@@ -329,6 +331,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
 
     public void LoadData(GameData data)
     {
+        Debug.Log("HELLPPPP");
         this._currHealth = data.currHealth;
         this.maxHealth = data.maxHealth;
         this.maxMana = data.maxMana;
@@ -354,6 +357,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         _healthBar.SetHealth(_currHealth);
         _manaBar.SetMana(currMana);
         _moveSpeed = data.moveSpeed;
+        ranged = data.ranged;
     }
 
     public void SaveData(ref GameData data)
@@ -369,6 +373,8 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         data.buffDataName = _buffData != null ? _buffData.skillName : null;
         data.attackDataName = _attackData != null ? _attackData.skillName : null;
         data.moveSpeed = this._moveSpeed;
+        data.currScene = SceneManager.GetActiveScene().name;
+        data.ranged = this.ranged;
     }
 
     public void Freeze()

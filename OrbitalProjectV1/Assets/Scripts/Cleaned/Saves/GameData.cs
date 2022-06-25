@@ -27,6 +27,8 @@ public class GameData
     public string buffDataName;
     public string attackDataName;
     public float moveSpeed;
+    public string currScene;
+    public bool ranged;
 
     /*
      * Room Data
@@ -44,6 +46,12 @@ public class GameData
         this.currGold = 0;
         this.currWeapon = "Fists";
         this.currPos = Vector2.zero;
+        this.attackDataName = null;
+        this.buffDataName = null;
+        this.debuffDataName = null;
+        moveSpeed = 5;
+        currScene = "ProjectConceptScene3";
+        this.ranged = true;
         this.rooms = new SerializableDictionary<string, bool>();
     }
 }
