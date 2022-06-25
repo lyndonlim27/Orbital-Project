@@ -15,7 +15,7 @@ public class DataPersistenceManager : MonoBehaviour
     private TextMeshProUGUI _promptText;
     public bool LoggedIn { get; private set;}
     public bool loaded;
-    public string CurrScene { get; private set; }
+    public string currScene;
 
     [Header("for testing")]
     [SerializeField] private string _email;
@@ -286,7 +286,7 @@ public class DataPersistenceManager : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
             GameData loadedData = JsonUtility.FromJson<GameData>(result.Data["Player"].Value);
-            CurrScene = loadedData.currScene;
+            currScene = loadedData.currScene;
         }
         else
         {
@@ -301,7 +301,7 @@ public class DataPersistenceManager : MonoBehaviour
     private IEnumerator LoadCoroutine(GetUserDataResult result)
     {
         GameData loadedData = JsonUtility.FromJson<GameData>(result.Data["Player"].Value);
-        CurrScene = loadedData.currScene;
+        currScene = loadedData.currScene;
         _dataPersistences = FindAllDataPersistenceObjects();
         foreach (IDataPersistence dataPersistence in _dataPersistences)
         {
@@ -363,7 +363,6 @@ public class DataPersistenceManager : MonoBehaviour
         };
         PlayFabClientAPI.LoginWithEmailAddress(request, OnLoginSuccess, OnError);
     }
-
 
 }
 

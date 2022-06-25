@@ -21,7 +21,7 @@ public class LoadProjConScene : MonoBehaviour
     }
     public IEnumerator Load()
     {
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Assets/Scenes/" + _dataManager.CurrScene + ".unity");
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Assets/Scenes/" + _dataManager.currScene + ".unity");
 
         // Wait until the asynchronous scene fully loads
         while (!asyncLoad.isDone)

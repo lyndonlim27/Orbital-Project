@@ -20,9 +20,9 @@ public class LoadScene : MonoBehaviour
         _canvas.gameObject.SetActive(true);
         StartCoroutine(Load());
     }
-    public IEnumerator Load()
+    private IEnumerator Load()
     {
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Assets/Scenes/" + _dataManager.CurrScene + ".unity");
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Assets/Scenes/" + _dataManager.currScene + ".unity");
 
         // Wait until the asynchronous scene fully loads
         while (!asyncLoad.isDone)
@@ -35,6 +35,33 @@ public class LoadScene : MonoBehaviour
             yield return null;
         }
         _canvas.gameObject.SetActive(false);
+    }
+
+    public void NextScene(string sceneName)
+    {
+        _canvas.gameObject.SetActive(true);
+        StartCoroutine(Next(sceneName));
+    }
+    private IEnumerator Next(string sceneName)
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Assets/Scenes/" + sceneName + ".unity");
+
+        // Wait until the asynchronous scene fully loads
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+        yield return StartCoroutine(SetPlayerStats());
+        _dataManager.SaveGame();
+        _canvas.gameObject.SetActive(false);
+    }
+
+    private IEnumerator SetPlayerStats()
+    {
+        Player player = FindObjectOfType<Player>(true);
+        player.AddHealth(1000);
+        player.AddMana(1000);
+        yield return null;
     }
 }
 
