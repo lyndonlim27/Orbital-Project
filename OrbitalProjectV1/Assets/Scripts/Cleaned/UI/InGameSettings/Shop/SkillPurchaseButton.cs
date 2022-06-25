@@ -17,11 +17,11 @@ public class SkillPurchaseButton : MonoBehaviour, IPointerEnterHandler, IPointer
     protected virtual void OnEnable()
     {
         player = FindObjectOfType<Player>();
+        shop = FindObjectOfType<Shop>(true);
     }
 
     protected virtual void Start()
     {
-        shop = FindObjectOfType<Shop>(true);
         spriteRenderer = GetComponent<SpriteRenderer>();
         _text = GetComponentInChildren<ToggleOnOff>(true);
         image = GetComponent<Image>();

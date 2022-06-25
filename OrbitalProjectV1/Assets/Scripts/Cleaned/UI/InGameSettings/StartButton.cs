@@ -24,7 +24,7 @@ public class StartButton : MonoBehaviour
 
     private void StartGame()
     {
-        if (_dataManager.loggedIn)
+        if (_dataManager.LoggedIn)
         {
             FindObjectOfType<LoadScene>().LoadSceneFromData();
         }

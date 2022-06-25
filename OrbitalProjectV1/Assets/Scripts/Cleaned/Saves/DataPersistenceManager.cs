@@ -13,9 +13,9 @@ public class DataPersistenceManager : MonoBehaviour
 {
     private Image _promptImage;
     private TextMeshProUGUI _promptText;
-    public bool loggedIn { get; private set;}
+    public bool LoggedIn { get; private set;}
     public bool loaded;
-    public string currScene { get; private set; }
+    public string CurrScene { get; private set; }
 
     [Header("for testing")]
     [SerializeField] private string _email;
@@ -25,21 +25,21 @@ public class DataPersistenceManager : MonoBehaviour
     private GameData _gameData;
     private List<IDataPersistence> _dataPersistences;
 
-    public static DataPersistenceManager instance { get; private set; }
+    public static DataPersistenceManager Instance { get; private set; }
 
     private void Awake()
     {
         DontDestroyOnLoad(this);
-        if (instance != null)
+        if (Instance != null)
         {
             Debug.LogError("Found more than one Data Persistence Manager in the scene. Please put only one data manager");
         }
-        instance = this;
+        Instance = this;
     }
 
     private void Start()
     {
-        loggedIn = false;
+        LoggedIn = false;
         loaded = false;
         Debug.Log(SceneManager.GetActiveScene().name);
         if (SceneManager.GetActiveScene().name == "MainMenu")
@@ -50,8 +50,20 @@ public class DataPersistenceManager : MonoBehaviour
         //LoadGame();
     }
 
+    /*
+     * Find all objects that inherits IDataPersistence (Saveable objects)
+     */
+    private List<IDataPersistence> FindAllDataPersistenceObjects()
+    {
+        IEnumerable<IDataPersistence> dataPersistences = FindObjectsOfType<MonoBehaviour>().OfType<IDataPersistence>();
+
+        return new List<IDataPersistence>(dataPersistences);
+    }
 
 
+    /*
+     * Creates new game data
+     */
     public void NewGame()
     {
         this._gameData = new GameData();
@@ -66,7 +78,7 @@ public class DataPersistenceManager : MonoBehaviour
     [ContextMenu("Save")]
     public void SaveGame()
     {
-        this._gameData = new GameData();
+       // this._gameData = new GameData();
         _dataPersistences = FindAllDataPersistenceObjects();
         foreach (IDataPersistence dataPersistence in _dataPersistences)
         {
@@ -83,30 +95,14 @@ public class DataPersistenceManager : MonoBehaviour
         PlayFabClientAPI.UpdateUserData(request, OnDataSend, OnError);
     }
 
-    public void ResetPassword()
-    {
-        var request = new SendAccountRecoveryEmailRequest
-        {
-            Email = GameObject.Find("Email").GetComponent<TMP_InputField>().text,
-            TitleId = "B1035"
-        };
-        PlayFabClientAPI.SendAccountRecoveryEmail(request, OnResetSuccess, OnErrorReset);
-    }
-
-    private List<IDataPersistence> FindAllDataPersistenceObjects()
-    {
-        IEnumerable<IDataPersistence> dataPersistences = FindObjectsOfType<MonoBehaviour>().OfType<IDataPersistence>();
-
-        return new List<IDataPersistence>(dataPersistences);
-    }
-
     public void Register()
     {
         var request = new RegisterPlayFabUserRequest
         {
             Email = GameObject.Find("Email").GetComponent<TMP_InputField>().text,
             Password = GameObject.Find("Password").GetComponent<TMP_InputField>().text,
-            RequireBothUsernameAndEmail = false 
+            DisplayName = GameObject.Find("Email").GetComponent<TMP_InputField>().text,
+            RequireBothUsernameAndEmail = false,
         };
         PlayFabClientAPI.RegisterPlayFabUser(request, OnRegisterSuccess, OnErrorRegister);
     }
@@ -115,29 +111,78 @@ public class DataPersistenceManager : MonoBehaviour
     {
         var request = new LoginWithEmailAddressRequest
         {
-            //Email = "hnghng127@gmail.com",
-            //Password = "123456"
             Email = GameObject.Find("Email").GetComponent<TMP_InputField>().text,
             Password = GameObject.Find("Password").GetComponent<TMP_InputField>().text,
         };
         PlayFabClientAPI.LoginWithEmailAddress(request, OnLoginSuccess, OnErrorLogin);
     }
 
-    private void OnRegisterSuccess(RegisterPlayFabUserResult result)
+    public void ResetPassword()
     {
-        SaveGame();
-        //if (SceneManager.GetActiveScene().name == "MainMenu")
-        //{
-        //    FindObjectOfType<LoginMenu>(true).gameObject.SetActive(false);
-        _promptText.text = "Registered successfully. Please login now";
-        StartCoroutine(FlashPrompt());
-        //    LoadGame();
-        //}
+        var request = new SendAccountRecoveryEmailRequest
+        {
+            Email = GameObject.Find("Email").GetComponent<TMP_InputField>().text,
+            TitleId = "B1035",
+        };
+        PlayFabClientAPI.SendAccountRecoveryEmail(request, OnResetSuccess, OnErrorReset);
     }
 
+    /*
+     * Set player class to assassin
+     */
+    public void SetAssassin()
+    {
+        NewGame();
+        this._gameData.ranged = false;
+        string dataToStore = JsonUtility.ToJson(_gameData, true);
+        var request = new UpdateUserDataRequest
+        {
+            Data = new Dictionary<string, string>
+            {
+                { "Player", dataToStore }
+            }
+        };
+        PlayFabClientAPI.UpdateUserData(request, OnDataSet, OnError);
+    }
+
+    /*
+     * Set player class to mage
+     */
+    public void SetMage()
+    {
+        NewGame();
+        this._gameData.ranged = true;
+        string dataToStore = JsonUtility.ToJson(_gameData, true);
+        var request = new UpdateUserDataRequest
+        {
+            Data = new Dictionary<string, string>
+            {
+                { "Player", dataToStore }
+            }
+        };
+        PlayFabClientAPI.UpdateUserData(request, OnDataSet, OnError);
+    }
+
+    /** On success methods **/
+
+    /*
+     * On registeration success show prompt text and show class selection
+     */
+    private void OnRegisterSuccess(RegisterPlayFabUserResult result)
+    {
+        LoggedIn = true;
+        FindObjectOfType<LoginMenu>(true).gameObject.SetActive(false);
+        _promptText.text = "Registered successfully";
+        StartCoroutine(FlashPrompt());
+        StartCoroutine(DelayActive());
+    }
+
+    /*
+     * On login success show prompt text
+     */
     private void OnLoginSuccess(LoginResult result)
     {
-        loggedIn = true;
+        LoggedIn = true;
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
             FindObjectOfType<LoginMenu>(true).gameObject.SetActive(false);
@@ -148,18 +193,31 @@ public class DataPersistenceManager : MonoBehaviour
             Debug.Log("Logged in");
     }
 
+    /*
+     * On registeration success show prompt text
+     */
     private void OnResetSuccess(SendAccountRecoveryEmailResult result)
     {
         _promptText.text = "Password reset email sent!";
         StartCoroutine(FlashPrompt());
     }
 
+    
+
+    /** On error methods **/
+
+    /*
+     * Error when sending reset email
+     */
     private void OnErrorReset(PlayFabError error)
     {
         _promptText.text = "User does not exist";
         StartCoroutine(FlashPrompt());
     }
 
+    /*
+     * Error when logging
+     */
     private void OnErrorLogin(PlayFabError error)
     {
 
@@ -167,6 +225,9 @@ public class DataPersistenceManager : MonoBehaviour
         StartCoroutine(FlashPrompt());
     }
 
+    /*
+     * Error when registeration
+     */
     private void OnErrorRegister(PlayFabError error)
     {
         //_promptText.text = "Email already exists or invalid/ Password must be 6 characters long";
@@ -187,22 +248,45 @@ public class DataPersistenceManager : MonoBehaviour
         StartCoroutine(FlashPrompt());
     }
 
+    /*
+     * Error
+     */
     private void OnError(PlayFabError error)
     {
-        Debug.Log("Erorr");
+        Debug.Log("Error");
     }
 
+
+    /** On success load/save methods **/
+
+    /*
+     * On data save success
+     */
     private void OnDataSend(UpdateUserDataResult result)
     {
         Debug.Log("Saved");
     }
+
+    /*
+     * On data set for registeration
+     */
+
+    private void OnDataSet(UpdateUserDataResult result)
+    {
+        LoadGame();
+        Debug.Log("Set new data");
+    }
+
+    /*
+     * On data load success
+     */
 
     private void OnDataLoad(GetUserDataResult result)
     {
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
             GameData loadedData = JsonUtility.FromJson<GameData>(result.Data["Player"].Value);
-            currScene = loadedData.currScene;
+            CurrScene = loadedData.currScene;
         }
         else
         {
@@ -211,11 +295,13 @@ public class DataPersistenceManager : MonoBehaviour
         }
     }
 
-
+    /*
+     * Initialise loading screen
+     */
     private IEnumerator LoadCoroutine(GetUserDataResult result)
     {
         GameData loadedData = JsonUtility.FromJson<GameData>(result.Data["Player"].Value);
-        currScene = loadedData.currScene;
+        CurrScene = loadedData.currScene;
         _dataPersistences = FindAllDataPersistenceObjects();
         foreach (IDataPersistence dataPersistence in _dataPersistences)
         {
@@ -224,9 +310,11 @@ public class DataPersistenceManager : MonoBehaviour
         }
         yield return new WaitForSeconds(0.5f);
         loaded = true;
-
     }
 
+    /*
+     * Flash text prompt based on login/register/reset status
+     */
     private IEnumerator FlashPrompt()
     {
         _promptImage.enabled = true;
@@ -237,6 +325,19 @@ public class DataPersistenceManager : MonoBehaviour
         _promptText.text = "";
     }
 
+    /*
+     * To show the select class option after prompt message
+     */
+    private IEnumerator DelayActive()
+    {
+        yield return new WaitForSeconds(1);
+        FindObjectOfType<SelectClass>(true).gameObject.SetActive(true);
+    }
+
+
+    /*
+     * For Testing
+     */
     [ContextMenu("Register")]
     public void TestingRegister()
     {
@@ -249,6 +350,9 @@ public class DataPersistenceManager : MonoBehaviour
         PlayFabClientAPI.RegisterPlayFabUser(request, OnRegisterSuccess, OnError);
     }
 
+    /*
+     * For Testing
+     */
     [ContextMenu("Login")]
     public void TestingLogin()
     {
@@ -259,6 +363,7 @@ public class DataPersistenceManager : MonoBehaviour
         };
         PlayFabClientAPI.LoginWithEmailAddress(request, OnLoginSuccess, OnError);
     }
+
 
 }
 

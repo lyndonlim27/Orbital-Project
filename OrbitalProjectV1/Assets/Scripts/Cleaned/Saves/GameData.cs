@@ -28,6 +28,7 @@ public class GameData
     public string attackDataName;
     public float moveSpeed;
     public string currScene;
+    public bool ranged;
 
     /*
      * Room Data
@@ -50,6 +51,7 @@ public class GameData
         this.debuffDataName = null;
         moveSpeed = 5;
         currScene = "ProjectConceptScene3";
+        this.ranged = true;
         this.rooms = new SerializableDictionary<string, bool>();
     }
 }

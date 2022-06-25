@@ -27,7 +27,6 @@ public class Shop : MenuBehaviour
         _promptText.text = "";
         _promptImage.gameObject.SetActive(false);
         _audioSource = GetComponent<AudioSource>();
-
     }
 
     // Update is called once per frame
