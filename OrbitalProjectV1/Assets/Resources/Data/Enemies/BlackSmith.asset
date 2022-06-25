@@ -29,12 +29,15 @@ MonoBehaviour:
   itemTextDatas: []
   ac_name: AC_BlackSmith
   _trigger: 
-  isAWeapon: 0
+  item_type: 0
+  secondarysprite: {fileID: 0}
+  description: 
   damageValue: 1
-  moveSpeed: 2
-  chaseSpeed: 3
+  moveSpeed: 4
+  chaseSpeed: 5
   attackRange: 1
   attackSpeed: 1
+  maxDist: 100
   meleetriggers:
   - NormalAttack
   - SpinAttack
@@ -44,10 +47,19 @@ MonoBehaviour:
   - ShootLaser
   dashattacks:
   - LeapAttack
+  - MultiAttack1
+  - JumpAttack
   rangedDatas:
   - {fileID: 11400000, guid: fd44465a58f324a7c916d0a7e9e2c9b4, type: 2}
+  bossdamageprops:
+  - {fileID: 11400000, guid: 63983a77f709d4e4989b4b21f2db0943, type: 2}
+  - {fileID: 11400000, guid: 2c769baa3e3ea452c93af53e6a962d15, type: 2}
+  - {fileID: 11400000, guid: fdb54340be0c54ceca8968363b8ad078, type: 2}
+  - {fileID: 11400000, guid: 5a0f2b4e1939b436191c8a0f8ee1cdc1, type: 2}
+  - {fileID: 11400000, guid: fa8c78dd72d514bcc9da2d1d016629e8, type: 2}
+  bossdefenceprops: []
   animatorname: AC_BlackSmith
-  words: 100
+  words: 10
   rangedcooldown: 2
   stage2: 1
   enragedColor: {r: 0.5568628, g: 0.32941177, b: 0.32941177, a: 1}

@@ -37,34 +37,57 @@ public class TrapActiveState : StateClass
         if (Time.time >= activatedTime + trap.trapData.duration)
         {
 
-            trap.animator.SetBool(trap.trapData.triggername, false);
-            trap.inAnimation = false;
-        }
+            //trap.animator.SetBool(trap.trapData.triggername, false);
+            //trap.inAnimation = false;
+            //trap.inAnimation = false;
+            stateMachine.ChangeState(StateMachine.STATE.TRAPINACTIVE, null);
+        } 
     }
 
     private void CheckForActivation()
     {
         if (!trap.inAnimation)
         {
-
             if (!trap.trapData.ontrigger)
             {
                 trap.inAnimation = true;
                 trap.animator.SetTrigger(trap.trapData.triggername);
-            }
-            
-            else if (trap.detectionScript.playerDetected)
-            {
-                trap.inAnimation = true;
-                trap.animator.SetTrigger(trap.trapData.triggername);
-
-                //activatedTime = Time.time;
-                //trap.animator.SetBool(trap.trapData.triggername, true);
-
-            } else
-            {
                 stateMachine.ChangeState(StateMachine.STATE.TRAPINACTIVE, null);
-                
+            }
+       
+            else {
+                if (trap.detectionScript.playerDetected)
+                {
+                    trap.inAnimation = true;
+                    trap.animator.SetTrigger(trap.trapData.triggername);
+                }
+                else
+                {
+                    stateMachine.ChangeState(StateMachine.STATE.TRAPINACTIVE, null);
+                }
+
+
+                    //CheckIfTrapExpired();
+
+
+                    //if (!trap.trapData.ontrigger)
+                    //{
+                    //    activatedTime = Time.time;
+                    //    trap.inAnimation = true;
+                    //    trap.animator.SetTrigger(trap.trapData.triggername);
+                    //}
+
+                    //else if (trap.detectionScript.playerDetected)
+                    //{
+                    //    trap.inAnimation = true;
+                    //    trap.animator.SetTrigger(trap.trapData.triggername);
+
+                    //activatedTime = Time.time;
+                    //trap.animator.SetBool(trap.trapData.triggername, true);
+
+
+
+
             }
         }
 

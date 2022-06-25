@@ -30,11 +30,14 @@ MonoBehaviour:
   ac_name: AC_OneStateRanged
   _trigger: 
   item_type: 3
+  secondarysprite: {fileID: 0}
+  description: 
   damageValue: 1
   moveSpeed: 3
   chaseSpeed: 4
   attackRange: 1
   attackSpeed: 1
+  maxDist: 15
   meleetriggers: []
   defends: []
   rangedtriggers:
@@ -43,7 +46,7 @@ MonoBehaviour:
   rangedDatas:
   - {fileID: 11400000, guid: 1fd8220190ddf4b02bd257a8bbf4c48a, type: 2}
   animatorname: AC_OneStateRanged
-  words: 100
-  rangedcooldown: 4
+  words: 1
+  rangedcooldown: 2
   stage2: 0
   enragedColor: {r: 0, g: 0, b: 0, a: 0}

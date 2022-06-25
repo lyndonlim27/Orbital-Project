@@ -38,13 +38,14 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     public Vector2 startingpos { get; protected set; }
     public Player player { get; protected set; }
     
-    protected bool facingRight;
-    private MonsterTextLogic tl;
+    public bool facingRight { get; protected set; }
+    protected MonsterTextLogic tl;
     protected Transform _transform;
     protected DamageFlicker _flicker;
     public DetectionScript detectionScript;
     private Light2D light2D;
     private CapsuleCollider2D body;
+    private LineController lineController;
 
     /** Pathfinding Movement
      * 
@@ -56,11 +57,17 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     private float lastRepath = float.NegativeInfinity;
     private float nextWaypointDistance = 1f;
     private bool reachedEndOfPath;
+    private Bounds bounds;
+    private Patterns patterns;
+    private int maxhealth;
+    
 
 
     [Header("Cooldowns")]
     [SerializeField] protected float Dashcooldown;
     [SerializeField] protected float cooldown;
+    [SerializeField] protected float healStagecooldown;
+    //[SerializeField] protected float 
 
     protected override void Awake()
     {
@@ -72,29 +79,64 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         seeker = GetComponent<Pathfinding.Seeker>();
         tl = GetComponentInChildren<MonsterTextLogic>(true);
         light2D = GetComponentInChildren<Light2D>(true);
-        
-        
+        patterns = Patterns.of(bounds.min, bounds.max);
+        lineController = GetComponentInChildren<LineController>(true);
+       
+
+
     }
 
     protected override void OnEnable()
     {
         health = enemyData.words;
+        maxhealth = enemyData.words;
         isDead = false;
-        _transform = transform.parent;
+        ResetTransform();
         DisableAnimator();
         SettingUpColliders();
-        EnableAnimator();
+        EnableAnimator(); 
+        _healthBar.SetMaxHealth(maxhealth);
         ranged.gameObject.SetActive(enemyData.rangedtriggers.Count > 0);
+        if (ranged.isActiveAndEnabled)
+        {
+            lineController.ResetLineRenderer();
+        }
         ranged.rangeds = enemyData.rangedDatas;
         melee.gameObject.SetActive(enemyData.meleetriggers.Count > 0);
         ResettingColor();
         light2D.color = spriteRenderer.color;
         light2D.pointLightOuterRadius = enemyData.scale * 2;
         insideStage2 = false;
-        maxDist = 15f;
+        maxDist = enemyData.maxDist;
         rb = GetComponentInParent<Rigidbody2D>();
+        healStagecooldown = 0;
         
-        
+
+    }
+
+    public void RegenHealth(int hp)
+    {
+        if (health + hp > maxhealth)
+        {
+            health = maxhealth;
+
+        }
+        else
+        {
+            health = Mathf.Min(health + hp, maxhealth);
+        }
+        _healthBar.SetHealth(health);
+    }
+
+    private void ResetTransform()
+    {
+        _transform = transform.parent;
+        facingRight = false;
+        RectTransform rect = _healthBar.GetComponent<RectTransform>();
+        float ratio = enemyData.scale / 5;
+        //rect.localPosition = new Vector3(rect.localPosition.x * ratio, rect.localPosition.y +ratio);
+        _healthBar.transform.localScale = new Vector2(1,1);
+        //tl.transform.localScale = new Vector2(ratio * 0.2f, ratio * 0.2f);
     }
 
     protected override void EnableAnimator()
@@ -108,18 +150,20 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     private void SettingUpColliders()
     {
-        Debug.Log(enemyData.sprite);
-        Debug.Log(enemyData.sprite.bounds.size);
         
         body = GetComponentInParent<CapsuleCollider2D>();
-        if (body!=null)
+        if (body != null)
         {
             body.size = enemyData.sprite.bounds.size * enemyData.scale;
             body.offset = new Vector2(0, 0);
             BoxCollider2D coll = melee.GetComponent<BoxCollider2D>();
             coll.size = new Vector2(enemyData.sprite.bounds.size.x * 0.8f, enemyData.sprite.bounds.size.y * 0.8f);
             coll.offset = new Vector2(0.2f, 0);
+            ranged.GetComponent<CircleCollider2D>().radius = enemyData.sprite.bounds.size.x * 6f;
+            detectionScript.GetComponent<CircleCollider2D>().radius = enemyData.sprite.bounds.size.x * 5f;
         }
+        
+    
         
     }
 
@@ -130,9 +174,8 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         
         animator.SetBool("isAlive", true);
         animator.SetBool("NotSpawned", true);
-        //_rb.WakeUp();
-        //transform.parent.position = transform.position;
-        //transform.position = Vector3.zero;
+
+        bounds = currentRoom.GetRoomAreaBounds();
         cooldown = 2.5f;
         startingpos = _transform.position;
         
@@ -148,6 +191,8 @@ public class EnemyBehaviour : ItemWithTextBehaviour
             return;
         }
         CheckForStage2();
+        CheckForHealStage();
+        CheckHealStageInteruption();
         stateMachine.Update();
         
         tick();
@@ -201,10 +246,10 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     public virtual void resetPosition()
     {
-        Debug.Log("entered");
+        
         if (animator.applyRootMotion == true)
         {
-            Debug.Log("Dafuq");
+            
             //_transform.position = transform.position;
             //transform.position = Vector3.zero;
             //if (transform.position.x > currentRoom.GetRoomAreaBounds().max.x || transform.position.y > currentRoom.GetRoomAreaBounds().max.y)
@@ -237,7 +282,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         inAnimation = false;
         //resetPosition();
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
-        Debug.Log(stateMachine.currState);
+        
     }
 
     public void getNewRoamPosition()
@@ -383,18 +428,31 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         Vector3 currentFace = transform.localScale;
         currentFace.x *= -1;
         transform.localScale = currentFace;
-        Vector3 _tf = tl.transform.localScale;
-        _tf.x *= -1;
-        tl.transform.localScale = _tf;
+        FlipTextLogic();
+        FlipHealthBar();
         facingRight = !facingRight;
 
+    }
+
+    private void FlipTextLogic()
+    {
+        if (tl != null)
+        {
+            Vector3 _tf = tl.transform.localScale;
+            _tf.x *= -1;
+            tl.transform.localScale = _tf;
+
+        }
+    }
+
+    private void FlipHealthBar()
+    {
         if (_healthBar != null)
         {
             Vector3 scaleHealthBar = _healthBar.transform.localScale;
             scaleHealthBar.x *= -1;
             _healthBar.transform.localScale = scaleHealthBar;
         }
-
     }
 
     //public void RotateTowardsTarget(Vector3 pos)
@@ -431,14 +489,70 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     public void CheckForStage2()
     {
-        if (!insideStage2 && enemyData.stage2 && health <= (0.5f * enemyData.words) &&!inAnimation)
+        bool canActivate = !insideStage2 && enemyData.stage2 && health <= (0.5f * maxhealth) && !inAnimation;
+        if (canActivate)
         {
             animator.SetTrigger("stage2intro");
             animator.SetBool("stage2", true);
+            SummonOffensiveProps();
             insideStage2 = true;
             spriteRenderer.material.color = enemyData.enragedColor;
             light2D.color = enemyData.enragedColor;
         }
+    }
+
+    private void SummonOffensiveProps()
+    {
+        currentRoom.SpawnObjects(enemyData.bossdamageprops.ToArray());
+        
+    }
+
+    private void SummonDefensiveProps()
+    {
+        currentRoom.SpawnObjects(enemyData.bossdefenceprops.ToArray());
+    }
+
+    private void SummonFodders()
+    {
+        currentRoom.SpawnObjects(enemyData.bossSummonprops.ToArray());
+    }
+
+    private void CheckForHealStage()
+    {
+        if (enemyData.healStage && health <= 0.5f * maxhealth && !inAnimation && currstate != StateMachine.STATE.RECOVERY)
+        {
+            animator.SetTrigger("Heal");
+            inAnimation = true;
+            LockMovement();
+            SummonDefensiveProps();
+            SummonFodders();
+            DisableAttackComps();
+            stateMachine.ChangeState(StateMachine.STATE.RECOVERY, null);
+        }
+    }
+
+    private void CheckHealStageInteruption()
+    {
+        if (currstate == StateMachine.STATE.RECOVERY)
+        {
+            bool interupted = currentRoom.conditionSize == 0 || health == maxhealth;
+            if (interupted)
+            {
+                UnlockMovement();
+                EnableAttackComps();
+                currentRoom.DestroyAllFodders();
+                currentRoom.DestroyBossProps();
+                stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+                animator.ResetTrigger("Heal");
+                inAnimation = false;
+                resetHealingCooldown();
+            }
+        }
+    }
+
+    private void resetHealingCooldown()
+    {
+        healStagecooldown = 40f;
     }
 
     public void meleeAttack()
@@ -461,7 +575,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         }
         catch (System.NullReferenceException)
         {
-            Debug.Log("No weapon detected");
+            
         }
     }
 
@@ -474,7 +588,8 @@ public class EnemyBehaviour : ItemWithTextBehaviour
                 flipFace(player.transform.position);
                 break;
             case ANIMATION_CODE.ATTACK_END:
-                
+
+                UnlockMovement();
                 resetPosition();
                 inAnimation = false;
                 stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
@@ -487,19 +602,21 @@ public class EnemyBehaviour : ItemWithTextBehaviour
             case ANIMATION_CODE.SHOOT_START:
                 //animator.applyRootMotion = false;
                 flipFace(player.transform.position);
-                if (insideStage2)
-                {
-                    RandomShoot();
-                } else
-                {
-                    Shoot();
-                }
+                //if (insideStage2)
+                //{
+                //    RandomShoot();
+                //} else
+                //{
+                //    Shoot();
+                //}
+                Shoot();
                 resetPosition();
 
                 break;
             case ANIMATION_CODE.CAST_END:
                 //resetCooldown();
                 //resetPosition();
+                UnlockMovement();
                 resetPosition();
                 resetCooldown();
                 //inAnimation = false;
@@ -511,14 +628,58 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         }
     }
 
+    public void LockMovement()
+    {
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;
+    }
+
+    public void UnlockMovement()
+    {
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+    }
+
     private void SpellAttack()
     {
-        ranged.SpellAttackSingle();
+        if (insideStage2)
+        {
+            ranged.SpellAttackMultiple();
+        } else
+        {
+            ranged.SpellAttackSingle();
+        }
+        
     }
 
     private void Shoot()
     {
-        ranged.ShootSingle();
+        if (insideStage2)
+        {
+            int rand = Random.Range(0, 2);
+            if (rand == 1)
+            {
+                ranged.LaserAttack();
+            } else
+            {
+                RandomShoot();
+            }
+            
+            //EnemyData.PATTERN pATTERN = (EnemyData.PATTERN)Random.Range(0, (int)EnemyData.PATTERN.COUNT);
+            //List<Vector2> points = patterns.RandomPattern(pATTERN);
+            //ranged.ShootRandomPattern(points);
+        } else
+        {
+            ranged.ShootSingle();
+        }
+        
+    }
+
+    public void RandomShoot()
+    {
+
+
+        ranged.ShootSingleSphere();
+
+
     }
 
     public override void TakeDamage(int damage)
@@ -528,6 +689,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         //Debug.Log(health);
         _flicker.Flicker(this);
         base.TakeDamage(damage);
+        _healthBar.SetHealth(health);
         animator.SetTrigger("Hurt");
     }
 
@@ -537,7 +699,6 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         GameObject corpse = new GameObject("Corpse");
         SpriteRenderer corpseRenderer = corpse.AddComponent<SpriteRenderer>();
         var sprite = Resources.Load<Sprite>("Sprites/corpse");
-        Debug.Log(sprite);
         corpseRenderer.sprite = sprite;
         corpse.transform.position = animator.transform.position;
         corpse.layer = 1;
@@ -576,7 +737,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     
     public override void Defeated()
     {
-        Debug.Log("Dafuq?");
+        
         animator.SetBool("isAlive", false);
         body.enabled = false;
         StartCoroutine(FadeOut());
@@ -628,26 +789,10 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         if (transform.localScale.x > 0) // facing left, 
         {
             RaycastHit2D hit = Physics2D.Linecast(transform.position, new Vector2(transform.position.x + 12f, transform.position.y), LayerMask.GetMask("Obstacles"));
-            if (hit)
-            {
-                Debug.Log("Check inside room hit "+ hit.collider);
-            } else
-            {
-                Debug.Log("Nothing hit");
-            }
-
             return !hit;
         } else
         {
             RaycastHit2D hit = Physics2D.Linecast(transform.position, new Vector2(transform.position.x - 12f, transform.position.y), LayerMask.GetMask("Obstacles"));
-            if (hit)
-            {
-                Debug.Log("Check inside room hit " + hit.collider);
-            }
-            else
-            {
-                Debug.Log("Nothing hit");
-            }
             return !hit;
         }
     }
@@ -721,14 +866,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     }
 
 
-    public void RandomShoot()
-    {
-        
-
-        ranged.ShootSingleSphere();
-        
-
-    }
+    
 
     public override void Freeze()
     {

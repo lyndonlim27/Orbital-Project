@@ -49,17 +49,17 @@ public class NPCRoom_Mgr : RoomManager
 
     }
 
-    protected void CheckNPCPrereq()
-    {
-        foreach (NPCBehaviour npc in npcs)
-        {
-            NPCData _data = npc.GetData() as NPCData;
-            if (!conditions.Contains(_data.prereq._name + _data.prereq.GetInstanceID()))
-            {
-                npc.Proceed();
-            }
-        }
-    }
+    //protected void CheckNPCPrereq()
+    //{
+    //    foreach (NPCBehaviour npc in npcs)
+    //    {
+    //        NPCData _data = npc.GetData() as NPCData;
+    //        if (!conditions.Contains(_data.prereq._name + _data.prereq.GetInstanceID()))
+    //        {
+    //            npc.Proceed();
+    //        }
+    //    }
+    //}
 
 
     protected override void CheckRunningEvents()

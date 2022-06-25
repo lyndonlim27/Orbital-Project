@@ -4,5 +4,10 @@ using UnityEngine;
 
 public class SaveRoom_Mgr : RoomManager
 {
-   
+    protected override void Update()
+    {
+        base.Update();
+        RoomChecker();
+        CheckRunningEvents();
+    }
 }

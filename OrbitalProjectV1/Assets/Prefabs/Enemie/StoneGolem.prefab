@@ -226,14 +226,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c9b809ce1a14c64bada2deeb29847e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentRoom: {fileID: 0}
   isDead: 0
   inAnimation: 0
   data: {fileID: 0}
   consumableItemDatas: []
   _healthBar: {fileID: 0}
   enemyData: {fileID: 11400000, guid: 7c18992022d21482285e42cae6d4a2cd, type: 2}
-  stage2: 0
+  currstate: 0
+  insideStage2: 0
   detectionScript: {fileID: 6762626419530351819}
+  Dashcooldown: 0
+  cooldown: 0
+  healStagecooldown: 0
   stageProp: {fileID: 4787399030627389434, guid: c7a80671574be4bad9fcf27d9c1d51c4, type: 3}
   propsData:
   - {fileID: 11400000, guid: 9cefff5005f2c4309ba081714b1a62dc, type: 2}
@@ -405,7 +410,7 @@ GameObject:
   - component: {fileID: 6762626420980749894}
   - component: {fileID: 7001249356972347236}
   m_Layer: 0
-  m_Name: Melee
+  m_Name: MeleeComponent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -509,7 +514,7 @@ GameObject:
   - component: {fileID: 6762626421026970672}
   - component: {fileID: 6762626421026970673}
   m_Layer: 0
-  m_Name: Ranged
+  m_Name: RangedComponent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

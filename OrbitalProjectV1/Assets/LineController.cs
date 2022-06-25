@@ -9,11 +9,13 @@ public class LineController : MonoBehaviour
     LineRenderer lineRenderer;
     Transform origin;
     [SerializeField] private LayerMask layerMask;
+    EnemyBehaviour parent;
     float duration;
 
     private void Awake()
     {
-        lineRenderer = GetComponent<LineRenderer>(); 
+        lineRenderer = GetComponent<LineRenderer>();
+        parent = GetComponentInParent<EnemyBehaviour>();
     }
 
     private void Start()
@@ -21,6 +23,11 @@ public class LineController : MonoBehaviour
         lineRenderer.enabled = false;
         lineRenderer.useWorldSpace = false;
         origin = transform;
+    }
+
+    private void OnDisable()
+    {
+        ResetLineRenderer();
     }
 
     public IEnumerator AnimateLine()
@@ -31,8 +38,6 @@ public class LineController : MonoBehaviour
         {
             lineRenderer.enabled = true;
             float startTime = Time.time;
-            Debug.DrawLine(transform.localPosition, hit.point);
-            Debug.Log(hit.collider);
             Vector2 pos = transform.localPosition;
             float startRotation = transform.eulerAngles.y;
             float endRotation = startRotation + 360.0f;
@@ -57,7 +62,7 @@ public class LineController : MonoBehaviour
                 lineRenderer.SetPosition(1, hit.point);
                 yield return null;
             }
-            //this.enabled = false;
+
             ResetLineRenderer();
         }
     }
@@ -66,7 +71,7 @@ public class LineController : MonoBehaviour
     {
         if (hit)
         {
-            Player player = hit.collider.GetComponentInChildren<Player>();
+            Player player = hit.collider.GetComponent<Player>();
             if (player != null)
             {
                 player.TakeDamage(3);
@@ -75,11 +80,12 @@ public class LineController : MonoBehaviour
         
     }
 
-    private void ResetLineRenderer()
+    public void ResetLineRenderer()
     {
         lineRenderer.enabled = false;
-        //GetComponentInParent<RangedComponent>().parent.resetCooldown();
         lineRenderer.SetPosition(1, new Vector2(0, 0));
         transform.rotation = Quaternion.identity;
+        parent.resetCooldown();
+        parent.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
     }
 }

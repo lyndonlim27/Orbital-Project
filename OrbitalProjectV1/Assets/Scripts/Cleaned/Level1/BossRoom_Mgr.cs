@@ -7,10 +7,7 @@ public class BossRoom_Mgr : RoomManager
     protected override void Update()
     {
         base.Update();
-
-        //if (enemies[0].insideStage2)
-        //{
-            
-        //}
+        RoomChecker();
+        CheckRunningEvents();
     }
 }

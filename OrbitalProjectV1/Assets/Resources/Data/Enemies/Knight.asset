@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Knight
   m_EditorClassIdentifier: 
   _name: Knight
-  minDist: 10
+  minDist: 5
   sprite: {fileID: -723318249, guid: 1c1a112a27bbd43b0839e41a4f0a1040, type: 3}
   pattern: 0
   condition: 0
@@ -29,12 +29,15 @@ MonoBehaviour:
   itemTextDatas: []
   ac_name: AC_Knight
   _trigger: 
-  isAWeapon: 0
+  item_type: 0
+  secondarysprite: {fileID: 0}
+  description: 
   damageValue: 10
-  moveSpeed: 1
-  chaseSpeed: 1
+  moveSpeed: 3
+  chaseSpeed: 4
   attackRange: 1
   attackSpeed: 1
+  maxDist: 15
   meleetriggers:
   - Melee1
   - Melee2

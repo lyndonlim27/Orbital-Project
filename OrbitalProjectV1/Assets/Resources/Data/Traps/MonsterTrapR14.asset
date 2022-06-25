@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Chest
   minDist: 3
-  sprite: {fileID: 1533358200, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
+  sprite: {fileID: 1616055449, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
   pattern: 0
   condition: 1
   _type: 4
@@ -25,12 +25,14 @@ MonoBehaviour:
   pos: {x: 62, y: -67}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
-  scale: 3
+  scale: 1.5
   itemTextDatas:
   - {fileID: 11400000, guid: e2ba91a99bfb84c05b594010d3bf8927, type: 2}
   - {fileID: 11400000, guid: 97f7cb48e946b40f7812bd1a12e17289, type: 2}
   - {fileID: 11400000, guid: 73f722faef2ce453e8d41437bb6b2083, type: 2}
   - {fileID: 11400000, guid: e2ba91a99bfb84c05b594010d3bf8927, type: 2}
   ac_name: Chest
-  _trigger: Open
-  isAWeapon: 0
+  _trigger: defaultOpen
+  item_type: 2
+  secondarysprite: {fileID: 0}
+  description: Surprise

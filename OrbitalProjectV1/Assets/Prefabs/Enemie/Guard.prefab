@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6741073404643878710}
   - component: {fileID: 4431353508152069340}
   - component: {fileID: 6782388487811097132}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Guard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,14 +120,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e626cd40a81444e36920c0eee511c906, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentRoom: {fileID: 0}
   isDead: 0
   inAnimation: 0
   data: {fileID: 0}
   consumableItemDatas: []
   _healthBar: {fileID: 0}
   enemyData: {fileID: 11400000, guid: b378410b27ba6431fb8a1c0aaec55249, type: 2}
-  stage2: 0
+  currstate: 0
+  insideStage2: 0
   detectionScript: {fileID: 7285576144356060932}
+  Dashcooldown: 0
+  cooldown: 0
+  healStagecooldown: 0
 --- !u!60 &6782388487811097132
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -193,7 +198,7 @@ GameObject:
   - component: {fileID: 7285576144356060933}
   - component: {fileID: 7285576144356060932}
   - component: {fileID: 9082538028667299397}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Detection
   m_TagString: Untagged
   m_Icon: {fileID: 0}

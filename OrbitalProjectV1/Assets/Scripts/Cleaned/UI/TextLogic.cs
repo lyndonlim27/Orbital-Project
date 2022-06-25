@@ -13,7 +13,7 @@ using System.Linq;
 public abstract class TextLogic : MonoBehaviour
 {
     
-    public TextMeshPro Textdisplayer { get; protected set; }
+    public TextMeshProUGUI Textdisplayer { get; protected set; }
     protected Player player;
     public string remainingword { get; protected set; } 
     public string currentword { get; protected set; }
@@ -28,9 +28,9 @@ public abstract class TextLogic : MonoBehaviour
      */
     protected virtual void Awake()
     {
-        Textdisplayer = GetComponent<TextMeshPro>();
+        Textdisplayer = GetComponent<TextMeshProUGUI>();
         player = GameObject.FindObjectOfType<Player>(true);
-        parent = this.gameObject.transform.parent.GetComponent<EntityBehaviour>();
+        parent = GetComponentInParent<EntityBehaviour>();
         InstantiateAudio();
         //Textdisplayer.alignment = TextAlignmentOptions.Center;
 
@@ -46,11 +46,15 @@ public abstract class TextLogic : MonoBehaviour
 
     protected virtual void OnEnable()
     {
-        Textdisplayer.enabled = !outOfRange() && !parent.isDead;
+        if (parent != null)
+        {
+            Textdisplayer.enabled = !outOfRange() && !parent.isDead;
+            minDist = parent.GetData().minDist;
+        }
         remainingword = "";
         GenerateNewWord();
         //InstantiateAudio();
-        minDist = parent.GetData().minDist;
+        
     }
 
     protected void InstantiateAudio()
@@ -142,12 +146,23 @@ public abstract class TextLogic : MonoBehaviour
             if (isWordComplete())
             {
                 PerformAction();
-                if (!parent.isDead)
+                ResetCounter();
+                if (parent != null)
+                {
+                    if (parent.isDead)
+                    {
+                        return;
+                    } else
+                    {
+                        GenerateNewWord();
+                    }
+                    
+                } else
                 {
                     GenerateNewWord();
                 }
                 
-                ResetCounter();
+                
                 
                 
             }

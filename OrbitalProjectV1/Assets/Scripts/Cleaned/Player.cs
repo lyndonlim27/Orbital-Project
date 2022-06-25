@@ -23,6 +23,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     private DamageFlicker _flicker;
     private GoldCounter _goldCounter;
     public int currGold { get; private set;}
+    
 
     private bool _invulnerable;
 
@@ -42,6 +43,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     [SerializeField] private BuffData _buffData;
     [SerializeField] private DebuffData _debuffData;
     [SerializeField] private AttackData _attackData;
+    
 
 
     [Header("Player UI")]
@@ -67,7 +69,8 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     {
         currGold = 100;
         currMana = maxMana;
-        _currHealth = maxHealth;
+        //_currHealth = maxHealth;
+        _currHealth = 100;
         _healthBar.SetMaxHealth(maxHealth);
         _manaBar.SetMaxMana(maxMana);
         _rb = GetComponent<Rigidbody2D>();
@@ -96,7 +99,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         {
             Defeated();
         }
-
+       
         _currWeapon = _weaponManager.ActiveWeapon().GetComponent<Weapon>();
 
         CheckCombat();
@@ -162,13 +165,15 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
 
     public void AddHealth(int health)
     {
-      if(_currHealth + health > maxHealth)
+        
+        if (_currHealth + health > maxHealth)
         {
             _currHealth = maxHealth;
+            
         }
         else
         {
-            _currHealth = Math.Min(_currHealth + health, 100);
+            _currHealth = Math.Min(_currHealth + health, maxHealth);
         }
         _healthBar.SetHealth(_currHealth);
     }

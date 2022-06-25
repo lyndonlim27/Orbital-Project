@@ -23,18 +23,20 @@ public class EntityData : ScriptableObject
         PROJECTILE,
         CONSUMABLE_ITEM,
         TRAP,
-        PUZZLEBOX
+        PUZZLEBOX,
+        FODDER,
     }
     public enum PATTERN
     {
         SIMPLE_DIAG,
-        ZIG_ZAG,
+        //ZIG_ZAG,
         CROSS,
-        CIRCLE,
+        //CIRCLE,
         BOX_LINE,
         PATTERN1,
         PATTERN2,
-        PATTERN3
+        PATTERN3,
+        COUNT
     }
     public PATTERN pattern;
     public int condition;
@@ -47,4 +49,8 @@ public class EntityData : ScriptableObject
     public GameObject damageFlicker;
     public bool spawnAtStart;
     public float scale;
+    public bool staggered;
+    public float staggerTime;
+    public float duration;
+    public Color defaultcolor;
 }

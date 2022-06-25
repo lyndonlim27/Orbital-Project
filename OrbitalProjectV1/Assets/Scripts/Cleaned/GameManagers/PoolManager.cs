@@ -61,14 +61,15 @@ public class PoolManager : MonoBehaviour
         ranged.TargetEntity(target);
         ranged.SetEntityStats(rangedData);
         ranged.GetComponent<SpriteRenderer>().sprite = rangedData.sprite;
-        if (rangedData._type == EntityData.TYPE.PROJECTILE)
-        {
-            ranged.transform.SetParent(null);
-        }
-        else
-        {
-            ranged.transform.SetParent(go.transform);
-        }
+        ranged.transform.SetParent(null);
+        //if (rangedData._type == EntityData.TYPE.PROJECTILE)
+        //{
+        //    ranged.transform.SetParent(null);
+        //}
+        //else
+        //{
+        //    ranged.transform.SetParent(go.transform);
+        //}
 
 
         return ranged;
@@ -95,17 +96,23 @@ public class PoolManager : MonoBehaviour
                 Debug.Log("entered");
                 Debug.Log(entity);
                 ObjectPool<EntityBehaviour> pool = new ObjectPool<EntityBehaviour>(() => CreatePooledEntity(entity),
-                OnGetEntity, OnReleaseEntity, OnDestroyEntity, false, 100, 1000);
+                OnGetEntity, OnReleaseEntity, OnDestroyEntity, false, 200, 1000);
                 Debug.Log(pool.CountAll);
                 objectPools.Add(EntityData.TYPE.CAST_ONTARGET, pool);
                 objectPools.Add(EntityData.TYPE.CAST_SELF, pool);
                 objectPools.Add(EntityData.TYPE.PROJECTILE, pool);
             }
-            else
+            else if (entity.GetType() == typeof(ItemWithTextBehaviour)) 
             {
-                Debug.Log(entity.GetData()._type);
+
+                ObjectPool<EntityBehaviour> pool = new ObjectPool<EntityBehaviour>(() => CreatePooledEntity(entity),
+                OnGetEntity, OnReleaseEntity, OnDestroyEntity, false, 100, 500);
+                objectPools.Add(EntityData.TYPE.ITEM, pool);
+                objectPools.Add(EntityData.TYPE.BOSSPROPS, pool);
+            } else
+            {
                 objectPools.Add(entity.GetData()._type, new ObjectPool<EntityBehaviour>(() => CreatePooledEntity(entity),
-                OnGetEntity, OnReleaseEntity, OnDestroyEntity, false, 10, 50));
+                OnGetEntity, OnReleaseEntity, OnDestroyEntity, false, 100, 500));
             }
 
         }

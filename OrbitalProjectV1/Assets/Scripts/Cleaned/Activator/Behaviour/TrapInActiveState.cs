@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class TrapInActiveState : StateClass
 {
+    private float enteredTime;
     public TrapInActiveState(TrapBehaviour entity, StateMachine stateMachine) : base(entity, stateMachine)
     {
 
@@ -11,6 +13,8 @@ public class TrapInActiveState : StateClass
 
     public override void Enter(object stateData)
     {
+        enteredTime = Time.time;
+        
         CheckIfActivated();
     }
 
@@ -31,15 +35,76 @@ public class TrapInActiveState : StateClass
 
     private void CheckIfActivated()
     {
+        //bool canActivate = Time.time > enteredTime + trap.trapData.duration;
+        //if ((trap.detectionScript.playerDetected && canActivate) || !trap.trapData.ontrigger)
+        //{
+        //    stateMachine.ChangeState(StateMachine.STATE.TRAPACTIVE, null);
+        //}
+        /** Original
+        //if (trap.detectionScript.playerDetected || !trap.trapData.ontrigger)
+        //{
+        //    stateMachine.ChangeState(StateMachine.STATE.TRAPACTIVE, null);
+        //}
+        //else
+        //{
+        //    trap.animator.enabled = false;
+        //    trap.spriteRenderer.sprite = null;
+        //}
 
-        if (trap.detectionScript.playerDetected || !trap.trapData.ontrigger)
+        **/
+
+        bool canActivate = Time.time >= enteredTime + trap.trapData.duration;
+        if (!trap.trapData.ontrigger)
         {
-            stateMachine.ChangeState(StateMachine.STATE.TRAPACTIVE, null);
-        }
-        else
+            if (canActivate)
+            {
+                stateMachine.ChangeState(StateMachine.STATE.TRAPACTIVE, null);
+            } else
+            {
+                trap.animator.enabled = trap.inAnimation;
+                trap.spriteRenderer.sprite = null;
+            }
+        } else
         {
-            trap.animator.enabled = false;
-            trap.spriteRenderer.sprite = null;
+            if (trap.detectionScript.playerDetected)
+            {
+                stateMachine.ChangeState(StateMachine.STATE.TRAPACTIVE, null);
+            } else
+            {
+                trap.animator.enabled = trap.inAnimation;
+                trap.spriteRenderer.sprite = null;
+            }
         }
+
+
+        //if (trap.trapData.ontrigger)
+        //{
+        //    if (trap.detectionScript.playerDetected)
+        //    {
+        //        stateMachine.ChangeState(StateMachine.STATE.TRAPACTIVE, null);
+        //    } else
+        //    {
+        //        trap.animator.enabled = false;
+        //        trap.spriteRenderer.sprite = null;
+        //    }
+
+        //}
+        //else
+        //{
+        //    if (canActivate)
+        //    {
+        //        stateMachine.ChangeState(StateMachine.STATE.TRAPACTIVE, null);
+        //    } else
+        //    {
+        //        trap.animator.enabled = false;
+        //        trap.spriteRenderer.sprite = null;
+        //    }
+            
+        //}
+    }
+
+    private void tick()
+    {
+        
     }
 }

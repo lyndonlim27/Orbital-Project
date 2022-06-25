@@ -13,27 +13,43 @@ MonoBehaviour:
   m_Name: ForestArcher
   m_EditorClassIdentifier: 
   _name: ForestArcher
-  minDist: 4
+  minDist: 8
   sprite: {fileID: -1943885830, guid: afd163eebdc4c4c0dbe4ef8acf43cbf1, type: 3}
+  pattern: 0
   condition: 0
   _type: 5
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
   random: 1
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
-  scale: 2
+  scale: 5
+  itemTextDatas: []
+  ac_name: 
+  _trigger: 
+  item_type: 0
+  secondarysprite: {fileID: 0}
+  description: 
   damageValue: 1
-  moveSpeed: 1
-  chaseSpeed: 1
+  moveSpeed: 3
+  chaseSpeed: 4
   attackRange: 1
   attackSpeed: 1
+  maxDist: 15
   meleetriggers:
   - Melee1
-  - Melee2
   defends:
   - Dash
   - Jump
-  rangedtriggers: []
+  rangedtriggers:
+  - Melee2
+  dashattacks: []
+  rangedDatas:
+  - {fileID: 11400000, guid: 1fd8220190ddf4b02bd257a8bbf4c48a, type: 2}
   animatorname: AC_ForestArcher
   words: 1
   rangedcooldown: 2
+  stage2: 0
+  enragedColor: {r: 0, g: 0, b: 0, a: 0}

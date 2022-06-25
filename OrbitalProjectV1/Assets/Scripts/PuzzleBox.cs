@@ -60,6 +60,7 @@ public class PuzzleBox : ItemWithTextBehaviour
         {
             if (CheckInput())
             {
+                Debug.Log("???? lightsystem we correct");
                 lightSwitchSystem.Next();
             }
             else
@@ -97,27 +98,38 @@ public class PuzzleBox : ItemWithTextBehaviour
     {
         
         List<int> answer = lightSwitchSystem.GetCurrentSeq();
-        LetterSlotNoDnD[] guess = puzzleInputManager.GetCurrentGuess();
+        List<int> guess = new List<int>();
+
+        foreach(LetterSlotNoDnD slot in puzzleInputManager.GetCurrentGuess())
+        {
+            guess.Add(slot.currnum - 1);
+        }
+        puzzleInputManager.ResetGuess();
+
         if (guess != null)
         {
             //return false;
-            foreach (LetterSlotNoDnD d in guess)
-            {
-                Debug.Log("Current num is " + d.currnum);
-            }
+            
 
             for (int i = 0; i < answer.Count; i++)
             {
-                if (guess[i].currnum - 1 != answer[i])
+                
+                if (guess[i] != answer[i])
                 {
+                    
                     return false;
                 }
             }
-            puzzleInputManager.ResetGuess();
+
+            
             return true;
+        } else
+        {
+            
+            return false;
         }
-        puzzleInputManager.ResetGuess();
-        return false;
+
+        
         
     }
 

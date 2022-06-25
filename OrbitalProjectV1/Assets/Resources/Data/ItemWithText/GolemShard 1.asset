@@ -15,13 +15,24 @@ MonoBehaviour:
   _name: IS
   minDist: 3
   sprite: {fileID: 305096539, guid: 819aac2cc6d4642538dd542ed7ec2e6b, type: 3}
+  pattern: 0
   condition: 1
   _type: 6
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
   random: 0
-  pos: {x: -34, y: 45}
-  gold: 0
+  pos: {x: -106, y: -95}
   damageFlicker: {fileID: 0}
-  entityDatas: []
+  spawnAtStart: 1
+  scale: 2
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  itemTextDatas: []
   ac_name: AC_FloatingRock
   _trigger: 
-  isAWeapon: 0
+  item_type: 3
+  secondarysprite: {fileID: 0}
+  description: 

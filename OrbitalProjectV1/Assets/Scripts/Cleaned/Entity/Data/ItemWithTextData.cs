@@ -15,6 +15,9 @@ public class ItemWithTextData : EntityData
         CHEST,
         OTHERS,
         TOMB,
+        SAVEPOINT,
+        PUZZLETORCH,
+        BOSSPROPS
     }
     public ITEM_TYPE item_type;
     public Sprite secondarysprite;

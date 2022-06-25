@@ -15,19 +15,41 @@ MonoBehaviour:
   _name: Plant
   minDist: 5
   sprite: {fileID: -1089700377, guid: 8ef2e8c92b1154110b58fd44d3f620fb, type: 3}
+  pattern: 0
   condition: 0
-  _type: 5
-  random: 0
+  _type: 14
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
+  random: 1
   pos: {x: -27.8, y: 56}
   damageFlicker: {fileID: 672315831686351503, guid: 287fa61315c39429e8235e664399d8cc, type: 3}
+  spawnAtStart: 1
+  scale: 1.5
+  itemTextDatas: []
+  ac_name: 
+  _trigger: 
+  item_type: 0
+  secondarysprite: {fileID: 0}
+  description: 
   damageValue: 2
   moveSpeed: 0
   chaseSpeed: 0
   attackRange: 3
   attackSpeed: 1
+  maxDist: 0
   meleetriggers:
-  - Melee1
-  rangeds:
-  - {fileID: 0}
-  animatorname: 
-  words: 0
+  - Melee
+  defends: []
+  rangedtriggers: []
+  dashattacks: []
+  rangedDatas: []
+  bossdamageprops: []
+  bossSummonprops: []
+  bossdefenceprops: []
+  animatorname: AC_Guardian
+  words: 100
+  rangedcooldown: 0
+  stage2: 0
+  healStage: 0
+  enragedColor: {r: 0, g: 0, b: 0, a: 0}

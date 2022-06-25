@@ -8,7 +8,7 @@ using TMPro;
  */
 public class TextConverter : MonoBehaviour
 {
-    private TextMeshPro tmp;
+    private TextMeshProUGUI tmp;
     private TextLogic textlogic;
     private Dictionary<char, string> dict = new Dictionary<char, string>();
 
@@ -33,7 +33,7 @@ public class TextConverter : MonoBehaviour
 
         dict.Add(' ', " ");
         textlogic = GetComponent<TextLogic>();
-        tmp = GetComponent<TextMeshPro>();
+        tmp = GetComponent<TextMeshProUGUI>();
 
     }
 

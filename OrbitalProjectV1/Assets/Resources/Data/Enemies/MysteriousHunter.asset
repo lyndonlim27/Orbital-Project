@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MysteriousHunter
   m_EditorClassIdentifier: 
   _name: MysteriousHunter
-  minDist: 0
+  minDist: 5
   sprite: {fileID: -901612626, guid: e77c4e2b347224110a7619c180ce6f44, type: 3}
   pattern: 0
   condition: 0
@@ -21,30 +21,34 @@ MonoBehaviour:
   multispawns: 0
   startPos: {x: 0, y: 0}
   endPos: {x: 0, y: 0}
-  random: 0
+  random: 1
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
-  spawnAtStart: 0
+  spawnAtStart: 1
   scale: 5
   itemTextDatas: []
   ac_name: AC_MysteriousHunter
   _trigger: 
-  isAWeapon: 0
+  item_type: 0
+  secondarysprite: {fileID: 0}
+  description: 
   damageValue: 1
-  moveSpeed: 1
-  chaseSpeed: 1
+  moveSpeed: 3
+  chaseSpeed: 4
   attackRange: 1
   attackSpeed: 1
+  maxDist: 15
   meleetriggers:
   - Melee1
   defends:
   - Dash
   rangedtriggers:
   - MH_cast
+  dashattacks: []
   rangedDatas:
   - {fileID: 11400000, guid: 432e61bb89be5482d90ad22a96018b5e, type: 2}
   animatorname: AC_MysteriousHunter
-  words: 100
+  words: 1
   rangedcooldown: 4
   stage2: 0
   enragedColor: {r: 0, g: 0, b: 0, a: 0}

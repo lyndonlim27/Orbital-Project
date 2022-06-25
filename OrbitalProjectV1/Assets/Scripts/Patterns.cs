@@ -26,7 +26,7 @@ public class Patterns
         int j = (int)startPos.y;
         List<Vector2> points = new List<Vector2>();
         int k = n;
-        while(k-- > 0)
+        while (k-- > 0)
         {
             points.Add(new Vector2(i + k, j + k));
         }
@@ -46,10 +46,10 @@ public class Patterns
         //    i++;
         //}
         int k = n;
-        while (k-- >0)
+        while (k-- > 0)
         {
             points.Add(new Vector2(i + k, j + k));
-            points.Add(new Vector2(i + k, j + n - k ));
+            points.Add(new Vector2(i + k, j + n - k));
         }
 
         return new List<Vector2>(points);
@@ -71,7 +71,7 @@ public class Patterns
                 || i == n - 1 || j == n - 1
                 || i + j == n - 1)
                 {
-                    points.Add(new Vector2(k+i, g+j));
+                    points.Add(new Vector2(k + i, g + j));
                 }
             }
         }
@@ -86,7 +86,7 @@ public class Patterns
         int c1 = (n - 1) / 2;
 
         // For printing lower portion
-        int c2 = 3 * n  / 2 - 1;
+        int c2 = 3 * n / 2 - 1;
 
         // Loop denoting rows
         for (int i = 0; i < n; i++)
@@ -102,7 +102,7 @@ public class Patterns
                     || j - i == c1 || i + j == c2 ||
                     i == c1 || j == c1)
                 {
-                    points.Add(new Vector2(k+i, g+j));
+                    points.Add(new Vector2(k + i, g + j));
                 }
 
             }
@@ -144,9 +144,9 @@ public class Patterns
     public List<Vector2> Box()
     {
         List<Vector2> points = new List<Vector2>();
-        for (int i = (int)startPos.x; i <= (int) endPos.x; i++)
+        for (int i = (int)startPos.x; i <= (int)endPos.x; i++)
         {
-            for (int j = (int) startPos.y; j <= (int) endPos.y; j++)
+            for (int j = (int)startPos.y; j <= (int)endPos.y; j++)
             {
                 points.Add(new Vector2(i, j));
             }
@@ -154,6 +154,34 @@ public class Patterns
         return points;
     }
 
+    public List<Vector2> RandomPattern(EnemyData.PATTERN pattern)
+    {
+        List<Vector2> points;
+        switch (pattern)
+        {
+            default:
+            case EntityData.PATTERN.BOX_LINE:
+                points = this.Box();
+                break;
+            case EntityData.PATTERN.CROSS:
+                points = this.Cross();
+                break;
+            case EntityData.PATTERN.SIMPLE_DIAG:
+                points = this.Diagonal();
+                break;
+            case EntityData.PATTERN.PATTERN1:
+                points = this.Pattern1();
+                break;
+            case EntityData.PATTERN.PATTERN2:
+                points = this.Pattern2();
+                break;
+            case EntityData.PATTERN.PATTERN3:
+                points = this.Pattern3();
+                break;
+        }
 
+        Debug.Log("This is pattern" + pattern);
+        return points;
+    }
 
 }

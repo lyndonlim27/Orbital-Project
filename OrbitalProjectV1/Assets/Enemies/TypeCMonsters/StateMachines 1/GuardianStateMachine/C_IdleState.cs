@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class C_IdleState : StateClass
 {
-    private int teleportcounter;
+    private float teleportcounter;
     public C_IdleState(EnemyBehaviour enemy, StateMachine stateMachine) : base(enemy, stateMachine)
     {
         
@@ -12,8 +12,8 @@ public class C_IdleState : StateClass
 
     public override void Enter(object stateData)
     {
-        teleportcounter = 250;
-        TeleportCounter();
+        teleportcounter = 2f;
+        //TeleportCounter();
     }
 
 
@@ -21,20 +21,19 @@ public class C_IdleState : StateClass
     {
 
         //let roam state handle detection of enemy if enemy is a non-stationary type.
-        if (teleportcounter == 0)
+        if (teleportcounter <= 0)
         {
-            enemy.getNewRoamPosition();
             stateMachine.ChangeState(StateMachine.STATE.TELEPORT, null);
 
         }
         else
         {
-            if (enemy.detectionScript.playerDetected && !enemy.onCooldown())
+            if (enemy.detectionScript.playerDetected)
             {
                 stateMachine.ChangeState(StateMachine.STATE.ATTACK1, null);
             }
 
-            teleportcounter--;
+            teleportcounter-= Time.deltaTime;
         }
 
         enemy.tick();

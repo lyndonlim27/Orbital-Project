@@ -29,7 +29,6 @@ public class UITextDescription : MonoBehaviour
             yield return new WaitForSeconds(2f);
             StartCoroutine(FadeOutText());
             yield return new WaitForSeconds(1f);
-            
             textDescription.enabled = false;
 
         }

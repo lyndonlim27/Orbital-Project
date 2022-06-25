@@ -19,13 +19,21 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     GameObject secondarylightsource;
     ItemTextLogic _tl;
     UITextDescription uITextDescription;
+    TorchPuzzle torchPuzzle;
+    float origintensity;
     public Animator animator { get; private set; }
+    public bool lit { get; private set; }
     
 
     protected override void Awake()
     {
         base.Awake();
         light2D = GetComponent<Light2D>();
+        if (light2D != null)
+        {
+            origintensity = light2D.intensity;
+        }
+        
         animator = GetComponent<Animator>();
         animator.keepAnimatorControllerStateOnDisable = false;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
@@ -33,6 +41,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         _col = GetComponent<CapsuleCollider2D>();
         _tl = GetComponentInChildren<ItemTextLogic>();
         uITextDescription = FindObjectOfType<UITextDescription>(true);
+        torchPuzzle = FindObjectOfType<TorchPuzzle>(true);
         
         
     }
@@ -40,6 +49,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     protected virtual void OnEnable()
     {
         //_LightCookieSprite.SetValue(light2D, data.sprite);
+        ResetLight();
         Color c = spriteRenderer.material.color;
         c.a = 1;
         spriteRenderer.material.color = c;
@@ -95,6 +105,16 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 _rb.bodyType = RigidbodyType2D.Kinematic;
                 light2D.enabled = false;
                 break;
+            case ItemWithTextData.ITEM_TYPE.SAVEPOINT:
+                _col.enabled = false;
+                light2D.enabled = true;
+                light2D.pointLightOuterRadius = 3f;
+                light2D.color = new Color(74, 219, 233, 1);
+                break;
+            case ItemWithTextData.ITEM_TYPE.PUZZLETORCH:
+                torchPuzzle.AddPuzzleTorch(this);
+                light2D.enabled = true;
+                break;
 
 
 
@@ -129,7 +149,6 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     protected void OnDisable()
     {
         
-
     }
 
     void Start()
@@ -141,8 +160,20 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     public override void Defeated()
     {
         isDead = true;
-        FullFillCondition();
         
+        StartCoroutine(ConditionsChecking());
+
+    }
+
+    private IEnumerator ConditionsChecking()
+    {
+        if (data.description != "")
+        {
+            uITextDescription.StartDescription(data.description);
+            yield return new WaitForSeconds(5f);
+
+        }
+        FullFillCondition();
         switch (data.item_type)
         {
             default:
@@ -166,16 +197,17 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
             case ItemWithTextData.ITEM_TYPE.TOMB:
                 secondarylightsource.SetActive(true);
                 break;
+            case ItemWithTextData.ITEM_TYPE.SAVEPOINT:
+                StartCoroutine(ActivationAnimation(light2D));
+                //save data;
+                break;
+            case ItemWithTextData.ITEM_TYPE.PUZZLETORCH:
+                torchPuzzle.Input(this);
+                _tl.ResetWord();
+                isDead = false;
+                break;
+         
         }
-
-        if (data.description != "")
-        {
-            uITextDescription.StartDescription(data.description);
-        }
-
-
-
-
     }
 
     private void SpawnObjects()
@@ -273,6 +305,30 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     {
         _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         animator.speed = 1;
+    }
+
+    private IEnumerator ActivationAnimation(Light2D light)
+    {
+        for (float f = 0; f < 5; f += 0.5f)
+        {
+            light.pointLightInnerRadius += f;
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+    public void LightUp()
+    {
+        lit = true;
+        light2D.intensity = 5f;
+        light2D.color = Color.red;
+        //StartCoroutine(ActivationAnimation(light2D));
+    }
+
+    public void ResetLight()
+    {
+        light2D.intensity = origintensity;
+        light2D.color = new Color(1, 1, 1, 1);
+        lit = false;
     }
 
     

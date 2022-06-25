@@ -4,14 +4,24 @@ using UnityEngine;
 
 public class FodderStationary : EnemyBehaviour
 {
-    public void Start()
+
+    protected override void OnEnable()
     {
-        
         stateMachine = new StateMachine();
         stateMachine.AddState(StateMachine.STATE.IDLE, new C_IdleState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.ATTACK1, new C_MeleeState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.TELEPORT, new C_TeleportState(this, this.stateMachine));
+        
     }
+
+
+    public override void Update()
+    {
+        flipFace(roamPos);
+        stateMachine.Update();
+    }
+
+
 
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -23,6 +33,14 @@ public class FodderStationary : EnemyBehaviour
             player.GetComponent<Rigidbody2D>().AddForce(direction * enemyData.attackSpeed, ForceMode2D.Impulse);
             player.TakeDamage(enemyData.damageValue);
         }
+    }
+
+    public override void Teleport()
+    {
+        getNewRoamPosition();
+        transform.position = roamPos;
+        stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+
     }
 }
 

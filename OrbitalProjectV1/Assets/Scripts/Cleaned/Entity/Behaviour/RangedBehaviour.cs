@@ -70,7 +70,17 @@ public class RangedBehaviour : EntityBehaviour, Freezable
             gameObject.layer = _target.GetComponent<Player>() == null ? LayerMask.NameToLayer("PlayerProjectile") : LayerMask.NameToLayer("EnemyProjectile");
         }
 
+        spriteRenderer.sortingOrder = 2;
 
+
+    }
+    private void FixRotation()
+    {
+        if (!rangedData.followTarget)
+        {
+            _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
+       
     }
 
     private void EnableAnimator()
@@ -138,7 +148,7 @@ public class RangedBehaviour : EntityBehaviour, Freezable
             _collider.isTrigger = true;
         }
 
-        _collider.size = rangedData.sprite.bounds.size * rangedData.scale;
+        _collider.size = rangedData.sprite.bounds.size; /* rangedData.scale*/
         _collider.offset = Vector2.zero;
 
 
@@ -192,7 +202,7 @@ public class RangedBehaviour : EntityBehaviour, Freezable
             //enemy.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
 
         }
-        Debug.Log(lifeTime);
+        
         poolManager.ReleaseObject(this);
 
     }
@@ -206,8 +216,7 @@ public class RangedBehaviour : EntityBehaviour, Freezable
      */
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log(collision.gameObject);
-        Debug.Log(_target.gameObject);
+
         //_trailRenderer.enabled = false;
         stopMovement();
         DisableAnimation();
@@ -246,12 +255,12 @@ public class RangedBehaviour : EntityBehaviour, Freezable
             else
             {
                 EnemyBehaviour enemy = go.GetComponentInChildren<EnemyBehaviour>();
-                Debug.Log("NANI??");
+                
 
                 if (enemy != null)
                 {
                     enemy.TakeDamage(rangedData.damage);
-                    Debug.Log(enemy.isDead);
+                    
                 }
             }
         }
@@ -274,14 +283,14 @@ public class RangedBehaviour : EntityBehaviour, Freezable
     protected void OnTriggerStay2D(Collider2D collision)
     {
 
-        GameObject go = collision.gameObject;
-        //Debug.Log(go);
+        //GameObject go = collision.gameObject;
+        ////Debug.Log(go);
 
-        if (rangedData._type != EntityData.TYPE.PROJECTILE)
-        {
-            //ApplyDamage(go);
-            //ApplyForce(go);
-        }
+        //if (rangedData._type != EntityData.TYPE.PROJECTILE)
+        //{
+        //    //ApplyDamage(go);
+        //    //ApplyForce(go);
+        //}
 
     }
 
@@ -316,14 +325,15 @@ public class RangedBehaviour : EntityBehaviour, Freezable
         //_rb.angularVelocity = rotateSpeed * value;
         //_rb.velocity = transform.right * speed;
         float value = Vector3.Cross(point2Target, transform.right).z;
-        _rb.angularVelocity = rotateSpeed * value;
+        
         if (rangedData.followTarget)
         {
+            _rb.angularVelocity = rotateSpeed * value;
             _rb.velocity = shootpoint * speed;
         }
         else
         {
-
+            _rb.angularVelocity = 0f;
             _rb.AddForce(shootpoint, ForceMode2D.Impulse);
 
         }

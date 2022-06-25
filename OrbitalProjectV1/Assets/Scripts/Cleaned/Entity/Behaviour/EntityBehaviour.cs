@@ -6,7 +6,7 @@ public abstract class EntityBehaviour : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer { get; protected set; }
 
-    protected RoomManager currentRoom;
+    [SerializeField] protected RoomManager currentRoom;
 
     protected PoolManager poolManager;
 

@@ -14,7 +14,7 @@ public class  TypingTestTL : TextLogic
     private TextMeshProUGUI CanvasDisplayer;
     private RoomManager roomManager;
     private List<string> storybank = new List<string>();
-    GameObject go;
+    private DialogueDetection dialogueDetection;
 
 
     protected override void Awake()
@@ -34,20 +34,27 @@ public class  TypingTestTL : TextLogic
             }
 
         }
-        currentword = "";
-        remainingword = "";
+        
         CanvasDisplayer = GetComponent<TextMeshProUGUI>();
         textConverter = GetComponent<CanvasConverter>();
-        CanvasDisplayer.enabled = true;
-        seconds = 100;
-        go = FindObjectOfType<DialogueDetection>(true).gameObject;
+        dialogueDetection = FindObjectOfType<DialogueDetection>(true);
+        
     }
 
     protected override void Start()
     {
-        InstantiateAudio();
-        StartCoroutine(CountDown());
+        transform.root.gameObject.SetActive(false);
+    }
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        InstantiateAudio();
+        currentword = "";
+        remainingword = "";
+        seconds = 100;
+        CanvasDisplayer.enabled = true;
+        StartCoroutine(CountDown());
     }
 
     protected override void Update()
@@ -127,7 +134,7 @@ public class  TypingTestTL : TextLogic
 
     private IEnumerator CountDown()
     {
-        Debug.Log("have i entered coroutine?");
+        
         List<string> counter = new List<string>() { "THREE", "TWO", "ONE" };
         for (int i = 0; i < counter.Count; i++)
         {
@@ -161,10 +168,10 @@ public class  TypingTestTL : TextLogic
     private IEnumerator WaitForStats()
     {
         yield return new WaitForSeconds(2f);
-        Debug.Log("done");
+        
         this.transform.parent.parent.gameObject.SetActive(false);
         this.enabled = false;
-        go.SetActive(false);
+        //go.SetActive(false);
 
     }
 }

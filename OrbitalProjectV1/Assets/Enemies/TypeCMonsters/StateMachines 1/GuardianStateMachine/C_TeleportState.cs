@@ -8,18 +8,18 @@ public class C_TeleportState : StateClass
     {
 
     }
-    private float teleportcounter = 3f;
+    //private float teleportcounter = 3f;
 
     public override void Enter(object stateData)
     {
         enemy.animator.SetTrigger("Teleport");
-        TeleportCounter();
-        
+        enemy.Teleport();
+
     }
 
     public override void Update()
     {
-        TeleportCounter();
+        
         
     }
 
@@ -33,28 +33,28 @@ public class C_TeleportState : StateClass
         base.FixedUpdate();
     }
 
-    private void TeleportCounter()
-    {
+    //private void TeleportCounter()
+    //{
 
-        //let roam state handle detection of enemy if enemy is a non-stationary type.
-        if (teleportcounter <= 0)
-        {
-            enemy.getNewRoamPosition();
-            stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+    //    //let roam state handle detection of enemy if enemy is a non-stationary type.
+    //    if (teleportcounter <= 0)
+    //    {
+    //        enemy.getNewRoamPosition();
+    //        stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
 
-        }
-        else
-        {
-            if (enemy.detectionScript.playerDetected && !enemy.onCooldown())
-            {
-                stateMachine.ChangeState(StateMachine.STATE.ATTACK1, null);
-            }
-            teleportcounter-= Time.deltaTime;
+    //    }
+    //    else
+    //    {
+    //        if (enemy.detectionScript.playerDetected && !enemy.onCooldown())
+    //        {
+    //            stateMachine.ChangeState(StateMachine.STATE.ATTACK1, null);
+    //        }
+    //        teleportcounter-= Time.deltaTime;
 
-        }
+    //    }
         
-        enemy.tick();
-    }
+    //    enemy.tick();
+    //}
 
 
 

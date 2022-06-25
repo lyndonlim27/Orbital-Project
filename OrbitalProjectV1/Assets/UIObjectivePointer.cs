@@ -9,17 +9,28 @@ public class UIObjectivePointer : MonoBehaviour
     private Vector2 objectivePos;
     private RectTransform pointer;
     private float offset;
+    private Vector2 targetPos;
+    //private Player player;
     [SerializeField] private Sprite arrow;
+    [SerializeField] private Sprite destsprite;
     [SerializeField] private Image pointerImage;
+
 
     private void Awake()
     {
-        pointer = GetComponent<RectTransform>();
+        
+        pointer = GameObject.Find("Pointer").GetComponent<RectTransform>();
         offset = 100f;
         pointerImage = GetComponentInChildren<Image>();
         pointerImage.sprite = arrow;
         gameObject.SetActive(false);
+        //player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         
+    }
+
+    private void OnEnable()
+    {
+        pointerImage.color = new Color(1, 1, 1, 1);
     }
 
     public void StartNavi(Vector2 pos)
@@ -29,34 +40,23 @@ public class UIObjectivePointer : MonoBehaviour
 
     }
 
-    public void StopNavi()
-    {
-        if (Vector2.Distance(pointer.position, objectivePos) <= 3f)
-        {
-            gameObject.SetActive(false);
-        }
-        
-    }
-
 
     private void Update()
     {
+        targetPos = Camera.main.WorldToScreenPoint(objectivePos);
         RotateTowardsTarget();
         StartArrowNavi();
-        StopNavi();
 
     }
 
     private void RotateTowardsTarget()
     {
         Vector2 dir = (objectivePos - (Vector2)Camera.main.transform.position).normalized;
-        pointer.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg % 360);
+        pointer.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg % 360);
     }
 
-    private bool CheckOffScreen()
-    {
-        
-        Vector2 targetPos = Camera.main.WorldToScreenPoint(objectivePos);
+    public bool CheckOffScreen()
+    { 
         bool notInXScreen = targetPos.x <= offset || targetPos.x >= Screen.width - offset;
         bool notInYScreen = targetPos.y <= offset || targetPos.y >= Screen.height - offset;
         return notInXScreen || notInYScreen; 
@@ -64,36 +64,79 @@ public class UIObjectivePointer : MonoBehaviour
 
     private void StartArrowNavi()
     {
-        Vector2 pointerWorldPos;
+        
         if (CheckOffScreen())
         {
             Vector2 pointerPos = pointer.position;
-            if (objectivePos.x <= offset || objectivePos.y <= 0)
+            
+            if (targetPos.x <= offset)
             {
-                pointerPos = new Vector2(Mathf.Max(offset, pointerPos.x), Mathf.Max(offset, pointerPos.y));
+                pointerPos.x = offset;
             }
 
-            if (objectivePos.x >= Screen.width - offset)
+            if (targetPos.y <= offset)
+            {
+                pointerPos.y = offset;
+            }
+
+            if (targetPos.x >= Screen.width - offset)
             {
                 pointerPos.x = Screen.width - offset;
             }
 
-            if (objectivePos.y >= Screen.height - offset)
+            if (targetPos.y >= Screen.height - offset)
             {
                 pointerPos.y = Screen.height - offset;
             }
-            pointerWorldPos = Camera.main.ScreenToWorldPoint(pointerPos);
-            pointer.position = pointerWorldPos;
+            
+            pointer.position = pointerPos;
+            pointerImage.sprite = arrow;
+            pointer.localPosition = new Vector3(pointer.localPosition.x, pointer.localPosition.y, 0f);
 
         } else
         {
-            pointerWorldPos = Camera.main.ScreenToWorldPoint(objectivePos);
-            pointer.position = pointerWorldPos;
-            pointer.localEulerAngles = Vector3.zero;
+            pointer.position = targetPos;
+            pointerImage.sprite = destsprite;
+            pointer.localPosition = new Vector3(pointer.localPosition.x, pointer.localPosition.y, 0f);
+            pointer.eulerAngles = Vector3.zero;
+            //StartCoroutine(Wait());
+             
 
         }
         
                 
     }
+
+    private IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(1.5f);
+        gameObject.SetActive(false);
+
+    }
+
+    public void StopNavi()
+    {
+        gameObject.SetActive(false);
+    }
+
+    //private CheckIfPlayerCrossed()
+    //{
+    //    if (player.transform.position == objectivePos)
+    //    {
+    //        gameObject.
+    //    }
+    //}
+
+    //private IEnumerator Wait()
+    //{
+    //    for (float a = 1f; a > 0f; a-=0.1f)
+    //    {
+    //        Color c = pointerImage.color;
+    //        c.a = a;
+    //        pointerImage.color = c;
+    //        yield return new WaitForSeconds(0.1f);
+    //    }
+    //    gameObject.SetActive(false);
+    //}
 
 }

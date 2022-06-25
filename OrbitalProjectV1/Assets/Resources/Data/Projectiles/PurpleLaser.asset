@@ -15,16 +15,26 @@ MonoBehaviour:
   _name: PurpleLaser
   minDist: 0
   sprite: {fileID: -1142376677, guid: 632cafa631bdb4d708170fb9b30225d7, type: 3}
+  pattern: 0
   condition: 0
-  _type: 2
+  _type: 9
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
   random: 0
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
-  type: 1
+  spawnAtStart: 1
+  scale: 0
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
   damage: 10
   speed: 1
   rotation: 1
   lifetime: 2
   trigger: PurpleLaser
-  ac_name: PurpleLaser_VFX
-  scale: 0
+  followTarget: 0
+  loop: 0
+  impact_trigger: 

@@ -12,9 +12,10 @@ public class DetectionScript : MonoBehaviour
     {
         col = GetComponent<Collider2D>();
         playerDetected = false;
+        
     }
 
- 
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
      //   if (collision.gameObject.GetComponent<Player>() != null)

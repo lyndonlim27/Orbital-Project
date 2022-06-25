@@ -17,6 +17,7 @@ public class EliteMeleeFodder : EnemyBehaviour
         stateMachine.AddState(StateMachine.STATE.ATTACK1, new C_MeleeState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.ATTACK2, new RangedState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.STOP, new StopState(this, this.stateMachine));
+        stateMachine.AddState(StateMachine.STATE.RECOVERY, new HardenStage(this, this.stateMachine));
     }
 
     protected override void OnEnable()

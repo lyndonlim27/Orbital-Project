@@ -41,18 +41,19 @@ class C_MeleeState : StateClass
             {
                 stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
             }
-            else if (!enemy.inAnimation)
+            else
             {
                 enemy.flipFace(enemy.player.transform.position);
                 List<string> meleetriggers = enemy.enemyData.meleetriggers;
                 int random = Random.Range(0, meleetriggers.Count);
                 enemy.animator.SetTrigger(meleetriggers[random]);
-                enemy.inAnimation = true;
+                //enemy.inAnimation = true;
                 return;
-            } else
-            {
-                stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
             }
+            //} else
+            //{
+            //    stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+            //}
         }
     }
 }

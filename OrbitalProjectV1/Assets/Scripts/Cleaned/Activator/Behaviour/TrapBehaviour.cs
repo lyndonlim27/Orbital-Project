@@ -10,6 +10,7 @@ public class TrapBehaviour : ActivatorBehaviour
     private BoxCollider2D _boxColl;
     private Player player;
     private Transform _transform;
+    [SerializeField] private StateMachine.STATE currstate;
 
 
     protected override void Awake()
@@ -132,7 +133,6 @@ public class TrapBehaviour : ActivatorBehaviour
         if (currentRoom != null)
         {
             Bounds roombounds = currentRoom.GetRoomAreaBounds();
-            Debug.Log(_boxColl.bounds.size);
             return _boxColl.bounds.max.x > roombounds.max.x || _boxColl.bounds.max.x < roombounds.min.x ||
                 _boxColl.bounds.max.y > roombounds.max.y || _boxColl.bounds.max.y < roombounds.min.y;
         } else
@@ -146,6 +146,7 @@ public class TrapBehaviour : ActivatorBehaviour
     void Update()
     {
         stateMachine.Update();
+        currstate = stateMachine.currState;
     }
 
     public void ActivateRangedComponents()
