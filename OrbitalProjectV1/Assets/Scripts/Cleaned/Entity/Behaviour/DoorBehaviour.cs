@@ -8,12 +8,24 @@ public class DoorBehaviour : EntityBehaviour
     private Animator animator;
     public bool unlocked;
     private HashSet<RoomManager> roomManagers;
+    private AudioClip unlockWoodenClip;
+    private AudioClip lockWoodenClip;
+    private AudioClip unlockSteelClip;
+    private AudioClip unlockTutorialClip;
+
     private List<string> conditions;
     protected override void Awake()
     {
         base.Awake();
         animator = GetComponent<Animator>();
         roomManagers = new HashSet<RoomManager>();
+        unlockWoodenClip = Resources.Load("Sounds/Door/UnlockWooden") as AudioClip;
+        lockWoodenClip = Resources.Load("Sounds/Door/LockWooden") as AudioClip;
+        unlockSteelClip = Resources.Load("Sounds/Door/UnlockSteel") as AudioClip;
+        unlockTutorialClip = Resources.Load("Sounds/Door/UnlockTut") as AudioClip;
+        audioSource.maxDistance = 20f;
+        audioSource.pitch = 0.6f;
+        audioSource.volume = 0.05f;
     }
 
     private void Start()
@@ -25,15 +37,41 @@ public class DoorBehaviour : EntityBehaviour
     {
         if (unlocked)
         {
+
+            CheckDoorUnlockedSound();
             UnlockDoor();
+             
+            
+            //CheckDoorUnlockedSound();
+
         }
-        else
+        else 
         {
+            CheckDoorLockedSound();
             LockDoor();
+            
+            
+            
+            
         }
 
     }
 
+    private void CheckDoorUnlockedSound()
+    {
+        if (!animator.GetBool(gameObject.name.Substring(0, 4)))
+        {
+            UnlockAudio();
+        }
+    }
+
+    private void CheckDoorLockedSound()
+    {
+        if (animator.GetBool(gameObject.name.Substring(0, 4)))
+        {
+            LockAudio();
+        }
+    }
     public override void Defeated()
     {
         
@@ -51,7 +89,6 @@ public class DoorBehaviour : EntityBehaviour
 
     public void UnlockDoor()
     {
-       
         animator.SetBool(gameObject.name.Substring(0, 4), true);
         GetComponent<Collider2D>().enabled = false;
         
@@ -60,7 +97,6 @@ public class DoorBehaviour : EntityBehaviour
 
     public void LockDoor()
     {
-        
         animator.SetBool(gameObject.name.Substring(0, 4), false);
         GetComponent<Collider2D>().enabled = true;
     }
@@ -95,6 +131,49 @@ public class DoorBehaviour : EntityBehaviour
     public void SetRoomControllers(RoomManager room)
     {
         roomManagers.Add(room);
+    }
+
+    public void LockAudio()
+    {
+        string doorname = this.name.Substring(0, 2);
+        switch (doorname)
+        {
+
+            case ("D1"):
+            case ("D3"):
+                audioSource.clip = unlockSteelClip;
+                audioSource.Play();
+                break;
+            case ("D2"):
+                audioSource.clip = lockWoodenClip;
+                audioSource.Play();
+                break;
+            case ("T1"):
+                audioSource.clip = unlockTutorialClip;
+                audioSource.Play();
+                break;
+        }
+    }
+
+    public void UnlockAudio()
+    {
+        string doorname = this.name.Substring(0, 2);
+        switch (doorname)
+        {
+            case ("D1"):
+            case ("D3"):
+                audioSource.clip = unlockSteelClip;
+                audioSource.Play();
+                break;
+            case ("D2"):
+                audioSource.clip = unlockWoodenClip;
+                audioSource.Play();
+                break;
+            case ("T1"):
+                audioSource.clip = unlockTutorialClip;
+                audioSource.Play();
+                break;
+        }
     }
 
     public HashSet<RoomManager> GetRoomManagers()

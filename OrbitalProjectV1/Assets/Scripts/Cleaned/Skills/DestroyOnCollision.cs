@@ -13,6 +13,8 @@ public class DestroyOnCollision : MonoBehaviour
     {
         _collider = GetComponent<Collider2D>();
         _attackSkill = FindObjectOfType<AttackSkillBehaviour>();
+        Player player = FindObjectOfType<Player>();
+        attackData = player.GetAttackData();
     }
 
     // Update is called once per frame
@@ -23,13 +25,14 @@ public class DestroyOnCollision : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-
-        if(collision.gameObject.GetComponent<EnemyBehaviour>() != null)
+        EnemyBehaviour enemy = collision.gameObject.GetComponentInChildren<EnemyBehaviour>();
+        if (enemy != null)
         {
-            for (int i = 0; i < _attackSkill._attackData.damage; i++)
-            {
-                collision.gameObject.GetComponent<EnemyBehaviour>().TakeDamage(attackData.damage);
-            }
+            enemy.TakeDamage(attackData.damage);
+            //for (int i = 0; i < _attackSkill._attackData.damage; i++)
+            //{
+            //    collision.gameObject.GetComponent<EnemyBehaviour>().TakeDamage(attackData.damage);
+            //}
         }
         GetComponent<Animator>().SetBool("Explode", true);
     }

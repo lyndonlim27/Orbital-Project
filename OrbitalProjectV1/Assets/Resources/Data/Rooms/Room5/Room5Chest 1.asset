@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10a1c4479d5574dac908b62726c971cb, type: 3}
   m_Name: Room5Chest 1
   m_EditorClassIdentifier: 
-  _name: Chest
+  _name: open
   minDist: 5
   sprite: {fileID: 1616055449, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
   pattern: 0
@@ -26,8 +26,19 @@ MonoBehaviour:
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 1.5
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 0
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios:
+  - {fileID: 8300000, guid: 31b12d103e2934983952a184ed549df4, type: 3}
   itemTextDatas: []
   ac_name: Chest
   _trigger: defaultOpen
   item_type: 2
   secondarysprite: {fileID: 0}
+  description: 

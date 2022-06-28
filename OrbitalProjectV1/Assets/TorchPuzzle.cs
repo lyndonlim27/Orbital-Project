@@ -101,7 +101,7 @@ public class TorchPuzzle : MonoBehaviour
             torch.enabled = false;
         }
 
-        LightUpStatue();
+        StartCoroutine(LightUpStatue());
     }
 
 

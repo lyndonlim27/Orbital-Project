@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class NPCBehaviour : EntityBehaviour
+public class
+    NPCBehaviour : EntityBehaviour
 {
     [SerializeField] private NPCData data;
+    //public bool fulfilled;
+    protected bool proceedable;
+    protected Animator animator;
     protected bool fulfilled;
-    Animator animator;
-    DialogueDetection dialogueDetection;
-
+    protected DialogueDetection dialogueDetection;
+    
     protected override void Awake()
     {
         base.Awake();
         animator = GetComponent<Animator>();
         dialogueDetection = GetComponentInChildren<DialogueDetection>();
-    }
-    void Start()
-    { 
-
+        
     }
 
     private void OnEnable()
@@ -26,13 +26,17 @@ public class NPCBehaviour : EntityBehaviour
         this.spriteRenderer.sprite = data.sprite;
         if (data._animator != "")
         {
-            animator.runtimeAnimatorController = Resources.Load($"Animations/AnimatorController/{data._animator}") as RuntimeAnimatorController;
+            animator.runtimeAnimatorController = Resources.Load($"Animations/AnimatorControllers/{data._animator}") as RuntimeAnimatorController;
         }
-        fulfilled = data.prereq == null;
+        proceedable = data.prereq == null;
+        fulfilled = false;
+        //dialogueDetection.enabled = proceedable;
         
  
         
     }
+
+    
 
     private void OnDisable()
     {
@@ -42,34 +46,39 @@ public class NPCBehaviour : EntityBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        dialogueDetection.enabled = proceedable;
     }
 
     internal virtual void Proceed()
     {
-        if (!fulfilled)
+        if (!proceedable)
         {
-            dialogueDetection.gameObject.SetActive(true);
-        } else
-        {
-            dialogueDetection.gameObject.SetActive(false);
+            proceedable = true;
+            
         }
+        //} else
+        //{
+        //    dialogueDetection.enabled = false;
+        //}
         
     }
 
     internal virtual void Fulfill()
     {
+        //this.gameObject.SetActive(false);
         fulfilled = true;
-        this.gameObject.SetActive(false);
-        dialogueDetection.enabled = false;
+        proceedable = false;
         animator.enabled = false;
         if (data.condition == 1)
         {
             currentRoom.conditions.Remove(data._name + data.GetInstanceID());
         }
-        Debug.Log("Drop data = " + data.dropData[0]);
-        currentRoom.SpawnObjects(data.dropData);
-        
+        if (data.dropData.Length > 0)
+        {
+            currentRoom.SpawnObjects(data.dropData);
+        }
+       
+ 
     }
 
     public override void Defeated()
@@ -86,5 +95,33 @@ public class NPCBehaviour : EntityBehaviour
     {
         return data;
     }
+
+    public void NPCAfterAction()
+    {
+        if (fulfilled)
+        {
+            switch (data._npcAction)
+            {
+                case NPCData.NPCActions.TYPINGTEST:
+                    TypingTestTL _tl = FindObjectOfType<TypingTestTL>(true);
+                    _tl.SetActive();
+                    break;
+            }
+
+
+            this.enabled = false;
+        }
+        
+        
+
+    }
+
+    //public IEnumerator InteractedAction()
+    //{
+    //    yield return StartCoroutine(FindObjectOfType<DialogueManager>().ExitDialogue());
+    //    yield return null;
+        
+        
+    //}
 
 }

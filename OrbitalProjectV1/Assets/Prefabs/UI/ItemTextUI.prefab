@@ -81,7 +81,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 999
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &3116212859344019807
 MonoBehaviour:
@@ -187,7 +187,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ededdfc9314cd4fe3977cceaaab8944e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  typingeffect: {fileID: 8213125897907324299}
 --- !u!114 &343097105442012201
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,6 +199,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72df990f3c94d4298b5cd8a371c8c7c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unhighlighted: {fileID: 0}
+  highlighted: {fileID: 0}
 --- !u!82 &8213125897907324299
 AudioSource:
   m_ObjectHideFlags: 0

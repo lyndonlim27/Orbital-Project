@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: StoneGolem
   m_EditorClassIdentifier: 
   _name: StoneGolem
-  minDist: 20
+  minDist: 15
   sprite: {fileID: 1558316739, guid: 1ed8b26f1c2354608b32d925213c28da, type: 3}
   pattern: 0
   condition: 0
@@ -30,6 +30,12 @@ MonoBehaviour:
   staggerTime: 0
   duration: 0
   defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 1
+  moveable: 1
+  attackAudios:
+  - {fileID: 8300000, guid: 0c367f8b6ee494311a488a7f93c75481, type: 3}
+  miscellaneousAudios: []
+  interactionAudios: []
   itemTextDatas: []
   ac_name: 
   _trigger: 
@@ -37,8 +43,8 @@ MonoBehaviour:
   secondarysprite: {fileID: 0}
   description: 
   damageValue: 5
-  moveSpeed: 3
-  chaseSpeed: 4
+  moveSpeed: 4
+  chaseSpeed: 5
   attackRange: 5
   attackSpeed: 3
   maxDist: 100
@@ -63,8 +69,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 586cec4b90fba47b19982d9fc7b56319, type: 2}
   - {fileID: 11400000, guid: d3202327355c44fb5ab68f2f23b83f46, type: 2}
   animatorname: AC_Golem
-  words: 10
-  rangedcooldown: 2
+  words: 100
+  rangedcooldown: 4
   stage2: 1
   healStage: 1
   enragedColor: {r: 0.4056604, g: 0.35016912, b: 0.35016912, a: 1}
+  body: 2

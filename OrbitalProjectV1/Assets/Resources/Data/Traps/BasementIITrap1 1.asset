@@ -26,12 +26,19 @@ MonoBehaviour:
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 1
-  duration: 5
+  staggered: 0
+  staggerTime: 0
+  duration: 8
   defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 0
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios: []
   activatedcolor: {r: 0, g: 0, b: 0, a: 0}
   triggername: MagicTrap
   ontrigger: 0
-  damage: 0
+  damage: 3
   quaternion: {x: 0, y: 0, z: 0, w: 0}
   ranged: 0
   horizontal: 0

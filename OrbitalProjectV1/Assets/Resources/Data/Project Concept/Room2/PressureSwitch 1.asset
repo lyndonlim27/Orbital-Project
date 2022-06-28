@@ -15,10 +15,25 @@ MonoBehaviour:
   _name: PressureSwitch1
   minDist: 0
   sprite: {fileID: -1999106071, guid: 926457695c2e44d8284e7ad030a4e3e4, type: 3}
-  condition: 1
+  pattern: 0
+  condition: 0
   _type: 0
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
   random: 1
   pos: {x: 0, y: 0}
-  gold: 0
   damageFlicker: {fileID: 0}
+  spawnAtStart: 1
+  scale: 1
+  staggered: 0
+  staggerTime: 0
   duration: 2
+  defaultcolor: {r: 1, g: 0, b: 0, a: 1}
+  floating: 0
+  moveable: 0
+  NotURP: 0
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios: []
+  activatedcolor: {r: 0.08025527, g: 1, b: 0, a: 1}

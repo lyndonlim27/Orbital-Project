@@ -28,12 +28,6 @@ public class WordStorageManagerUI : MenuBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            ConsumableItemData cons = ScriptableObject.CreateInstance<ConsumableItemData>();
-            cons.sprite = Resources.Load<Sprite>("Sprites/corpse");
-            AddItem(cons);
-        }
         //Debug.Log(NotFull());
         //Debug.Log(inventoryslots.Values.ToList().Count);
     }

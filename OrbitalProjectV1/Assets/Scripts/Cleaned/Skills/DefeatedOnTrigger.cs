@@ -14,9 +14,10 @@ public class DefeatedOnTrigger : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log(collision);
-        if(collision.GetComponentInChildren<EnemyBehaviour>() != null)
+        EnemyBehaviour enemy = collision.gameObject.GetComponentInChildren<EnemyBehaviour>();
+        if (enemy != null)
         {
-            collision.GetComponentInChildren<EnemyBehaviour>().TakeDamage(player.GetAttackData().damage);
+            enemy.TakeDamage(player.GetAttackData().damage);
         }
     }
 }

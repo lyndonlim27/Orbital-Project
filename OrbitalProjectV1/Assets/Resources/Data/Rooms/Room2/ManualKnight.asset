@@ -26,18 +26,28 @@ MonoBehaviour:
   damageFlicker: {fileID: 672315831686351503, guid: 287fa61315c39429e8235e664399d8cc, type: 3}
   spawnAtStart: 1
   scale: 5
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 1
+  attackAudios:
+  - {fileID: 8300000, guid: 8fde594ce881e45b8ae4c17a21032198, type: 3}
+  miscellaneousAudios: []
+  interactionAudios: []
   itemTextDatas: []
   ac_name: AC_Knight
   _trigger: 
-  item_type: 0
+  item_type: 3
   secondarysprite: {fileID: 0}
   description: 
-  damageValue: 10
+  damageValue: 2
   moveSpeed: 2
   chaseSpeed: 3
   attackRange: 1
   attackSpeed: 1
-  maxDist: 15
+  maxDist: 20
   meleetriggers:
   - Melee1
   - Melee2
@@ -45,8 +55,13 @@ MonoBehaviour:
   rangedtriggers: []
   dashattacks: []
   rangedDatas: []
+  bossdamageprops: []
+  bossSummonprops: []
+  bossdefenceprops: []
   animatorname: Knight
-  words: 1
+  words: 15
   rangedcooldown: 0
   stage2: 0
+  healStage: 0
   enragedColor: {r: 0, g: 0, b: 0, a: 0}
+  body: 0

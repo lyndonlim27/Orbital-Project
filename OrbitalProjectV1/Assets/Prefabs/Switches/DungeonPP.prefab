@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 796981598516887655}
   - component: {fileID: 796981598516887649}
   - component: {fileID: 796981598516887651}
-  - component: {fileID: 8212455274303573591}
   - component: {fileID: 2098085031516162915}
   m_Layer: 7
   m_Name: DungeonPP
@@ -116,6 +115,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9823cd341a7d341d1aee58845c6818b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentRoom: {fileID: 0}
+  audioSource: {fileID: 0}
+  inAudio: 0
+  footStep: {fileID: 0}
   isDead: 0
   inAnimation: 0
   data: {fileID: 11400000, guid: 5c2af697b66464728ac04ce0287fc693, type: 2}
@@ -124,25 +127,7 @@ MonoBehaviour:
     m_Bits: 98295
   animator: {fileID: 0}
   detectionScript: {fileID: 0}
---- !u!114 &8212455274303573591
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 796981598516887654}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ada46fb884e1548b9bf4c49ed1484cd1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _audioSource: {fileID: 2098085031516162915}
-  _ac1: {fileID: 8300000, guid: 53bd5ac37b062477895e3cdf93b9f751, type: 3}
-  _ac2: {fileID: 0}
-  _ac3: {fileID: 0}
-  _ac4: {fileID: 0}
-  _ac5: {fileID: 0}
-  audios: []
+  audioClip: {fileID: 8300000, guid: 53bd5ac37b062477895e3cdf93b9f751, type: 3}
 --- !u!82 &2098085031516162915
 AudioSource:
   m_ObjectHideFlags: 0

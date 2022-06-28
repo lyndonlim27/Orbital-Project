@@ -15,22 +15,39 @@ MonoBehaviour:
   _name: WaterMage
   minDist: 10
   sprite: {fileID: 2082459020, guid: d8b53f057f9cc4d97ac151235543eea3, type: 3}
+  pattern: 0
   condition: 0
   _type: 5
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
   random: 1
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 3
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 0
+  NotURP: 1
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios: []
   itemTextDatas: []
   ac_name: AC_WaterMage
   _trigger: 
-  isAWeapon: 0
+  item_type: 0
+  secondarysprite: {fileID: 0}
+  description: 
   damageValue: 1
   moveSpeed: 1.5
   chaseSpeed: 2.5
   attackRange: 1
   attackSpeed: 1
+  maxDist: 0
   meleetriggers:
   - Melee1
   - Melee2
@@ -42,6 +59,15 @@ MonoBehaviour:
   rangedtriggers:
   - Wave
   - Ulti
+  dashattacks: []
+  rangedDatas: []
+  bossdamageprops: []
+  bossSummonprops: []
+  bossdefenceprops: []
   animatorname: AC_WaterMage
   words: 1
   rangedcooldown: 10
+  stage2: 0
+  healStage: 0
+  enragedColor: {r: 0, g: 0, b: 0, a: 0}
+  body: 0

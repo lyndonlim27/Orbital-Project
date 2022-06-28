@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MeleeComponent : AttackComponent
 { 
+
     public void Attack()
 
     {
@@ -19,6 +20,5 @@ public class MeleeComponent : AttackComponent
             target.TakeDamage(enemyData.damageValue);
         }
     }
-
 
 }

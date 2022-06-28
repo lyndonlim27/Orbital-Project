@@ -58,15 +58,17 @@ public class DebuffBehaviour : SkillBehaviour
         ResetCooldown();
         foreach(EnemyBehaviour enemy in _player.GetCurrentRoom().GetComponentsInChildren<EnemyBehaviour>())
         {
-            enemy.rb.constraints = RigidbodyConstraints2D.FreezeAll;
-            enemy.GetComponent<EnemyBehaviour>().enabled = false;
+            //enemy.rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            enemy.Debuffed = true;
+            enemy.Freeze();
+            //enemy.GetComponent<EnemyBehaviour>().enabled = false;
             Instantiate(_debuffData.particleSystem, enemy.transform);
         }
         yield return new WaitForSeconds(_debuffData.duration);
         foreach (EnemyBehaviour enemy in _player.GetCurrentRoom().GetComponentsInChildren<EnemyBehaviour>())
         {
-            enemy.rb.constraints = RigidbodyConstraints2D.None;
-            enemy.GetComponent<EnemyBehaviour>().enabled = true;
+            enemy.Debuffed = false;
+            enemy.UnFreeze();
             Destroy(enemy.transform.Find("StunDebuff(Clone)").gameObject);
         }
     }
@@ -79,6 +81,8 @@ public class DebuffBehaviour : SkillBehaviour
             enemy.enemyData.chaseSpeed *= _debuffData.slowAmount;
             enemy.enemyData.attackSpeed *= _debuffData.slowAmount;
             enemy.enemyData.moveSpeed *= _debuffData.slowAmount;
+            enemy.Debuffed = true;
+            enemy.animator.speed *= _debuffData.slowAmount;
             RangedComponent rangedComponent = enemy.GetComponentInChildren<RangedComponent>();
             if (rangedComponent != null)
             {
@@ -96,9 +100,11 @@ public class DebuffBehaviour : SkillBehaviour
     {
         foreach (EnemyBehaviour enemy in _player.GetCurrentRoom().GetComponentsInChildren<EnemyBehaviour>())
         {
+            enemy.Debuffed = false;
             enemy.enemyData.chaseSpeed /= _debuffData.slowAmount;
             enemy.enemyData.attackSpeed /= _debuffData.slowAmount;
             enemy.enemyData.moveSpeed /= _debuffData.slowAmount;
+            enemy.animator.speed /= _debuffData.slowAmount;
             RangedComponent rangedComponent = enemy.GetComponentInChildren<RangedComponent>();
             if (rangedComponent != null)
             {

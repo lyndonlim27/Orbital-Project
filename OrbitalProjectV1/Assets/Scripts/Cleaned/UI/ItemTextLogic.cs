@@ -9,7 +9,14 @@ public class ItemTextLogic : TextLogic
     protected override void Start()
     {
         base.Start();
+        
+    }
+
+    protected override void OnEnable()
+    {
         currentword = parent.GetData()._name.ToLower();
+        base.OnEnable();
+        
     }
     protected override bool CheckInternalInput()
     {

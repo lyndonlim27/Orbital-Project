@@ -54,9 +54,11 @@ class MeleeState : StateClass
             {
                 List<string> meleetriggers = enemy.enemyData.meleetriggers;
                 enemy.LockMovement();
+                enemy.inAnimation = true;
+                Debug.Log("Enemy in animation?" + enemy.inAnimation);
                 int random = Random.Range(0, meleetriggers.Count);
                 enemy.animator.SetTrigger(meleetriggers[random]);
-                enemy.inAnimation = true;
+                
                     
             } else
             {

@@ -20,7 +20,9 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     ItemTextLogic _tl;
     UITextDescription uITextDescription;
     TorchPuzzle torchPuzzle;
+    Vector2 originalpos;
     float origintensity;
+    private DataPersistenceManager dataPersistenceManager;
     public Animator animator { get; private set; }
     public bool lit { get; private set; }
     
@@ -41,9 +43,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         _col = GetComponent<CapsuleCollider2D>();
         _tl = GetComponentInChildren<ItemTextLogic>();
         uITextDescription = FindObjectOfType<UITextDescription>(true);
-        torchPuzzle = FindObjectOfType<TorchPuzzle>(true);
-        
-        
+        torchPuzzle = FindObjectOfType<TorchPuzzle>(true);     
     }
 
     protected virtual void OnEnable()
@@ -58,8 +58,23 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         SetItemBody();
         EnableAnimator();
         spriteRenderer.sortingOrder = 2;
+
+        
         
 
+    }
+
+    public void CheckURP()
+    {
+        if (data.NotURP)
+        {
+            light2D.enabled = false;
+        }
+    }
+
+    private void Start()
+    {
+        dataPersistenceManager = FindObjectOfType<DataPersistenceManager>(true);
     }
 
     protected virtual void EnableAnimator()
@@ -93,7 +108,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 _rb.gravityScale = 0;
                 _rb.drag = 1.5f;
                 _rb.mass = 45f;
-
+                originalpos = transform.position;
                 _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
                 _rb.freezeRotation = true;
                 light2D.enabled = true;
@@ -108,8 +123,10 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
             case ItemWithTextData.ITEM_TYPE.SAVEPOINT:
                 _col.enabled = false;
                 light2D.enabled = true;
-                light2D.pointLightOuterRadius = 3f;
-                light2D.color = new Color(74, 219, 233, 1);
+                light2D.pointLightOuterRadius = 6f;
+                light2D.intensity = 0.5f;
+                light2D.color = data.defaultcolor;
+                //light2D.color = new Color(74, 219, 233, 1);
                 break;
             case ItemWithTextData.ITEM_TYPE.PUZZLETORCH:
                 torchPuzzle.AddPuzzleTorch(this);
@@ -120,6 +137,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
 
         }
         SettingUpColliders();
+        CheckURP();
     }
 
     private void SettingUpSecondaryLight(GameObject go, SpriteRenderer _spr)
@@ -149,12 +167,6 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     protected void OnDisable()
     {
         
-    }
-
-    void Start()
-    {
-        
-
     }
 
     public override void Defeated()
@@ -190,7 +202,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 HandleAnimation();
                 break;
             case ItemWithTextData.ITEM_TYPE.PUSHABLE:
-                transform.position = data.pos;
+                transform.position = originalpos;
                 _tl.ResetWord();
                 isDead = false;
                 break;
@@ -198,7 +210,11 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 secondarylightsource.SetActive(true);
                 break;
             case ItemWithTextData.ITEM_TYPE.SAVEPOINT:
-                StartCoroutine(ActivationAnimation(light2D));
+                //StartCoroutine(ActivationAnimation(light2D));
+                //StartCoroutine(ActivationAnimation(light2D));
+                dataPersistenceManager.SaveGame();
+                _tl.ResetWord();
+                isDead = false;
                 //save data;
                 break;
             case ItemWithTextData.ITEM_TYPE.PUZZLETORCH:
@@ -242,15 +258,16 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
             ConsumableItemData condata = consumableItemDatas[rand2];
             WordBank wordBank = FindObjectOfType<WordBank>();
             string passcode = wordBank.passcode;
+            ConsumableItemData temp = Instantiate(condata);
             if (condata._consumableType == ConsumableItemData.CONSUMABLE.LETTER && passcode.Length > 0)
             {
-                ConsumableItemData temp = Instantiate(condata);
                 int randomnum = Random.Range(0, passcode.Length);
                 temp.letter = passcode[randomnum];
                 temp.sprite = condata.letters[(int)temp.letter - 81];
                 wordBank.passcode = passcode.Substring(0, randomnum) + passcode.Substring(randomnum, passcode.Length - (randomnum + 1));
-                con.SetEntityStats(temp);
+                
             }
+            con.SetEntityStats(temp);
             con.transform.position = transform.position + new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f));
             con.SetTarget(player.gameObject);
             con.gameObject.SetActive(true);
@@ -259,7 +276,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
 
     private void HandleAnimation()
     {
-        if (data.ac_name == "")
+        if (data.ac_name == "" || data._trigger == "")
         {
             StartCoroutine(FadeOut());
         }
@@ -309,10 +326,10 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
 
     private IEnumerator ActivationAnimation(Light2D light)
     {
-        for (float f = 0; f < 5; f += 0.5f)
+        for (float f = 0; f < 3; f += 0.1f)
         {
-            light.pointLightInnerRadius += f;
-            yield return new WaitForSeconds(0.5f);
+            light.pointLightInnerRadius = f;
+            yield return null;
         }
     }
 
@@ -320,7 +337,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     {
         lit = true;
         light2D.intensity = 5f;
-        light2D.color = Color.red;
+        light2D.color = data.defaultcolor;
         //StartCoroutine(ActivationAnimation(light2D));
     }
 

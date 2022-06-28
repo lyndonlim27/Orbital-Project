@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using System.Linq;
+using UnityEngine.UI;
 
 
 /** 
@@ -26,20 +27,25 @@ public class DialogueManager : MonoBehaviour
 
     private NPCData _npcData;
 
-    private bool fulfilled;
-
     private Coroutine coroutine;
 
     private string nextline;
+
+    //private int currindex;
+
+    //private Player player;
 
     public bool playing { get; private set; }
 
     private bool inExit;
 
+    
+
 
     [Header("DialogueUI")]
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TextMeshProUGUI dialoguetext;
+    [SerializeField] private Image dialogueImage;
     [SerializeField] private GameObject[] choices;
 
     /** 
@@ -49,7 +55,7 @@ public class DialogueManager : MonoBehaviour
     {
         //npc = roomManager.npcs;
         //_npcData = roomManager._npcData;
-
+        //player = FindObjectOfType<Player>(true);
     }
 
     /**
@@ -172,8 +178,8 @@ public class DialogueManager : MonoBehaviour
         currentNPC = npc;
         _npcData = (NPCData) npc.GetData();
         currentstory = new Story(_npcData.story.text);
-        Debug.Log(currentstory);
         playing = true;
+        dialogueImage.sprite = _npcData.dialogueFace;
         dialoguePanel.SetActive(true);
         ContinueStory();
 
@@ -189,15 +195,19 @@ public class DialogueManager : MonoBehaviour
         {
             nextline = currentstory.Continue();
             coroutine = StartCoroutine(TypeSentence(nextline));
+
             if (currentstory.currentTags.Count > 0 &&
                 currentstory.currentTags[currentstory.currentTags.Count - 1] == "NPC")
             {
-                fulfilled = true;
+                
                 currentNPC.Fulfill();
+                //THE CHANGE HERE.
+                //dialoguePanel.SetActive(false);
+                //THE CHANGE HERE.
             }
 
             DisplayChoices();
-           
+
         }
         else
         {
@@ -209,18 +219,26 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    //private void ChangeFace()
+    //{
+    //    if (currentstory.currentTags[currindex] == "NPC")
+    //    {
+    //        dialogueImage.sprite = _npcData.dialogueFace;
+    //    }
+    //    else
+    //    {
+    //        dialogueImage.sprite = player.GetDialogueSprite();
+    //        }
+    //}
+
     /**
      * Exit Dialogue.
      */
-    private IEnumerator ExitDialogue()
+    public IEnumerator ExitDialogue()
     {
         inExit = true;
         yield return new WaitForSeconds(0.5f);
-        if (fulfilled)
-        {
-            roomManager.FulfillCondition(_npcData._name + _npcData.GetInstanceID());
-        }
-
+        currentNPC.NPCAfterAction();
         playing = false;
         dialoguePanel.SetActive(false);
         inExit = false;

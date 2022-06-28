@@ -7,12 +7,28 @@ using UnityEngine.SceneManagement;
 public class LoadScene : MonoBehaviour
 {
     private DataPersistenceManager _dataManager;
+    public static LoadScene Instance { get; private set; }
     private Canvas _canvas;
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            this.enabled = false;
+        } else
+        {
+            Instance = this;
+        }
+    }
+
     void Start()
     {
         _dataManager = FindObjectOfType<DataPersistenceManager>();
         _canvas = GetComponentInChildren<Canvas>(true);
         DontDestroyOnLoad(this);
+        
+
+
     }
 
     public void LoadSceneFromData()
@@ -59,9 +75,31 @@ public class LoadScene : MonoBehaviour
     private IEnumerator SetPlayerStats()
     {
         Player player = FindObjectOfType<Player>(true);
-        player.AddHealth(1000);
-        player.AddMana(1000);
-        yield return null;
+        if (player!=null)
+        {
+            player.AddHealth(1000);
+            player.AddMana(1000);
+            yield return null;
+
+        }
+        
     }
+
+    public void LoadMainMenu()
+    {
+        _canvas.gameObject.SetActive(true);
+        StartCoroutine(LoadMainScene());
+    }
+
+    private IEnumerator LoadMainScene()
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Assets/Scenes/MainMenu.unity");
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+        _canvas.gameObject.SetActive(false);
+    }
+
 }
 

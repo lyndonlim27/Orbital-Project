@@ -26,12 +26,20 @@ MonoBehaviour:
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 3
+  staggered: 0
+  staggerTime: 0
   duration: 0
   defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 0
+  attackAudios:
+  - {fileID: 8300000, guid: d11894d01ae734ff798e6148b7e42ed0, type: 3}
+  miscellaneousAudios: []
+  interactionAudios: []
   activatedcolor: {r: 0, g: 0, b: 0, a: 0}
   triggername: SawTrap1
   ontrigger: 0
-  damage: 1
+  damage: 3
   quaternion: {x: 0, y: 0, z: 0, w: 0}
   ranged: 0
   horizontal: 0

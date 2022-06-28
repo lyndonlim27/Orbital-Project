@@ -87,9 +87,12 @@ public class AttackSkillBehaviour : SkillBehaviour
         GameObject fire1 = Instantiate(_attackData.prefab, _player.transform.position + direction1 * 1, Quaternion.Euler(0, 0, 90));
         GameObject fire2 = Instantiate(_attackData.prefab, _player.transform.position + direction2 * 1, Quaternion.Euler(0, 0, -135));
         GameObject fire3 = Instantiate(_attackData.prefab, _player.transform.position + direction3 * 1, Quaternion.Euler(0, 0, -45));
-        fire1.GetComponent<Rigidbody2D>().velocity = direction1 * 3;
-        fire2.GetComponent<Rigidbody2D>().velocity = direction2 * 3;
-        fire3.GetComponent<Rigidbody2D>().velocity = direction3 * 3;
+        //fire1.GetComponent<Rigidbody2D>().velocity = direction1 * 3;
+        fire1.GetComponent<Rigidbody2D>().AddForce(direction1, ForceMode2D.Impulse);
+        fire2.GetComponent<Rigidbody2D>().AddForce(direction2, ForceMode2D.Impulse);
+        fire3.GetComponent<Rigidbody2D>().AddForce(direction3, ForceMode2D.Impulse);
+        //fire2.GetComponent<Rigidbody2D>().velocity = direction2 * 3;
+        //fire3.GetComponent<Rigidbody2D>().velocity = direction3 * 3;
     }
 
     private void FireAttack2()
@@ -101,9 +104,13 @@ public class AttackSkillBehaviour : SkillBehaviour
         GameObject fire1 = Instantiate(_attackData.prefab, _player.transform.position + direction1 * 1, Quaternion.Euler(0, 0, 270));
         GameObject fire2 = Instantiate(_attackData.prefab, _player.transform.position + direction2 * 1, Quaternion.Euler(0, 0, 135));
         GameObject fire3 = Instantiate(_attackData.prefab, _player.transform.position + direction3 * 1, Quaternion.Euler(0, 0, 45));
-        fire1.GetComponent<Rigidbody2D>().velocity = direction1 * 3;
-        fire2.GetComponent<Rigidbody2D>().velocity = direction2 * 3;
-        fire3.GetComponent<Rigidbody2D>().velocity = direction3 * 3;
+        fire1.GetComponent<Rigidbody2D>().AddForce(direction1, ForceMode2D.Impulse);
+        fire2.GetComponent<Rigidbody2D>().AddForce(direction2, ForceMode2D.Impulse);
+        fire3.GetComponent<Rigidbody2D>().AddForce(direction3, ForceMode2D.Impulse);
+
+        //fire1.GetComponent<Rigidbody2D>().velocity = direction1 * 3;
+        //fire2.GetComponent<Rigidbody2D>().velocity = direction2 * 3;
+        //fire3.GetComponent<Rigidbody2D>().velocity = direction3 * 3;
     }
 
     private void FireAttack3()
@@ -114,8 +121,11 @@ public class AttackSkillBehaviour : SkillBehaviour
         Vector3 direction2 = new Vector3(-1, 0, 0);
         GameObject fire1 = Instantiate(_attackData.prefab, _player.transform.position + direction1 * 1, Quaternion.Euler(0, 0, 0));
         GameObject fire2 = Instantiate(_attackData.prefab, _player.transform.position + direction2 * 1, Quaternion.Euler(0, 0, 180));
-        fire1.GetComponent<Rigidbody2D>().velocity = direction1 * 3;
-        fire2.GetComponent<Rigidbody2D>().velocity = direction2 * 3;
+        //fire1.GetComponent<Rigidbody2D>().velocity = direction1 * 3;
+        //fire2.GetComponent<Rigidbody2D>().velocity = direction2 * 3;
+        fire1.GetComponent<Rigidbody2D>().AddForce(direction1, ForceMode2D.Impulse);
+        fire2.GetComponent<Rigidbody2D>().AddForce(direction2, ForceMode2D.Impulse);
+        //fire3.GetComponent<Rigidbody2D>().AddForce(direction3, ForceMode2D.Impulse);
     }
 
 

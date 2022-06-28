@@ -32,9 +32,13 @@ public class DataPersistenceManager : MonoBehaviour
         DontDestroyOnLoad(this);
         if (Instance != null)
         {
-            Debug.LogError("Found more than one Data Persistence Manager in the scene. Please put only one data manager");
+            this.enabled = false;
+            //Debug.LogError("Found more than one Data Persistence Manager in the scene. Please put only one data manager");
+        } else
+        {
+            Instance = this;
         }
-        Instance = this;
+        
     }
 
     private void Start()
@@ -310,6 +314,7 @@ public class DataPersistenceManager : MonoBehaviour
         }
         yield return new WaitForSeconds(0.5f);
         loaded = true;
+        _gameData = loadedData;
     }
 
     /*

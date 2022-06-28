@@ -7,11 +7,13 @@ public class ConsumableItemData : EntityData
 {
     public int _gold;
     public int _health;
+    public int _mana;
     public enum CONSUMABLE
     {
         HEALTH,
         GOLD,
-        LETTER
+        LETTER,
+        MANA,
     }
     public CONSUMABLE _consumableType;
     public Sprite[] letters;

@@ -21,11 +21,21 @@ MonoBehaviour:
   multispawns: 0
   startPos: {x: 0, y: 0}
   endPos: {x: 0, y: 0}
-  random: 1
-  pos: {x: 0, y: 0}
+  random: 0
+  pos: {x: 11, y: -16}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 1
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 0
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios:
+  - {fileID: 8300000, guid: 31b12d103e2934983952a184ed549df4, type: 3}
   itemTextDatas: []
   ac_name: Chest
   _trigger: defaultOpen

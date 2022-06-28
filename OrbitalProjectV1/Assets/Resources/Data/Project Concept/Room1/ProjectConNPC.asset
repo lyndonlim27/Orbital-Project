@@ -15,11 +15,30 @@ MonoBehaviour:
   _name: NPC1
   minDist: 100
   sprite: {fileID: 21300000, guid: 9379b7a45822e47278469dbef84b6f48, type: 3}
+  pattern: 0
   condition: 1
-  _type: 3
+  _type: 15
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
   random: 0
   pos: {x: 0.55, y: 7.28}
-  gold: 0
   damageFlicker: {fileID: 0}
+  spawnAtStart: 1
+  scale: 1
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 0
+  NotURP: 0
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios: []
   story: {fileID: 4900000, guid: 91204d614d0834befaa72948f2604901, type: 3}
-  _animator: {fileID: 0}
+  _animator: Player2(NPC)
+  dropData: []
+  prereq: {fileID: 0}
+  dialogueFace: {fileID: 21300000, guid: 9379b7a45822e47278469dbef84b6f48, type: 3}
+  _npcAction: 1

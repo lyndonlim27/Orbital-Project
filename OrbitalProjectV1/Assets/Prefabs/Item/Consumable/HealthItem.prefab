@@ -121,6 +121,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2caa9d7923694636b51ac9f33fa2421, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentRoom: {fileID: 0}
+  audioSource: {fileID: 0}
+  inAudio: 0
+  footStep: {fileID: 0}
   isDead: 0
   inAnimation: 0
   _itemData: {fileID: 11400000, guid: 23532790317044ebe8de1e951381e273, type: 2}
@@ -140,7 +144,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 1
 --- !u!82 &8056387855314916695
 AudioSource:
   m_ObjectHideFlags: 0

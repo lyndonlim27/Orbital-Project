@@ -10,6 +10,7 @@ public class TrapBehaviour : ActivatorBehaviour
     private BoxCollider2D _boxColl;
     private Player player;
     private Transform _transform;
+    private DamageApplier damageApplier;
     [SerializeField] private StateMachine.STATE currstate;
 
 
@@ -22,6 +23,7 @@ public class TrapBehaviour : ActivatorBehaviour
         animator.runtimeAnimatorController = Resources.Load("Animations/AnimatorControllers/AC_Trap") as RuntimeAnimatorController;
         ranged = GetComponentInChildren<RangedComponent>();
         _boxColl = detectionScript.GetComponent<BoxCollider2D>();
+        damageApplier = GetComponentInChildren<DamageApplier>(true);
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 
 
@@ -42,6 +44,13 @@ public class TrapBehaviour : ActivatorBehaviour
         _transform = transform;
         SettingUpCollider();
         SettingUpRotation();
+        if (damageApplier != null)
+        {
+            if (trapData.attackAudios.Count > 0) {
+                damageApplier.SettingUpAudio(trapData.attackAudios[0]);
+            }
+            damageApplier.SettingUpDamage(trapData.damage);
+        }
         spriteRenderer.sprite = null;
         animator.enabled = true;
         ranged.rangeds = trapData.rangedDatas;

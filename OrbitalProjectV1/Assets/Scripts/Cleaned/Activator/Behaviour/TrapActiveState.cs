@@ -67,27 +67,6 @@ public class TrapActiveState : StateClass
                 }
 
 
-                    //CheckIfTrapExpired();
-
-
-                    //if (!trap.trapData.ontrigger)
-                    //{
-                    //    activatedTime = Time.time;
-                    //    trap.inAnimation = true;
-                    //    trap.animator.SetTrigger(trap.trapData.triggername);
-                    //}
-
-                    //else if (trap.detectionScript.playerDetected)
-                    //{
-                    //    trap.inAnimation = true;
-                    //    trap.animator.SetTrigger(trap.trapData.triggername);
-
-                    //activatedTime = Time.time;
-                    //trap.animator.SetBool(trap.trapData.triggername, true);
-
-
-
-
             }
         }
 

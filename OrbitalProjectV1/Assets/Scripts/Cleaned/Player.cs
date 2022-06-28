@@ -144,7 +144,6 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
             return;
         }*/
 
-        
         //transform.position = (Vector2) transform.position +_movement.normalized * _moveSpeed * Time.fixedDeltaTime;
         _rb.MovePosition(_rb.position + _movement.normalized * _moveSpeed * Time.fixedDeltaTime);
     }
@@ -153,8 +152,10 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     //When player takes damage, reduce current health and flicker sprite
     public override void TakeDamage(int damageTaken)
     {
+        Debug.Log(damageTaken);
         if (!_invulnerable)
         {
+            CameraShake.instance.SetUpShake(4f, .1f);
             _currHealth -= damageTaken;
             _healthBar.SetHealth(_currHealth);
             _flicker.Flicker(this);
@@ -332,6 +333,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     public void LoadData(GameData data)
     {
         Debug.Log("HELLPPPP");
+        
         this._currHealth = data.currHealth;
         this.maxHealth = data.maxHealth;
         this.maxMana = data.maxMana;

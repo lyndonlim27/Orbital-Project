@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: King
   m_EditorClassIdentifier: 
   _name: King
-  minDist: 10
+  minDist: 15
   sprite: {fileID: -1902266288, guid: ee063f2c33b264eae926b6d348e67d75, type: 3}
   pattern: 0
   condition: 0
@@ -26,18 +26,28 @@ MonoBehaviour:
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 5
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 1
+  attackAudios:
+  - {fileID: 8300000, guid: e192335435ee144c98cb0eeac7a9d221, type: 3}
+  miscellaneousAudios: []
+  interactionAudios: []
   itemTextDatas: []
   ac_name: AC_King
   _trigger: 
   item_type: 0
   secondarysprite: {fileID: 0}
   description: 
-  damageValue: 1
+  damageValue: 5
   moveSpeed: 3
   chaseSpeed: 4
   attackRange: 1
   attackSpeed: 1
-  maxDist: 15
+  maxDist: 25
   meleetriggers:
   - Melee1
   - Melee2
@@ -46,8 +56,13 @@ MonoBehaviour:
   rangedtriggers: []
   dashattacks: []
   rangedDatas: []
+  bossdamageprops: []
+  bossSummonprops: []
+  bossdefenceprops: []
   animatorname: AC_King
-  words: 1
+  words: 15
   rangedcooldown: 0
   stage2: 0
+  healStage: 0
   enragedColor: {r: 0, g: 0, b: 0, a: 0}
+  body: 0

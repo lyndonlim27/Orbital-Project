@@ -26,6 +26,16 @@ MonoBehaviour:
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 1.5
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 0
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios:
+  - {fileID: 8300000, guid: 31b12d103e2934983952a184ed549df4, type: 3}
   itemTextDatas: []
   ac_name: Chest
   _trigger: defaultOpen

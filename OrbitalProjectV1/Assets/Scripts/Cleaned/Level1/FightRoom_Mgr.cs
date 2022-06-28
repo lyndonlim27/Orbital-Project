@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class FightRoom_Mgr : RoomManager 
 {
-    int waveNum;
-    int startNum;
+    [SerializeField] private int waveNum;
+    
 
     private void Start()
     {
-        //waveNum = Random.Range(4, 7);
-        waveNum = 1;
         startNum = 1;
     }
 
@@ -18,24 +16,13 @@ public class FightRoom_Mgr : RoomManager
     protected override void Update()
     {
         base.Update();
-        Debug.Log(CheckEnemiesDead());
-        if (CheckEnemiesDead() && startNum != waveNum)
-        {
-            int rand = Random.Range(3, 5);
-            startNum++;
-            textDescription.StartDescription("Wave " + startNum);
-            for (int i= 0; i < rand; i++)
-            {
-                EntityData entitydata = _EntityDatas[Random.Range(0, _EntityDatas.Length)];
-                SpawnObject(entitydata);
-            }
-        }
+        FightRoomCheck(waveNum);
         RoomChecker();
         CheckRunningEvents();
-        
+
     }
 
-
+    
 
     protected override bool CanProceed()
     {

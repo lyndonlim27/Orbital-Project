@@ -9,5 +9,12 @@ public class NPCData : EntityData
     public string _animator;
     public EntityData[] dropData;
     public ItemWithTextData prereq;
+    public Sprite dialogueFace;
+    public enum NPCActions
+    {
+        DEFAULT,
+        TYPINGTEST,
+    }
+    public NPCActions _npcAction;
 
 }

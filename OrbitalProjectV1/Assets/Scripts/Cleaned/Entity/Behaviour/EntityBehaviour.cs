@@ -7,6 +7,9 @@ public abstract class EntityBehaviour : MonoBehaviour
     public SpriteRenderer spriteRenderer { get; protected set; }
 
     [SerializeField] protected RoomManager currentRoom;
+    [SerializeField] protected AudioSource audioSource;
+    [SerializeField] protected bool inAudio;
+    [SerializeField] protected AudioClip footStep;
 
     protected PoolManager poolManager;
 
@@ -16,11 +19,18 @@ public abstract class EntityBehaviour : MonoBehaviour
 
     public bool inAnimation;
 
+    public bool Debuffed;
+
     protected virtual void Awake()
     {
         poolManager = FindObjectOfType<PoolManager>(true);
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.sortingOrder = 1;
+        audioSource = GetComponent<AudioSource>();
+        inAudio = false;
+        Debuffed = false;
+        footStep = Resources.Load("Sounds/Player/FootStep") as AudioClip;
+   
     }
 
     public abstract void SetEntityStats(EntityData stats);
@@ -30,8 +40,6 @@ public abstract class EntityBehaviour : MonoBehaviour
     public virtual void TakeDamage(int damage)
     {
         health -= damage;
-        Debug.Log(damage);
-        Debug.Log(health);
         if (health <= 0 && !isDead)
         {
             isDead = true;
@@ -48,6 +56,18 @@ public abstract class EntityBehaviour : MonoBehaviour
     }
 
     public abstract EntityData GetData();
+
+    protected virtual IEnumerator FootStepAudio()
+    {
+        if (!GetData().floating && GetData().moveable && !inAudio)
+        {
+            inAudio = true;
+            audioSource.clip = footStep;
+            audioSource.Play();
+            yield return new WaitForSeconds(footStep.length);
+            inAudio = false;
+        }
+    }
 
 
     public virtual IEnumerator FadeOut()
@@ -66,6 +86,20 @@ public abstract class EntityBehaviour : MonoBehaviour
     public void SetCurrentRoom(RoomManager roomManager)
     {
         currentRoom = roomManager;
+    }
+
+    protected IEnumerator LoadSingleAudio(AudioClip audioClip)
+    {
+        audioSource.Stop();
+        inAudio = true;
+        float ogpitch = audioSource.pitch;
+        audioSource.pitch = 1f;
+        audioSource.clip = audioClip;
+        audioSource.Play();
+        yield return new WaitForSeconds(audioSource.clip.length);
+        inAudio = false;
+        audioSource.pitch = ogpitch;
+
     }
 
 }

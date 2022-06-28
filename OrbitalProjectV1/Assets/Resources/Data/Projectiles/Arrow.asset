@@ -26,7 +26,17 @@ MonoBehaviour:
   damageFlicker: {fileID: 0}
   spawnAtStart: 0
   scale: 3
-  damage: 0
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 0
+  attackAudios:
+  - {fileID: 8300000, guid: c25b1fe8b1dfa4b4497651f000e2f41c, type: 3}
+  miscellaneousAudios: []
+  interactionAudios: []
+  damage: 3
   speed: 6
   rotation: 200
   lifetime: 3

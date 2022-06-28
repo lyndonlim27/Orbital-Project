@@ -9,6 +9,7 @@ public class TrapMovementBehaviour : EntityBehaviour
     [SerializeField] private TrapData trapData;
     private Animator animator;
     private float dist;
+    private DamageApplier damageApplier;
 
     public override void Defeated()
     {
@@ -25,6 +26,12 @@ public class TrapMovementBehaviour : EntityBehaviour
         trapData = stats as TrapData;
     }
 
+    protected override void Awake()
+    {
+        base.Awake();
+        damageApplier = GetComponentInChildren<DamageApplier>(true);   
+    }
+
     private void Start()
     {
         currentRoom = GetComponentInParent<RoomManager>();
@@ -33,6 +40,12 @@ public class TrapMovementBehaviour : EntityBehaviour
         forward = transform.localScale.x == 1;
         animator.SetBool(string.Format("SawTrap{0}", Random.Range(1, 4)), true);
         inAnimation = true;
+        damageApplier.SettingUpDamage(trapData.damage);
+        if (trapData.attackAudios.Count > 0)
+        {
+            damageApplier.SettingUpAudio(trapData.attackAudios[0]);
+        }
+        
         //Debug.Log("Roomsize = " + currentRoom.GetRoomAreaBounds().size.y);
         dist = 2.5f;
     }

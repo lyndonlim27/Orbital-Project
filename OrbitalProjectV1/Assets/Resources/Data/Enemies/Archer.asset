@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Archer
   m_EditorClassIdentifier: 
   _name: Archer
-  minDist: 10
+  minDist: 20
   sprite: {fileID: -1560866690, guid: 1ab00e31be2ef4978bbb4df111a31b42, type: 3}
   pattern: 0
   condition: 0
@@ -26,18 +26,27 @@ MonoBehaviour:
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 5
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 1
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios: []
   itemTextDatas: []
   ac_name: AC_OneStateRanged
   _trigger: 
   item_type: 3
   secondarysprite: {fileID: 0}
   description: 
-  damageValue: 1
+  damageValue: 3
   moveSpeed: 3
   chaseSpeed: 4
   attackRange: 1
   attackSpeed: 1
-  maxDist: 15
+  maxDist: 25
   meleetriggers: []
   defends: []
   rangedtriggers:
@@ -45,8 +54,13 @@ MonoBehaviour:
   dashattacks: []
   rangedDatas:
   - {fileID: 11400000, guid: 1fd8220190ddf4b02bd257a8bbf4c48a, type: 2}
+  bossdamageprops: []
+  bossSummonprops: []
+  bossdefenceprops: []
   animatorname: AC_OneStateRanged
-  words: 1
+  words: 10
   rangedcooldown: 2
   stage2: 0
+  healStage: 0
   enragedColor: {r: 0, g: 0, b: 0, a: 0}
+  body: 1

@@ -20,18 +20,25 @@ MonoBehaviour:
   _type: 12
   multispawns: 1
   startPos: {x: 8, y: -135}
-  endPos: {x: 15, y: -122}
+  endPos: {x: 14, y: -122}
   random: 0
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 1
+  staggered: 0
+  staggerTime: 0
   duration: 6
   defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 0
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios: []
   activatedcolor: {r: 0, g: 0, b: 0, a: 0}
   triggername: MagicTrap
   ontrigger: 0
-  damage: 0
+  damage: 3
   quaternion: {x: 0, y: 0, z: 0, w: 0}
   ranged: 0
   horizontal: 0

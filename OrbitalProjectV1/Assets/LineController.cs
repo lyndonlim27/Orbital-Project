@@ -9,13 +9,13 @@ public class LineController : MonoBehaviour
     LineRenderer lineRenderer;
     Transform origin;
     [SerializeField] private LayerMask layerMask;
-    EnemyBehaviour parent;
+    [SerializeField] EnemyBehaviour parent;
     float duration;
 
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
-        parent = GetComponentInParent<EnemyBehaviour>();
+        
     }
 
     private void Start()
@@ -25,9 +25,15 @@ public class LineController : MonoBehaviour
         origin = transform;
     }
 
+    public void SetParent(EnemyBehaviour enemyBehaviour)
+    {
+        this.parent = enemyBehaviour;
+    }
+
     private void OnDisable()
     {
         ResetLineRenderer();
+        
     }
 
     public IEnumerator AnimateLine()
@@ -51,7 +57,7 @@ public class LineController : MonoBehaviour
                 yield return null;
             }
 
-            
+
             while (t < duration)
             {
                 t += Time.deltaTime;
@@ -64,6 +70,20 @@ public class LineController : MonoBehaviour
             }
 
             ResetLineRenderer();
+            ResetCooldown();
+        }
+    }
+
+    private void ResetCooldown()
+    {
+        Debug.Log("Reseted cooldown?");
+        if (parent != null)
+        {
+            if (parent.currstate != StateMachine.STATE.RECOVERY)
+            {
+                parent.resetCooldown();
+            }
+            
         }
     }
 
@@ -85,7 +105,5 @@ public class LineController : MonoBehaviour
         lineRenderer.enabled = false;
         lineRenderer.SetPosition(1, new Vector2(0, 0));
         transform.rotation = Quaternion.identity;
-        parent.resetCooldown();
-        parent.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
     }
 }

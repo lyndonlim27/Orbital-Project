@@ -2,17 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 
-/**
- * GameOver UI Page.
+/*GameOver UI Page.
  */
 public class GameOver : MonoBehaviour
 {
+    private DataPersistenceManager _dataManager;
+    private LoadScene _loadScene;
+    private Button[] _buttons;
 
-    /**
-     * Disable all active gameObjects and Setup GameOver Page.
+    private void Start()
+    {
+        _dataManager = FindObjectOfType<DataPersistenceManager>();
+        _loadScene = FindObjectOfType<LoadScene>();
+        _buttons = GetComponentsInChildren<Button>();
+        _buttons[0].onClick.AddListener(RestartButton);
+        _buttons[1].onClick.AddListener(ExitButton);
+
+    }
+
+    /* Disable all active gameObjects and Setup GameOver Page.
      */
     public void Setup()
     {
@@ -22,7 +32,7 @@ public class GameOver : MonoBehaviour
         {
             if (obj.CompareTag("Enemy") || obj.CompareTag("Player"))
             {
-                //if (!(obj.CompareTag("MainCamera") || obj.CompareTag("CMCam") || obj.CompareTag("Audio")))
+                //if (!(obj.CompareTag("MainCamera")  obj.CompareTag("CMCam") || obj.CompareTag("Audio")))
                 obj.SetActive(false);
             }
         }
@@ -31,19 +41,17 @@ public class GameOver : MonoBehaviour
     }
 
 
-    /**
-     * Restart Button.
+    /* Restart Button.
      */
     public void RestartButton()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        _dataManager.LoadGame();
     }
 
-    /**
-     * Exit Button.
+    /* Exit Button.
      */
     public void ExitButton()
     {
-        SceneManager.LoadScene("MainMenu");
+        _loadScene.LoadMainMenu();
     }
 }

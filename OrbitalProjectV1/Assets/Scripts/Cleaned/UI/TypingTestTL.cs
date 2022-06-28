@@ -10,11 +10,12 @@ public class  TypingTestTL : TextLogic
 
     private float seconds;
     private int wordCount;
-    private CanvasConverter textConverter;
+    private TextConverter textConverter;
     private TextMeshProUGUI CanvasDisplayer;
-    private RoomManager roomManager;
+    private RoomManager currentRoom;
     private List<string> storybank = new List<string>();
     private DialogueDetection dialogueDetection;
+    private DialogueManager dialMgr;
 
 
     protected override void Awake()
@@ -36,15 +37,21 @@ public class  TypingTestTL : TextLogic
         }
         
         CanvasDisplayer = GetComponent<TextMeshProUGUI>();
-        textConverter = GetComponent<CanvasConverter>();
+        textConverter = GetComponent<TextConverter>();
         dialogueDetection = FindObjectOfType<DialogueDetection>(true);
         
     }
 
     protected override void Start()
     {
-        transform.root.gameObject.SetActive(false);
+        transform.parent.parent.gameObject.SetActive(false);
     }
+
+    public void SetActive() {
+
+        transform.parent.parent.gameObject.SetActive(true);
+    }
+
 
     protected override void OnEnable()
     {
@@ -66,6 +73,7 @@ public class  TypingTestTL : TextLogic
         {
             textConverter.enabled = false;
             CanvasDisplayer.text = string.Format("Words Per Minute = {0}",  (wordCount * 2));
+            
             StartCoroutine(WaitForStats());
         }
         
@@ -102,6 +110,11 @@ public class  TypingTestTL : TextLogic
 
     }
 
+    public void SetCurrentRoom(RoomManager room)
+    {
+        currentRoom = room;
+    }
+
 
     protected override void Validator(char inputchar)
     {
@@ -134,7 +147,6 @@ public class  TypingTestTL : TextLogic
 
     private IEnumerator CountDown()
     {
-        
         List<string> counter = new List<string>() { "THREE", "TWO", "ONE" };
         for (int i = 0; i < counter.Count; i++)
         {
@@ -144,7 +156,7 @@ public class  TypingTestTL : TextLogic
         }
 
         wordCount = 0;
-        seconds = 30;
+        seconds = 1;
         remainingword = storybank[0];
         storybank.Remove(remainingword);
         int j = 4;
@@ -159,19 +171,29 @@ public class  TypingTestTL : TextLogic
 
     }
 
-    protected override void PerformAction()
-    {
-        throw new System.NotImplementedException();
-    }
+    //protected override void PerformAction()
+    //{
+    //    currentRoom.FulfillCondition(this.name + GetInstanceID());
+    //}
 
 
     private IEnumerator WaitForStats()
     {
         yield return new WaitForSeconds(2f);
-        
+        var ply = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        ply.enabled = true;
+        ply.UnFreeze();
+        currentRoom.FulfillCondition(NPCData.NPCActions.TYPINGTEST.ToString());
         this.transform.parent.parent.gameObject.SetActive(false);
-        this.enabled = false;
+        
+
+        
         //go.SetActive(false);
 
+    }
+
+    protected override void PerformAction()
+    {
+        throw new System.NotImplementedException();
     }
 }

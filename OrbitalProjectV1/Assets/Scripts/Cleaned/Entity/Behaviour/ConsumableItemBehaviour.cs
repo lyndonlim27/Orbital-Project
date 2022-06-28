@@ -20,6 +20,7 @@ public class ConsumableItemBehaviour : EntityBehaviour
     {
         base.Awake();
         animator = GetComponent<Animator>();
+        animator.keepAnimatorControllerStateOnDisable = false;
         _tf = GetComponent<Transform>();
         wordStorageManager = FindObjectOfType<WordStorageManagerUI>(true);
     }
@@ -67,17 +68,12 @@ public class ConsumableItemBehaviour : EntityBehaviour
 
     private void OnEnable()
     {
-        Debug.Log(_itemData.sprite);
-        if (_itemData._consumableType == ConsumableItemData.CONSUMABLE.LETTER)
-        {
-            animator.enabled = false;
-        } else
-        {
-            animator.enabled = true;
-        }
+        //RuntimeAnimatorController oganimator = animator.runtimeAnimatorController;
+        //animator = null;
         spriteRenderer.sprite = _itemData.sprite;
+        animator.Play(_itemData._name);
         finishedBouncing = false;
-        GetComponent<TrailRenderer>().startColor = spriteRenderer.color;
+        GetComponent<TrailRenderer>().startColor = _itemData.defaultcolor;
         SetUpDropArea();
     }
 
@@ -105,6 +101,7 @@ public class ConsumableItemBehaviour : EntityBehaviour
 
     public override void SetEntityStats(EntityData stats)
     {
+        Debug.Log(stats);
         this._itemData = (ConsumableItemData) stats;
     }
 
@@ -117,17 +114,32 @@ public class ConsumableItemBehaviour : EntityBehaviour
             {
                 default:
                 case ConsumableItemData.CONSUMABLE.HEALTH:
-                    player.AddHealth(_itemData._health);
+                    player.AddHealth(Random.Range(0, _itemData._health));
+                    break;
+                case ConsumableItemData.CONSUMABLE.MANA:
+                    player.AddMana(Random.Range(0, _itemData._mana));
                     break;
                 case ConsumableItemData.CONSUMABLE.GOLD:
-                    player.AddGold(_itemData._gold);
+                    player.AddGold(Random.Range(0, _itemData._gold));
+                    break;
+                case ConsumableItemData.CONSUMABLE.LETTER:
+                    WordStorageManagerUI.instance.AddItem(_itemData);
                     break;
             }
-            soundeffect.Play();
-            StartCoroutine(FadeOut(soundeffect.clip.length));
-            
+            Debug.Log("This is item data" + _itemData._name);
+            StartCoroutine(WaitForAwhileBeforeRelease());
+
         }
     }
+
+    private IEnumerator WaitForAwhileBeforeRelease()
+    {
+        yield return StartCoroutine(LoadSingleAudio(_itemData.interactionAudios[0]));
+        poolManager.ReleaseObject(this);
+    }
+
+
+
     ////Fades sprite
     IEnumerator FadeOut(float f)
     {
@@ -139,16 +151,7 @@ public class ConsumableItemBehaviour : EntityBehaviour
             yield return new WaitForSeconds(0.05f);
         }
 
-        AddLetterToStorage();
         Defeated();
-    }
-
-    private void AddLetterToStorage()
-    {
-        if (_itemData._consumableType == ConsumableItemData.CONSUMABLE.LETTER)
-        {
-            WordStorageManagerUI.instance.AddItem(_itemData);
-        }
     }
 
     public override void Defeated()

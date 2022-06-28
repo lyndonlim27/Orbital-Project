@@ -19,7 +19,7 @@ public class TreasureRoom_Mgr : RoomManager
     protected override void Update()
     {
         base.Update();
-        Debug.Log(CanProceed());
+        
         RoomChecker();
         CheckRunningEvents();
     }

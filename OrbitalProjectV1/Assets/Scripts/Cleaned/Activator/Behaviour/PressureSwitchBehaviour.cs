@@ -10,13 +10,14 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
     private Coroutine _coroutine = null;
     private float activatedTime;
     private CircleCollider2D body;
+    private bool entered;
+    [SerializeField] protected AudioClip audioClip;
 
     void OnDrawGizmos() { Gizmos.DrawWireSphere(transform.position, 1); }
 
     protected override void Awake()
     {
         base.Awake();
-        
         colliders = new List<Collider2D>();
        
 
@@ -50,11 +51,18 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
     {
         if (!IsOn()) 
         {
+            entered = false;
             spriteRenderer.color = data.defaultcolor;
 
         }
         else
         {
+            
+            if (!entered)
+            {
+                StartCoroutine(LoadSingleAudio(audioClip));
+                entered = true;
+            }
             spriteRenderer.color = data.activatedcolor;
         }
     }
@@ -62,7 +70,7 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
 
     public bool IsOn()
     {
-
+        
         return body.IsTouchingLayers(layerMask);
     }
 

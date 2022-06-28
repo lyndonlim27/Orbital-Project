@@ -5,7 +5,6 @@ using UnityEngine;
 public class PressurePlateRoom_Mgr : RoomManager
 {   
     
-    private bool spawned;
 
     protected override void Awake()
     {
@@ -16,7 +15,6 @@ public class PressurePlateRoom_Mgr : RoomManager
 
     protected void Start()
     {
-        spawned = false;
         
     }
 
@@ -29,18 +27,12 @@ public class PressurePlateRoom_Mgr : RoomManager
 
     }
 
-
-    protected override void CheckRunningEvents()
+    protected override void RoomChecker()
     {
-        if (dialMgr.playing || popUpSettings.gameObject.activeInHierarchy)
+        if (pressureRoomComplete)
         {
-            PauseGame();
+            base.RoomChecker();
         }
-        else
-        {
-            ResumeGame();
-        }
-
+        
     }
-
 }

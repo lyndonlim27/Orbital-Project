@@ -12,7 +12,7 @@ using UnityEngine.Pool;
  */
 
 
-public abstract class RoomManager : MonoBehaviour
+public abstract class RoomManager : MonoBehaviour, IDataPersistence
 {
 
     /**
@@ -69,7 +69,7 @@ public abstract class RoomManager : MonoBehaviour
 
     protected AstarPath astarPath;
     protected DoorManager doorManager;
-
+    
 
     /**
      * Data.
@@ -82,6 +82,7 @@ public abstract class RoomManager : MonoBehaviour
     protected PolygonCollider2D roomArea;
     protected bool activated;
     protected bool pressureRoomComplete;
+    protected int startNum;
     private Vector2 areaminBound;
     private Vector2 areamaxBound;
     protected DialogueManager dialMgr;
@@ -98,7 +99,7 @@ public abstract class RoomManager : MonoBehaviour
      */
     protected PopUpSettings popUpSettings;
     private PoolManager poolManager;
-    
+
 
     /**
      * Retrieving of Data.
@@ -120,14 +121,14 @@ public abstract class RoomManager : MonoBehaviour
         poolManager = FindObjectOfType<PoolManager>(true);
         //doorManager = FindObjectOfType<DoorManager>(true);
         astarPath = FindObjectOfType<AstarPath>(true);
-        spawnlater = new List<EntityData>(); 
-        foreach(Light2D light in lights)
+        spawnlater = new List<EntityData>();
+        foreach (Light2D light in lights)
         {
             light.GetComponent<Animator>().SetBool(light.name, true);
         }
-        textDescription = FindObjectOfType<UITextDescription>(true);   
+        textDescription = FindObjectOfType<UITextDescription>(true);
         pointer = FindObjectOfType<UIObjectivePointer>(true);
-
+        GenerateGuid();
     }
 
     //protected void OnEnable()
@@ -136,9 +137,9 @@ public abstract class RoomManager : MonoBehaviour
     //}
 
     private void Start()
-    { 
+    {
         //SafePath();
-        
+
     }
 
     //protected void OnDisable()
@@ -173,7 +174,7 @@ public abstract class RoomManager : MonoBehaviour
             dialMgr.SetCurrentRoom(this);
 
         }
-        
+
     }
 
     private void DeActivateAStar()
@@ -221,7 +222,7 @@ public abstract class RoomManager : MonoBehaviour
         {
             conditions.Add(key);
         }
-        
+
     }
 
     protected virtual void RoomChecker()
@@ -244,20 +245,29 @@ public abstract class RoomManager : MonoBehaviour
         //{
         //    LockDoorsOnThisLevel();
         //}
-        
+
     }
 
     private void DisableTrapBehaviour()
     {
         TrapBehaviour[] trapBehaviours = GetComponentsInChildren<TrapBehaviour>();
+        TrapMovementBehaviour[] trapMovementBehaviours = GetComponentsInChildren<TrapMovementBehaviour>();
         if (trapBehaviours != null)
         {
-            foreach(TrapBehaviour trap in trapBehaviours)
+            foreach (TrapBehaviour trap in trapBehaviours)
             {
                 trap.enabled = false;
             }
-        } 
-      
+        }
+
+        if (trapMovementBehaviours != null)
+        {
+            foreach (TrapMovementBehaviour trapmvmt in trapMovementBehaviours)
+            {
+                trapmvmt.enabled = false;
+            }
+        }
+
     }
 
 
@@ -282,7 +292,7 @@ public abstract class RoomManager : MonoBehaviour
             Random.Range(areaminBound.x, areamaxBound.x),
             Random.Range(areaminBound.y, areamaxBound.y));
 
-        } while (!roomArea.OverlapPoint(randomPoint) && !Physics2D.OverlapCircle(randomPoint, 1, LayerMask.GetMask("Obstacles")));
+        } while (!roomArea.OverlapPoint(randomPoint)); //&& !Physics2D.OverlapCircle(randomPoint, 1, LayerMask.GetMask("Obstacles"))
         //&& safeRoute.Contains(randomPoint));
         return randomPoint;
     }
@@ -307,7 +317,7 @@ public abstract class RoomManager : MonoBehaviour
             randomPoint = new Vector2(
             Random.Range(minArea.x, maxArea.x),
             Random.Range(minArea.y, maxArea.y));
-        } while (!roomArea.OverlapPoint(randomPoint) && !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles")));
+        } while (!roomArea.OverlapPoint(randomPoint)); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
         //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
         return randomPoint;
     }
@@ -324,8 +334,8 @@ public abstract class RoomManager : MonoBehaviour
                 conditions.Add(entitydata._name + entitydata.GetInstanceID());
             }
             if (entitydata.spawnAtStart)
-            { 
-            
+            {
+
                 InstantiateEntity(entitydata);
             }
 
@@ -340,7 +350,7 @@ public abstract class RoomManager : MonoBehaviour
     {
         if (entityDatas == null)
         {
-            
+
             return;
         }
         for (int i = 0; i < entityDatas.Length; i++)
@@ -348,10 +358,10 @@ public abstract class RoomManager : MonoBehaviour
 
             EntityData _item = entityDatas[i];
             //EntityBehaviour initprop;
-            
+
             if (_item.condition == 1)
             {
-                
+
                 conditions.Add(_item._name + _item.GetInstanceID());
             }
 
@@ -361,16 +371,16 @@ public abstract class RoomManager : MonoBehaviour
                 continue;
             } else
             {
-                
+
                 if (_item.multispawns)
                 {
                     InstantiateMultiPosition(_item);
                 } else
                 {
-                    
+
                     InstantiateEntity(_item);
                 }
-                
+
             }
 
 
@@ -415,8 +425,8 @@ public abstract class RoomManager : MonoBehaviour
         {
             SpawnInstant(points, item);
         }
-        
-     
+
+
     }
 
     private void SpawnInstant(List<Vector2> points, EntityData item)
@@ -439,7 +449,7 @@ public abstract class RoomManager : MonoBehaviour
             entity.spriteRenderer.color = copy.defaultcolor;
             InitializeEntity(copy, point, entity);
             yield return new WaitForSeconds(item.staggerTime);
-            
+
         }
     }
 
@@ -451,7 +461,7 @@ public abstract class RoomManager : MonoBehaviour
     private void SafePath()
     {
         safeRoute = new HashSet<Vector3>();
-        
+
         var startPosition = entryDoor.transform.position;
         foreach (DoorBehaviour door in doors)
         {
@@ -479,13 +489,13 @@ public abstract class RoomManager : MonoBehaviour
 
     }
 
-    
+
 
     public void InstantiateEntity(EntityData data)
     {
 
 
-        
+
         Vector2 pos = data.random ? GetRandomPoint() : data.pos;
         EntityBehaviour entity = poolManager.GetObject(data._type);
         InitializeEntity(data, pos, entity);
@@ -527,8 +537,10 @@ public abstract class RoomManager : MonoBehaviour
                 pressureitems.Add((PressureSwitchBehaviour)entity);
                 break;
             case EntityData.TYPE.NPC:
+            case EntityData.TYPE.NPCMOVABLE:
                 entity.transform.SetParent(transform);
-                npcs.Add((NPCBehaviour) entity);
+                SettingUpNPCObject((NPCData)data);
+                npcs.Add((NPCBehaviour)entity);
                 break;
             case EntityData.TYPE.ENEMY:
             case EntityData.TYPE.BOSS:
@@ -539,6 +551,26 @@ public abstract class RoomManager : MonoBehaviour
         entity.gameObject.SetActive(true);
     }
 
+
+    private void SettingUpNPCObject(NPCData data)
+    {
+        UnfulfillCondition(data._npcAction.ToString());
+        switch (data._npcAction)
+        {
+            case NPCData.NPCActions.DEFAULT:
+                FulfillCondition(data._npcAction.ToString());
+                break;
+            case NPCData.NPCActions.TYPINGTEST:
+                TypingTestTL _tl = FindObjectOfType<TypingTestTL>(true);
+                _tl.SetCurrentRoom(this);
+                break;
+        }
+
+        
+        
+    }
+
+
     private void SettingDefaults(EntityData data, Vector2 pos, EntityBehaviour entity)
     {
         entity.SetEntityStats(data);
@@ -546,8 +578,8 @@ public abstract class RoomManager : MonoBehaviour
         entity.transform.position = pos;
         entity.transform.localScale = new Vector2(data.scale, data.scale);
         entity.SetCurrentRoom(this);
-        
-        
+
+
     }
 
     public DoorBehaviour[] GetDoors()
@@ -586,6 +618,7 @@ public abstract class RoomManager : MonoBehaviour
     {
         if (activated)
         {
+
             return conditions.Count == 0 && CheckEnemiesDead();
         } else
         {
@@ -614,17 +647,21 @@ public abstract class RoomManager : MonoBehaviour
     */
     protected virtual void CheckRunningEvents()
     {
+        if (activated)
+        {
+            if (dialMgr.playing || typingTestTL.isActiveAndEnabled || popUpSettings.gameObject.activeInHierarchy)
+            {
 
-        //if (dialMgr.playing || typingTestTL.isActiveAndEnabled || popUpSettings.gameObject.activeInHierarchy)
-        //{
+                PauseGame();
+            }
+            else
+            {
+                ResumeGame();
 
-        //    PauseGame();
-        //}
-        //else
-        //{
-        //    ResumeGame();
+            }
 
-        //}
+        }
+        
     }
 
 
@@ -635,31 +672,44 @@ public abstract class RoomManager : MonoBehaviour
     public void ResumeGame()
     {
 
-        Freezable[] freezables = GetComponentsInChildren<Freezable>();
-        foreach (Freezable freezable in freezables)
+
+        EntityBehaviour[] entities = GetComponentsInChildren<EntityBehaviour>();
+        foreach (EntityBehaviour entity in entities)
         {
+            Freezable freezable = entity.GetComponent<Freezable>();
+            if (freezable != null && !entity.Debuffed)
+            {
+                freezable.UnFreeze();
+            }
             //_enemy.enabled = false;
             //_enemy.animator.enabled = false;
-            freezable.UnFreeze();
+
         }
+    
         player.UnFreeze();
         player.enabled = true;
     }
+
+    
 
     /**
      * Pause game.
      */
     public void PauseGame()
     {
-        Freezable[] freezables = GetComponentsInChildren<Freezable>();
-        foreach (Freezable freezable in freezables)
+        EntityBehaviour[] entities = GetComponentsInChildren<EntityBehaviour>();
+        foreach (EntityBehaviour entity in entities)
         {
-            //_enemy.enabled = false;
-            //_enemy.animator.enabled = false;
-            freezable.Freeze();
+            Freezable freezable = entity.GetComponent<Freezable>();
+            if (freezable != null)
+            {
+                freezable.Freeze();
+            }
+            
         }
         player.Freeze();
         player.enabled = false;
+        
     }
 
     /**
@@ -688,17 +738,17 @@ public abstract class RoomManager : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        
+
         if (!this.enabled)
         {
-            
+
             return;
         }
 
-        else  {
+        else {
 
-            
-            
+
+
             if (collision.CompareTag("Player") || collision.CompareTag("Stealth"))
 
             {
@@ -706,7 +756,7 @@ public abstract class RoomManager : MonoBehaviour
                 //Debug.Log("Room is activated" + activated);
                 //if (activated && player.GetCurrentRoom() != this)
                 //{
-                if (player.GetCurrentRoom() != this) {  
+                if (player.GetCurrentRoom() != this) {
                     textDescription.StartDescription(this.name);
                     pointer.StopNavi();
                     player.SetCurrentRoom(this);
@@ -714,18 +764,18 @@ public abstract class RoomManager : MonoBehaviour
                 // maybe we need to use this in the future, dk
                 if (!CanProceed())
                 {
-                    
+
                     if (pressureRoomComplete)
                     {
 
                         pressureSwitchDoor.unlocked = false;
                     }
-                    
+
                     LockDoorsOnThisLevel();
                 }
             }
         }
-        
+
     }
 
     protected void LockDoorsOnThisLevel()
@@ -738,7 +788,7 @@ public abstract class RoomManager : MonoBehaviour
             }
 
         }
-       
+
     }
 
 
@@ -776,7 +826,7 @@ public abstract class RoomManager : MonoBehaviour
     {
         Gizmos.color = _colour;
         Gizmos.DrawWireCube(transform.position, roomSize);
-        
+
 
     }
 
@@ -786,7 +836,7 @@ public abstract class RoomManager : MonoBehaviour
         {
             pointer.StartNavi(exitDoor.transform.position);
         }
-        
+
     }
 
     /**
@@ -799,9 +849,12 @@ public abstract class RoomManager : MonoBehaviour
         foreach (NPCBehaviour npc in npcs)
         {
             NPCData _data = npc.GetData() as NPCData;
-            if (!conditions.Contains(_data.prereq._name + _data.prereq.GetInstanceID()))
+            if (_data.prereq != null)
             {
-                npc.Proceed();
+                if (!conditions.Contains(_data.prereq._name + _data.prereq.GetInstanceID()))
+                {
+                    npc.Proceed();
+                }
             }
         }
     }
@@ -814,18 +867,38 @@ public abstract class RoomManager : MonoBehaviour
 
             if (pressureitems.Count != 0 && pressureitems.TrueForAll(item => item.IsOn()))
             {
-                
+
                 float duration = pressureitems[0].data.duration;
                 StartCoroutine(OpenDoorsTemp(duration));
             }
 
             if (conditions.Count == 0 && !pressureRoomComplete)
             {
-                
+
                 PressureRoomAfterAction();
                 pressureSwitchDoor.unlocked = true;
 
             }
+        }
+    }
+
+    protected virtual void FightRoomCheck(int waveNum)
+    {
+        if (activated)
+        {
+            if (CheckEnemiesDead() && startNum <= waveNum)
+            {
+                int rand = Random.Range(3, 5);
+                startNum++;
+                textDescription.StartDescription("Wave " + startNum);
+                for (int i = 0; i < rand; i++)
+                {
+                    EntityData entitydata = _EntityDatas[Random.Range(0, _EntityDatas.Length)];
+                    SpawnObject(entitydata);
+                }
+
+            }
+
         }
     }
 
@@ -840,7 +913,7 @@ public abstract class RoomManager : MonoBehaviour
                 SpawnObject(ed);
             });
             pressureRoomComplete = true;
-            
+
         }
     }
 
@@ -858,6 +931,8 @@ public abstract class RoomManager : MonoBehaviour
         {
             if (bossprop.GetData()._type == EntityData.TYPE.BOSSPROPS)
             {
+                ItemWithTextData _data = bossprop.GetData() as ItemWithTextData;
+                conditions.Remove(_data._name + _data.GetInstanceID());
                 poolManager.ReleaseObject(bossprop);
             }
         }
@@ -867,8 +942,33 @@ public abstract class RoomManager : MonoBehaviour
     private IEnumerator OpenDoorsTemp(float duration)
     {
         pressureSwitchDoor.unlocked = true;
-        yield return duration;
+        yield return new WaitForSeconds(duration);
         pressureSwitchDoor.unlocked = conditions.Count == 0;
     }
 
+    public void LoadData(GameData data)
+    {
+
+        if (data.rooms.GetValueOrDefault(this.name, -1) == 1)
+        {
+            this.enabled = false;
+        }
+
+
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        if (this.enabled)
+        {
+            if (!CanProceed())
+            {
+                data.rooms[this.name] = 0;
+                return;
+            }
+        }
+
+        data.rooms[this.name] = 1;
+    
+    }
 }

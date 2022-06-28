@@ -26,8 +26,18 @@ MonoBehaviour:
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 1
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 0
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios: []
   story: {fileID: 4900000, guid: 769fca554659b41448a65682236006be, type: 3}
   _animator: 
   dropData:
   - {fileID: 11400000, guid: 56aac5022e93a40f7a90d1d38fa8fd71, type: 2}
   prereq: {fileID: 11400000, guid: d6d87f42ba1984f5a93f3dc29ff9f954, type: 2}
+  dialogueFace: {fileID: 21300000, guid: 939192233bb5a4752a1ff95de98e2f4d, type: 3}

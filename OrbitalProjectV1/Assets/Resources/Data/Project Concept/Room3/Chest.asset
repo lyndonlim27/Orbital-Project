@@ -25,9 +25,21 @@ MonoBehaviour:
   pos: {x: -25.81, y: 33.55}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
-  scale: 0
+  scale: 1
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 0
+  NotURP: 1
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios: []
   itemTextDatas:
-  - {fileID: 11400000, guid: 2960cd649e1204ed39a48b8c0c4e4f2d, type: 2}
+  - {fileID: 11400000, guid: 63ce10b1c6dcc4c699c7eda2f2f5f916, type: 2}
   ac_name: Chest
   _trigger: Open
-  isAWeapon: 0
+  item_type: 2
+  secondarysprite: {fileID: 0}
+  description: 

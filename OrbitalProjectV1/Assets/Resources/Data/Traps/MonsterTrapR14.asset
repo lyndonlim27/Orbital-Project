@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10a1c4479d5574dac908b62726c971cb, type: 3}
   m_Name: MonsterTrapR14
   m_EditorClassIdentifier: 
-  _name: Chest
+  _name: open
   minDist: 3
   sprite: {fileID: 1616055449, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
   pattern: 0
@@ -22,10 +22,19 @@ MonoBehaviour:
   startPos: {x: 0, y: 0}
   endPos: {x: 0, y: 0}
   random: 0
-  pos: {x: 62, y: -67}
+  pos: {x: 59, y: -67}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 1.5
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 0
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios: []
   itemTextDatas:
   - {fileID: 11400000, guid: e2ba91a99bfb84c05b594010d3bf8927, type: 2}
   - {fileID: 11400000, guid: 97f7cb48e946b40f7812bd1a12e17289, type: 2}

@@ -30,7 +30,10 @@ public class PopUpSettings : MenuBehaviour
         this.transform.GetComponentInChildren<ControlMenu>(true).Inactive();
         this.transform.GetComponentInChildren<Shop>(true).Inactive();
         this.transform.GetComponentInChildren<StorageMenu>(true).Inactive();
-        _player.GetCurrentRoom().PauseGame();
+        if (_player.GetCurrentRoom() != null)
+        {
+            _player.GetCurrentRoom().PauseGame();
+        }
         _skillManager.enabled = false;
         _debuffBehaviour.enabled = false;
         _buffBehaviour.enabled = false;
@@ -40,7 +43,10 @@ public class PopUpSettings : MenuBehaviour
     public override void Inactive()
     {
         this.gameObject.SetActive(false);
-        _player.GetCurrentRoom().ResumeGame();
+        if (_player.GetCurrentRoom() != null)
+        {
+            _player.GetCurrentRoom().ResumeGame();
+        }
         _skillManager.enabled = true;
         _debuffBehaviour.enabled = true;
         _buffBehaviour.enabled = true;

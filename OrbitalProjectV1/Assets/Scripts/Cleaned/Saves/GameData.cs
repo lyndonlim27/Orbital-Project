@@ -33,7 +33,7 @@ public class GameData
     /*
      * Room Data
      */
-    public SerializableDictionary<string, bool> rooms;
+    public SerializableDictionary<string, int> rooms;
 
     // the values defined in this constructor will be the default values
     // the game starts with when there's no data to load
@@ -52,6 +52,6 @@ public class GameData
         moveSpeed = 5;
         currScene = "ProjectConceptScene3";
         this.ranged = true;
-        this.rooms = new SerializableDictionary<string, bool>();
+        this.rooms = new SerializableDictionary<string, int>();
     }
 }

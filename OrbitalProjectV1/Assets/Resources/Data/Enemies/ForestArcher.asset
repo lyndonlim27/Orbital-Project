@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ForestArcher
   m_EditorClassIdentifier: 
   _name: ForestArcher
-  minDist: 8
+  minDist: 15
   sprite: {fileID: -1943885830, guid: afd163eebdc4c4c0dbe4ef8acf43cbf1, type: 3}
   pattern: 0
   condition: 0
@@ -26,18 +26,27 @@ MonoBehaviour:
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 5
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 1
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios: []
   itemTextDatas: []
   ac_name: 
   _trigger: 
   item_type: 0
   secondarysprite: {fileID: 0}
   description: 
-  damageValue: 1
+  damageValue: 4
   moveSpeed: 3
   chaseSpeed: 4
   attackRange: 1
   attackSpeed: 1
-  maxDist: 15
+  maxDist: 25
   meleetriggers:
   - Melee1
   defends:
@@ -48,8 +57,13 @@ MonoBehaviour:
   dashattacks: []
   rangedDatas:
   - {fileID: 11400000, guid: 1fd8220190ddf4b02bd257a8bbf4c48a, type: 2}
+  bossdamageprops: []
+  bossSummonprops: []
+  bossdefenceprops: []
   animatorname: AC_ForestArcher
-  words: 1
+  words: 15
   rangedcooldown: 2
   stage2: 0
+  healStage: 0
   enragedColor: {r: 0, g: 0, b: 0, a: 0}
+  body: 0

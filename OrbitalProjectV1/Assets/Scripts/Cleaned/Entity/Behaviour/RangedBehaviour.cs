@@ -14,6 +14,8 @@ public class RangedBehaviour : EntityBehaviour, Freezable
     protected BoxCollider2D _collider;
     protected TrailRenderer _trailRenderer;
     protected RuntimeAnimatorController runtimeAnimator;
+    private static int count = 0;
+    private bool alreadyAttacked;
 
     [Header("Bullet properties")]
     [SerializeField] private float speed = 6.0f;
@@ -31,6 +33,7 @@ public class RangedBehaviour : EntityBehaviour, Freezable
         runtimeAnimator = _animator.runtimeAnimatorController;
         _rb = GetComponent<Rigidbody2D>();
         _collider = GetComponent<BoxCollider2D>();
+        audioSource.volume = 0.5f;
         //_trailRenderer = GetComponentInChildren<TrailRenderer>();
     }
 
@@ -69,8 +72,8 @@ public class RangedBehaviour : EntityBehaviour, Freezable
         {
             gameObject.layer = _target.GetComponent<Player>() == null ? LayerMask.NameToLayer("PlayerProjectile") : LayerMask.NameToLayer("EnemyProjectile");
         }
-
-        spriteRenderer.sortingOrder = 2;
+        alreadyAttacked = false;
+        spriteRenderer.sortingOrder = 4;
 
 
     }
@@ -150,6 +153,7 @@ public class RangedBehaviour : EntityBehaviour, Freezable
 
         _collider.size = rangedData.sprite.bounds.size; /* rangedData.scale*/
         _collider.offset = Vector2.zero;
+        //_collider.enabled = true;
 
 
     }
@@ -191,18 +195,16 @@ public class RangedBehaviour : EntityBehaviour, Freezable
 
     public override void Defeated()
     {
-        Debug.Log("We entered !");
         if (_firer != null)
         {
             EnemyBehaviour enemy = _firer.GetComponent<EnemyBehaviour>();
-            if (!enemy.insideStage2)
+            if (!enemy.insideStage2 && enemy.currstate != StateMachine.STATE.RECOVERY)
             {
                 enemy.resetCooldown();
             }
             //enemy.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
 
         }
-        
         poolManager.ReleaseObject(this);
 
     }
@@ -218,31 +220,57 @@ public class RangedBehaviour : EntityBehaviour, Freezable
     {
 
         //_trailRenderer.enabled = false;
-        stopMovement();
-        DisableAnimation();
-        GameObject go = collision.gameObject;
-        //if (go.layer == LayerMask.NameToLayer("enemy") && _firer.laye == "enemy"))
-        //{
-        //    return;
+        if (!alreadyAttacked)
+        {
+            DisableAnimation();
+            stopMovement();
+            alreadyAttacked = true;
+            GameObject go = collision.gameObject;
+            ApplyDamage(go);
+            
+            if (rangedData.impact_trigger != "")
+            {
+                _animator.SetBool(rangedData.impact_trigger, true);
+            }
+            else
+            {
+                Defeated();
 
-        //}
-        ApplyDamage(go);
-        if (rangedData.impact_trigger != "")
-        {
-            _animator.SetBool(rangedData.impact_trigger, true);
+            }
+
+
+
         }
-        else
-        {
-            Defeated();
-        }
+        
 
     }
+
+    public void PlayAudio()
+    {
+        if(rangedData.attackAudios.Count > 0)
+        {
+            audioSource.pitch = 1f;
+            audioSource.clip = rangedData.attackAudios[0];
+            audioSource.Play();
+        }
+        
+    }
+
+    //private IEnumerator WaitForAudio()
+    //{
+    //    if (rangedData.attackAudios.Count > 0)
+    //    {
+    //        yield return StartCoroutine(LoadSingleAudio(rangedData.attackAudios[0]));
+    //    }
+    //    yield return null;
+        
+    //}
 
     private void ApplyDamage(GameObject go)
     {
         if (ReferenceEquals(go, _target))
         {
-            //Debug.Log("??? wtf?");
+            
             if (go.CompareTag("Player"))
             {
                 Player player = go.GetComponent<Player>();
@@ -270,11 +298,17 @@ public class RangedBehaviour : EntityBehaviour, Freezable
     {
         //Setting collision to true so that it will trigger the next state
         //for bullet and thus play the explosion animation
-        GameObject go = collision.gameObject.transform.root.gameObject;
+        GameObject go = collision.gameObject;
         if (rangedData._type != EntityData.TYPE.PROJECTILE)
         {
-            ApplyDamage(go);
-            ApplyForce(go);
+            if (!alreadyAttacked)
+            {
+                alreadyAttacked = true;
+                Debug.Log("did we enter trigger");
+                ApplyDamage(go);
+                ApplyForce(go);
+            }
+            
         }
 
 
@@ -305,14 +339,13 @@ public class RangedBehaviour : EntityBehaviour, Freezable
         {
             stopMovement();
         }
+
     }
 
-    protected void stopMovement()
+    private void stopMovement()
     {
-
-        _rb.angularVelocity = 0;
         _rb.velocity = Vector2.zero;
-
+        _rb.angularVelocity = 0f;
     }
 
     protected void ShootAtTarget()

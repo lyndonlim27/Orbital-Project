@@ -19,6 +19,7 @@ public abstract class TextLogic : MonoBehaviour
     public string currentword { get; protected set; }
     private GameObject AudioSystem;
 
+   
     protected float minDist;
     protected int currentcounter = 0;
     protected EntityBehaviour parent;
@@ -32,6 +33,7 @@ public abstract class TextLogic : MonoBehaviour
         player = GameObject.FindObjectOfType<Player>(true);
         parent = GetComponentInParent<EntityBehaviour>();
         InstantiateAudio();
+        
         //Textdisplayer.alignment = TextAlignmentOptions.Center;
 
     }
@@ -193,7 +195,7 @@ public abstract class TextLogic : MonoBehaviour
         if (player != null)
         {
 
-            return Vector2.Distance(player.transform.position, this.transform.position) > minDist;
+            return Vector2.Distance(player.transform.position, parent.transform.position) > minDist;
 
         } else
         {

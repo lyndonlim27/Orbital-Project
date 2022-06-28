@@ -26,4 +26,11 @@ public class EnemyData : ItemWithTextData
     public bool stage2;
     public bool healStage;
     public Color enragedColor;
+    public enum BODYTYPE
+    {
+        MEN,
+        WOMEN,
+        MONSTER,
+    }
+    public BODYTYPE body;
 }

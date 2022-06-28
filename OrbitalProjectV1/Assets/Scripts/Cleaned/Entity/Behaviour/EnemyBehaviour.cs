@@ -32,6 +32,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     public Rigidbody2D rb { get; protected set; }
     //public Animator animator { get; protected set; }
     public bool insideStage2;
+    
 
     public Vector2 roamPos { get; protected set; }
     public float maxDist { get; protected set; }
@@ -46,6 +47,21 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     private Light2D light2D;
     private CapsuleCollider2D body;
     private LineController lineController;
+    private AstarPath astarPath;
+
+    /**
+     * AudioSources
+     */
+
+    //MaleAudios
+    public List<AudioClip> malesTakeDamageAudio;
+    public List<AudioClip> malesDoDamageAudio;
+
+    public List<AudioClip> femalesTakeDamageAudio;
+    public List<AudioClip> femalesDoDamageAudio;
+
+    public List<AudioClip> nonhumanTakeDamageAudio;
+
 
     /** Pathfinding Movement
      * 
@@ -60,13 +76,14 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     private Bounds bounds;
     private Patterns patterns;
     private int maxhealth;
-    
-
+    private float detectionRange;
+    private DamageApplier damageApplier;
 
     [Header("Cooldowns")]
     [SerializeField] protected float Dashcooldown;
     [SerializeField] protected float cooldown;
     [SerializeField] protected float healStagecooldown;
+    [SerializeField] protected float animatorspeed;
     //[SerializeField] protected float 
 
     protected override void Awake()
@@ -81,7 +98,11 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         light2D = GetComponentInChildren<Light2D>(true);
         patterns = Patterns.of(bounds.min, bounds.max);
         lineController = GetComponentInChildren<LineController>(true);
-       
+        damageApplier = GetComponentInChildren<DamageApplier>(true);
+        spriteRenderer.sortingOrder = 3;
+        astarPath = FindObjectOfType<AstarPath>(true);
+
+
 
 
     }
@@ -91,8 +112,8 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         health = enemyData.words;
         maxhealth = enemyData.words;
         isDead = false;
-        ResetTransform();
         DisableAnimator();
+        ResetTransform();
         SettingUpColliders();
         EnableAnimator(); 
         _healthBar.SetMaxHealth(maxhealth);
@@ -100,7 +121,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         if (ranged.isActiveAndEnabled)
         {
             lineController.ResetLineRenderer();
+            
         }
+        lineController.SetParent(this);
         ranged.rangeds = enemyData.rangedDatas;
         melee.gameObject.SetActive(enemyData.meleetriggers.Count > 0);
         ResettingColor();
@@ -110,6 +133,14 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         maxDist = enemyData.maxDist;
         rb = GetComponentInParent<Rigidbody2D>();
         healStagecooldown = 0;
+        if (damageApplier != null)
+        {
+            if (enemyData.attackAudios.Count > 0) {
+                damageApplier.SettingUpAudio(enemyData.attackAudios[0]);
+            }
+            damageApplier.SettingUpDamage(enemyData.damageValue);
+        }
+        
         
 
     }
@@ -131,11 +162,14 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     private void ResetTransform()
     {
         _transform = transform.parent;
+        transform.localPosition = Vector2.zero;
+        transform.localRotation = Quaternion.identity;
         facingRight = false;
         RectTransform rect = _healthBar.GetComponent<RectTransform>();
         float ratio = enemyData.scale / 5;
         //rect.localPosition = new Vector3(rect.localPosition.x * ratio, rect.localPosition.y +ratio);
         _healthBar.transform.localScale = new Vector2(1,1);
+        tl.transform.localScale = new Vector2(1f,1f);
         //tl.transform.localScale = new Vector2(ratio * 0.2f, ratio * 0.2f);
     }
 
@@ -160,7 +194,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
             coll.size = new Vector2(enemyData.sprite.bounds.size.x * 0.8f, enemyData.sprite.bounds.size.y * 0.8f);
             coll.offset = new Vector2(0.2f, 0);
             ranged.GetComponent<CircleCollider2D>().radius = enemyData.sprite.bounds.size.x * 6f;
-            detectionScript.GetComponent<CircleCollider2D>().radius = enemyData.sprite.bounds.size.x * 5f;
+            detectionRange = enemyData.sprite.bounds.size.x * 6f;
+            detectionScript.GetComponent<CircleCollider2D>().radius = detectionRange;
+            
         }
         
     
@@ -194,9 +230,23 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         CheckForHealStage();
         CheckHealStageInteruption();
         stateMachine.Update();
-        
+        animatorspeed = this.animator.speed;
         tick();
     }
+
+    public virtual void FixedUpdate()
+    {
+        if (rb != null)
+        {
+            if (rb.velocity != Vector2.zero)
+            {
+                StartCoroutine(FootStepAudio());
+            }
+        }
+        
+        
+    }
+
 
     void OnPathComplete(Pathfinding.Path p)
     {
@@ -217,10 +267,22 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Obstacles"))
+        if (collision.gameObject.CompareTag("Obstacles") || collision.gameObject.CompareTag("enemy") || collision.gameObject.CompareTag("Door"))
         {
-            getNewRoamPosition();
-            stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
+            
+            if (currstate == StateMachine.STATE.ROAMING)
+            {
+                
+                ABPath.Construct(transform.position, roamPos);
+
+            }
+            else if (currstate == StateMachine.STATE.CHASE)
+            {
+                ABPath.Construct(transform.position, player.transform.position);
+                
+            }
+
+            //stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
         }
     }
 
@@ -241,7 +303,72 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         if (cooldown > 0)
         {
             cooldown -= Time.deltaTime;
+            healStagecooldown -= Time.deltaTime;
         }
+    }
+
+    public void InstantiateDamageAudio()
+    {
+        
+        switch(enemyData.body)
+        {
+            case EnemyData.BODYTYPE.MEN:
+                int rand = Random.Range(0, malesDoDamageAudio.Count);
+                StartCoroutine(LoadAudio(rand,malesDoDamageAudio));
+                break;
+            case EnemyData.BODYTYPE.WOMEN:
+                int rand2 = Random.Range(0, femalesDoDamageAudio.Count);
+                StartCoroutine(LoadAudio(rand2, femalesDoDamageAudio));
+                break;
+            case EnemyData.BODYTYPE.MONSTER:
+                /*havent found audios yet*/
+                break;
+        }
+
+    }
+
+    public void InstantiateHurtAudio()
+    {
+        switch (enemyData.body)
+        {
+            case EnemyData.BODYTYPE.MEN:
+                int rand = Random.Range(0, malesTakeDamageAudio.Count);
+                StartCoroutine(LoadAudio(rand, malesTakeDamageAudio));
+                break;
+            case EnemyData.BODYTYPE.WOMEN:
+                int rand2 = Random.Range(0, femalesTakeDamageAudio.Count);
+                StartCoroutine(LoadAudio(rand2, femalesTakeDamageAudio));
+                break;
+            case EnemyData.BODYTYPE.MONSTER:
+                /*havent found audios yet*/
+                break;
+        }
+
+    }
+
+    public void PlayAudio()
+    {
+        if (enemyData.attackAudios.Count > 0)
+        {
+            audioSource.pitch = 1f;
+            audioSource.clip = enemyData.attackAudios[0];
+            audioSource.Play();
+        }
+
+    }
+
+    private IEnumerator LoadAudio(int rand, List<AudioClip> audioClips)
+    {
+        audioSource.Stop();
+        inAudio = true;
+        float ogpitch = audioSource.pitch;
+        audioSource.pitch = 1f;
+        audioSource.clip = audioClips[rand];
+        audioSource.Play();
+        yield return new WaitForSeconds(audioSource.clip.length);
+        inAudio = false;
+        audioSource.pitch = ogpitch;
+        
     }
 
     public virtual void resetPosition()
@@ -301,6 +428,17 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         }
         AStarMove(roamPos, enemyData.moveSpeed);
         flipFace(roamPos);
+    }
+
+    protected override IEnumerator FootStepAudio()
+    {
+        if (!inAudio)
+        {
+            audioSource.pitch = 0.6f;
+        }
+        
+        return base.FootStepAudio();
+
     }
 
     private void AStarMove(Vector2 destination, float speed)
@@ -364,6 +502,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         rb.velocity += (Vector2) velocity * Time.deltaTime;
     }
 
+    
 
     public void moveToTarget(Player player)
     {
@@ -519,7 +658,8 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     private void CheckForHealStage()
     {
-        if (enemyData.healStage && health <= 0.5f * maxhealth && !inAnimation && currstate != StateMachine.STATE.RECOVERY)
+        bool activatable = enemyData.healStage && health <= 0.5f * maxhealth && !inAnimation && currstate != StateMachine.STATE.RECOVERY && healStagecooldown <= 0;
+        if (activatable)
         {
             animator.SetTrigger("Heal");
             inAnimation = true;
@@ -592,12 +732,14 @@ public class EnemyBehaviour : ItemWithTextBehaviour
                 UnlockMovement();
                 resetPosition();
                 inAnimation = false;
+                InstantiateDamageAudio();
                 stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
                 
                 break;
             case ANIMATION_CODE.CAST_START:
                 flipFace(player.transform.position);
                 SpellAttack();
+                InstantiateDamageAudio();
                 break;
             case ANIMATION_CODE.SHOOT_START:
                 //animator.applyRootMotion = false;
@@ -610,6 +752,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
                 //    Shoot();
                 //}
                 Shoot();
+                InstantiateDamageAudio();
                 resetPosition();
 
                 break;
@@ -630,12 +773,20 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     public void LockMovement()
     {
-        rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        if (rb != null)
+        {
+            rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        }
+        
     }
 
     public void UnlockMovement()
     {
-        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        if (rb != null)
+        {
+            rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
+        
     }
 
     private void SpellAttack()
@@ -689,6 +840,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         //Debug.Log(health);
         _flicker.Flicker(this);
         base.TakeDamage(damage);
+        InstantiateHurtAudio();
         _healthBar.SetHealth(health);
         animator.SetTrigger("Hurt");
     }
@@ -740,6 +892,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         
         animator.SetBool("isAlive", false);
         body.enabled = false;
+        isDead = true;
         StartCoroutine(FadeOut());
        
 
@@ -870,14 +1023,26 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     public override void Freeze()
     {
-        rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        
+        if (rb != null)
+        {
+            LockMovement();
+        }
+        
         animator.speed = 0;
     }
 
     public override void UnFreeze()
     {
-        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+   
+        if (rb !=  null)
+        {
+            UnlockMovement();
+            
+        }
+
         animator.speed = 1;
+
     }
 
     //public void CastSpell()

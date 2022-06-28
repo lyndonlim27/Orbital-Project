@@ -4,15 +4,34 @@ using UnityEngine;
 
 public class HangManRoom_Mgr : RoomManager
 {
-    // Start is called before the first frame update
-    void Start()
+    private bool playing;
+
+    protected override void Awake()
     {
+        base.Awake();
+        playing = false;
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        RoomChecker();
+        if (!playing)
+        {
+            playing = true;
+            StartCoroutine(ThankYou());
+        }
+        
+
         
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator ThankYou()
     {
-        
+        Debug.Log("hmm? how many times");
+        textDescription.StartDescription("If you ever reached this part, I am surprised, not at your ability to complete the game, but at the fact that you didn't run into bugs!");
+        yield return new WaitForSeconds(2f);
+        textDescription.StartDescription("Thank you for playing the game, I hope you enjoyed it");
+        yield return new WaitForSeconds(2f);
     }
 }

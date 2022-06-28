@@ -20,8 +20,8 @@ public class WeaponPickup : MonoBehaviour
     public void Swap(string weapon)
     {
         //If current weapon is the same as pickup weapon, do nothing
-        Debug.Log(weapon);
-        Debug.Log(transform.Find(weapon));
+        
+        
         if (transform.Find(weapon).gameObject.activeInHierarchy == true)
         {
             return;

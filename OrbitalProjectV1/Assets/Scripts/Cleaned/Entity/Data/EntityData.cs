@@ -25,6 +25,7 @@ public class EntityData : ScriptableObject
         TRAP,
         PUZZLEBOX,
         FODDER,
+        NPCMOVABLE,
     }
     public enum PATTERN
     {
@@ -53,4 +54,12 @@ public class EntityData : ScriptableObject
     public float staggerTime;
     public float duration;
     public Color defaultcolor;
+    public bool floating;
+    public bool moveable;
+    public bool NotURP;
+
+    [Header("AudioClips")]
+    public List<AudioClip> attackAudios;
+    public List<AudioClip> miscellaneousAudios;
+    public List<AudioClip> interactionAudios;
 }

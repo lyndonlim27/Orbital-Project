@@ -68,7 +68,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: <sprite="unhighlighted" index=0>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -87,16 +87,16 @@ MonoBehaviour:
     bottomLeft: {r: 1, g: 1, b: 1, a: 1}
     bottomRight: {r: 1, g: 1, b: 1, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 11400000, guid: f1375da807fc64fdaac7e2b7fdd0248f, type: 2}
+  m_spriteAsset: {fileID: 11400000, guid: 104c07feea87c4e3293ab5b42ae4ad83, type: 2}
   m_tintAllSprites: 0
-  m_StyleSheet: {fileID: 0}
+  m_StyleSheet: {fileID: 11400000, guid: f952c082cb03451daed3ee968ac6c63e, type: 2}
   m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12
-  m_fontSizeBase: 12
+  m_fontSize: 36
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -161,6 +161,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72df990f3c94d4298b5cd8a371c8c7c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unhighlighted: {fileID: 11400000, guid: 104c07feea87c4e3293ab5b42ae4ad83, type: 2}
+  highlighted: {fileID: 11400000, guid: 350a737cf17534e718b4fb357771bbf0, type: 2}
 --- !u!1 &1120695536501485629
 GameObject:
   m_ObjectHideFlags: 0
