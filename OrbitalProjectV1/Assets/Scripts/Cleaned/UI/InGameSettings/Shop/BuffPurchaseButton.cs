@@ -14,7 +14,6 @@ public class BuffPurchaseButton : SkillPurchaseButton
     protected override void OnEnable()
     {
         base.OnEnable();
-        Debug.Log(player);
         if(player.GetBuffData() != null)
         {
             shop.SetBuffButtons(player.GetBuffData().skillName);

@@ -35,7 +35,7 @@ public class RangedComponent : AttackComponent
         Vector2 dir = (Vector2)(target.transform.position - transform.position).normalized;
         Vector2 pos = selectedAttack._type == RangedData.TYPE.CAST_SELF ? (Vector2) this.transform.position +
             new Vector2(parent.facingRight? selectedAttack.pos.x * -1f : selectedAttack.pos.x, selectedAttack.pos.y)  : (Vector2)this.transform.position + dir;
-        Quaternion quaternion = /* selectedAttack._type == RangedData.TYPE.CAST_SELF ? Quaternion.identity*/ Quaternion.Euler(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+        Quaternion quaternion = /*selectedAttack._type == RangedData.TYPE.CAST_SELF ? Quaternion.identity*/ Quaternion.Euler(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
         transform.rotation = quaternion;
         SettingUpProjectile(selectedAttack, quaternion, pos);
 
@@ -52,8 +52,6 @@ public class RangedComponent : AttackComponent
     public void ShootSingle()
     {
         List<RangedData> bullets = rangeds.FindAll(ranged => ranged._type.Equals(EntityData.TYPE.PROJECTILE));
-        Debug.Log("THis is bullets: " + bullets);
-        Debug.Log(bullets[0]);
         int random = Random.Range(0, bullets.Count);
         RangedData selectedAttack = bullets[random];
         Vector2 dir = (Vector2)(target.transform.position - transform.position).normalized;
@@ -67,8 +65,6 @@ public class RangedComponent : AttackComponent
     public void ShootSingleSphere()
     {
         List<RangedData> bullets = rangeds.FindAll(ranged => ranged._type.Equals(EntityData.TYPE.PROJECTILE));
-        Debug.Log("THis is bullets: " + bullets);
-        Debug.Log(bullets[0]);
         int random = Random.Range(0, bullets.Count);
         RangedData selectedAttack = bullets[random];
         StartCoroutine(RadialAttack(selectedAttack));
@@ -117,7 +113,6 @@ public class RangedComponent : AttackComponent
         List<RangedData> bullets = rangeds.FindAll(ranged => ranged._type == EntityData.TYPE.PROJECTILE);
         int random = Random.Range(0, bullets.Count);
         RangedData selectedAttack = bullets[random];
-        Debug.Log("This is selected attack" + selectedAttack);
         foreach(Vector2 target in targets)
         {
             Vector2 dir = (target - (Vector2)transform.position).normalized;
@@ -129,7 +124,6 @@ public class RangedComponent : AttackComponent
 
     private void SettingUpProjectile(RangedData rangedData, Quaternion _quaternion, Vector2 pos)
     {
-        Debug.Log(rangedData._type);
         RangedBehaviour projectile = poolManager.GetProjectile(rangedData, target.gameObject, this.gameObject);
         projectile.gameObject.transform.position = pos;
         projectile.gameObject.transform.rotation = _quaternion;

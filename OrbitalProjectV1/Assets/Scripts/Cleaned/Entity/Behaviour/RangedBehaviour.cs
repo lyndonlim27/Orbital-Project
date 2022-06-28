@@ -119,7 +119,6 @@ public class RangedBehaviour : EntityBehaviour, Freezable
         lifeTime -= Time.deltaTime;
         if (lifeTime <= 0)
         {
-            Debug.Log(lifeTime);
             Defeated();
         }
     }
@@ -304,7 +303,6 @@ public class RangedBehaviour : EntityBehaviour, Freezable
             if (!alreadyAttacked)
             {
                 alreadyAttacked = true;
-                Debug.Log("did we enter trigger");
                 ApplyDamage(go);
                 ApplyForce(go);
             }

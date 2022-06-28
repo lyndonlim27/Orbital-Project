@@ -13,7 +13,6 @@ public class DefeatedOnTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision);
         EnemyBehaviour enemy = collision.gameObject.GetComponentInChildren<EnemyBehaviour>();
         if (enemy != null)
         {

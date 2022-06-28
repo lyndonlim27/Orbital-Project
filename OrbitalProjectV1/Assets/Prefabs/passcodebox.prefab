@@ -162,8 +162,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72df990f3c94d4298b5cd8a371c8c7c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unhighlighted: {fileID: 11400000, guid: 104c07feea87c4e3293ab5b42ae4ad83, type: 2}
-  highlighted: {fileID: 11400000, guid: 350a737cf17534e718b4fb357771bbf0, type: 2}
+  unhighlighted: {fileID: 11400000, guid: 207fefa6c85e44a7f985ed2229aff347, type: 2}
+  highlighted: {fileID: 11400000, guid: b49c8f55be58f40aeb10b648adf90bec, type: 2}
 --- !u!82 &6179772808888528432
 AudioSource:
   m_ObjectHideFlags: 0
@@ -496,6 +496,7 @@ MonoBehaviour:
   footStep: {fileID: 0}
   isDead: 0
   inAnimation: 0
+  Debuffed: 0
   data: {fileID: 11400000, guid: 05486bde68e8e43c48368df23c9e44b2, type: 2}
   consumableItemDatas: []
 --- !u!70 &2057017466831945173

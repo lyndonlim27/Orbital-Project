@@ -24,7 +24,6 @@ public class HybridRoom_Mgr : RoomManager
     {
         base.Update();
         RoomChecker();
-        Debug.Log(conditions.Count);
         if (activated)
         {
             if (traps != null)

@@ -156,7 +156,7 @@ public class  TypingTestTL : TextLogic
         }
 
         wordCount = 0;
-        seconds = 1;
+        seconds = 30;
         remainingword = storybank[0];
         storybank.Remove(remainingword);
         int j = 4;

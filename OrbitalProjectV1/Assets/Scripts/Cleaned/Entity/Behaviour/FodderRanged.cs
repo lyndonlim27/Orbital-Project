@@ -19,7 +19,6 @@ public class FodderRanged : EnemyBehaviour
     public override void Update()
     {
         base.Update();
-        Debug.Log(stateMachine.currState);
     }
 
 

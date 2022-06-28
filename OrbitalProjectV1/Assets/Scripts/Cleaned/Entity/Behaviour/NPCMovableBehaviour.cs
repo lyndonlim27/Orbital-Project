@@ -17,7 +17,6 @@ public class NPCMovableBehaviour : NPCBehaviour
     void Start()
     {
         _target = GameObject.FindObjectOfType<Player>();
-        Debug.Log(animator.runtimeAnimatorController);
     }
 
     // Update is called once per frame

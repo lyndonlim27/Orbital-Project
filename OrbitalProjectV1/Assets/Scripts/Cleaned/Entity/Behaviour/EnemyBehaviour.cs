@@ -78,6 +78,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     private int maxhealth;
     private float detectionRange;
     private DamageApplier damageApplier;
+    private Vector2 velocityCheckPoint;
 
     [Header("Cooldowns")]
     [SerializeField] protected float Dashcooldown;
@@ -101,6 +102,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         damageApplier = GetComponentInChildren<DamageApplier>(true);
         spriteRenderer.sortingOrder = 3;
         astarPath = FindObjectOfType<AstarPath>(true);
+        velocityCheckPoint = new Vector2(0.5f, 0.5f);
 
 
 
@@ -112,6 +114,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         health = enemyData.words;
         maxhealth = enemyData.words;
         isDead = false;
+        inAnimation = false;
         DisableAnimator();
         ResetTransform();
         SettingUpColliders();
@@ -265,26 +268,26 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Obstacles") || collision.gameObject.CompareTag("enemy") || collision.gameObject.CompareTag("Door"))
-        {
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if (collision.gameObject.CompareTag("Obstacles") || collision.gameObject.CompareTag("enemy") || collision.gameObject.CompareTag("Door"))
+    //    {
             
-            if (currstate == StateMachine.STATE.ROAMING)
-            {
+    //        if (currstate == StateMachine.STATE.ROAMING)
+    //        {
                 
-                ABPath.Construct(transform.position, roamPos);
+    //            ABPath.Construct(transform.position, roamPos);
 
-            }
-            else if (currstate == StateMachine.STATE.CHASE)
-            {
-                ABPath.Construct(transform.position, player.transform.position);
+    //        }
+    //        else if (currstate == StateMachine.STATE.CHASE)
+    //        {
+    //            ABPath.Construct(transform.position, player.transform.position);
                 
-            }
+    //        }
 
-            //stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
-        }
-    }
+    //        //stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
+    //    }
+    //}
 
     public bool onCooldown()
     {
@@ -424,7 +427,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     {
         if (!reachedEndOfPath)
         {
-
+            if (body.IsTouchingLayers(LayerMask.GetMask("Obstacles", "enemy", "door"))) {
+                getNewRoamPosition();
+            }
         }
         AStarMove(roamPos, enemyData.moveSpeed);
         flipFace(roamPos);
@@ -467,7 +472,8 @@ public class EnemyBehaviour : ItemWithTextBehaviour
             // If you want maximum performance you can check the squared distance instead to get rid of a
             // square root calculation. But that is outside the scope of this tutorial.
             distanceToWaypoint = Vector3.Distance(_transform.position, path.vectorPath[currentWaypoint]);
-            if (distanceToWaypoint < nextWaypointDistance)
+
+            if (rb.velocity.magnitude <= 0.5f || distanceToWaypoint <= nextWaypointDistance)
             {
                 // Check if there is another waypoint or if we have reached the end of the path
                 if (currentWaypoint + 1 < path.vectorPath.Count)
@@ -513,6 +519,10 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     public void moveToStartPos()
     {
+        if (body.IsTouchingLayers(LayerMask.GetMask("Obstacles", "enemy", "door")))
+        {
+            startingpos = currentRoom.GetRandomPoint();
+        }
         AStarMove(startingpos, enemyData.moveSpeed);
         flipFace(startingpos);
     }
@@ -805,15 +815,11 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     {
         if (insideStage2)
         {
-            int rand = Random.Range(0, 2);
-            if (rand == 1)
-            {
-                ranged.LaserAttack();
-            } else
-            {
-                RandomShoot();
-            }
-            
+
+
+            ranged.ShootSingleSphere();
+
+
             //EnemyData.PATTERN pATTERN = (EnemyData.PATTERN)Random.Range(0, (int)EnemyData.PATTERN.COUNT);
             //List<Vector2> points = patterns.RandomPattern(pATTERN);
             //ranged.ShootRandomPattern(points);
@@ -824,14 +830,6 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         
     }
 
-    public void RandomShoot()
-    {
-
-
-        ranged.ShootSingleSphere();
-
-
-    }
 
     public override void TakeDamage(int damage)
     {

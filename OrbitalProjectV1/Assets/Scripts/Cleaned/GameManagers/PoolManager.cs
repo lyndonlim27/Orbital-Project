@@ -41,7 +41,6 @@ public class PoolManager : MonoBehaviour
 
     private EntityBehaviour CreatePooledEntity(EntityBehaviour entity)
     {
-        Debug.Log("Dafug>");
         EntityBehaviour e1 = Instantiate(entity, transform.position, Quaternion.identity);
         e1.gameObject.transform.SetParent(transform);
         e1.gameObject.SetActive(false);
@@ -80,7 +79,6 @@ public class PoolManager : MonoBehaviour
 
     public void ReleaseObject(EntityBehaviour instance)
     {
-        Debug.Log(instance);
         instance.StopCoroutine(instance.FadeOut());
         objectPools[instance.GetData()._type].Release(instance);
     }
@@ -90,14 +88,10 @@ public class PoolManager : MonoBehaviour
     {
         foreach (EntityBehaviour entity in entityPrefabs)
         {
-            Debug.Log("?????");
             if (entity.GetType() == typeof(RangedBehaviour))
             {
-                Debug.Log("entered");
-                Debug.Log(entity);
                 ObjectPool<EntityBehaviour> pool = new ObjectPool<EntityBehaviour>(() => CreatePooledEntity(entity),
                 OnGetEntity, OnReleaseEntity, OnDestroyEntity, false, 200, 1000);
-                Debug.Log(pool.CountAll);
                 objectPools.Add(EntityData.TYPE.CAST_ONTARGET, pool);
                 objectPools.Add(EntityData.TYPE.CAST_SELF, pool);
                 objectPools.Add(EntityData.TYPE.PROJECTILE, pool);
@@ -122,14 +116,14 @@ public class PoolManager : MonoBehaviour
     /**
      * Debugging
      */
-    private void OnGUI()
-    {
-        foreach(EntityData.TYPE type in objectPools.Keys)
-        {
-            GUI.Label(new Rect(10, 10, 150, 50), $"PoolSize: {type} = {objectPools[type].CountAll}");
-        }
+    //private void OnGUI()
+    //{
+    //    foreach(EntityData.TYPE type in objectPools.Keys)
+    //    {
+    //        GUI.Label(new Rect(10, 10, 150, 50), $"PoolSize: {type} = {objectPools[type].CountAll}");
+    //    }
         
 
-    }
+    //}
 }
 //}

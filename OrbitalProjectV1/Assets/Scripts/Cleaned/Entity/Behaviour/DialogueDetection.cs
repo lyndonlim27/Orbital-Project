@@ -47,7 +47,6 @@ public class DialogueDetection : MonoBehaviour
         {
             if (player != null && !player.IsDead() && !player.InCombat)
             {
-                Debug.Log("Entered npc detection");
 //                Debug.Log("We are in this detection");
                 dialogueAlert.SetActive(true);
                 if (Input.GetKeyDown(KeyCode.Space) && !dialMgr.playing)
@@ -63,7 +62,6 @@ public class DialogueDetection : MonoBehaviour
         }
         else
         {
-            Debug.Log("wtf? why is it closed");
             dialogueAlert.SetActive(false);
         }
     }

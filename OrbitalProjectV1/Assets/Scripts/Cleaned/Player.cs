@@ -23,7 +23,8 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     private DamageFlicker _flicker;
     private GoldCounter _goldCounter;
     public int currGold { get; private set;}
-    
+    private Animator buffanimator;
+    private RuntimeAnimatorController healinganimator;
 
     private bool _invulnerable;
 
@@ -46,6 +47,11 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     
 
 
+    [Header("AudioClips")]
+    Dictionary<string,AudioClip> audioClips;
+
+
+
     [Header("Player UI")]
     [SerializeField] private GameOver _gameOver;
     [SerializeField] private HealthBar _healthBar;
@@ -57,6 +63,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         base.Awake();
         col = GetComponent<Collider2D>();
         InCombat = false;
+        healinganimator = Resources.Load("Animations/AnimatorControllers/HealBuffVFX") as RuntimeAnimatorController;
     }
 
     public bool IsDead()
@@ -89,6 +96,12 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         _invulnerable = false;
         isDead = false;
         inAnimation = false;
+        audioClips = new Dictionary<string, AudioClip>();
+        audioClips["HPMP"] = Resources.Load("Sounds/UI/HPMP") as AudioClip;
+        audioClips["Gold"] = Resources.Load("Sounds/UI/Gold") as AudioClip;
+        buffanimator = transform.Find("BuffAnimator").gameObject.GetComponent<Animator>();
+        
+
     }
 
     // Update is called once per frame
@@ -152,7 +165,6 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     //When player takes damage, reduce current health and flicker sprite
     public override void TakeDamage(int damageTaken)
     {
-        Debug.Log(damageTaken);
         if (!_invulnerable)
         {
             CameraShake.instance.SetUpShake(4f, .1f);
@@ -186,6 +198,22 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         currGold += gold;
         _goldCounter.GoldUpdate();
     }
+
+    public void PlayRegen()
+    {
+        audioSource.Stop();
+        audioSource.clip = audioClips["HPMP"];
+        audioSource.Play();
+
+    }
+
+    public void PlayRegenAnim()
+    {
+        buffanimator.runtimeAnimatorController = healinganimator;
+        buffanimator.SetTrigger("Activate");
+
+    }
+
 
     public void UseGold(int gold)
     {
@@ -332,7 +360,6 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
 
     public void LoadData(GameData data)
     {
-        Debug.Log("HELLPPPP");
         
         this._currHealth = data.currHealth;
         this.maxHealth = data.maxHealth;

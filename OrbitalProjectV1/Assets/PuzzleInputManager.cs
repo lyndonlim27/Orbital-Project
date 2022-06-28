@@ -32,7 +32,6 @@ public class PuzzleInputManager : MonoBehaviour
     private void Start()
     {
         letterSlots = GetComponentsInChildren<LetterSlotNoDnD>(true);
-        Debug.Log(letterSlots.Length);
         gameObject.SetActive(false);
     }
 
@@ -56,11 +55,6 @@ public class PuzzleInputManager : MonoBehaviour
     public void SetUp(int numofletters)
     {
         guessed = false;
-        Debug.Log("Letterslot == " +letterSlots);
-        Debug.Log(letterSlots.Length);
-        
-        Debug.Log("these are letter slots" + letterSlots.Length);
-        Debug.Log("this is numofletters" + numofletters);
         int i = 0;
         for (; i < numofletters; i++)
         {
@@ -83,7 +77,6 @@ public class PuzzleInputManager : MonoBehaviour
         {
             audioSources[KeyCode.A].Play();
             currindex = Mathf.Max(0, currindex - 1);
-            Debug.Log("currentindex" + currindex);
             letterSlots[currindex].ClearData();
             
 
@@ -100,7 +93,6 @@ public class PuzzleInputManager : MonoBehaviour
                 {
                     audioSources[KeyCode.A].Play();
                     int currnum = i - 48;
-                    Debug.Log("Currentn num is :" + currnum);
                     letterSlots[currindex].SetData(letters[currnum], currnum);
                     currindex++;
 

@@ -52,13 +52,12 @@ public class RangedState : StateClass
                 if (dashattacks.Count == 0)
                 {
                     int random = Random.Range(0, enemy.enemyData.rangedtriggers.Count);
-                    Debug.Log(rangedtriggers.Count);
+
                     enemy.flipFace(enemy.player.transform.position);
                     enemy.animator.SetTrigger(rangedtriggers[random]);
                 } else
                 {
                     int r1 = 1;
-                    Debug.Log("Enemy dash ok" + enemy.CheckInsideRoom());
                    
                     if (r1 == 1 && enemy.CheckInsideRoom())
                     {
@@ -71,7 +70,6 @@ public class RangedState : StateClass
                     else
                     {
                         int random = Random.Range(0, enemy.enemyData.rangedtriggers.Count);
-                        Debug.Log(rangedtriggers.Count);
                         enemy.flipFace(enemy.player.transform.position);
                         enemy.animator.SetTrigger(rangedtriggers[random]);
 

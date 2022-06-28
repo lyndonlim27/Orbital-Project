@@ -64,7 +64,6 @@ public class LoadSave : MonoBehaviour
             }
             else
             {
-                Debug.Log("WRONG PIN");
             }
         });
     }

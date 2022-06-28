@@ -9,7 +9,6 @@ public class NPCRoom_Mgr : RoomManager
     protected override void Awake()
     {
         base.Awake();
-        roomtype = ROOMTYPE.PUZZLE_ROOM;
         //door = GameObject.FindObjectOfType<UnlockableDoor>();
 
     }

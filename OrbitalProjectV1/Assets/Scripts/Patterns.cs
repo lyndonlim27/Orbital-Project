@@ -180,7 +180,6 @@ public class Patterns
                 break;
         }
 
-        Debug.Log("This is pattern" + pattern);
         return points;
     }
 

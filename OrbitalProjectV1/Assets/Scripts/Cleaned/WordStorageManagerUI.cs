@@ -34,14 +34,10 @@ public class WordStorageManagerUI : MenuBehaviour
 
     public void AddItem(ConsumableItemData data)
     {
-        Debug.Log("This is itemdata" + data);
         foreach(LetterSlotUI letterSlot in inventoryslots.Keys)
         {
-            Debug.Log(letterSlot);
-            Debug.Log(data.sprite);
             if (inventoryslots[letterSlot] == null)
             {
-                Debug.Log("What?");
                 UpdateItem(letterSlot, data);
                 return;
             }

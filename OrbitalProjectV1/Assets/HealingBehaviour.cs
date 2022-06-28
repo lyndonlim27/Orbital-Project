@@ -52,7 +52,8 @@ public class HealingBehaviour : MonoBehaviour
             if (_col.IsTouchingLayers(LayerMask.GetMask("Player")) && cooldown <= 0)
             {
                 player.AddHealth(healingpertick);
-                Debug.Log("entered healing!");
+                player.PlayRegen();
+                player.PlayRegenAnim();
                 resetCooldown();
             }
             else

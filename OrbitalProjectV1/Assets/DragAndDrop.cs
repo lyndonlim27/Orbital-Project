@@ -18,7 +18,6 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IBe
         rectTransform = GetComponent<RectTransform>();
         originalposition = rectTransform.anchoredPosition;
         icon = GetComponent<Image>();
-        Debug.Log(icon);
         icon.sprite = null;
     }
 
@@ -37,7 +36,6 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IBe
 
     public void ClearImage()
     {
-        Debug.Log(icon);
         icon.sprite = null;
         Color c = icon.color;
         c.a = 0f;
@@ -46,19 +44,16 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IBe
 
     public void OnPointerDown(PointerEventData pointerData)
     {
-        Debug.Log("PointerDown");
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        Debug.Log("End Drag");
         canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = true;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log("Begin Drag");
         canvasGroup.alpha = 0.5f;
         canvasGroup.blocksRaycasts = false;
 

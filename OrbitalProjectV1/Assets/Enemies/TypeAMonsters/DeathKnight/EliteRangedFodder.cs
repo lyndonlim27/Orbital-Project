@@ -26,7 +26,6 @@ public class EliteRangedFodder : EnemyBehaviour
     public override void Update()
     {
         base.Update();
-        Debug.Log("this is state: " + stateMachine.currState);
     }
 
     public override void resetCooldown()

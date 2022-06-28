@@ -31,7 +31,6 @@ public class DoorManager : MonoBehaviour
 
         DoorBehaviour cleareddoor = RoomDoors[room][index];
 
-        Debug.Log("Door is: " + cleareddoor);
 
         if (!clearedDoors.Contains(cleareddoor))
         {

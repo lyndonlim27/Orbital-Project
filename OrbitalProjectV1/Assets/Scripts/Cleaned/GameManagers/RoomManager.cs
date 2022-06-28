@@ -25,14 +25,19 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         id = System.Guid.NewGuid().ToString();
     }
 
+    public int RoomIndex;
     protected Player player;
     protected enum ROOMTYPE
     {
         PUZZLE_ROOM,
         FIGHTING_ROOM,
         HYBRID_ROOM,
-        TREASURE_ROOM
+        TREASURE_ROOM,
+        ROOMBEFOREBOSS,
+        BOSSROOM,
     }
+    [SerializeField] protected ROOMTYPE roomtype;
+
     /**
      * Concrete classes
      * Every room starts with their own conditions.
@@ -46,10 +51,10 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     public List<PressureSwitchBehaviour> pressureitems;
     public LayerMask CollisionObjects;
     public List<NPCBehaviour> npcs { get; protected set; }
-    protected ROOMTYPE roomtype;
     public Light2D[] lights;
     protected UITextDescription textDescription;
     private UIObjectivePointer pointer;
+    private GlobalAudioManager globalAudioManager;
 
     /**
      * Prefabs.
@@ -65,6 +70,8 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     [SerializeField] protected LayerMask layerMask;
     [SerializeField] protected Vector2 roomSize;
     [SerializeField] private Color _colour;
+    [SerializeField] protected AudioClip BossRoomAudio;
+    [SerializeField] protected AudioClip BeforeBossRoomAudio;
 
 
     protected AstarPath astarPath;
@@ -128,7 +135,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         }
         textDescription = FindObjectOfType<UITextDescription>(true);
         pointer = FindObjectOfType<UIObjectivePointer>(true);
+        globalAudioManager = FindObjectOfType<GlobalAudioManager>(true);
         GenerateGuid();
+        
     }
 
     //protected void OnEnable()
@@ -138,6 +147,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     private void Start()
     {
+        
         //SafePath();
 
     }
@@ -157,6 +167,8 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
             {
                 activated = true;
                 SettingDialogueMgr();
+                SettingUpAudio();
+
                 SpawnObjects(_EntityDatas);
                 //InitializeAStar();
                 //AddConditionalNPCS();
@@ -165,6 +177,37 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         }
 
         conditionSize = conditions.Count;
+    }
+
+    private void SettingUpAudio()
+    {
+        if (globalAudioManager == null)
+        {
+            return;
+        }
+
+        switch(roomtype)
+        {
+            default:
+                globalAudioManager.PlayTrack(this.RoomIndex);
+                break;
+            case ROOMTYPE.ROOMBEFOREBOSS:
+                if (BeforeBossRoomAudio == null)
+                {
+                    Debug.LogError("BeforeBossRoom lacking audio");
+                }
+                
+                globalAudioManager.PlaySpecificTrack(BeforeBossRoomAudio, 0.5f);
+                break;
+            case ROOMTYPE.BOSSROOM:
+                if (BossRoomAudio == null)
+                {
+                    Debug.LogError("BossRoom lacking audio");
+                }
+                globalAudioManager.PlaySpecificTrack(BossRoomAudio, 0.5f);
+                break;
+        }
+     
     }
 
     private void SettingDialogueMgr()

@@ -7,7 +7,6 @@ public class TreasureRoom_Mgr : RoomManager
 
     protected override void Awake()
     {
-        roomtype = ROOMTYPE.TREASURE_ROOM;
         base.Awake();
     }
     // Start is called before the first frame update

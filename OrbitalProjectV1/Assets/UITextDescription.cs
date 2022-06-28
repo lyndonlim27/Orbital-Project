@@ -49,7 +49,6 @@ public class UITextDescription : MonoBehaviour
 
     private IEnumerator FadeOutText()
     {
-        Debug.Log("Did we enter fade out?");
         for (float f = 1f; f > 0.1f; f -= 0.1f)
         {
             Color c = textDescription.color;

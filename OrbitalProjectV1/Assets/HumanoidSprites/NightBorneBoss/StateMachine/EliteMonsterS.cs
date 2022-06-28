@@ -25,8 +25,9 @@ public class EliteMonsterS : EnemyBehaviour
 
 
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         hpBarUI = GameObject.FindObjectOfType<HealthBarEnemy>(true);
         hpBarUI.gameObject.SetActive(true);
         fodderObjects = new List<EnemyBehaviour>();
@@ -39,7 +40,6 @@ public class EliteMonsterS : EnemyBehaviour
     public void Start()
     {
        
-        Debug.Log(stateMachine.currState);
         stateMachine.AddState(StateMachine.STATE.IDLE, new IdleState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.ROAMING, new RoamState(this, this.stateMachine));
         stateMachine.AddState(StateMachine.STATE.CHASE, new S_DiceState(this, this.stateMachine));
@@ -53,7 +53,6 @@ public class EliteMonsterS : EnemyBehaviour
     public override void Update()
     {
         base.Update();
-        Debug.Log(stateMachine.currState);
     }
 
 
@@ -96,7 +95,6 @@ public class EliteMonsterS : EnemyBehaviour
             bossprop.SetCurrentRoom(this.currentRoom);
             bossprop.SetBoss(this);
             allProps.Add(bossprop);
-            Debug.Log(allProps.Count);
         }
     }
 
@@ -125,7 +123,6 @@ public class EliteMonsterS : EnemyBehaviour
 
     public void DestroyBossProps()
     {
-        Debug.Log(allProps.Count);
         foreach (BossProps bp in allProps)
         {
             if (bp != null)
@@ -169,7 +166,6 @@ public class EliteMonsterS : EnemyBehaviour
         {
             transform.parent.position = player.transform.position;
         }
-        Debug.Log(roamPos);
         //Debug.Log(stateMachine.currState);
         //Debug.Break();
 

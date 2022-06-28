@@ -97,6 +97,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
             default:
             case ItemWithTextData.ITEM_TYPE.CHEST:
                 light2D.enabled = true;
+                light2D.pointLightOuterRadius = 2f;
                 _rb.bodyType = RigidbodyType2D.Kinematic;
                 break;
             case ItemWithTextData.ITEM_TYPE.WEAPON:
@@ -189,7 +190,6 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         switch (data.item_type)
         {
             default:
-                Debug.Log("Entered here in animation");
                 HandleAnimation();
                 break;
             case ItemWithTextData.ITEM_TYPE.WEAPON:

@@ -16,7 +16,7 @@ public class HangManRoom_Mgr : RoomManager
     {
         base.Update();
         RoomChecker();
-        if (!playing)
+        if (!playing && activated)
         {
             playing = true;
             StartCoroutine(ThankYou());
@@ -28,7 +28,6 @@ public class HangManRoom_Mgr : RoomManager
 
     private IEnumerator ThankYou()
     {
-        Debug.Log("hmm? how many times");
         textDescription.StartDescription("If you ever reached this part, I am surprised, not at your ability to complete the game, but at the fact that you didn't run into bugs!");
         yield return new WaitForSeconds(2f);
         textDescription.StartDescription("Thank you for playing the game, I hope you enjoyed it");

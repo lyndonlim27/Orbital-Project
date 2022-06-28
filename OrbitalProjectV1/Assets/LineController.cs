@@ -39,7 +39,6 @@ public class LineController : MonoBehaviour
     public IEnumerator AnimateLine()
     {
         RaycastHit2D hit = Physics2D.Raycast(origin.localPosition, transform.right, Mathf.Infinity, layerMask);
-        Debug.Log(hit.collider);
         if (hit)
         {
             lineRenderer.enabled = true;
@@ -76,7 +75,6 @@ public class LineController : MonoBehaviour
 
     private void ResetCooldown()
     {
-        Debug.Log("Reseted cooldown?");
         if (parent != null)
         {
             if (parent.currstate != StateMachine.STATE.RECOVERY)

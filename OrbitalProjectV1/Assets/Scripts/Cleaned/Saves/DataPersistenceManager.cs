@@ -45,7 +45,6 @@ public class DataPersistenceManager : MonoBehaviour
     {
         LoggedIn = false;
         loaded = false;
-        Debug.Log(SceneManager.GetActiveScene().name);
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
             _promptImage = GameObject.Find("Prompt").GetComponent<Image>();

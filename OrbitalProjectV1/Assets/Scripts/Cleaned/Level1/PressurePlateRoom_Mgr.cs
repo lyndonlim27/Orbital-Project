@@ -8,7 +8,6 @@ public class PressurePlateRoom_Mgr : RoomManager
 
     protected override void Awake()
     {
-        roomtype = ROOMTYPE.FIGHTING_ROOM;
         base.Awake();
 
     }

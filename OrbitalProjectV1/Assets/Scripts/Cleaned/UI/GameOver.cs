@@ -45,7 +45,7 @@ public class GameOver : MonoBehaviour
      */
     public void RestartButton()
     {
-        _dataManager.LoadGame();
+        _loadScene.LoadSceneFromData();
     }
 
     /* Exit Button.

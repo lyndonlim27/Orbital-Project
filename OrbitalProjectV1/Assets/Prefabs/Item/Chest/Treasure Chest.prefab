@@ -130,6 +130,7 @@ MonoBehaviour:
   footStep: {fileID: 0}
   isDead: 0
   inAnimation: 0
+  Debuffed: 0
   data: {fileID: 11400000, guid: d6d87f42ba1984f5a93f3dc29ff9f954, type: 2}
   consumableItemDatas:
   - {fileID: 11400000, guid: 23532790317044ebe8de1e951381e273, type: 2}
@@ -375,6 +376,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: ItemCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 1147895269306230779, guid: 7eba5c53e2c784c5a8ec311ea163c078, type: 3}
+      propertyPath: highlighted
+      value: 
+      objectReference: {fileID: 11400000, guid: b49c8f55be58f40aeb10b648adf90bec, type: 2}
+    - target: {fileID: 1147895269306230779, guid: 7eba5c53e2c784c5a8ec311ea163c078, type: 3}
+      propertyPath: unhighlighted
+      value: 
+      objectReference: {fileID: 11400000, guid: 207fefa6c85e44a7f985ed2229aff347, type: 2}
     - target: {fileID: 1883883124948463513, guid: 7eba5c53e2c784c5a8ec311ea163c078, type: 3}
       propertyPath: m_fontSize
       value: 44.75

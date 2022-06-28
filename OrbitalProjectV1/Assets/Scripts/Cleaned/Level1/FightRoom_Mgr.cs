@@ -6,7 +6,6 @@ public class FightRoom_Mgr : RoomManager
 {
     [SerializeField] private int waveNum;
     
-
     private void Start()
     {
         startNum = 1;

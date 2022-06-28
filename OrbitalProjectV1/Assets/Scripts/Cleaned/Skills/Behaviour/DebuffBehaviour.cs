@@ -54,7 +54,6 @@ public class DebuffBehaviour : SkillBehaviour
 
     private IEnumerator Stun()
     {
-        Debug.Log("STUN");
         ResetCooldown();
         foreach(EnemyBehaviour enemy in _player.GetCurrentRoom().GetComponentsInChildren<EnemyBehaviour>())
         {
@@ -92,7 +91,6 @@ public class DebuffBehaviour : SkillBehaviour
                 }
             }
             Instantiate(_debuffData.particleSystem, enemy.transform);
-            Debug.Log("SLOW");
         }
     }
 
@@ -113,7 +111,6 @@ public class DebuffBehaviour : SkillBehaviour
                     rangedData.speed /= _debuffData.slowAmount;
                 }
             }
-            Debug.Log("STOP SLOW");
             Destroy(enemy.transform.Find("SlowDebuff(Clone)").gameObject);
         }
     }

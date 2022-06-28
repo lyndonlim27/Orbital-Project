@@ -22,12 +22,20 @@ MonoBehaviour:
   startPos: {x: 0, y: 0}
   endPos: {x: 0, y: 0}
   random: 0
-  pos: {x: -36, y: -58}
+  pos: {x: -36, y: -56}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 1.5
+  staggered: 0
+  staggerTime: 0
   duration: 0
   defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 0
+  NotURP: 0
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios: []
   activatedcolor: {r: 0, g: 0, b: 0, a: 0}
   triggername: ArrowTrap
   ontrigger: 1

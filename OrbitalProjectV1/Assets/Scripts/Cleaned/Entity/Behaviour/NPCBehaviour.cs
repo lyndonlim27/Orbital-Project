@@ -51,7 +51,7 @@ public class
 
     internal virtual void Proceed()
     {
-        if (!proceedable)
+        if (!proceedable && !fulfilled)
         {
             proceedable = true;
             

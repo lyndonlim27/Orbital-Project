@@ -15,25 +15,53 @@ MonoBehaviour:
   _name: NightBorne
   minDist: 20
   sprite: {fileID: 1927221173, guid: 7cf01e94e76d0498991d99c1e750ac4a, type: 3}
+  pattern: 0
   condition: 0
-  _type: 0
-  random: 0
+  _type: 5
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
+  random: 1
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
   spawnAtStart: 0
-  scale: 0
+  scale: 1
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 1
+  moveable: 1
+  NotURP: 0
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios: []
   itemTextDatas: []
   ac_name: AC_NightBorne
   _trigger: 
-  isAWeapon: 0
+  item_type: 0
+  secondarysprite: {fileID: 0}
+  description: 
   damageValue: 3
   moveSpeed: 1
   chaseSpeed: 1
   attackRange: 1
   attackSpeed: 1
-  meleetriggers: []
+  maxDist: 0
+  meleetriggers:
+  - Melee1
+  - Melee2
   defends: []
   rangedtriggers: []
+  dashattacks: []
+  rangedDatas: []
+  bossdamageprops: []
+  bossSummonprops: []
+  bossdefenceprops: []
   animatorname: AC_NightBorne
   words: 10
   rangedcooldown: 0
+  stage2: 0
+  healStage: 0
+  enragedColor: {r: 0, g: 0, b: 0, a: 0}
+  body: 0

@@ -101,7 +101,6 @@ public class ConsumableItemBehaviour : EntityBehaviour
 
     public override void SetEntityStats(EntityData stats)
     {
-        Debug.Log(stats);
         this._itemData = (ConsumableItemData) stats;
     }
 
@@ -126,7 +125,6 @@ public class ConsumableItemBehaviour : EntityBehaviour
                     WordStorageManagerUI.instance.AddItem(_itemData);
                     break;
             }
-            Debug.Log("This is item data" + _itemData._name);
             StartCoroutine(WaitForAwhileBeforeRelease());
 
         }

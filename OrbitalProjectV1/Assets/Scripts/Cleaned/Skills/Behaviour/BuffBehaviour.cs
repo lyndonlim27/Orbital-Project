@@ -114,7 +114,6 @@ public class BuffBehaviour : SkillBehaviour
     private IEnumerator Invulnerable()
     {
         yield return new WaitForSeconds(1.583f);
-        Debug.Log("YAS");
         _player.SetInvulnerability(true);
         yield return new WaitForSeconds(_buffData.duration);
         _player.SetInvulnerability(false);

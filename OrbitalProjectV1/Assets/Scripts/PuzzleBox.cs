@@ -14,7 +14,6 @@ public class PuzzleBox : ItemWithTextBehaviour
     {
         base.Awake();
         puzzleInputManager = FindObjectOfType<PuzzleInputManager>(true);
-        Debug.Log("Puzzle input manager == " + puzzleInputManager);
         lightSwitchSystem = FindObjectOfType<LightSwitchSystem>(true);
         
 
@@ -27,7 +26,6 @@ public class PuzzleBox : ItemWithTextBehaviour
 
     private void PullUpPuzzleMenu()
     {
-        Debug.Log("Did we pul up?");   
         ////stop lightshow when box is interacted;
         //StopCoroutine(lightSwitchSystem.StartLightShow());
         //pull up puzzlemenu;
@@ -42,6 +40,7 @@ public class PuzzleBox : ItemWithTextBehaviour
     {
         puzzleTl = GetComponentInChildren<TextLogic>();
         puzzleTl.enabled = false;
+        //int rand = UnityEngine.Random.Range(1, 5);
         lightSwitchSystem.Activate(1);
         StartCoroutine(lightSwitchSystem.StartLightShow());
     }
@@ -60,8 +59,8 @@ public class PuzzleBox : ItemWithTextBehaviour
         {
             if (CheckInput())
             {
-                Debug.Log("???? lightsystem we correct");
                 lightSwitchSystem.Next();
+                
             }
             else
             {
@@ -75,7 +74,6 @@ public class PuzzleBox : ItemWithTextBehaviour
         
         if (lightSwitchSystem.IsComplete())
         {
-            Debug.Log("Complete" + currentRoom.conditions.Count);
             currentRoom.FulfillCondition(data._name + data.GetInstanceID());
             poolManager.ReleaseObject(this);
         }
@@ -85,7 +83,6 @@ public class PuzzleBox : ItemWithTextBehaviour
     {
         if (!lightSwitchSystem.incoroutine)
         {
-            Debug.Log("allow textinputs???");
             puzzleTl.enabled = true;
         }
         else

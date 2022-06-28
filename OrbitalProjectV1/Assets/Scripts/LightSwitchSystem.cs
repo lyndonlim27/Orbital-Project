@@ -36,13 +36,12 @@ public class LightSwitchSystem : MonoBehaviour
 
     public void Activate(int _numseqs)
     {
-        Debug.Log("entered");
         numseqs = _numseqs;
         activated = true;
         numlights = candles.Length;
         currindex = 0;
         StartCandleAnimation();
-        levels = Random.Range(3, 7);
+        levels = 5;
         GeneratePattern();
         incoroutine = false;
     }
@@ -55,10 +54,8 @@ public class LightSwitchSystem : MonoBehaviour
             List<int> currseq = new List<int>();
             for (int j = 0; j < levels; j++)
             {
-                Debug.Log("Numlights = " + numlights);
                 currseq.Add(Random.Range(0, numlights));
             }
-            Debug.Log(currseq.Count);
             sequence.Add(currseq);
         }
         
@@ -66,14 +63,11 @@ public class LightSwitchSystem : MonoBehaviour
 
     public IEnumerator StartLightShow()
     {
-        Debug.Log("entered");
         incoroutine = true;
         StartCandleAnimation();
         List<int> currentseq = sequence[currindex];
         foreach(int i in currentseq)
         {
-            Debug.Log("current num: " + i);
-            Debug.Log("we enterd coroutine");
             candles[i].intensity = 2f;
             Color c = candles[i].color;
             candles[i].color = Color.red;
@@ -101,10 +95,11 @@ public class LightSwitchSystem : MonoBehaviour
 
     public void Next()
     {
+        currindex++;
         if (!IsComplete())
         {
-            currindex++;
-        }
+            StartCoroutine(StartLightShow());
+        } 
         
     }
 

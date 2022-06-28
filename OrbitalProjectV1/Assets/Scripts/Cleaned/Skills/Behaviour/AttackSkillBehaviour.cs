@@ -64,7 +64,6 @@ public class AttackSkillBehaviour : SkillBehaviour
     }
     private void Fire()
     {
-        Debug.Log("FIRE");
         if (_attackData.numOfProjectiles == 3)
         {
             FireAttack1();

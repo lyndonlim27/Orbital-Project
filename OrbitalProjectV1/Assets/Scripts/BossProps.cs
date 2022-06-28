@@ -9,11 +9,6 @@ public class BossProps : ItemWithTextBehaviour
 
     public override void Defeated()
     {
-        if (EliteMonsterA == null)
-        {
-            Debug.Log("dafuq");
-        } 
-        Debug.Log(EliteMonsterA.allProps);
         EliteMonsterA.allProps.Remove(this);
         Destroy(this.gameObject);
         

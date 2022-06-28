@@ -448,6 +448,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea68dd1b580324fa494756d64201e353, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inAudio: 0
 --- !u!82 &83811224924120534
 AudioSource:
   m_ObjectHideFlags: 0
@@ -978,11 +979,11 @@ PrefabInstance:
     - target: {fileID: 9115810082060282472, guid: 7fb209273d56f40c5b183bc44d229dbc, type: 3}
       propertyPath: highlighted
       value: 
-      objectReference: {fileID: 11400000, guid: 104c07feea87c4e3293ab5b42ae4ad83, type: 2}
+      objectReference: {fileID: 11400000, guid: b49c8f55be58f40aeb10b648adf90bec, type: 2}
     - target: {fileID: 9115810082060282472, guid: 7fb209273d56f40c5b183bc44d229dbc, type: 3}
       propertyPath: unhighlighted
       value: 
-      objectReference: {fileID: 11400000, guid: 350a737cf17534e718b4fb357771bbf0, type: 2}
+      objectReference: {fileID: 11400000, guid: 207fefa6c85e44a7f985ed2229aff347, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7fb209273d56f40c5b183bc44d229dbc, type: 3}
 --- !u!224 &3634143356629636590 stripped

@@ -20,7 +20,7 @@ public class UIObjectivePointer : MonoBehaviour
     {
         
         pointer = GameObject.Find("Pointer").GetComponent<RectTransform>();
-        offset = 100f;
+        offset = 200f;
         pointerImage = GetComponentInChildren<Image>();
         pointerImage.sprite = arrow;
         gameObject.SetActive(false);

@@ -38,13 +38,17 @@ public class LoadScene : MonoBehaviour
     }
     private IEnumerator Load()
     {
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Assets/Scenes/" + _dataManager.currScene + ".unity");
-
-        // Wait until the asynchronous scene fully loads
-        while (!asyncLoad.isDone)
+        if (_dataManager.currScene != SceneManager.GetActiveScene().ToString())
         {
-            yield return null;
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Assets/Scenes/" + _dataManager.currScene + ".unity");
+
+            // Wait until the asynchronous scene fully loads
+            while (!asyncLoad.isDone)
+            {
+                yield return null;
+            }
         }
+
         _dataManager.LoadGame();
         while (!_dataManager.loaded)
         {

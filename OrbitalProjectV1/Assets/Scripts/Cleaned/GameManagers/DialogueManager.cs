@@ -120,7 +120,6 @@ public class DialogueManager : MonoBehaviour
             coroutine = null;
             dialoguetext.text = nextline;
         }
-        Debug.Log("Make choice");
         ContinueStory();
         
     }
@@ -161,7 +160,6 @@ public class DialogueManager : MonoBehaviour
                 
             else if (Input.GetKeyDown(KeyCode.Escape))
             {
-                Debug.Log("exited dialogue");
                 StartCoroutine(ExitDialogue());
             }
         }

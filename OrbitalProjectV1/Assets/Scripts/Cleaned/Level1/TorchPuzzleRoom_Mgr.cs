@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TorchPuzzleRoom_Mgr : RoomManager
 {
-    TorchPuzzle torchPuzzle;
+    private TorchPuzzle torchPuzzle;
     protected override void Awake()
     {
         base.Awake();
