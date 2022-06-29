@@ -44,7 +44,7 @@ public class GameData
         this.maxHealth = 100;
         this.currMana = 100;
         this.maxMana = 100;
-        this.currGold = 15;
+        this.currGold = 0;
         this.currWeapon = "Fists";
         this.currPos = Vector2.zero;
         this.attackDataName = null;

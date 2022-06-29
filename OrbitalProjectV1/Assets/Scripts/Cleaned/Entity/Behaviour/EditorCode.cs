@@ -10,5 +10,7 @@ public class EditorCode : MonoBehaviour
 
     public TMP_SpriteAsset spriteAsset;
     Dictionary<int, int> glyphs;
-    
+    private void OnEnable()
+    {
+    }
 }

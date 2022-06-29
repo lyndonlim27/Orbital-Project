@@ -77,6 +77,17 @@ public class LoadScene : MonoBehaviour
         }
         yield return StartCoroutine(SetPlayerStats());
         _dataManager.SaveGame();
+        while (!_dataManager.saved)
+        {
+            yield return null;
+        }
+
+        _dataManager.LoadGame();
+        while (!_dataManager.loaded)
+        {
+            yield return null;
+        }
+        yield return new WaitForSeconds(1f);
         _canvas.gameObject.SetActive(false);
     }
 

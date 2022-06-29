@@ -16,6 +16,7 @@ public class DataPersistenceManager : MonoBehaviour
     public bool LoggedIn { get; private set;}
     public bool loaded;
     public string currScene;
+    public bool saved;
 
     [Header("for testing")]
     [SerializeField] private string _email;
@@ -34,17 +35,24 @@ public class DataPersistenceManager : MonoBehaviour
         {
             Destroy(this.gameObject);
             //Debug.LogError("Found more than one Data Persistence Manager in the scene. Please put only one data manager");
-        } else
+        }
+        else
         {
             Instance = this;
         }
-        
+
+    }
+
+    private void OnEnable()
+    {
+        LoggedIn = false;
+        loaded = false;
+        saved = false;
     }
 
     private void Start()
     {
-        LoggedIn = false;
-        loaded = false;
+        
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
             _promptImage = GameObject.Find("Prompt").GetComponent<Image>();
@@ -81,7 +89,8 @@ public class DataPersistenceManager : MonoBehaviour
     [ContextMenu("Save")]
     public void SaveGame()
     {
-       // this._gameData = new GameData();
+        // this._gameData = new GameData();
+        saved = false;
         _dataPersistences = FindAllDataPersistenceObjects();
         foreach (IDataPersistence dataPersistence in _dataPersistences)
         {
@@ -267,7 +276,9 @@ public class DataPersistenceManager : MonoBehaviour
      */
     private void OnDataSend(UpdateUserDataResult result)
     {
+
         currScene = SceneManager.GetActiveScene().name;
+        saved = true;
         Debug.Log("Saved");
     }
 
@@ -316,6 +327,8 @@ public class DataPersistenceManager : MonoBehaviour
         loaded = true;
         _gameData = loadedData;
     }
+
+
 
     /*
      * Flash text prompt based on login/register/reset status
