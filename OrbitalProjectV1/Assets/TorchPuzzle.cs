@@ -108,7 +108,10 @@ public class TorchPuzzle : MonoBehaviour
     private IEnumerator LightUpStatue()
     {
         healingFountain.enabled = true;
-        uITextDescription.StartDescription("The statue lights up...");
+        if (uITextDescription.isActiveAndEnabled)
+        {
+            uITextDescription.StartDescription("The statue lights up...");
+        }
         yield return new WaitForSeconds(2f);
         isComplete = true;
 

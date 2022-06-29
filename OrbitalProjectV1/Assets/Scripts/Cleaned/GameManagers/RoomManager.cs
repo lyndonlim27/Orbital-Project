@@ -35,6 +35,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         TREASURE_ROOM,
         ROOMBEFOREBOSS,
         BOSSROOM,
+        SAVE_ROOM,
     }
     [SerializeField] protected ROOMTYPE roomtype;
 
@@ -96,6 +97,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     private TypingTestTL typingTestTL;
     protected Collider2D _collider;
     private HashSet<Vector3> safeRoute;
+    //protected RoomManager[] rooms;
 
 
     //private AstarPath AstarGraph;
@@ -138,6 +140,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         globalAudioManager = FindObjectOfType<GlobalAudioManager>(true);
         GenerateGuid();
         
+        
     }
 
     //protected void OnEnable()
@@ -152,11 +155,15 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     }
 
-    //protected void OnDisable()
-    //{
-    //    DeActivateAStar();
-    //}
+    protected void OnDisable()
+    {
+        UnlockDoorsOnThisLevel();
+    }
 
+    //private void TurnOffCollider()
+    //{
+    //    this.roomArea.enabled = false;
+    //}
 
     protected virtual void Update()
     {
@@ -281,7 +288,10 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
             }
             DisableTrapBehaviour();
             pointToObjective();
-            textDescription.StartDescription("You hear a loud creak..");
+            if (textDescription.isActiveAndEnabled)
+            {
+                textDescription.StartDescription("You hear a loud creak..");
+            }
             this.enabled = false;
         }
         //} else
@@ -800,7 +810,12 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
                 //if (activated && player.GetCurrentRoom() != this)
                 //{
                 if (player.GetCurrentRoom() != this) {
-                    textDescription.StartDescription(this.name);
+                    if (textDescription != null && textDescription.isActiveAndEnabled)
+                    {
+                        Debug.Log(textDescription);
+                        textDescription.StartDescription(this.name);
+
+                    }
                     pointer.StopNavi();
                     player.SetCurrentRoom(this);
                 }
@@ -830,6 +845,16 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
                 door.unlocked = false;
             }
 
+        }
+
+    }
+
+    protected void UnlockDoorsOnThisLevel()
+    {
+        
+        foreach (DoorBehaviour door in doors)
+        {
+            door.unlocked = true;
         }
 
     }
@@ -933,7 +958,11 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
             {
                 int rand = Random.Range(3, 5);
                 startNum++;
-                textDescription.StartDescription("Wave " + startNum);
+                if (textDescription.isActiveAndEnabled)
+                {
+                    textDescription.StartDescription("Wave " + startNum);
+                }
+
                 for (int i = 0; i < rand; i++)
                 {
                     EntityData entitydata = _EntityDatas[Random.Range(0, _EntityDatas.Length)];
@@ -991,13 +1020,60 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     public void LoadData(GameData data)
     {
-
-        if (data.rooms.GetValueOrDefault(this.name, -1) == 1)
+        ActivatedHealPoints(data);
+        if (this.roomtype != ROOMTYPE.SAVE_ROOM)
         {
-            this.enabled = false;
+            if (data.rooms.GetValueOrDefault(this.name + ":" + RoomIndex, -1) == 1)
+            {
+                this.enabled = false;
+            }
         }
 
+        if (pointer.isActiveAndEnabled)
+        {
+            RestartNavigation(data);
+        }
+            
 
+    }
+
+    private void RestartNavigation(GameData data)
+    {
+        pointer.StopNavi();
+        Dictionary<string, int> dict = data.rooms;
+        int lastroomid = 999;
+        string lastroomname = "";
+        foreach (KeyValuePair<string, int> pair in dict)
+        {
+           
+            if (pair.Value != 1)
+            {
+                string currroomname = pair.Key;
+                int index = currroomname.LastIndexOf(":") + 1;
+                int currroomid;
+                if (int.TryParse(currroomname.Substring(index), out currroomid))
+                {
+                    if (currroomid < lastroomid)
+                    {
+                        lastroomid = currroomid;
+                        lastroomname = currroomname.Substring(0, index - 1);
+                        
+                    }
+                }
+            }
+        }
+        RoomManager lastroom = GameObject.Find(lastroomname).GetComponent<RoomManager>();
+        pointer.StartNavi(lastroom.entryDoor.transform.position);
+
+    }
+
+    private void ActivatedHealPoints(GameData data)
+    {
+        HealingBehaviour healingBehaviour = GetComponentInChildren<HealingBehaviour>();
+        if (healingBehaviour != null && data.rooms.GetValueOrDefault(this.name + ":" + RoomIndex, -1) == 1)
+        {
+            healingBehaviour.enabled = true;
+        }
     }
 
     public void SaveData(ref GameData data)
@@ -1006,12 +1082,12 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         {
             if (!CanProceed())
             {
-                data.rooms[this.name] = 0;
+                data.rooms[this.name + ":" + RoomIndex] = 0;
                 return;
             }
         }
 
-        data.rooms[this.name] = 1;
+        data.rooms[this.name + ":" + RoomIndex] = 1;
     
     }
 }

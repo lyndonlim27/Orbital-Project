@@ -6,14 +6,16 @@ using UnityEngine;
 public class HealingBehaviour : MonoBehaviour
 {
     private float cooldown = 2f;
-    private int healingpertick = 5;
+    private int healingpertick = 15;
+    private int manapertick = 15;
     private bool healing;
     private Collider2D _col;
     private Player player;
+    private RoomManager roomManager;
 
     private void OnEnable()
     {
-        foreach(Transform _tr in GetComponentsInChildren<Transform>(true))
+        foreach (Transform _tr in GetComponentsInChildren<Transform>(true))
         {
             _tr.gameObject.SetActive(true);
         }
@@ -47,11 +49,13 @@ public class HealingBehaviour : MonoBehaviour
 
     private void Update()
     {
+        
         if (healing)
         {
             if (_col.IsTouchingLayers(LayerMask.GetMask("Player")) && cooldown <= 0)
             {
                 player.AddHealth(healingpertick);
+                player.AddMana(manapertick);
                 player.PlayRegen();
                 player.PlayRegenAnim();
                 resetCooldown();
@@ -60,7 +64,8 @@ public class HealingBehaviour : MonoBehaviour
             {
                 tick();
             }
-        }
+        }    
+        
     }
 
     private void tick()

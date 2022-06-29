@@ -42,10 +42,10 @@ public class ChaseState : StateClass
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
         }
 
-        else if (enemy.TravelToofar())
-        {
-            stateMachine.ChangeState(StateMachine.STATE.STOP, null);
-        }
+        //else if (enemy.TravelToofar())
+        //{
+        //    stateMachine.ChangeState(StateMachine.STATE.STOP, null);
+        //}
 
         else
         {

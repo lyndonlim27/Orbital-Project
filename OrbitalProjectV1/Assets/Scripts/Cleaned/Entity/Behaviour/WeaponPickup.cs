@@ -20,22 +20,28 @@ public class WeaponPickup : MonoBehaviour
     public void Swap(string weapon)
     {
         //If current weapon is the same as pickup weapon, do nothing
-        
-        
-        if (transform.Find(weapon).gameObject.activeInHierarchy == true)
+
+        Transform _tr = transform.Find(weapon);
+        if (_tr != null)
         {
-            return;
+            if (_tr.gameObject.activeInHierarchy)
+            {
+                return;
+            }
+
+            //Else set all weapon inactive then set pickup weapon active
+            else
+            {
+                for (int i = 0; i < transform.childCount; i++)
+                {
+                    transform.GetChild(i).gameObject.SetActive(false);
+                }
+                transform.Find(weapon).gameObject.SetActive(true);
+            }
+
         }
 
-        //Else set all weapon inactive then set pickup weapon active
-        else
-        {
-            for (int i = 0; i < transform.childCount; i++)
-            {
-                transform.GetChild(i).gameObject.SetActive(false);
-            }
-            transform.Find(weapon).gameObject.SetActive(true);
-        }
+        
 
     }
 

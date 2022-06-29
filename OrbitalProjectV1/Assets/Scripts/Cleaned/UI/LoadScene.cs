@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 
 
@@ -26,7 +27,7 @@ public class LoadScene : MonoBehaviour
         _dataManager = FindObjectOfType<DataPersistenceManager>();
         _canvas = GetComponentInChildren<Canvas>(true);
         DontDestroyOnLoad(this);
-        
+
 
 
     }
@@ -38,22 +39,25 @@ public class LoadScene : MonoBehaviour
     }
     private IEnumerator Load()
     {
-        if (_dataManager.currScene != SceneManager.GetActiveScene().ToString())
-        {
-            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Assets/Scenes/" + _dataManager.currScene + ".unity");
+        //if (_dataManager.currScene != SceneManager.GetActiveScene().ToString())
+        //{
+            
+        //}
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Assets/Scenes/" + _dataManager.currScene + ".unity");
 
-            // Wait until the asynchronous scene fully loads
-            while (!asyncLoad.isDone)
-            {
-                yield return null;
-            }
+        // Wait until the asynchronous scene fully loads
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
         }
+
 
         _dataManager.LoadGame();
         while (!_dataManager.loaded)
         {
             yield return null;
         }
+        yield return new WaitForSeconds(1f);
         _canvas.gameObject.SetActive(false);
     }
 
@@ -79,14 +83,15 @@ public class LoadScene : MonoBehaviour
     private IEnumerator SetPlayerStats()
     {
         Player player = FindObjectOfType<Player>(true);
-        if (player!=null)
+        if (player != null)
         {
             player.AddHealth(1000);
             player.AddMana(1000);
-            yield return null;
-
         }
-        
+
+        yield return null;
+
+
     }
 
     public void LoadMainMenu()

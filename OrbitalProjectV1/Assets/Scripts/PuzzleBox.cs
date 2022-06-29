@@ -40,8 +40,8 @@ public class PuzzleBox : ItemWithTextBehaviour
     {
         puzzleTl = GetComponentInChildren<TextLogic>();
         puzzleTl.enabled = false;
-        //int rand = UnityEngine.Random.Range(1, 5);
-        lightSwitchSystem.Activate(1);
+        int rand = UnityEngine.Random.Range(1, 5);
+        lightSwitchSystem.Activate(rand);
         StartCoroutine(lightSwitchSystem.StartLightShow());
     }
 

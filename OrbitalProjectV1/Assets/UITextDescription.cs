@@ -13,16 +13,27 @@ public class UITextDescription : MonoBehaviour
         textDescription = GetComponentInChildren<TextMeshProUGUI>();
         textDescription.enabled = false;
     }
+    //private void OnEnable()
+    //{
+    //    StopAllCoroutines();
+    //}
+
+    //private void OnDisable()
+    //{
+    //    StopAllCoroutines();
+    //}
 
     public void StartDescription(string text)
     {
+        
         StartCoroutine(ShowDescription(text));
+        
+            
     }
 
     private IEnumerator ShowDescription(string description)
     {
-        
-        {
+           
             textDescription.text = description;
             textDescription.enabled = true;
             StartCoroutine(FadeInText());
@@ -30,8 +41,9 @@ public class UITextDescription : MonoBehaviour
             StartCoroutine(FadeOutText());
             yield return new WaitForSeconds(1f);
             textDescription.enabled = false;
+            
 
-        }
+        
 
     }
 

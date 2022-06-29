@@ -182,6 +182,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     {
         if (data.description != "")
         {
+            Debug.Log("we waited");
             uITextDescription.StartDescription(data.description);
             yield return new WaitForSeconds(5f);
 
@@ -212,6 +213,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
             case ItemWithTextData.ITEM_TYPE.SAVEPOINT:
                 //StartCoroutine(ActivationAnimation(light2D));
                 //StartCoroutine(ActivationAnimation(light2D));
+                player.SetSavePoint(transform.position);
                 dataPersistenceManager.SaveGame();
                 _tl.ResetWord();
                 isDead = false;

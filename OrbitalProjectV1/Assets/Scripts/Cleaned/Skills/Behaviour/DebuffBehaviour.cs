@@ -68,7 +68,12 @@ public class DebuffBehaviour : SkillBehaviour
         {
             enemy.Debuffed = false;
             enemy.UnFreeze();
-            Destroy(enemy.transform.Find("StunDebuff(Clone)").gameObject);
+            Transform tr_ = enemy.transform.Find("StunDebuff(Clone)");
+            if (tr_ != null)
+            {
+                Destroy(tr_.gameObject);
+            }
+            
         }
     }
     
@@ -111,7 +116,12 @@ public class DebuffBehaviour : SkillBehaviour
                     rangedData.speed /= _debuffData.slowAmount;
                 }
             }
-            Destroy(enemy.transform.Find("SlowDebuff(Clone)").gameObject);
+            Transform tr_ = enemy.transform.Find("SlowDebuff(Clone)");
+            if (tr_ != null)
+            {
+                Destroy(tr_.gameObject);
+            }
+            
         }
     }
 

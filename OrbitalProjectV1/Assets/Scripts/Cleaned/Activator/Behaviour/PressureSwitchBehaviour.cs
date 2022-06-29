@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class PressureSwitchBehaviour : ActivatorBehaviour
 { 
@@ -11,6 +12,7 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
     private float activatedTime;
     private CircleCollider2D body;
     private bool entered;
+    private Light2D light2D;
     [SerializeField] protected AudioClip audioClip;
 
     void OnDrawGizmos() { Gizmos.DrawWireSphere(transform.position, 1); }
@@ -19,7 +21,7 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
     {
         base.Awake();
         colliders = new List<Collider2D>();
-       
+        light2D = GetComponent<Light2D>();
 
     }
 
@@ -27,8 +29,18 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
     {
         ResettingColor();
         SettingUpColliders();
+        CheckForURP();
         spriteRenderer.sortingOrder = 0;
     }
+
+    private void CheckForURP()
+    {
+        if (data.NotURP)
+        {
+            light2D.enabled = false;
+        }
+    }
+
     //specifically for this
     private void SettingUpColliders()
     {

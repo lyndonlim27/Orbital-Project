@@ -17,6 +17,7 @@ public class NPCMovableBehaviour : NPCBehaviour
     void Start()
     {
         _target = GameObject.FindObjectOfType<Player>();
+        _col.enabled = true;
     }
 
     // Update is called once per frame
@@ -31,19 +32,25 @@ public class NPCMovableBehaviour : NPCBehaviour
             animator.SetFloat("Vertical", Mathf.RoundToInt(point2Target.y));
             animator.SetFloat("Speed", point2Target.magnitude);
             float steps = 3 * Time.deltaTime;
-            Vector2 offset = new Vector2(_target.transform.position.x, _target.transform.position.y + 1);
+            Vector2 offset = new Vector2(_target.transform.position.x, _target.transform.position.y + 1.5f);
             transform.position = Vector3.MoveTowards(transform.position, offset, steps);
-        }
+        } 
 
     }
 
+
+    internal override void Fulfill()
+    {
+        base.Fulfill();
+        _col.enabled = false;
+    }
     //internal override void Fulfill()
     //{
     //    base.Fulfill();
     //    dialogueDetection.enabled = false;
-        
+
     //    animator.enabled = false;
-        
+
     //    //FindObjectOfType<TypingTestTL>(true).transform.parent.parent.gameObject.SetActive(true);
     //    this.enabled = false;
     //}

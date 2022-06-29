@@ -21,7 +21,12 @@ public class StopState : StateClass
     private void returnToStartPos()
     {
         //curr position > 5f from startingpos,
-        if (Vector2.Distance(enemy.transform.position, enemy.startingpos) <= 1f)
+        if (enemy.detectionScript.playerDetected)
+        {
+            stateMachine.ChangeState(StateMachine.STATE.CHASE, null);
+        }
+
+        else if (Vector2.Distance(enemy.transform.position, enemy.startingpos) <= 1f)
         {
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
         } else

@@ -32,7 +32,7 @@ public class DataPersistenceManager : MonoBehaviour
         DontDestroyOnLoad(this);
         if (Instance != null)
         {
-            this.enabled = false;
+            Destroy(this.gameObject);
             //Debug.LogError("Found more than one Data Persistence Manager in the scene. Please put only one data manager");
         } else
         {
@@ -267,6 +267,7 @@ public class DataPersistenceManager : MonoBehaviour
      */
     private void OnDataSend(UpdateUserDataResult result)
     {
+        currScene = SceneManager.GetActiveScene().name;
         Debug.Log("Saved");
     }
 

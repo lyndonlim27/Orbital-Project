@@ -113,6 +113,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     {
         health = enemyData.words;
         maxhealth = enemyData.words;
+        Debuffed = false;
         isDead = false;
         inAnimation = false;
         DisableAnimator();
@@ -138,14 +139,24 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         healStagecooldown = 0;
         if (damageApplier != null)
         {
-            if (enemyData.attackAudios.Count > 0) {
-                damageApplier.SettingUpAudio(enemyData.attackAudios[0]);
-            }
+            //if (enemyData.attackAudios.Count > 0) {
+            //    damageApplier.SettingUpAudio(enemyData.attackAudios[0]);
+            //}
             damageApplier.SettingUpDamage(enemyData.damageValue);
         }
+        DestroyAllParticles();
         
         
 
+    }
+
+    private void DestroyAllParticles()
+    {
+        ParticleSystem[] particleSystems = GetComponentsInChildren<ParticleSystem>(true);
+        foreach(ParticleSystem particleSystem in particleSystems)
+        {
+            Destroy(particleSystem.gameObject);
+        }
     }
 
     public void RegenHealth(int hp)
@@ -519,7 +530,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     public void moveToStartPos()
     {
-        if (body.IsTouchingLayers(LayerMask.GetMask("Obstacles", "enemy", "door")))
+        if (body.IsTouchingLayers(LayerMask.GetMask("Obstacles", "enemy", "door","Trap")))
         {
             startingpos = currentRoom.GetRandomPoint();
         }

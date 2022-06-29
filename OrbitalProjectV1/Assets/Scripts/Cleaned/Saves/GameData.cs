@@ -29,6 +29,7 @@ public class GameData
     public float moveSpeed;
     public string currScene;
     public bool ranged;
+    public bool alreadyActive;
 
     /*
      * Room Data
@@ -43,15 +44,17 @@ public class GameData
         this.maxHealth = 100;
         this.currMana = 100;
         this.maxMana = 100;
-        this.currGold = 0;
+        this.currGold = 15;
         this.currWeapon = "Fists";
         this.currPos = Vector2.zero;
         this.attackDataName = null;
         this.buffDataName = null;
         this.debuffDataName = null;
         moveSpeed = 5;
-        currScene = "ProjectConceptScene3";
+        currScene = "TutorialLevel";
         this.ranged = true;
         this.rooms = new SerializableDictionary<string, int>();
+        alreadyActive = false;
+        
     }
 }

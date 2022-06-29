@@ -25,8 +25,10 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     public int currGold { get; private set;}
     private Animator buffanimator;
     private RuntimeAnimatorController healinganimator;
+    private Vector2 savePoint;
 
     private bool _invulnerable;
+    private int playerprogress;
 
     /*
      * Player skills/data
@@ -74,7 +76,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     // Start is called before the first frame update
     void Start()
     {
-        currGold = 100;
+        //currGold = 100;
         currMana = maxMana;
         //_currHealth = maxHealth;
         _currHealth = 100;
@@ -100,7 +102,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         audioClips["HPMP"] = Resources.Load("Sounds/UI/HPMP") as AudioClip;
         audioClips["Gold"] = Resources.Load("Sounds/UI/Gold") as AudioClip;
         buffanimator = transform.Find("BuffAnimator").gameObject.GetComponent<Animator>();
-        
+        savePoint = transform.position;
 
     }
 
@@ -108,6 +110,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     void Update()
     {
         _time += 1f * Time.deltaTime;
+
         if (_currHealth <= 0)
         {
             Defeated();
@@ -303,7 +306,6 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         _moveSpeed += speed;
     }
 
-
     public RoomManager GetCurrentRoom()
     {
         return currentRoom;
@@ -353,6 +355,11 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         this._attackData = attackData;
     }
 
+    public void SetSavePoint(Vector2 _savepoint)
+    {
+        this.savePoint = _savepoint;
+    }
+
     public bool IsRanged()
     {
         return ranged;
@@ -397,7 +404,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         data.currMana = this.currMana;
         data.currGold = this.currGold;
         data.currWeapon = _weaponManager.ActiveWeapon().name;
-        data.currPos = this.transform.position;
+        data.currPos = this.savePoint;
         data.debuffDataName = _debuffData != null ? _debuffData.skillName : null;
         data.buffDataName = _buffData != null ? _buffData.skillName : null;
         data.attackDataName = _attackData != null ? _attackData.skillName : null;

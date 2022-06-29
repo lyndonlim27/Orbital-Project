@@ -120,8 +120,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6adbe81ca61b74b4a8bb5fa023e51074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentRoom: {fileID: 0}
+  audioSource: {fileID: 0}
+  inAudio: 0
+  footStep: {fileID: 0}
   isDead: 0
   inAnimation: 0
+  Debuffed: 0
   data: {fileID: 11400000, guid: bdab2ccd9ab50437dbbbd501c2477eab, type: 2}
 --- !u!1001 &2035161239189806277
 PrefabInstance:
@@ -247,6 +252,10 @@ PrefabInstance:
     - target: {fileID: 8354289780484549697, guid: 63229ea49edf4431091f9023f811c009, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8354289780484549698, guid: 63229ea49edf4431091f9023f811c009, type: 3}
+      propertyPath: m_SortingOrder
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8354289780484549699, guid: 63229ea49edf4431091f9023f811c009, type: 3}
       propertyPath: m_Name

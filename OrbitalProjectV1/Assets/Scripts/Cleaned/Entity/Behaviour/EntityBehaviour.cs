@@ -83,7 +83,7 @@ public abstract class EntityBehaviour : MonoBehaviour
         poolManager.ReleaseObject(this);
     }
 
-    public void SetCurrentRoom(RoomManager roomManager)
+    public virtual void SetCurrentRoom(RoomManager roomManager)
     {
         currentRoom = roomManager;
     }

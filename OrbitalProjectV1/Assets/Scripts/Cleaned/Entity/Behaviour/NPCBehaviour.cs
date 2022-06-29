@@ -30,6 +30,7 @@ public class
         }
         proceedable = data.prereq == null;
         fulfilled = false;
+        this.gameObject.layer = LayerMask.NameToLayer("NPC");
         //dialogueDetection.enabled = proceedable;
         
  

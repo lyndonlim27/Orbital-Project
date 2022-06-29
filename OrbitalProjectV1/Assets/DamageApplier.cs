@@ -55,16 +55,16 @@ public class DamageApplier : MonoBehaviour
             Vector2 direction = ((Vector2)target.transform.position - (Vector2)transform.position).normalized;
             target.GetComponent<Rigidbody2D>().AddForce(direction * attackSpeed, ForceMode2D.Impulse);
             target.TakeDamage(damage);
-            //if (meleeAudio != null)
-            //{
-            //    if (!inAudio && parent.inAnimation)
-            //    {
-            //        StartCoroutine(LoadSingleAudio(meleeAudio));
-            //    }
-                   
-                
-            //}
-            
+            if (meleeAudio != null)
+            {
+                if (!inAudio && parent.inAnimation)
+                {
+                    StartCoroutine(LoadSingleAudio(meleeAudio));
+                }
+
+
+            }
+
         }
     
     }
@@ -98,19 +98,19 @@ public class DamageApplier : MonoBehaviour
         damaging = false;
     }
 
-    //protected IEnumerator LoadSingleAudio(AudioClip audioClip)
-    //{
-        
-    //    inAudio = true;
-    //    float ogpitch = audioSource.pitch;
-    //    audioSource.pitch = 1f;
-    //    audioSource.clip = audioClip;
-    //    audioSource.Play();
-    //    yield return new WaitForSeconds(1.5f);
-    //    inAudio = false;
-    //    audioSource.pitch = ogpitch;
+    protected IEnumerator LoadSingleAudio(AudioClip audioClip)
+    {
 
-    //}
+        inAudio = true;
+        float ogpitch = audioSource.pitch;
+        audioSource.pitch = 1f;
+        audioSource.clip = audioClip;
+        audioSource.Play();
+        yield return new WaitForSeconds(1.5f);
+        inAudio = false;
+        audioSource.pitch = ogpitch;
+
+    }
 
     private void OnDrawGizmos()
     {

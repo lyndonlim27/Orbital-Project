@@ -13,9 +13,10 @@ public class MainMenu : MonoBehaviour
     /**
      * Load First Scene.
      */
+
     public void StartButton()
     {
-        SceneManager.LoadScene("TutorialScene1");
+        SceneManager.LoadScene("TutorialLevel");
     }
 
     /**
