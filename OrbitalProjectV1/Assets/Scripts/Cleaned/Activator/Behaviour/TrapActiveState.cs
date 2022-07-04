@@ -28,7 +28,6 @@ public class TrapActiveState : StateClass
     
     public override void Update()
     {
-        //CheckIfTrapExpired();
         CheckForActivation();
     }
 
@@ -37,9 +36,6 @@ public class TrapActiveState : StateClass
         if (Time.time >= activatedTime + trap.trapData.duration)
         {
 
-            //trap.animator.SetBool(trap.trapData.triggername, false);
-            //trap.inAnimation = false;
-            //trap.inAnimation = false;
             stateMachine.ChangeState(StateMachine.STATE.TRAPINACTIVE, null);
         } 
     }

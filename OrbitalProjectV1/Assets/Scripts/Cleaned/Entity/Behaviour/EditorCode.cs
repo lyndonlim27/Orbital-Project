@@ -12,5 +12,10 @@ public class EditorCode : MonoBehaviour
     Dictionary<int, int> glyphs;
     private void OnEnable()
     {
+        SkillData[] skillDatas = Resources.FindObjectsOfTypeAll<SkillData>();
+        foreach(SkillData skill in skillDatas)
+        {
+            skill.goldCost -= 10;
+        }
     }
 }

@@ -5,17 +5,14 @@ using UnityEngine;
 
 public class NPCRoom_Mgr : RoomManager
 {
-    private bool added;
     protected override void Awake()
     {
         base.Awake();
-        //door = GameObject.FindObjectOfType<UnlockableDoor>();
 
     }
 
     private void Start()
     {
-        //added = false;
     }
 
     protected override void Update()
@@ -27,20 +24,14 @@ public class NPCRoom_Mgr : RoomManager
 
     protected override void RoomChecker()
     {
-        //check condition 1
-
         if (activated)
         {
             CheckNPCPrereq();
-
-           
         }
         
         base.RoomChecker();
 
     }
-
-
 
 }
 

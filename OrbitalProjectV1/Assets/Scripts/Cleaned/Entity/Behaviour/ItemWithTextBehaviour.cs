@@ -7,26 +7,36 @@ using TMPro;
 using Random = UnityEngine.Random;
 using System.Reflection;
 
+/// <summary>
+/// This is a general class for item with texts.
+/// It handles the different behaviours for all items with texts.
+/// </summary>
+
 public class ItemWithTextBehaviour : EntityBehaviour, Freezable
 {
-   [SerializeField] protected ItemWithTextData data;
-   [SerializeField] protected List<ConsumableItemData> consumableItemDatas;
+    [SerializeField] protected ItemWithTextData data;
+    [SerializeField] protected List<ConsumableItemData> consumableItemDatas;
+
+   
     private FieldInfo _LightCookieSprite = typeof(Light2D).GetField("m_LightCookieSprite", BindingFlags.NonPublic | BindingFlags.Instance);
-    Player player;
-    Light2D light2D;
-    Rigidbody2D _rb;
-    CapsuleCollider2D _col;
-    GameObject secondarylightsource;
-    ItemTextLogic _tl;
-    UITextDescription uITextDescription;
-    TorchPuzzle torchPuzzle;
-    Vector2 originalpos;
-    float origintensity;
+    protected Player player;
+    protected Light2D light2D;
+    protected Rigidbody2D _rb;
+    protected CapsuleCollider2D _col;
+    protected GameObject secondarylightsource;
+    protected ItemTextLogic _tl;
+    protected UITextDescription uITextDescription;
+    protected TorchPuzzle torchPuzzle;
+    protected Vector2 originalpos;
+    protected float origintensity;
     private DataPersistenceManager dataPersistenceManager;
     public Animator animator { get; private set; }
     public bool lit { get; private set; }
     
 
+    /** The first instance the gameobject is being activated.
+     *  Retrieves all relevant data.
+     */
     protected override void Awake()
     {
         base.Awake();
@@ -46,9 +56,19 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         torchPuzzle = FindObjectOfType<TorchPuzzle>(true);     
     }
 
+    /**
+     * For general items which is used in all entities.
+     */
+    private void Start()
+    {
+        dataPersistenceManager = FindObjectOfType<DataPersistenceManager>(true);
+    }
+
+    /** OnEnable method.
+     *  To intialize more specific entity behaviours for ObjectPooling.
+     */
     protected virtual void OnEnable()
     {
-        //_LightCookieSprite.SetValue(light2D, data.sprite);
         ResetLight();
         Color c = spriteRenderer.material.color;
         c.a = 1;
@@ -58,12 +78,19 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         SetItemBody();
         EnableAnimator();
         spriteRenderer.sortingOrder = 2;
+    }
 
-        
-        
+    /**
+     * Left it blank for now since most stuffs can be done inside onenable.
+     */
+    protected void OnDisable()
+    {
 
     }
 
+    /**
+     * Checking of URP objects.
+     */
     public void CheckURP()
     {
         if (data.NotURP)
@@ -72,11 +99,10 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         }
     }
 
-    private void Start()
-    {
-        dataPersistenceManager = FindObjectOfType<DataPersistenceManager>(true);
-    }
-
+    
+    /**
+     * Enabling of Animator.
+     */
     protected virtual void EnableAnimator()
     {
         animator.enabled = true;
@@ -84,12 +110,19 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
 
     }
 
+
+    /**
+     * Disabling of Animator.
+     */
     protected void DisableAnimator()
     {
         animator.enabled = false;
         animator.runtimeAnimatorController = null;
     }
 
+    /**
+     * Setting ItemData.
+     */
     private void SetItemBody()
     {
         switch (data.item_type)
@@ -127,20 +160,20 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 light2D.pointLightOuterRadius = 6f;
                 light2D.intensity = 0.5f;
                 light2D.color = data.defaultcolor;
-                //light2D.color = new Color(74, 219, 233, 1);
                 break;
             case ItemWithTextData.ITEM_TYPE.PUZZLETORCH:
                 torchPuzzle.AddPuzzleTorch(this);
                 light2D.enabled = true;
                 break;
 
-
-
         }
         SettingUpColliders();
         CheckURP();
     }
 
+    /**
+     * Setting Up Secondary Lights if any.
+     */
     private void SettingUpSecondaryLight(GameObject go, SpriteRenderer _spr)
     {
         _spr.sprite = data.secondarysprite;
@@ -155,6 +188,9 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         go.SetActive(false);
     }
 
+    /**
+     * Setting Up Colliders.
+     */
     private void SettingUpColliders()
     {
         _col.isTrigger = false;
@@ -165,11 +201,9 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
 
     }
 
-    protected void OnDisable()
-    {
-        
-    }
-
+    /**
+     * Despawn behaviour.
+     */
     public override void Defeated()
     {
         isDead = true;
@@ -178,11 +212,13 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
 
     }
 
+    /**
+     * Conditions checking before releasing to pool.
+     */
     private IEnumerator ConditionsChecking()
     {
         if (data.description != "")
         {
-            Debug.Log("we waited");
             uITextDescription.StartDescription(data.description);
             yield return new WaitForSeconds(5f);
 
@@ -211,13 +247,10 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 secondarylightsource.SetActive(true);
                 break;
             case ItemWithTextData.ITEM_TYPE.SAVEPOINT:
-                //StartCoroutine(ActivationAnimation(light2D));
-                //StartCoroutine(ActivationAnimation(light2D));
                 player.SetSavePoint(transform.position);
                 dataPersistenceManager.SaveGame();
                 _tl.ResetWord();
                 isDead = false;
-                //save data;
                 break;
             case ItemWithTextData.ITEM_TYPE.PUZZLETORCH:
                 torchPuzzle.Input(this);
@@ -228,6 +261,9 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         }
     }
 
+    /**
+     * Spawn itemwithtextbehaviours if any.
+     */
     private void SpawnObjects()
     {
         List<ItemWithTextData> edClones = new List<ItemWithTextData>();
@@ -247,6 +283,9 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         
     }
 
+    /**
+     * Spawn consumableitembehaviour if any.
+     */
     protected void SpawnDrops()
     {
         int rand = Random.Range(0, 5);
@@ -276,6 +315,9 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         }
     }
 
+    /**
+     * Handling of animations.
+     */
     private void HandleAnimation()
     {
         if (data.ac_name == "" || data._trigger == "")
@@ -288,6 +330,9 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         }
     }
 
+    /**
+     * Fulfilling condition in rooms.
+     */
     protected void FullFillCondition()
     {
         if (data.condition == 1)
@@ -297,12 +342,17 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         }
     }
 
-
+    /**
+     * Retrieving item data.
+     */
     public override EntityData GetData()
     {
         return data;
     }
 
+    /**
+     * Setting item data.
+     */
     public override void SetEntityStats(EntityData stats)
     {
 
@@ -314,18 +364,27 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         }
     }
 
+    /**
+     * Freezing item movement.
+     */
     public virtual void Freeze()
     {
         _rb.constraints = RigidbodyConstraints2D.FreezeAll;
         animator.speed = 0;
     }
 
+    /**
+    * UnFreezing item movement.
+    */
     public virtual void UnFreeze()
     {
         _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         animator.speed = 1;
     }
 
+    /**
+    * Activating lights animation if any.
+    */
     private IEnumerator ActivationAnimation(Light2D light)
     {
         for (float f = 0; f < 3; f += 0.1f)
@@ -335,14 +394,19 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         }
     }
 
+    /**
+    * Static light, no animation.
+    */
     public void LightUp()
     {
         lit = true;
         light2D.intensity = 5f;
         light2D.color = data.defaultcolor;
-        //StartCoroutine(ActivationAnimation(light2D));
     }
 
+    /**
+    * Resetting light intensity.
+    */
     public void ResetLight()
     {
         light2D.intensity = origintensity;

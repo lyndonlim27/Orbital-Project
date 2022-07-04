@@ -151,7 +151,6 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     private void Start()
     {
         
-        //SafePath();
 
     }
 
@@ -159,11 +158,6 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     {
         UnlockDoorsOnThisLevel();
     }
-
-    //private void TurnOffCollider()
-    //{
-    //    this.roomArea.enabled = false;
-    //}
 
     protected virtual void Update()
     {
@@ -175,10 +169,8 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
                 activated = true;
                 SettingDialogueMgr();
                 SettingUpAudio();
-
                 SpawnObjects(_EntityDatas);
-                //InitializeAStar();
-                //AddConditionalNPCS();
+
             }
 
         }
@@ -217,6 +209,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
      
     }
 
+    /**
+     * Setting Up dialogue Manager's room.
+     */
     private void SettingDialogueMgr()
     {
         if (dialMgr != null)
@@ -227,6 +222,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     }
 
+    /**
+     * DeActivate Astar.
+     */
     private void DeActivateAStar()
     {
 
@@ -238,7 +236,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     }
 
-
+    /**
+     * Initialize AStarPath.
+     */
     private void InitializeAStar()
     {
         if (roomtype != ROOMTYPE.FIGHTING_ROOM && roomtype != ROOMTYPE.HYBRID_ROOM)
@@ -257,7 +257,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     }
 
-
+    /**
+     * Fulfill condiitons for current room.
+     */
     public virtual void FulfillCondition(string key)
     {
         if (conditions.Contains(key))
@@ -266,6 +268,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         }
     }
 
+    /**
+     * Unfulfill condiitons for current room.
+     */
     public virtual void UnfulfillCondition(string key)
     {
         if (!conditions.Contains(key))
@@ -275,6 +280,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     }
 
+    /**
+     * Check If Room Proceedable.
+     */
     protected virtual void RoomChecker()
     {
 
@@ -301,6 +309,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     }
 
+    /**
+     * Disable All Trap Behaviours.
+     */
     private void DisableTrapBehaviour()
     {
         TrapBehaviour[] trapBehaviours = GetComponentsInChildren<TrapBehaviour>();
@@ -443,45 +454,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         }
     }
 
-    protected void InstantiateMultiPosition(EntityData item)
-    {
-        List<Vector2> points;
-        Patterns pattern = Patterns.of(item.startPos, item.endPos);
-        switch (item.pattern)
-        {
-            default:
-            case EntityData.PATTERN.BOX_LINE:
-                points = pattern.Box();
-                break;
-            case EntityData.PATTERN.CROSS:
-                points = pattern.Cross();
-                break;
-            case EntityData.PATTERN.SIMPLE_DIAG:
-                points = pattern.Diagonal();
-                break;
-            case EntityData.PATTERN.PATTERN1:
-                points = pattern.Pattern1();
-                break;
-            case EntityData.PATTERN.PATTERN2:
-                points = pattern.Pattern2();
-                break;
-            case EntityData.PATTERN.PATTERN3:
-                points = pattern.Pattern3();
-                break;
-        }
-
-        //points.Sort();
-        if (item.staggered)
-        {
-            StartCoroutine(SpawnStaggered(points, item));
-        } else
-        {
-            SpawnInstant(points, item);
-        }
-
-
-    }
-
+    /**
+     * Spawn instant without staggering.
+     */
     private void SpawnInstant(List<Vector2> points, EntityData item)
     {
         foreach (Vector2 point in points)
@@ -492,7 +467,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         }
     }
 
-
+    /**
+     * Spawn objects staggered.
+     */
     private IEnumerator SpawnStaggered(List<Vector2> points, EntityData item)
     {
         foreach (Vector2 point in points)
@@ -506,11 +483,17 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         }
     }
 
+    /**
+     * Get current room bounds.
+     */
     public Bounds GetRoomAreaBounds()
     {
         return roomArea.bounds;
     }
 
+    /**
+    * SafePath for room.
+    */
     private void SafePath()
     {
         safeRoute = new HashSet<Vector3>();
@@ -543,38 +526,65 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     }
 
 
-
+    /**
+     * Instantiating single entity.
+     */
     public void InstantiateEntity(EntityData data)
     {
-
-
-
         Vector2 pos = data.random ? GetRandomPoint() : data.pos;
         EntityBehaviour entity = poolManager.GetObject(data._type);
         InitializeEntity(data, pos, entity);
 
     }
 
-    private void SettingUpEnemy(EnemyData data, Vector2 pos, EnemyBehaviour emf)
+    /**
+    * Instantiate MultiplePositionals.
+    */
+    protected void InstantiateMultiPosition(EntityData item)
     {
-        GameObject go = new GameObject(data._name);
-        go.layer = LayerMask.NameToLayer("enemy");
-        go.transform.position = pos;
-        go.AddComponent<CapsuleCollider2D>();
-        Rigidbody2D rb = go.AddComponent<Rigidbody2D>();
-        rb.bodyType = RigidbodyType2D.Dynamic;
-        rb.gravityScale = 0f;
-        rb.drag = 1.5f;
-        rb.mass = 100f;
-        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-        rb.freezeRotation = true;
-        emf.transform.SetParent(go.transform);
-        emf.transform.localScale = new Vector2(data.scale, data.scale);
-        emf.transform.localPosition = Vector3.zero;
-        //emf.animator.runtimeAnimatorController = Resources.Load(string.Format("Animations/AnimatorControllers/{0}", data.animatorname)) as RuntimeAnimatorController;
-        go.transform.SetParent(transform);
-        enemies.Add(emf);
+        List<Vector2> points;
+        Patterns pattern = Patterns.of(item.startPos, item.endPos);
+        switch (item.pattern)
+        {
+            default:
+            case EntityData.PATTERN.BOX_LINE:
+                points = pattern.Box();
+                break;
+            case EntityData.PATTERN.CROSS:
+                points = pattern.Cross();
+                break;
+            case EntityData.PATTERN.SIMPLE_DIAG:
+                points = pattern.Diagonal();
+                break;
+            case EntityData.PATTERN.PATTERN1:
+                points = pattern.Pattern1();
+                break;
+            case EntityData.PATTERN.PATTERN2:
+                points = pattern.Pattern2();
+                break;
+            case EntityData.PATTERN.PATTERN3:
+                points = pattern.Pattern3();
+                break;
+        }
+
+        //points.Sort();
+        if (item.staggered)
+        {
+            StartCoroutine(SpawnStaggered(points, item));
+        }
+        else
+        {
+            SpawnInstant(points, item);
+        }
+
+
     }
+
+
+
+    /**
+     * Initializing Entities.
+     */
 
     private void InitializeEntity(EntityData data, Vector2 pos, EntityBehaviour entity)
     {
@@ -604,6 +614,27 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         entity.gameObject.SetActive(true);
     }
 
+    // <summary>
+    // Setting Datas for entities.
+    // </summary>
+
+    /**
+     * Setting general data for entities.
+     */
+    private void SettingDefaults(EntityData data, Vector2 pos, EntityBehaviour entity)
+    {
+        entity.SetEntityStats(data);
+        entity.GetComponent<SpriteRenderer>().sprite = data.sprite;
+        entity.transform.position = pos;
+        entity.transform.localScale = new Vector2(data.scale, data.scale);
+        entity.SetCurrentRoom(this);
+
+
+    }
+
+    /**
+     * Setting NPC datas
+     */
 
     private void SettingUpNPCObject(NPCData data)
     {
@@ -619,21 +650,38 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
                 break;
         }
 
-        
-        
+
+
     }
 
+    /**
+     * Setting Enemies datas
+     */
 
-    private void SettingDefaults(EntityData data, Vector2 pos, EntityBehaviour entity)
+    private void SettingUpEnemy(EnemyData data, Vector2 pos, EnemyBehaviour emf)
     {
-        entity.SetEntityStats(data);
-        entity.GetComponent<SpriteRenderer>().sprite = data.sprite;
-        entity.transform.position = pos;
-        entity.transform.localScale = new Vector2(data.scale, data.scale);
-        entity.SetCurrentRoom(this);
-
-
+        GameObject go = new GameObject(data._name);
+        go.layer = LayerMask.NameToLayer("enemy");
+        go.transform.position = pos;
+        go.AddComponent<CapsuleCollider2D>();
+        Rigidbody2D rb = go.AddComponent<Rigidbody2D>();
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        rb.gravityScale = 0f;
+        rb.drag = 1.5f;
+        rb.mass = 100f;
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        rb.freezeRotation = true;
+        emf.transform.SetParent(go.transform);
+        emf.transform.localScale = new Vector2(data.scale, data.scale);
+        emf.transform.localPosition = Vector3.zero;
+        //emf.animator.runtimeAnimatorController = Resources.Load(string.Format("Animations/AnimatorControllers/{0}", data.animatorname)) as RuntimeAnimatorController;
+        go.transform.SetParent(transform);
+        enemies.Add(emf);
     }
+
+    /**
+     * Get all doors controlled by current room.
+     */
 
     public DoorBehaviour[] GetDoors()
     {
@@ -770,25 +818,6 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
      * @param collision 
      * Check whether is player.
      */
-    /*
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            if (activated == false)
-            {
-                activated = true;
-                dialMgr.SetCurrentRoom(this);
-                SpawnObjects();
-                AddConditionalNPCS();
-
-            }
-            
-        }
-        
-    }*/
-
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
 
@@ -819,7 +848,6 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
                     pointer.StopNavi();
                     player.SetCurrentRoom(this);
                 }
-                // maybe we need to use this in the future, dk
                 if (!CanProceed())
                 {
 
@@ -836,6 +864,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     }
 
+    /**
+     * Lock all doors controlled by current room.
+     */
     protected void LockDoorsOnThisLevel()
     {
         if (activated)
@@ -849,6 +880,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     }
 
+    /**
+     * Unlock all doors controlled by current room.
+     */
     protected void UnlockDoorsOnThisLevel()
     {
         
@@ -859,7 +893,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     }
 
-
+    /**
+     * Disable room collider.
+     */
     public void DisableCollider()
     {
         this.roomArea.enabled = false;
@@ -890,6 +926,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     //    }
     //}
 
+    /**
+     * Roomsize Drawing.
+     */
     private void OnDrawGizmos()
     {
         Gizmos.color = _colour;
@@ -898,6 +937,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     }
 
+    /**
+     * Initialize pointer.
+     */
     private void pointToObjective()
     {
         if (exitDoor != null)
@@ -907,11 +949,13 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     }
 
+    // <summary>
+    // Room Conditions Checker. 
+    // </summary>
+
     /**
-     * ConditionCheckers
+     * NPC Prerequisite Checker.
      */
-
-
     protected void CheckNPCPrereq()
     {
         foreach (NPCBehaviour npc in npcs)
@@ -927,7 +971,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         }
     }
 
-
+    /**
+     * PressurePlate Checker.
+     */
     protected void PressurePlateCheck()
     {
         if (activated)
@@ -950,6 +996,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         }
     }
 
+    /**
+     * WaveRoom Checker.
+     */
     protected virtual void FightRoomCheck(int waveNum)
     {
         if (activated)
@@ -974,6 +1023,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         }
     }
 
+    /**
+     * PressureRoom afterAction.
+     */
     private void PressureRoomAfterAction()
     {
         if (!pressureRoomComplete)
@@ -989,6 +1041,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         }
     }
 
+    /**
+    * Destroy all boss spawns.
+    */
     public void DestroyAllFodders()
     {
         FodderStationary[] fodders = GetComponentsInChildren<FodderStationary>(true);
@@ -996,6 +1051,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     }
 
+    /**
+     * Destroy all boss props.
+     */
     public void DestroyBossProps()
     {
         ItemWithTextBehaviour[] bossprops = GetComponentsInChildren<ItemWithTextBehaviour>(true);
@@ -1011,6 +1069,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         );
     }
 
+    /** TempDoor Opener.
+     * Open doors temporary for pressureplates.
+     */
     private IEnumerator OpenDoorsTemp(float duration)
     {
         pressureSwitchDoor.unlocked = true;
@@ -1018,25 +1079,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         pressureSwitchDoor.unlocked = conditions.Count == 0;
     }
 
-    public void LoadData(GameData data)
-    {
-        ActivatedHealPoints(data);
-        if (this.roomtype != ROOMTYPE.SAVE_ROOM)
-        {
-            if (data.rooms.GetValueOrDefault(this.name + ":" + RoomIndex, -1) == 1)
-            {
-                this.enabled = false;
-            }
-        }
-
-        if (pointer.isActiveAndEnabled)
-        {
-            RestartNavigation(data);
-        }
-            
-
-    }
-
+    /** Navigator Reset.
+     *  Restart the navigation.
+     */
     private void RestartNavigation(GameData data)
     {
         pointer.StopNavi();
@@ -1067,6 +1112,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     }
 
+    /** Healpoints reactivation.
+     *  ReActivate All HealingPoints upon load.
+     */
     private void ActivatedHealPoints(GameData data)
     {
         HealingBehaviour healingBehaviour = GetComponentInChildren<HealingBehaviour>();
@@ -1076,6 +1124,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         }
     }
 
+    /** SaveData.
+     * Saving RoomData.
+     */
     public void SaveData(ref GameData data)
     {
         if (this.enabled)
@@ -1089,5 +1140,27 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
         data.rooms[this.name + ":" + RoomIndex] = 1;
     
+    }
+
+    /** LoadData.
+     * Load RoomData from cloud.
+     */
+    public void LoadData(GameData data)
+    {
+        ActivatedHealPoints(data);
+        if (this.roomtype != ROOMTYPE.SAVE_ROOM)
+        {
+            if (data.rooms.GetValueOrDefault(this.name + ":" + RoomIndex, -1) == 1)
+            {
+                this.enabled = false;
+            }
+        }
+
+        if (pointer.isActiveAndEnabled)
+        {
+            RestartNavigation(data);
+        }
+
+
     }
 }

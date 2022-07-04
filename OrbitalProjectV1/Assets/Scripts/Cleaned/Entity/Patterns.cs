@@ -2,8 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This is the pattern class.
+/// It generates the different patterns according to input.
+/// </summary>
 public class Patterns
 {
+
     Vector2 startPos;
     Vector2 endPos;
     private int n;
@@ -20,6 +25,9 @@ public class Patterns
         return new Patterns(startpos, endpos);
     }
 
+    /** Diagonal Pattern.
+     * returns a list of vectors in the diagonal matrix.
+     */
     public List<Vector2> Diagonal()
     {
         int i = (int)startPos.x;
@@ -34,6 +42,9 @@ public class Patterns
         return points;
     }
 
+    /** Cross Pattern.
+     * returns a list of vectors in the cross matrix.
+     */
     public List<Vector2> Cross()
     {
         int i = (int)startPos.x;
@@ -55,7 +66,9 @@ public class Patterns
         return new List<Vector2>(points);
     }
 
-
+    /** Pattern1.
+     * returns a list of vectors in the pattern1 matrix.
+     */
     public List<Vector2> Pattern1()
     {
         int k = (int)startPos.x;
@@ -78,6 +91,9 @@ public class Patterns
         return points;
     }
 
+    /** Pattern2.
+     * returns a list of vectors in the pattern2 matrix.
+     */
     public List<Vector2> Pattern2()
     {
         List<Vector2> points = new List<Vector2>();
@@ -111,6 +127,9 @@ public class Patterns
         return points;
     }
 
+    /** Pattern3.
+     * returns a list of vectors in the pattern3 matrix.
+     */
     public List<Vector2> Pattern3()
     {
         List<Vector2> points = new List<Vector2>();
@@ -141,6 +160,9 @@ public class Patterns
         return points;
     }
 
+    /** Box Pattern.
+     * returns a list of vectors in the Box matrix.
+     */
     public List<Vector2> Box()
     {
         List<Vector2> points = new List<Vector2>();
@@ -154,6 +176,9 @@ public class Patterns
         return points;
     }
 
+    /** Random Patterns.
+     * returns a list of vectors of random patterns.
+     */
     public List<Vector2> RandomPattern(EnemyData.PATTERN pattern)
     {
         List<Vector2> points;
