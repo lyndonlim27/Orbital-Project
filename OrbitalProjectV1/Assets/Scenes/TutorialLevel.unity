@@ -10435,7 +10435,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7774968, y: 1}
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -23403,41 +23403,9 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1924427488}
-    - target: {fileID: 198168162933345984, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 198168162933345989, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 198168162933345991, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
-      propertyPath: m_WasSpriteAssigned
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2845914623627805895, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
-      propertyPath: m_Size.x
-      value: 0.84
-      objectReference: {fileID: 0}
-    - target: {fileID: 2845914623627805895, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
-      propertyPath: m_Size.y
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 4374332775502748977, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4374332775865201289, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
       propertyPath: m_Name
       value: Player 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4374332775865201291, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
-      propertyPath: ranged
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4374332775865201291, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
-      propertyPath: maxMana
-      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 4374332775865201291, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
       propertyPath: _manaBar
@@ -23448,21 +23416,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 518101446}
     - target: {fileID: 4374332775865201291, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
-      propertyPath: maxHealth
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 4374332775865201291, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
       propertyPath: _healthBar
       value: 
       objectReference: {fileID: 1234682925}
-    - target: {fileID: 4374332775865201291, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
-      propertyPath: _moveSpeed
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4374332775865201291, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
-      propertyPath: _debuffData
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 4374332776539690098, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
       propertyPath: m_RootOrder
       value: 15
@@ -23507,12 +23463,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4374332776856344446, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 5772658070408478858, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 601dad73d594b4c5caac6c47417fc108, type: 3}
 --- !u!4 &4374332775066565745 stripped
 Transform:
