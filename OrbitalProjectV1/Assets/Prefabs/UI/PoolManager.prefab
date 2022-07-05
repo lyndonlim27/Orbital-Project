@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4419972133747443276
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4419972133747443274}
+  - component: {fileID: 4419972133747443275}
+  m_Layer: 0
+  m_Name: PoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4419972133747443274
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4419972133747443276}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.009372203, y: 0.014188469, z: 0.0011389704}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4419972133747443275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4419972133747443276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85751e28b8fd04d7bb0ad3cd05c947de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entityPrefabs:
+  - {fileID: 6102511709532313600, guid: e97f1a76819bb45298a4f96ef5210119, type: 3}
+  - {fileID: 4685046678121746872, guid: 93eba7168fb65405cb2c7a4886e12d1c, type: 3}
+  - {fileID: 3539920906336780350, guid: 6e154308a3f4d4d6b80668f6d2fa5041, type: 3}
+  - {fileID: 997478139141977204, guid: 144a53c432d83459d945184d7a734cbc, type: 3}
+  - {fileID: 1488280533225022318, guid: bbeac3e7e03314e82b778d29b9e65a65, type: 3}
+  - {fileID: 1585722123075491524, guid: 887c979ab13de416090908c82065ff85, type: 3}
+  - {fileID: 796981598516887651, guid: 2c0bbb87975494b08b05f5c6f9e49ee7, type: 3}
+  - {fileID: 8536370682585452009, guid: 4f1435b83902f428795018ae3289abb1, type: 3}
+  - {fileID: 4431353508152069340, guid: 896b235e0f2974ac7a44bb24b9c34c37, type: 3}

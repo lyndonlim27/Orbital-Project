@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6001843dad184b65bbe555da823aabd, type: 3}
+  m_Name: StoneGolem
+  m_EditorClassIdentifier: 
+  _name: StoneGolem
+  minDist: 15
+  sprite: {fileID: 1558316739, guid: 1ed8b26f1c2354608b32d925213c28da, type: 3}
+  pattern: 0
+  condition: 0
+  _type: 5
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
+  random: 0
+  pos: {x: -94, y: -97}
+  damageFlicker: {fileID: 672315831686351503, guid: 287fa61315c39429e8235e664399d8cc, type: 3}
+  spawnAtStart: 1
+  scale: 8
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 1
+  moveable: 1
+  attackAudios:
+  - {fileID: 8300000, guid: 0c367f8b6ee494311a488a7f93c75481, type: 3}
+  miscellaneousAudios: []
+  interactionAudios: []
+  itemTextDatas: []
+  ac_name: 
+  _trigger: 
+  item_type: 0
+  secondarysprite: {fileID: 0}
+  description: 
+  damageValue: 5
+  moveSpeed: 4
+  chaseSpeed: 5
+  attackRange: 5
+  attackSpeed: 3
+  maxDist: 100
+  meleetriggers:
+  - Melee
+  defends: []
+  rangedtriggers:
+  - Laser
+  - Cast
+  dashattacks: []
+  rangedDatas:
+  - {fileID: 11400000, guid: 8f104031de1404436866443573a46aaa, type: 2}
+  - {fileID: 11400000, guid: a427c93a36bb6426998f9edc14cae61a, type: 2}
+  bossdamageprops:
+  - {fileID: 11400000, guid: 6af559b7009ba4347b72eb4abe64570f, type: 2}
+  bossSummonprops:
+  - {fileID: 11400000, guid: ae8f3b6bed12549b9baa62c7941aae54, type: 2}
+  - {fileID: 11400000, guid: d173fea339b704ddeb0e3eb02ccf04e3, type: 2}
+  - {fileID: 11400000, guid: b378410b27ba6431fb8a1c0aaec55249, type: 2}
+  bossdefenceprops:
+  - {fileID: 11400000, guid: 9cefff5005f2c4309ba081714b1a62dc, type: 2}
+  - {fileID: 11400000, guid: 586cec4b90fba47b19982d9fc7b56319, type: 2}
+  - {fileID: 11400000, guid: d3202327355c44fb5ab68f2f23b83f46, type: 2}
+  animatorname: AC_Golem
+  words: 100
+  rangedcooldown: 4
+  stage2: 1
+  healStage: 1
+  enragedColor: {r: 0.4056604, g: 0.35016912, b: 0.35016912, a: 1}
+  body: 2

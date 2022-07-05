@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a5caf378f7a24f559479c92e5eaf367, type: 3}
+  m_Name: WaterRipple 1
+  m_EditorClassIdentifier: 
+  _name: WaterSpikes
+  minDist: 0
+  sprite: {fileID: 1160180818, guid: 17955d31ea0344615acc85c0597a9b51, type: 3}
+  condition: 0
+  _type: 8
+  random: 0
+  pos: {x: 0, y: 0}
+  damageFlicker: {fileID: 0}
+  spawnAtStart: 1
+  scale: 1
+  damage: 0
+  speed: 3
+  rotation: 5
+  lifetime: 5
+  trigger: waterspikes
+  followTarget: 1
+  loop: 0
+  impact_trigger: 

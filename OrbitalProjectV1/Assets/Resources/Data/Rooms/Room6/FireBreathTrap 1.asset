@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cec4b2d638e1942d09ff748bd2d97aa5, type: 3}
+  m_Name: FireBreathTrap 1
+  m_EditorClassIdentifier: 
+  _name: FireBreathTrap
+  minDist: 0
+  sprite: {fileID: 60879359, guid: 6c967d32f9c2b4162bbb5a633e236df5, type: 3}
+  pattern: 0
+  condition: 0
+  _type: 12
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
+  random: 0
+  pos: {x: 10, y: -92}
+  damageFlicker: {fileID: 0}
+  spawnAtStart: 1
+  scale: 1
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  activatedcolor: {r: 0, g: 0, b: 0, a: 0}
+  triggername: FireBreathTrap
+  ontrigger: 1
+  damage: 1
+  quaternion: {x: 0, y: 0, z: 0, w: 0}
+  ranged: 1
+  horizontal: 1
+  flip: 0
+  rangedDatas:
+  - {fileID: 11400000, guid: f3e3a7428ed6a44f7a571352d7275f5a, type: 2}

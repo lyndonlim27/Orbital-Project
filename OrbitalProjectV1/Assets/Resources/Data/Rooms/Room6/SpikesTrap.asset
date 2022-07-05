@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cec4b2d638e1942d09ff748bd2d97aa5, type: 3}
+  m_Name: SpikesTrap
+  m_EditorClassIdentifier: 
+  _name: SpikesTrap
+  minDist: 0
+  sprite: {fileID: 21300000, guid: 0dfb3be63077345c7a3a907e35557746, type: 3}
+  pattern: 0
+  condition: 0
+  _type: 12
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
+  random: 0
+  pos: {x: -22, y: -104}
+  damageFlicker: {fileID: 0}
+  spawnAtStart: 1
+  scale: 1
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 0
+  attackAudios:
+  - {fileID: 8300000, guid: d11894d01ae734ff798e6148b7e42ed0, type: 3}
+  miscellaneousAudios: []
+  interactionAudios: []
+  activatedcolor: {r: 0, g: 0, b: 0, a: 0}
+  triggername: SpikesTrap
+  ontrigger: 1
+  damage: 3
+  quaternion: {x: 0, y: 0, z: 0, w: 0}
+  ranged: 0
+  horizontal: 0
+  flip: 0
+  rangedDatas: []

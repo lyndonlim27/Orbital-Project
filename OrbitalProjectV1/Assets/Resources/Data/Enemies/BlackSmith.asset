@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6001843dad184b65bbe555da823aabd, type: 3}
+  m_Name: BlackSmith
+  m_EditorClassIdentifier: 
+  _name: BlackSmith
+  minDist: 15
+  sprite: {fileID: -934617628, guid: 944f301fb80194dc7a1af31fb70da0bf, type: 3}
+  pattern: 0
+  condition: 0
+  _type: 5
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
+  random: 1
+  pos: {x: 27, y: -91}
+  damageFlicker: {fileID: 0}
+  spawnAtStart: 1
+  scale: 5
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 1
+  attackAudios:
+  - {fileID: 8300000, guid: 0c367f8b6ee494311a488a7f93c75481, type: 3}
+  miscellaneousAudios: []
+  interactionAudios: []
+  itemTextDatas: []
+  ac_name: AC_BlackSmith
+  _trigger: 
+  item_type: 0
+  secondarysprite: {fileID: 0}
+  description: 
+  damageValue: 5
+  moveSpeed: 4
+  chaseSpeed: 5
+  attackRange: 1
+  attackSpeed: 1
+  maxDist: 100
+  meleetriggers:
+  - NormalAttack
+  - SpinAttack
+  defends:
+  - Dash
+  rangedtriggers:
+  - ShootLaser
+  dashattacks:
+  - LeapAttack
+  - MultiAttack1
+  - JumpAttack
+  rangedDatas:
+  - {fileID: 11400000, guid: fd44465a58f324a7c916d0a7e9e2c9b4, type: 2}
+  bossdamageprops:
+  - {fileID: 11400000, guid: 63983a77f709d4e4989b4b21f2db0943, type: 2}
+  - {fileID: 11400000, guid: 2c769baa3e3ea452c93af53e6a962d15, type: 2}
+  - {fileID: 11400000, guid: fdb54340be0c54ceca8968363b8ad078, type: 2}
+  - {fileID: 11400000, guid: 5a0f2b4e1939b436191c8a0f8ee1cdc1, type: 2}
+  - {fileID: 11400000, guid: fa8c78dd72d514bcc9da2d1d016629e8, type: 2}
+  bossSummonprops: []
+  bossdefenceprops: []
+  animatorname: AC_BlackSmith
+  words: 100
+  rangedcooldown: 2
+  stage2: 1
+  healStage: 0
+  enragedColor: {r: 0.5568628, g: 0.32941177, b: 0.32941177, a: 1}
+  body: 0

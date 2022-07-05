@@ -1,0 +1,507 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc4d72162a1884b879c9a5e0ffca656d, type: 3}
+  m_Name: VoicesDemo
+  m_EditorClassIdentifier: 
+  voices:
+  - voice: Ava
+    type: Female
+    lines:
+    - line: CantLearnThisSkill
+      audioClip:
+      - {fileID: 8300000, guid: c4d366123440248bcab871a9cfd94379, type: 3}
+      emotions:
+      - emotion: Fierce
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+    - line: CantLearnThisSpell
+      audioClip:
+      - {fileID: 8300000, guid: 5724977f0680d45cba8b5c1b3de28e2a, type: 3}
+      emotions:
+      - emotion: Fierce
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+    - line: LetsGo
+      audioClip:
+      - {fileID: 8300000, guid: c742e9f44202d49509c7248758eaa6f3, type: 3}
+      emotions:
+      - emotion: Fierce
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+    - line: ThankYou
+      audioClip:
+      - {fileID: 8300000, guid: a3e94e7239b3c47718496b49808da9fd, type: 3}
+      emotions:
+      - emotion: Fierce
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+    - line: ThisWillComeInHandy
+      audioClip:
+      - {fileID: 8300000, guid: ec3f9639901c64dc087a16872b6fe2aa, type: 3}
+      emotions:
+      - emotion: Fierce
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+  - voice: Evelyn
+    type: Female
+    lines:
+    - line: CantLearnThisSkill
+      audioClip:
+      - {fileID: 8300000, guid: 3d9f989b24ea84509be5cf6567c7db80, type: 3}
+      emotions:
+      - emotion: Fierce
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+    - line: CantLearnThisSpell
+      audioClip:
+      - {fileID: 8300000, guid: 087e2d450bf90441da0b524916d41789, type: 3}
+      emotions:
+      - emotion: Fierce
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+    - line: LetsGo
+      audioClip:
+      - {fileID: 8300000, guid: ea862c4ce60f04761b4af28b47e302ba, type: 3}
+      emotions:
+      - emotion: Fierce
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+    - line: ThankYou
+      audioClip:
+      - {fileID: 8300000, guid: d4506662f670a475d9090b553ce97ae6, type: 3}
+      emotions:
+      - emotion: Fierce
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+    - line: ThisWillComeInHandy
+      audioClip:
+      - {fileID: 8300000, guid: 9543ce3b39d104a5ba2f693f5516e658, type: 3}
+      emotions:
+      - emotion: Fierce
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+  - voice: Gray
+    type: Male
+    lines:
+    - line: CantLearnThisSkill
+      audioClip:
+      - {fileID: 8300000, guid: 99566c5b752b344d697c81d6cff76d00, type: 3}
+      emotions:
+      - emotion: Fierce
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+    - line: CantLearnThisSpell
+      audioClip:
+      - {fileID: 8300000, guid: 492b7c33ca0514b0eae26258c589e5ee, type: 3}
+      emotions:
+      - emotion: Fierce
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+    - line: LetsGo
+      audioClip:
+      - {fileID: 8300000, guid: ed19d45c4c4414dcda583fad7b063f63, type: 3}
+      emotions:
+      - emotion: Fierce
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+    - line: ThankYou
+      audioClip:
+      - {fileID: 8300000, guid: 6d1ca769ab6754a67823e7b46a9506a3, type: 3}
+      emotions:
+      - emotion: Fierce
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+    - line: ThisWillComeInHandy
+      audioClip:
+      - {fileID: 8300000, guid: 4d4255b582e82483ab6f29dddef88167, type: 3}
+      emotions:
+      - emotion: Fierce
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+  - voice: Sorine
+    type: Female
+    lines:
+    - line: CantLearnThisSkill
+      audioClip: []
+      emotions:
+      - emotion: Fierce
+        audioClip:
+        - {fileID: 8300000, guid: b849702d53fee42b2a0ef2c188df0148, type: 3}
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip:
+        - {fileID: 8300000, guid: 4cbaf3685f5cf4cc08307a00e729fc1d, type: 3}
+        - {fileID: 8300000, guid: a54c8d561f5ec4be58f897410a509ebc, type: 3}
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip:
+        - {fileID: 8300000, guid: 1dc62e4ffcc764eda8b096aa3441fadd, type: 3}
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+    - line: CantLearnThisSpell
+      audioClip: []
+      emotions:
+      - emotion: Fierce
+        audioClip:
+        - {fileID: 8300000, guid: 2f2d5c025fd6742c3956435ea0fece30, type: 3}
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip:
+        - {fileID: 8300000, guid: 9a325d3d378b3416bb4a81c862562067, type: 3}
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip:
+        - {fileID: 8300000, guid: ac224ad83e2fc41d6bf74c82cd0c72e1, type: 3}
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+    - line: LetsGo
+      audioClip: []
+      emotions:
+      - emotion: Fierce
+        audioClip:
+        - {fileID: 8300000, guid: a478981a4db9d4bf69a10222217db2e0, type: 3}
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip:
+        - {fileID: 8300000, guid: 61e932236d3b5449b97d40b06430c57c, type: 3}
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip:
+        - {fileID: 8300000, guid: 4ae8b44c80bb44305aa0c6ec4f4ed8d2, type: 3}
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+    - line: ThankYou
+      audioClip: []
+      emotions:
+      - emotion: Fierce
+        audioClip:
+        - {fileID: 8300000, guid: 0c31fabd60d22495b87b46c11bdaffd5, type: 3}
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip:
+        - {fileID: 8300000, guid: 8169cc71d1a7e4e66bfd0254bd17f988, type: 3}
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip:
+        - {fileID: 8300000, guid: a43b433cc5f4e42e6b9b2e304e576840, type: 3}
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+    - line: ThisWillComeInHandy
+      audioClip: []
+      emotions:
+      - emotion: Fierce
+        audioClip:
+        - {fileID: 8300000, guid: 0e88c2c3dcd934f1dbb3389dbd073e9a, type: 3}
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip:
+        - {fileID: 8300000, guid: 203cc3268bb1640adbe5272d365e7346, type: 3}
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip:
+        - {fileID: 8300000, guid: 0b8dde1a659d14e86990ad94c7584f25, type: 3}
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+  - voice: Stone
+    type: Male
+    lines:
+    - line: CantLearnThisSkill
+      audioClip:
+      - {fileID: 8300000, guid: c94208c0c30d5466ba99bd010aa5c398, type: 3}
+      emotions:
+      - emotion: Fierce
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+    - line: CantLearnThisSpell
+      audioClip:
+      - {fileID: 8300000, guid: 67382613ab0b848bfbbe670395f7225b, type: 3}
+      emotions:
+      - emotion: Fierce
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+    - line: LetsGo
+      audioClip:
+      - {fileID: 8300000, guid: 51fe4306a24d64e1ba7b9792fa3d0837, type: 3}
+      emotions:
+      - emotion: Fierce
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+    - line: ThankYou
+      audioClip:
+      - {fileID: 8300000, guid: dcb62b1e9a49e4fa4b5c702f4a97f96e, type: 3}
+      emotions:
+      - emotion: Fierce
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+    - line: ThisWillComeInHandy
+      audioClip:
+      - {fileID: 8300000, guid: 01a52d7a56fb14f359b19e368b4bf27a, type: 3}
+      emotions:
+      - emotion: Fierce
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Lighthearted
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      - emotion: Wise
+        audioClip: []
+        newAudioClip: {fileID: 0}
+        newName: 
+      newAudioClip: {fileID: 0}
+      newName: 
+  types:
+  - Female
+  - Male
+  lineNames:
+  - CantLearnThisSkill
+  - CantLearnThisSpell
+  - LetsGo
+  - ThankYou
+  - ThisWillComeInHandy
+  emotionNames:
+  - Fierce
+  - Lighthearted
+  - Wise
+  showAutoFill: 1
+  autoFillDirectory: Assets/InfinityPBR/---Game Modules/Voices/Demo - Voices/Demo
+    Voices

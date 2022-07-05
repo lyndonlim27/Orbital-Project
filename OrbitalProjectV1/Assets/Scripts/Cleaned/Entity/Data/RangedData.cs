@@ -1,0 +1,16 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu]
+public class RangedData : EntityData
+{
+    public int damage;
+    public float speed, rotation, lifetime;
+    public string trigger;
+    public bool followTarget;
+    public bool loop;
+    public string impact_trigger;
+    [TextArea]
+    public string weapdescription;
+}

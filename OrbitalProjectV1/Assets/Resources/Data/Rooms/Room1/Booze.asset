@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10a1c4479d5574dac908b62726c971cb, type: 3}
+  m_Name: Booze
+  m_EditorClassIdentifier: 
+  _name: booze
+  minDist: 3
+  sprite: {fileID: 1554656945, guid: 9c079d16156a2484b8f87a197c973d59, type: 3}
+  pattern: 0
+  condition: 1
+  _type: 4
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
+  random: 0
+  pos: {x: 0, y: 0.5}
+  damageFlicker: {fileID: 0}
+  spawnAtStart: 1
+  scale: 1
+  itemTextDatas: []
+  ac_name: 
+  _trigger: 
+  item_type: 3
+  secondarysprite: {fileID: 0}
+  description: The guard wakes up from its slumber and looks at you

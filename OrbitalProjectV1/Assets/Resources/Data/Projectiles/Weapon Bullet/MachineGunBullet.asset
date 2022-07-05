@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a5caf378f7a24f559479c92e5eaf367, type: 3}
+  m_Name: MachineGunBullet
+  m_EditorClassIdentifier: 
+  _name: MachineGunBullet
+  minDist: 0
+  sprite: {fileID: 21300000, guid: 6b22c73d194b94c61ac7ba3ad66db93c, type: 3}
+  pattern: 0
+  condition: 0
+  _type: 10
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
+  random: 0
+  pos: {x: 0, y: 0}
+  damageFlicker: {fileID: 0}
+  spawnAtStart: 1
+  scale: 3
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0.2784314, g: 0.78431374, b: 1, a: 1}
+  floating: 0
+  moveable: 0
+  NotURP: 0
+  attackAudios:
+  - {fileID: 8300000, guid: 5ff823f546b52574a931e1d9b44290a6, type: 3}
+  miscellaneousAudios: []
+  interactionAudios: []
+  damage: 3
+  speed: 6
+  rotation: 200
+  lifetime: 0.2
+  trigger: machinegunidle
+  followTarget: 1
+  loop: 1
+  impact_trigger: machinegunexplode
+  weapdescription: 'Machine Gun
+
+    Damage : 4
+
+    Rarity : Rare'

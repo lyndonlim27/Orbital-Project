@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e1b101609d924783a550e2dc7a43a2e, type: 3}
+  m_Name: Player
+  m_EditorClassIdentifier: 
+  _name: Player
+  minDist: 0
+  sprite: {fileID: 21300000, guid: 7d1c192d1bda04ab5956733b310ec354, type: 3}
+  condition: 0
+  _type: 0
+  random: 0
+  pos: {x: 0, y: 0}
+  damageFlicker: {fileID: 672315831686351503, guid: 287fa61315c39429e8235e664399d8cc, type: 3}
+  spawnAtStart: 0
+  scale: 0
+  maxHealth: 110
+  maxMana: 110
+  gold: 100
+  ranged: 1
+  debuffData: {fileID: 11400000, guid: 5e31ab52052bb4195b400cf2e7a632e2, type: 2}
+  buffData: {fileID: 11400000, guid: 3af8d0230977d45e39ad618f66cc9d90, type: 2}
+  attackData: {fileID: 11400000, guid: 2354f420a0ee94b3eacee6ea3a793100, type: 2}
+  _moveSpeed: 5
