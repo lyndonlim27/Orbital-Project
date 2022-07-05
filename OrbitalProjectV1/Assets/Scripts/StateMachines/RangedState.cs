@@ -53,7 +53,7 @@ public class RangedState : StateClass
                 {
                     int random = Random.Range(0, enemy.enemyData.rangedtriggers.Count);
 
-                    enemy.flipFace(enemy.player.transform.position);
+                    enemy.FlipFace(enemy.player.transform.position);
                     enemy.animator.SetTrigger(rangedtriggers[random]);
                 } else
                 {
@@ -63,14 +63,14 @@ public class RangedState : StateClass
                     {
                         //enemy.Dodge();
                         int random = Random.Range(0, enemy.enemyData.dashattacks.Count);
-                        enemy.flipFace(enemy.player.transform.position);
+                        enemy.FlipFace(enemy.player.transform.position);
                         enemy.animator.SetTrigger(dashattacks[random]);
 
                     }
                     else
                     {
                         int random = Random.Range(0, enemy.enemyData.rangedtriggers.Count);
-                        enemy.flipFace(enemy.player.transform.position);
+                        enemy.FlipFace(enemy.player.transform.position);
                         enemy.animator.SetTrigger(rangedtriggers[random]);
 
                 }

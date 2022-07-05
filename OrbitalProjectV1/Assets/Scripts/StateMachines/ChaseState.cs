@@ -67,7 +67,7 @@ public class ChaseState : StateClass
                     stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
                 } else
                 {
-                    enemy.moveToTarget(enemy.player);
+                    enemy.MoveToTarget(enemy.player);
                 }
              
             } 

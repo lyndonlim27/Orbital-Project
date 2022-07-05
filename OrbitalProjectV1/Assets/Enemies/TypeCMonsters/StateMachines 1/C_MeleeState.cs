@@ -43,7 +43,7 @@ class C_MeleeState : StateClass
             }
             else
             {
-                enemy.flipFace(enemy.player.transform.position);
+                enemy.FlipFace(enemy.player.transform.position);
                 List<string> meleetriggers = enemy.enemyData.meleetriggers;
                 int random = Random.Range(0, meleetriggers.Count);
                 enemy.animator.SetTrigger(meleetriggers[random]);

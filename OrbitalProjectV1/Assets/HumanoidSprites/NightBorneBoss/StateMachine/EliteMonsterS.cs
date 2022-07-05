@@ -64,9 +64,9 @@ public class EliteMonsterS : EnemyBehaviour
 
     }
 
-    public override bool hasWeapon()
+    public override bool HasWeapon()
     {
-        return base.hasWeapon();
+        return base.HasWeapon();
     }
 
     //public override void Defeated()
@@ -141,7 +141,7 @@ public class EliteMonsterS : EnemyBehaviour
                 stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
                 break;
             case ANIMATION_CODE.MELEE_TRIGGER:
-                meleeAttack();
+                MeleeAttack();
                 break;
             case ANIMATION_CODE.CAST_END:
                 //animator.SetTrigger("TeleportIn");
@@ -229,13 +229,13 @@ public class EliteMonsterS : EnemyBehaviour
 
             //    break;
             default:
-                flipFace((player.transform.position));
+                FlipFace((player.transform.position));
                 //ranged.StartCoroutine(
                     //ranged.Cast(ranged.rangeds[roll - 1]));
 
                 break;
             case 3:
-                flipFace((player.transform.position));
+                FlipFace((player.transform.position));
                 animator.SetTrigger("Melee2");
                 break;
 

@@ -5,10 +5,14 @@ using UnityEngine;
 public class WeaponPickup : MonoBehaviour
 {
 
+    Player player;
+    private void Awake()
+    {
+        player = GetComponentInParent<Player>(true);
+    }
     // Start is called before the first frame update
     void Start()
     {
-
     }
 
     // Update is called once per frame
@@ -20,7 +24,6 @@ public class WeaponPickup : MonoBehaviour
     public void Swap(string weapon)
     {
         //If current weapon is the same as pickup weapon, do nothing
-
         Transform _tr = transform.Find(weapon);
         if (_tr != null)
         {
@@ -36,7 +39,9 @@ public class WeaponPickup : MonoBehaviour
                 {
                     transform.GetChild(i).gameObject.SetActive(false);
                 }
-                transform.Find(weapon).gameObject.SetActive(true);
+                Weapon weap = transform.Find(weapon).gameObject.GetComponent<Weapon>();
+                weap.gameObject.SetActive(true);
+                player.SetWeapon(weap);
             }
 
         }

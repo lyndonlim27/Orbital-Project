@@ -4,27 +4,36 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
+/// <summary>
+/// This is a general class for pressure switches.
+/// It handles the different behaviours for all pressure switches.
+/// </summary>
+
 public class PressureSwitchBehaviour : ActivatorBehaviour
 { 
-    //private bool _status;
-    private List<Collider2D> colliders;
-    private Coroutine _coroutine = null;
-    private float activatedTime;
     private CircleCollider2D body;
     private bool entered;
     private Light2D light2D;
     [SerializeField] protected AudioClip audioClip;
 
+    /**
+     * Debugging.
+     */
     void OnDrawGizmos() { Gizmos.DrawWireSphere(transform.position, 1); }
 
+    /** The first instance the gameobject is being activated.
+     *  Retrieves all relevant data.
+     */
     protected override void Awake()
     {
         base.Awake();
-        colliders = new List<Collider2D>();
         light2D = GetComponent<Light2D>();
 
     }
 
+    /** OnEnable method.
+     *  To intialize more specific entity behaviours for ObjectPooling.
+     */
     private void OnEnable()
     {
         ResettingColor();
@@ -33,6 +42,9 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
         spriteRenderer.sortingOrder = 0;
     }
 
+    /**
+     * Checking of URP objects.
+     */
     private void CheckForURP()
     {
         if (data.NotURP)
@@ -41,7 +53,9 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
         }
     }
 
-    //specifically for this
+    /**
+     * Setting Up Colliders.
+     */
     private void SettingUpColliders()
     {
         body = GetComponent<CircleCollider2D>();
@@ -54,11 +68,9 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
         
     }
 
-    public override EntityData GetData()
-    {
-        return data;
-    }
-
+    /**
+     * Check to see if pressure switch is activated to change color every frame.
+     */
     public void Update()
     {
         if (!IsOn()) 
@@ -79,18 +91,34 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
         }
     }
 
-
+    /**
+     * Check if pressure switch is turned on.
+     */
     public bool IsOn()
     {
         
         return body.IsTouchingLayers(layerMask);
     }
 
+    /**
+     * Setting Pressure Switch Data.
+     */
     public override void SetEntityStats(EntityData stats)
     {
         data = (SwitchData)stats;
     }
 
+    /**
+     * Getting Pressure Switch Data.
+     */
+    public override EntityData GetData()
+    {
+        return data;
+    }
+
+    /**
+     * Despawn behaviour.
+     */
     public override void Defeated()
     {
         poolManager.ReleaseObject(this);

@@ -36,7 +36,7 @@ public class C_IdleState : StateClass
             teleportcounter-= Time.deltaTime;
         }
 
-        enemy.tick();
+        enemy.Tick();
     }
 
 

@@ -55,11 +55,11 @@ public class C_ChaseState : StateClass
         }
         else
         {
-            enemy.moveToTarget(enemy.player);
+            enemy.MoveToTarget(enemy.player);
 
         }
 
-        enemy.tick();
+        enemy.Tick();
 
     }
 }

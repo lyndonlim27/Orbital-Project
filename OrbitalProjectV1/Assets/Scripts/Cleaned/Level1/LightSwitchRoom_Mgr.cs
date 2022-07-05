@@ -12,7 +12,7 @@ public class LightSwitchRoom_Mgr : RoomManager
     protected override void Awake()
     {
         base.Awake();
-        lightSwitchSystem = FindObjectOfType<LightSwitchSystem>(true);
+        lightSwitchSystem = GetComponentInChildren<LightSwitchSystem>();
         
     }
 

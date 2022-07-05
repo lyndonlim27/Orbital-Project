@@ -10,7 +10,13 @@ public class EditorCode : MonoBehaviour
 
     public TMP_SpriteAsset spriteAsset;
     Dictionary<int, int> glyphs;
-    private void OnEnable()
+
+    public void ClearAllRooms()
     {
+        GameObject RoomContainer = GameObject.Find("RoomsContainer");
+        if (RoomContainer != null)
+        {
+            DestroyImmediate(RoomContainer);
+        }
     }
 }

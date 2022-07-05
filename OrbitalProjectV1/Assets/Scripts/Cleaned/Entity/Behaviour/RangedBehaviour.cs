@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This is a general class for ranged behaviours.
+/// It handles the different behaviours for all types of projectiles.
+/// </summary>
+
 public class RangedBehaviour : EntityBehaviour, Freezable
 {
     protected Player player;
@@ -14,7 +19,6 @@ public class RangedBehaviour : EntityBehaviour, Freezable
     protected BoxCollider2D _collider;
     protected TrailRenderer _trailRenderer;
     protected RuntimeAnimatorController runtimeAnimator;
-    private static int count = 0;
     private bool alreadyAttacked;
 
     [Header("Bullet properties")]
@@ -24,6 +28,9 @@ public class RangedBehaviour : EntityBehaviour, Freezable
     [Header("Movement")]
     [SerializeField] private float rotateSpeed = 200.0f;
 
+    /** The first instance the gameobject is being activated.
+    *  Retrieves all relevant data.
+    */
     protected override void Awake()
     {
         base.Awake();
@@ -37,16 +44,24 @@ public class RangedBehaviour : EntityBehaviour, Freezable
         //_trailRenderer = GetComponentInChildren<TrailRenderer>();
     }
 
+    /**
+     * For general items which is used in all entities.
+     */
     protected virtual void Start()
     {
-        //_collider.size = spriteRenderer.sprite.bounds.size;
     }
 
+    /**
+     * Reduce rangedbehaviour lifespan every frame.
+     */
     private void Update()
     {
         ReduceLifeSpan();
     }
 
+    /**
+     * Move rangedbehaviour towards target every frame.
+     */
     protected virtual void FixedUpdate()
     {
         if (rangedData._type != EntityData.TYPE.CAST_ONTARGET)
@@ -57,6 +72,9 @@ public class RangedBehaviour : EntityBehaviour, Freezable
 
     }
 
+    /** OnEnable method.
+     *  To intialize more specific ranged behaviours for ObjectPooling.
+     */
     protected void OnEnable()
     {
         DisableAnimator();
@@ -75,17 +93,21 @@ public class RangedBehaviour : EntityBehaviour, Freezable
         alreadyAttacked = false;
         spriteRenderer.sortingOrder = 4;
 
-
     }
-    private void FixRotation()
-    {
-        if (!rangedData.followTarget)
-        {
-            _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-        }
+
+
+    //private void FixRotation()
+    //{
+    //    if (!rangedData.followTarget)
+    //    {
+    //        _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+    //    }
        
-    }
+    //}
 
+    /**
+     * Enabling of Animator.
+     */
     private void EnableAnimator()
     {
         _animator.enabled = true;
@@ -93,12 +115,18 @@ public class RangedBehaviour : EntityBehaviour, Freezable
 
     }
 
+    /**
+     * Disabling of Animator.
+     */
     private void DisableAnimator()
     {
         _animator.enabled = false;
         _animator.runtimeAnimatorController = null;
     }
 
+    /**
+     * Resetting of color.
+     */
     private void ResttingColor()
     {
         Color c = spriteRenderer.material.color;
@@ -108,12 +136,18 @@ public class RangedBehaviour : EntityBehaviour, Freezable
 
     }
 
+    /**
+     * Resetting firer to null on disable.
+     */
     protected void OnDisable()
     {
         _firer = null;
 
     }
 
+    /**
+     * Reduce Life Span of rangedbehaviour by time.deltatime.
+     */
     private void ReduceLifeSpan()
     {
         lifeTime -= Time.deltaTime;
@@ -123,6 +157,9 @@ public class RangedBehaviour : EntityBehaviour, Freezable
         }
     }
 
+    /**
+     * Setting Target for the rangedbehaviour.
+     */
     public void TargetEntity(GameObject target)
     {
         _target = target;
@@ -137,6 +174,9 @@ public class RangedBehaviour : EntityBehaviour, Freezable
         }
     }
 
+    /**
+     * Setting Up Collider for rangedbehaviour.
+     */
     private void SettingUpCollider()
     {
         if (rangedData._type == EntityData.TYPE.PROJECTILE)
@@ -152,11 +192,12 @@ public class RangedBehaviour : EntityBehaviour, Freezable
 
         _collider.size = rangedData.sprite.bounds.size; /* rangedData.scale*/
         _collider.offset = Vector2.zero;
-        //_collider.enabled = true;
-
-
+ 
     }
 
+    /**
+     * Enabling animation.
+     */
     public void EnableAnimation()
     {
         //_animator.applyRootMotion = true;
@@ -174,6 +215,10 @@ public class RangedBehaviour : EntityBehaviour, Freezable
 
     }
 
+
+    /**
+     * Disabling animation.
+     */
     private void DisableAnimation()
     {
         if (rangedData.loop && rangedData.trigger != "")
@@ -183,6 +228,9 @@ public class RangedBehaviour : EntityBehaviour, Freezable
 
     }
 
+    /**
+     * Setting rangedbehaviour stats.
+     */
     public override void SetEntityStats(EntityData stats)
     {
         RangedData rangedD = (RangedData)stats;
@@ -192,6 +240,9 @@ public class RangedBehaviour : EntityBehaviour, Freezable
         }
     }
 
+    /**
+     * Despawn behaviour.
+     */
     public override void Defeated()
     {
         if (_firer != null)
@@ -201,49 +252,23 @@ public class RangedBehaviour : EntityBehaviour, Freezable
             {
                 enemy.resetCooldown();
             }
-            //enemy.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
-
+      
         }
         poolManager.ReleaseObject(this);
 
     }
 
+    /**
+     * Retrieiving rangedbehaviour data.
+     */
     public override EntityData GetData()
     {
         return this.rangedData;
     }
+
     /**
-     * will only be called by bullet types since trigger will be set to true for spell objects.
+     * Play audio of rangedbehaviour.
      */
-    protected virtual void OnCollisionEnter2D(Collision2D collision)
-    {
-
-        //_trailRenderer.enabled = false;
-        if (!alreadyAttacked)
-        {
-            DisableAnimation();
-            stopMovement();
-            alreadyAttacked = true;
-            GameObject go = collision.gameObject;
-            ApplyDamage(go);
-            
-            if (rangedData.impact_trigger != "")
-            {
-                _animator.SetBool(rangedData.impact_trigger, true);
-            }
-            else
-            {
-                Defeated();
-
-            }
-
-
-
-        }
-        
-
-    }
-
     public void PlayAudio()
     {
         if(rangedData.attackAudios.Count > 0)
@@ -265,6 +290,9 @@ public class RangedBehaviour : EntityBehaviour, Freezable
         
     //}
 
+    /**
+     * Apply damage for current rangedbehaviour.
+     */
     private void ApplyDamage(GameObject go)
     {
         if (ReferenceEquals(go, _target))
@@ -293,6 +321,40 @@ public class RangedBehaviour : EntityBehaviour, Freezable
         }
     }
 
+    /**
+     * Check if collision is player or an enemy.
+     * Will only be called by bullet types since trigger will be set to true for spell objects.
+     */
+    protected virtual void OnCollisionEnter2D(Collision2D collision)
+    {
+
+        //_trailRenderer.enabled = false;
+        if (!alreadyAttacked)
+        {
+            DisableAnimation();
+            stopMovement();
+            alreadyAttacked = true;
+            GameObject go = collision.gameObject;
+            ApplyDamage(go);
+
+            if (rangedData.impact_trigger != "")
+            {
+                _animator.SetBool(rangedData.impact_trigger, true);
+            }
+            else
+            {
+                Defeated();
+
+            }
+        }
+
+
+    }
+
+    /**
+     * Check if collision is player or an enemy.
+     * Will only be called by spell types since trigger will be set to true for spell objects.
+     */
     protected void OnTriggerEnter2D(Collider2D collision)
     {
         //Setting collision to true so that it will trigger the next state
@@ -312,20 +374,9 @@ public class RangedBehaviour : EntityBehaviour, Freezable
 
     }
 
-    protected void OnTriggerStay2D(Collider2D collision)
-    {
-
-        //GameObject go = collision.gameObject;
-        ////Debug.Log(go);
-
-        //if (rangedData._type != EntityData.TYPE.PROJECTILE)
-        //{
-        //    //ApplyDamage(go);
-        //    //ApplyForce(go);
-        //}
-
-    }
-
+    /**
+     * Apply Force to target on hit.
+     */
     private void ApplyForce(GameObject go)
     {
         if (ReferenceEquals(go, _target))
@@ -340,12 +391,18 @@ public class RangedBehaviour : EntityBehaviour, Freezable
 
     }
 
+    /**
+     * Stop movement on hit.
+     */
     private void stopMovement()
     {
         _rb.velocity = Vector2.zero;
         _rb.angularVelocity = 0f;
     }
 
+    /**
+     * Applying force to rangedbehaviour towards target/current direction.
+     */
     protected void ShootAtTarget()
     {
         Vector2 targetpos = rangedData.followTarget ? _target.transform.position : currenttargetposition;
@@ -369,17 +426,20 @@ public class RangedBehaviour : EntityBehaviour, Freezable
 
         }
 
-
-        //_rb.AddForce(shootpoint*speed, rangedData.followTarget ? ForceMode2D.Force : ForceMode2D.Impulse);
-        //_rb.velocity = shootpoint* speed;
     }
 
+    /**
+     * Freeze rangedbehaviour.
+     */
     public void Freeze()
     {
         _rb.constraints = RigidbodyConstraints2D.FreezeAll;
         _animator.speed = 0;
     }
 
+    /**
+     * Unfreeze rangedbehaviour.
+     */
     public void UnFreeze()
     {
         _rb.constraints = RigidbodyConstraints2D.None;

@@ -24,27 +24,23 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     //data;
 
     public EnemyData enemyData;
-    //public StateMachine stateMachine { get; protected set; }
     public StateMachine stateMachine;
     public StateMachine.STATE currstate;
     public MeleeComponent melee { get; protected set; }
     public RangedComponent ranged { get; protected set; }
     public Rigidbody2D rb { get; protected set; }
-    //public Animator animator { get; protected set; }
     public bool insideStage2;
     
 
     public Vector2 roamPos { get; protected set; }
     public float maxDist { get; protected set; }
     public Vector2 startingpos { get; protected set; }
-    public Player player { get; protected set; }
     
     public bool facingRight { get; protected set; }
     protected MonsterTextLogic tl;
     protected Transform _transform;
     protected DamageFlicker _flicker;
     public DetectionScript detectionScript;
-    private Light2D light2D;
     private CapsuleCollider2D body;
     private LineController lineController;
     private AstarPath astarPath;
@@ -85,8 +81,11 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     [SerializeField] protected float cooldown;
     [SerializeField] protected float healStagecooldown;
     [SerializeField] protected float animatorspeed;
-    //[SerializeField] protected float 
 
+
+    /** The first instance the gameobject is being activated.
+     *  Retrieves all relevant data.
+     */
     protected override void Awake()
     {
         base.Awake();
@@ -103,12 +102,11 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         spriteRenderer.sortingOrder = 3;
         astarPath = FindObjectOfType<AstarPath>(true);
         velocityCheckPoint = new Vector2(0.5f, 0.5f);
-
-
-
-
     }
 
+    /** OnEnable method.
+     *  To intialize more specific entity behaviours for ObjectPooling.
+     */
     protected override void OnEnable()
     {
         health = enemyData.words;
@@ -139,17 +137,14 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         healStagecooldown = 0;
         if (damageApplier != null)
         {
-            //if (enemyData.attackAudios.Count > 0) {
-            //    damageApplier.SettingUpAudio(enemyData.attackAudios[0]);
-            //}
             damageApplier.SettingUpDamage(enemyData.damageValue);
         }
         DestroyAllParticles();
-        
-        
-
     }
 
+    /**
+     * Destroy all particles before enabling.
+     */
     private void DestroyAllParticles()
     {
         ParticleSystem[] particleSystems = GetComponentsInChildren<ParticleSystem>(true);
@@ -159,6 +154,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         }
     }
 
+    /**
+     * Regen health.
+     */
     public void RegenHealth(int hp)
     {
         if (health + hp > maxhealth)
@@ -173,6 +171,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         _healthBar.SetHealth(health);
     }
 
+    /**
+     * Resetting transforms to current entity size.
+     */
     private void ResetTransform()
     {
         _transform = transform.parent;
@@ -187,6 +188,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         //tl.transform.localScale = new Vector2(ratio * 0.2f, ratio * 0.2f);
     }
 
+    /**
+     * Enabling animator.
+     */
     protected override void EnableAnimator()
     {
         animator.enabled = true;
@@ -194,8 +198,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     }
 
-
-
+    /**
+     * Setting Up of Colliders.
+     */
     private void SettingUpColliders()
     {
         
@@ -217,22 +222,21 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         
     }
 
-    // later than onenable, making use of spawning window time.
-    public virtual void Initialize() {
-        
-        
-        
+    /**
+     * Initializing enemy animator and cooldown and startingpos after spawn animation.
+     */
+    public virtual void Initialize() { 
         animator.SetBool("isAlive", true);
         animator.SetBool("NotSpawned", true);
-
         bounds = currentRoom.GetRoomAreaBounds();
         cooldown = 2.5f;
         startingpos = _transform.position;
-        
-       
-        
+
     }
 
+    /**
+     * Check for change of states every frame.
+     */
     public virtual void Update()
     {
         currstate = stateMachine.currState;
@@ -245,9 +249,12 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         CheckHealStageInteruption();
         stateMachine.Update();
         animatorspeed = this.animator.speed;
-        tick();
+        Tick();
     }
 
+    /**
+     * Check for change in entity movement every frame.
+     */
     public virtual void FixedUpdate()
     {
         if (rb != null)
@@ -261,7 +268,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         
     }
 
-
+    /**
+     * AStarPathfinding on complete.
+     */
     void OnPathComplete(Pathfinding.Path p)
     {
 
@@ -300,6 +309,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     //    }
     //}
 
+    /**
+     * Check if skill on cooldown.
+     */
     public bool onCooldown()
     {
         if (ranged != null)
@@ -312,7 +324,10 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     }
 
-    public void tick()
+    /**
+     * Decrement cooldown timer.
+     */
+    public void Tick()
     {
         if (cooldown > 0)
         {
@@ -321,6 +336,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         }
     }
 
+    /**
+     * Instantiate damage audio.
+     */
     public void InstantiateDamageAudio()
     {
         
@@ -341,6 +359,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     }
 
+    /**
+     * Instantiate hurt audio.
+     */
     public void InstantiateHurtAudio()
     {
         switch (enemyData.body)
@@ -360,6 +381,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     }
 
+    /**
+     * Play audio.
+     */
     public void PlayAudio()
     {
         if (enemyData.attackAudios.Count > 0)
@@ -371,6 +395,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     }
 
+    /**
+     * Load Audio.
+     */
     private IEnumerator LoadAudio(int rand, List<AudioClip> audioClips)
     {
         audioSource.Stop();
@@ -385,47 +412,36 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         
     }
 
+    /**
+     * Reset Position after animation ends.
+     */
     public virtual void resetPosition()
     {
         
         if (animator.applyRootMotion == true)
         {
-            
-            //_transform.position = transform.position;
-            //transform.position = Vector3.zero;
-            //if (transform.position.x > currentRoom.GetRoomAreaBounds().max.x || transform.position.y > currentRoom.GetRoomAreaBounds().max.y)
-            //{
-            //    var minX = Mathf.Min(transform.position.x, currentRoom.GetRoomAreaBounds().max.x - 1.5f);
-            //    var minY = Mathf.Min(transform.position.y, currentRoom.GetRoomAreaBounds().max.y - 1.5f);
-            //    _transform.position = new Vector2(minX, minY);
-            //}
-
-            //else if (transform.position.x < currentRoom.GetRoomAreaBounds().min.x || transform.position.y < currentRoom.GetRoomAreaBounds().min.y)
-            //{
-            //    var maxX = Mathf.Max(transform.position.x, currentRoom.GetRoomAreaBounds().min.x + 1.5f);
-            //    var maxY = Mathf.Max(transform.position.y, currentRoom.GetRoomAreaBounds().min.y + 1.5f);
-            //    _transform.position = new Vector2(maxX, maxY);
-            //} else
-            //{
             _transform.position = transform.position;
-            //melee.GetComponent<BoxCollider2D>().bounds.
             transform.position = Vector3.zero;
-            //GetComponentInParent<Rigidbody2D>().MovePosition(transform.position);
             
         }
         
     }
 
+    /**
+     * Reset Cooldown.
+     */
     public virtual void resetCooldown()
     {
         // use enemydata.rangedcooldown, nexttime then i add numbers to the enemy datas. for now just use 10.
         this.cooldown = enemyData.rangedcooldown;
         inAnimation = false;
-        //resetPosition();
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
         
     }
 
+    /**
+     * Get new Roam Positon.
+     */
     public void getNewRoamPosition()
     {
         //roamPos = new Vector2(Random.Range(-5f, 5f), Random.Range(-5f, 5f));
@@ -434,6 +450,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     }
 
+    /**
+     * Move To Roam Positon.
+     */
     public void moveToRoam()
     {
         if (!reachedEndOfPath)
@@ -443,9 +462,12 @@ public class EnemyBehaviour : ItemWithTextBehaviour
             }
         }
         AStarMove(roamPos, enemyData.moveSpeed);
-        flipFace(roamPos);
+        FlipFace(roamPos);
     }
 
+    /**
+     * FootStep Audio.
+     */
     protected override IEnumerator FootStepAudio()
     {
         if (!inAudio)
@@ -457,6 +479,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     }
 
+    /**
+     * AStar Pathing.
+     */
     private void AStarMove(Vector2 destination, float speed)
     {
         if (Time.time > lastRepath + repathRate && seeker.IsDone())
@@ -519,43 +544,45 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         rb.velocity += (Vector2) velocity * Time.deltaTime;
     }
 
-    
 
-    public void moveToTarget(Player player)
+    /**
+     * Move To Target Position.
+     */
+    public void MoveToTarget(Player player)
     {
         AStarMove(player.transform.position, enemyData.chaseSpeed);
         //transform.position = Vector3.MoveTowards(transform.position,player.transform.position,steps);
-        flipFace(player.transform.position);
+        FlipFace(player.transform.position);
     }
 
-    public void moveToStartPos()
+    /**
+     * Move To Starting Position.
+     */
+    public void MoveToStartPos()
     {
         if (body.IsTouchingLayers(LayerMask.GetMask("Obstacles", "enemy", "door","Trap")))
         {
             startingpos = currentRoom.GetRandomPoint();
         }
         AStarMove(startingpos, enemyData.moveSpeed);
-        flipFace(startingpos);
+        FlipFace(startingpos);
     }
 
-    public bool isReached()
+    /**
+     * Check if reached.
+     */
+    public bool IsReached()
     {
         //return Vector2.Distance(roamPos, _transform.position) <= 0.1f;
         return Vector2.Distance(roamPos, transform.position) <= 0.1f;
     }
 
-    public void flipFace(Vector2 target)
+    /**
+     * Flip transform to face target.
+     */
+    public void FlipFace(Vector2 target)
     {
-        //Vector2 dir = (target - (Vector2)_transform.position).normalized;
-        //if (dir.x < 0 && !facingRight)
-        //{
-        //    Flip();
-        //}
-        //else if (dir.x > 0 && facingRight)
-        //{
-        //    Flip();
-        //}
-
+      
         Vector2 dir = (target - (Vector2)transform.position).normalized;
         if (dir.x < 0 && !facingRight)
         {
@@ -568,23 +595,12 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     }
 
+    /**
+     * Flipping of transform.
+     */
     private void Flip()
     {
-        //Vector3 currentFace = _transform.localScale;
-        //currentFace.x *= -1;
-        //_transform.localScale = currentFace;
-        //Vector3 _tf = tl.transform.localScale;
-        //_tf.x *= -1;
-        //tl.transform.localScale = _tf;
-        //facingRight = !facingRight;
-
-        //if (_healthBar != null)
-        //{
-        //    Vector3 scaleHealthBar = _healthBar.transform.localScale;
-        //    scaleHealthBar.x *= -1;
-        //    _healthBar.transform.localScale = scaleHealthBar;
-        //}
-
+      
         Vector3 currentFace = transform.localScale;
         currentFace.x *= -1;
         transform.localScale = currentFace;
@@ -594,6 +610,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     }
 
+    /**
+     * Flipping of textUI transform.
+     */
     private void FlipTextLogic()
     {
         if (tl != null)
@@ -605,6 +624,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         }
     }
 
+    /**
+     * Flipping of healthbar transform.
+     */
     private void FlipHealthBar()
     {
         if (_healthBar != null)
@@ -636,6 +658,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     //    //} while (Quaternion.Angle(transform.parent.rotation, targetRotation) > 0.01f);
     //}
 
+    /**
+     * Teleport tranform to roam position.
+     */
     public virtual void Teleport()
     {
         //_transform.position = currentRoom.GetRandomPoint();
@@ -647,6 +672,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         this.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
     }
 
+    /**
+     * Check for Stage2.
+     */
     public void CheckForStage2()
     {
         bool canActivate = !insideStage2 && enemyData.stage2 && health <= (0.5f * maxhealth) && !inAnimation;
@@ -661,22 +689,34 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         }
     }
 
+    /**
+     * Summoning of Offensive Props.
+     */
     private void SummonOffensiveProps()
     {
         currentRoom.SpawnObjects(enemyData.bossdamageprops.ToArray());
         
     }
 
+    /**
+     * Summoning of Defensive Props.
+     */
     private void SummonDefensiveProps()
     {
         currentRoom.SpawnObjects(enemyData.bossdefenceprops.ToArray());
     }
 
+    /**
+     * Summoning of Fodders.
+     */
     private void SummonFodders()
     {
         currentRoom.SpawnObjects(enemyData.bossSummonprops.ToArray());
     }
 
+    /**
+     * Checking for Heal Stages.
+     */
     private void CheckForHealStage()
     {
         bool activatable = enemyData.healStage && health <= 0.5f * maxhealth && !inAnimation && currstate != StateMachine.STATE.RECOVERY && healStagecooldown <= 0;
@@ -692,6 +732,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         }
     }
 
+    /**
+     * Checking for Heal Interuptions.
+     */
     private void CheckHealStageInteruption()
     {
         if (currstate == StateMachine.STATE.RECOVERY)
@@ -706,27 +749,38 @@ public class EnemyBehaviour : ItemWithTextBehaviour
                 stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
                 animator.ResetTrigger("Heal");
                 inAnimation = false;
-                resetHealingCooldown();
+                ResetHealingCooldown();
             }
         }
     }
 
-    private void resetHealingCooldown()
+    /**
+     * Resetting healing cooldown.
+     */
+    private void ResetHealingCooldown()
     {
         healStagecooldown = 40f;
     }
 
-    public void meleeAttack()
+    /**
+     * MeleeAttacks.
+     */
+    public void MeleeAttack()
     {
         melee.Attack();
     }
 
-
-    public virtual bool hasWeapon()
+    /**
+     * Check if enemy holding on weapon.
+     */
+    public virtual bool HasWeapon()
     {
         return false;
     }
 
+    /**
+     * Initializing weapon attacks.
+     */
     public void WeapAttack()
     {
         try
@@ -740,13 +794,15 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         }
     }
 
+    /**
+     * Animation breaks to next state.
+     */
     public virtual void AnimationBreak(ANIMATION_CODE code)
     {
         switch (code)
         {
             case ANIMATION_CODE.MELEE_TRIGGER:
-                //meleeAttack();
-                flipFace(player.transform.position);
+                FlipFace(player.transform.position);
                 break;
             case ANIMATION_CODE.ATTACK_END:
 
@@ -758,33 +814,22 @@ public class EnemyBehaviour : ItemWithTextBehaviour
                 
                 break;
             case ANIMATION_CODE.CAST_START:
-                flipFace(player.transform.position);
+                FlipFace(player.transform.position);
                 SpellAttack();
                 InstantiateDamageAudio();
                 break;
             case ANIMATION_CODE.SHOOT_START:
-                //animator.applyRootMotion = false;
-                flipFace(player.transform.position);
-                //if (insideStage2)
-                //{
-                //    RandomShoot();
-                //} else
-                //{
-                //    Shoot();
-                //}
+                FlipFace(player.transform.position);
                 Shoot();
                 InstantiateDamageAudio();
                 resetPosition();
 
                 break;
             case ANIMATION_CODE.CAST_END:
-                //resetCooldown();
-                //resetPosition();
+               
                 UnlockMovement();
                 resetPosition();
                 resetCooldown();
-                //inAnimation = false;
-                //stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
                 break;
             case ANIMATION_CODE.WEAP_TRIGGER:
                 WeapAttack();
@@ -792,6 +837,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         }
     }
 
+    /**
+     * Lock Enemy Movement.
+     */
     public void LockMovement()
     {
         if (rb != null)
@@ -801,6 +849,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         
     }
 
+    /**
+     * Unlock Enemy Movement.
+     */
     public void UnlockMovement()
     {
         if (rb != null)
@@ -810,6 +861,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         
     }
 
+    /**
+     * Initiailize SpellAttack.
+     */
     private void SpellAttack()
     {
         if (insideStage2)
@@ -822,15 +876,14 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         
     }
 
+    /**
+     * Initiailize Shooting Attack.
+     */
     private void Shoot()
     {
         if (insideStage2)
         {
-
-
             ranged.ShootSingleSphere();
-
-
             //EnemyData.PATTERN pATTERN = (EnemyData.PATTERN)Random.Range(0, (int)EnemyData.PATTERN.COUNT);
             //List<Vector2> points = patterns.RandomPattern(pATTERN);
             //ranged.ShootRandomPattern(points);
@@ -841,12 +894,11 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         
     }
 
-
+    /**
+     * Enemy Take Damage.
+     */
     public override void TakeDamage(int damage)
     {
-        //Debug.Log(damage);
-        //health--;
-        //Debug.Log(health);
         _flicker.Flicker(this);
         base.TakeDamage(damage);
         InstantiateHurtAudio();
@@ -854,9 +906,11 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         animator.SetTrigger("Hurt");
     }
 
+    /*
+     * Spawn Corpse on death.
+     */
     private void SpawnCorpse()
     {
-        //corpses wont be disabled, so no need to use objectpooling
         GameObject corpse = new GameObject("Corpse");
         SpriteRenderer corpseRenderer = corpse.AddComponent<SpriteRenderer>();
         var sprite = Resources.Load<Sprite>("Sprites/corpse");
@@ -867,35 +921,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         
     }
 
-    //private void SpawnDrops()
-    //{
-    //    int rand = Random.Range(0, 5);
-    //    Debug.Log(rand);
-    //    for (int i = 0; i < rand; i ++)
-    //    {
-    //        Debug.Log("This is drop" + i);
-    //        int rand2 = Random.Range(0, consumableItemDatas.Count);
-    //        ConsumableItemBehaviour con = poolManager.GetObject(EntityData.TYPE.CONSUMABLE_ITEM) as ConsumableItemBehaviour;
-    //        ConsumableItemData condata = consumableItemDatas[rand2];
-    //        if (condata._consumableType == ConsumableItemData.CONSUMABLE.LETTER)
-    //        {
-    //            ConsumableItemData temp = condata;
-    //            string passcode = FindObjectOfType<WordBank>().passcode;
-    //            Debug.Log(passcode);
-    //            int randomnum = Random.Range(0, passcode.Length);
-    //            temp.letter = passcode[randomnum];            
-    //            passcode = passcode.Substring(0, randomnum) + passcode.Substring(randomnum, passcode.Length - (randomnum+1));
-    //            temp.sprite = temp.letters[(int) temp.letter - 81];
-    //        }
-
-    //        con.SetEntityStats(condata);
-    //        con.transform.position = transform.position + new Vector3(Random.Range(-0.5f,0.5f),Random.Range(-0.5f,0.5f));
-    //        con.SetTarget(player.gameObject);
-    //        con.gameObject.SetActive(true);
-    //    }
-    //}
-
-    
+    /**
+     * Despawn behaviour.
+     */
     public override void Defeated()
     {
         
@@ -907,6 +935,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     }
 
+    /**
+     * FadeOut Animation.
+     */
     public override IEnumerator FadeOut()
     {
         for (float f = 1f; f >= -0.05f; f -= 0.05f)
@@ -922,143 +953,168 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         
     }
 
+    /**
+     * Setting Enemy Stats.
+     */
     public override void SetEntityStats(EntityData stats)
     {
         this.enemyData = Instantiate((EnemyData) stats);
     }
 
+    /**
+     * Retrieving Enemy Stats.
+     */
     public override EntityData GetData()
     {
         return enemyData;
     }
 
+    /**
+     * Getting Current Room.
+     */
     public RoomManager GetCurrentRoom()
     {
         return this.currentRoom;
     }
 
+    /**
+     * Check if enemy travelled too far from original position.
+     */
     public bool TravelToofar()
     {
         return Vector2.Distance(_transform.position, startingpos) >= maxDist;
     }
 
-    //to prevent the object from jumping outside. technically shudnt happen when there are colliders but well.
-    public bool CheckInsideRoom()
+/**
+ * Check if enemy still inside room.
+ * To prevent the object from jumping outside. technically shudnt happen when there are colliders but well.
+ */
+public bool CheckInsideRoom()
+{
+    //bool insidex = Mathf.Abs(_transform.position.x - currentRoom.GetRoomAreaBounds().max.x) > 2.5f && Mathf.Abs(_transform.position.x - currentRoom.GetRoomAreaBounds().min.x) > 2.5f;
+    //bool insidey = Mathf.Abs(_transform.position.y - currentRoom.GetRoomAreaBounds().max.y) > 2.5f&& Mathf.Abs(_transform.position.y - currentRoom.GetRoomAreaBounds().min.y) > 2.5f;
+    //Debug.Log("This is face" + facingRight);
+    if (transform.localScale.x > 0) // facing left, 
     {
-        //bool insidex = Mathf.Abs(_transform.position.x - currentRoom.GetRoomAreaBounds().max.x) > 2.5f && Mathf.Abs(_transform.position.x - currentRoom.GetRoomAreaBounds().min.x) > 2.5f;
-        //bool insidey = Mathf.Abs(_transform.position.y - currentRoom.GetRoomAreaBounds().max.y) > 2.5f&& Mathf.Abs(_transform.position.y - currentRoom.GetRoomAreaBounds().min.y) > 2.5f;
-        //Debug.Log("This is face" + facingRight);
-        if (transform.localScale.x > 0) // facing left, 
-        {
-            RaycastHit2D hit = Physics2D.Linecast(transform.position, new Vector2(transform.position.x + 12f, transform.position.y), LayerMask.GetMask("Obstacles"));
-            return !hit;
-        } else
-        {
-            RaycastHit2D hit = Physics2D.Linecast(transform.position, new Vector2(transform.position.x - 12f, transform.position.y), LayerMask.GetMask("Obstacles"));
-            return !hit;
-        }
+        RaycastHit2D hit = Physics2D.Linecast(transform.position, new Vector2(transform.position.x + 12f, transform.position.y), LayerMask.GetMask("Obstacles"));
+        return !hit;
+    } else
+    {
+        RaycastHit2D hit = Physics2D.Linecast(transform.position, new Vector2(transform.position.x - 12f, transform.position.y), LayerMask.GetMask("Obstacles"));
+        return !hit;
     }
+}
 
-
-    public void Dodge()
+/**
+ * Enemy dodge motion.
+ */
+public void Dodge()
+{
+    if (!inAnimation && CheckInsideRoom())
     {
-        if (!inAnimation && CheckInsideRoom())
+        FlipFace(-player.transform.position);
+        inAnimation = true;
+        List<string> dodges = enemyData.defends;
+        if (dodges.Count != 0)
         {
-            flipFace(-player.transform.position);
-            inAnimation = true;
-            List<string> dodges = enemyData.defends;
-            if (dodges.Count != 0)
-            {
-                int random = Random.Range(0, dodges.Count);
-                animator.SetTrigger(dodges[random]);
-                DisableAttackComps();
+            int random = Random.Range(0, dodges.Count);
+            animator.SetTrigger(dodges[random]);
+            DisableAttackComps();
 
-            }
-
-        }
-        else
-        {
-            stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
-
-        }
-    }
-
-    private void DisableAttackComps()
-    {
-        if (melee != null)
-        {
-            melee.gameObject.SetActive(false);
-        }
-
-        if (ranged != null)
-        {
-            ranged.gameObject.SetActive(false);
-        }
-
-
-    }
-
-    private void EnableAttackComps()
-    {
-        if (melee != null)
-        {
-            melee.gameObject.SetActive(enemyData.meleetriggers.Count > 0);
-        }
-        if (ranged != null)
-        {
-            ranged.gameObject.SetActive(enemyData.rangedtriggers.Count > 0);
         }
 
     }
-
-    public void ResetDash()
+    else
     {
-        Dashcooldown = 15f;
-        inAnimation = false;
-        //transform.parent.position = transform.position;
-        //transform.localPosition = Vector3.zero;
-        resetPosition();
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
-        EnableAttackComps();
-    }
 
-    public bool CheckDistance()
+    }
+}
+
+/**
+ * Disabling of attack components.
+ */
+private void DisableAttackComps()
+{
+    if (melee != null)
     {
-        return Vector2.Distance(_transform.position, player.transform.position) > 3f;
+        melee.gameObject.SetActive(false);
+    }
+
+    if (ranged != null)
+    {
+        ranged.gameObject.SetActive(false);
     }
 
 
+}
+
+/**
+ * Enabling of attack components.
+ */
+private void EnableAttackComps()
+{
+    if (melee != null)
+    {
+        melee.gameObject.SetActive(enemyData.meleetriggers.Count > 0);
+    }
+    if (ranged != null)
+    {
+        ranged.gameObject.SetActive(enemyData.rangedtriggers.Count > 0);
+    }
+
+}
+
+/**
+ * Reseting Dash.
+ */
+public void ResetDash()
+{
+    Dashcooldown = 15f;
+    inAnimation = false;
+    //transform.parent.position = transform.position;
+    //transform.localPosition = Vector3.zero;
+    resetPosition();
+    stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+    EnableAttackComps();
+}
+
+/**
+ * Checking distance between enemy and player.
+ */
+public bool CheckDistance()
+{
+    return Vector2.Distance(_transform.position, player.transform.position) > 3f;
+}
+
+/**
+ * Freezing enemy movement.
+ */
+public override void Freeze()
+{
     
-
-    public override void Freeze()
+    if (rb != null)
     {
+        LockMovement();
+    }
+    
+    animator.speed = 0;
+}
+
+/**
+ * Unfreezing enemy movement.
+ */
+public override void UnFreeze()
+{
+
+    if (rb !=  null)
+    {
+        UnlockMovement();
         
-        if (rb != null)
-        {
-            LockMovement();
-        }
-        
-        animator.speed = 0;
     }
 
-    public override void UnFreeze()
-    {
-   
-        if (rb !=  null)
-        {
-            UnlockMovement();
-            
-        }
+    animator.speed = 1;
 
-        animator.speed = 1;
-
-    }
-
-    //public void CastSpell()
-    //{
-    //    List<string> spellcasts = enemyData.rangedtriggers;
-    //    int rand = Random.Range(0, spellcasts.Count);
-    //    GetComponent<Animator>().Play(spellcasts[rand]);
-    //}
+}
 
 }

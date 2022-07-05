@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class EliteMeleeFodder : EnemyBehaviour
 {
-    private float Teleportcooldown;
-    private float UltCooldown;
     // Start is called before the first frame update
-   
+    //private float UltCooldown;
     private void StartState()
     {
         stateMachine = new StateMachine();
@@ -23,17 +21,15 @@ public class EliteMeleeFodder : EnemyBehaviour
     protected override void OnEnable()
     {
         base.OnEnable();
-        //Reset stateMachine;
         StartState();
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
     }
 
-    public void resetUltCooldown()
-    {
+    //public void resetUltCooldown()
+    //{
+    //    UltCooldown = 30f;
+    //    inAnimation = false;
 
-        UltCooldown = 30f;
-        inAnimation = false;
-
-    }
+    //}
 
 }

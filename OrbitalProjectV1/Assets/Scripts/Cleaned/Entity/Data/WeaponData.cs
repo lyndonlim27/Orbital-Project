@@ -5,5 +5,5 @@ using UnityEngine;
 [CreateAssetMenu]
 public class WeaponData : EntityData
 {
-    int skill;
+    public int skill;
 }

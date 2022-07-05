@@ -27,6 +27,6 @@ public class S_KnightState : StateClass
 
     public override void Update()
     {
-        enemy.tick();
+        enemy.Tick();
     }
 }

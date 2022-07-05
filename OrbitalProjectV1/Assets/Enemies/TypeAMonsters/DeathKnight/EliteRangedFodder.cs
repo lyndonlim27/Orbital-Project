@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class EliteRangedFodder : EnemyBehaviour
 {
-    private float Dashcooldown;
-    private float Teleportcooldown;
-    private bool dashStarted;
-    private bool dashFinished;
-    private float UltCooldown;
     // Start is called before the first frame update
     public void Start()
     {
@@ -36,37 +31,12 @@ public class EliteRangedFodder : EnemyBehaviour
 
     }
 
-    public void resetUltCooldown()
-    {
-        UltCooldown = 30f;
-        inAnimation = false;
+    //public void resetUltCooldown()
+    //{
+    //    UltCooldown = 30f;
+    //    inAnimation = false;
 
-    }
-
-    public void Dodge()
-    {
-        if (Dashcooldown <= 0 && !inAnimation)
-        {
-            List<string> dodges = enemyData.defends;
-            int random = Random.Range(0, dodges.Count);
-
-            animator.SetTrigger(dodges[random]);
-            inAnimation = true;
-        }
-        else
-        {
-            Dashcooldown -= Time.deltaTime;
-        }
-    }
-
-    public void ResetDash()
-    {
-        Dashcooldown = 15f;
-        inAnimation = false;
-        transform.parent.position = transform.position;
-        transform.localPosition = Vector3.zero;
-        stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
-    }
+    //}
 
     public override void Teleport()
     {

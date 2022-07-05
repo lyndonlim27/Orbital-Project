@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 [RequireComponent(typeof(DetectionScript),typeof(Animator))]
+
+
+/// <summary>
+/// This is a general class for trap behaviours.
+/// It handles the different behaviours for all traps.
+/// </summary>
 public class TrapBehaviour : ActivatorBehaviour
 {
     StateMachine stateMachine;
@@ -13,7 +19,9 @@ public class TrapBehaviour : ActivatorBehaviour
     private DamageApplier damageApplier;
     [SerializeField] private StateMachine.STATE currstate;
 
-
+    /** The first instance the gameobject is being activated.
+    *  Retrieves all relevant data.
+    */
     protected override void Awake()
     {
         base.Awake();
@@ -28,7 +36,10 @@ public class TrapBehaviour : ActivatorBehaviour
 
 
     }
-    // Start is called before the first frame update
+
+    /**
+    * For general items which is used in all entities.
+    */
     void Start()
     {
         stateMachine = new StateMachine();
@@ -38,6 +49,10 @@ public class TrapBehaviour : ActivatorBehaviour
 
     }
 
+
+    /** OnEnable method.
+     *  To intialize more specific entity behaviours for ObjectPooling.
+     */
     private void OnEnable()
     {
         animator.enabled = false;
@@ -59,26 +74,12 @@ public class TrapBehaviour : ActivatorBehaviour
         
     }
 
-    private void OnDisable()
-    {
-        
-    }
-
+    /**
+     * Setting Up Rotation of the trap.
+     */
     private void SettingUpRotation()
     {
-        //if (trapData.flip)
-        //{
-        //    transform.localScale.x *= -1;
-        //}
-        //transform.rotation = trapData.quaternion;
-        //float angle = trapData.quaternion.eulerAngles.z;
-        //if (angle > 90f && angle < 270f)
-        //{
-        //    Debug.Log("???");
-        //    Vector2 scale = transform.localScale;
-        //    scale.y *= -1;
-        //    transform.localScale = scale;
-        //}
+ 
         if (trapData.flip)
         {
             Vector2 scale = transform.localScale;
@@ -89,6 +90,9 @@ public class TrapBehaviour : ActivatorBehaviour
 
     }
 
+    /**
+     * Setting Up Colliders.
+     */
     private void SettingUpCollider()
     {
 
@@ -151,13 +155,18 @@ public class TrapBehaviour : ActivatorBehaviour
        
     }
 
-    // Update is called once per frame
+    /**
+     * Checking for state changes every frame.
+     */
     void Update()
     {
         stateMachine.Update();
         currstate = stateMachine.currState;
     }
 
+    /**
+     * Activate ranged components of trap.
+     */
     public void ActivateRangedComponents()
     {
         if (ranged != null)
@@ -166,11 +175,17 @@ public class TrapBehaviour : ActivatorBehaviour
         }
     }
 
+    /**
+     * Resetting Animation of trap.
+     */
     public void resetAnimation()
     {
         inAnimation = false;
     }
 
+    /**
+     * Setting trap stats.
+     */
     public override void SetEntityStats(EntityData stats)
     {
         TrapData temp = (TrapData)stats;
@@ -180,16 +195,22 @@ public class TrapBehaviour : ActivatorBehaviour
         }
     }
 
+    /**
+     * Retrieving trap stats.
+     */
+    public override EntityData GetData()
+    {
+        return trapData;
+    }
+
+    /**
+     * Despawn behaviour.
+     */
     public override void Defeated()
     {
 
         poolManager.ReleaseObject(this);
         
         
-    }
-
-    public override EntityData GetData()
-    {
-        return trapData;
     }
 }

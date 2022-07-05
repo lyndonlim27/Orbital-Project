@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FightRoom_Mgr : RoomManager 
 {
-    [SerializeField] private int waveNum;
+    public int waveNum;
     
     private void Start()
     {

@@ -46,6 +46,6 @@ public class S_IdleState : StateClass
             counter-=Time.deltaTime;
         }
 
-        enemy.tick();
+        enemy.Tick();
     }
 }

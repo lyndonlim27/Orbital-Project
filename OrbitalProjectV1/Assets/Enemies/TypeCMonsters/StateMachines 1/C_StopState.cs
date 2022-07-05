@@ -26,7 +26,7 @@ public class C_StopState : StateClass
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
         } else
         {
-            enemy.moveToStartPos();
+            enemy.MoveToStartPos();
         }
 
         

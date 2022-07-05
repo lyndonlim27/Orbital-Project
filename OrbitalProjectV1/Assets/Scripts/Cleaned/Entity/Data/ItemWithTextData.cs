@@ -22,7 +22,7 @@ public class ItemWithTextData : EntityData
     public ITEM_TYPE item_type;
     public Sprite secondarysprite;
     public string description;
-    
+    public RangedData rangedData;
 
     // Start is called before the first frame update
 

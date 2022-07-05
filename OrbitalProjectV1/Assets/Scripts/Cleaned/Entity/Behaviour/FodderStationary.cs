@@ -17,7 +17,7 @@ public class FodderStationary : EnemyBehaviour
 
     public override void Update()
     {
-        flipFace(roamPos);
+        FlipFace(roamPos);
         stateMachine.Update();
     }
 

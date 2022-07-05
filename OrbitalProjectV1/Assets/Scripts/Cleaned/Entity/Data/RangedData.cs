@@ -11,4 +11,6 @@ public class RangedData : EntityData
     public bool followTarget;
     public bool loop;
     public string impact_trigger;
+    [TextArea]
+    public string weapdescription;
 }

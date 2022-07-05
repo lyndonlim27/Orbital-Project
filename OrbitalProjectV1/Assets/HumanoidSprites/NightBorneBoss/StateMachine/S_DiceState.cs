@@ -32,7 +32,7 @@ public class S_DiceState : StateClass
 
         if (enemy.detectionScript.playerDetected && !eliteMonsterS.playing && !eliteMonsterS.animator.GetBool("MageState"))
         {
-            enemy.moveToTarget(enemy.player);
+            enemy.MoveToTarget(enemy.player);
         } 
 
         RollDice();
@@ -88,7 +88,7 @@ public class S_DiceState : StateClass
 
             }
         }
-        enemy.tick();
+        enemy.Tick();
     }
 
 

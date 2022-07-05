@@ -31,7 +31,7 @@ public class StopState : StateClass
             stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
         } else
         {
-            enemy.moveToStartPos();
+            enemy.MoveToStartPos();
         }
 
         

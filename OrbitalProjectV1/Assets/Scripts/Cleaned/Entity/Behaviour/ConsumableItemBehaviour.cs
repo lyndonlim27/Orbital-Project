@@ -2,20 +2,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// <summary>
+// This is the general class for consumable items.
+// It handles the different behaviours for all consumables.
+// </summary>
+
 public class ConsumableItemBehaviour : EntityBehaviour
 {
+
+    [Header("Properties")]
     [SerializeField] private ConsumableItemData _itemData;
     [SerializeField] AudioSource soundeffect;
+
+    /**
+     * Inventory.
+     */
+    private WordStorageManagerUI wordStorageManager;
+
+
+    /**
+     * Animator and Targets.
+     */
     private Animator animator;
     private Transform target;
     private Transform _tf;
+
+    /**
+     * Bounce Physics.
+     */
     private Vector3 followvelocity = Vector3.zero;
     private Vector3 jumpvelocity;
     private Vector3 angularVelocity;
     private Vector3 startingpos;
     private bool finishedBouncing;
-    private WordStorageManagerUI wordStorageManager;
 
+    /** The first instance the gameobject is being activated.
+     *  Retrieves all relevant data.
+     */
     protected override void Awake()
     {
         base.Awake();
@@ -25,11 +48,17 @@ public class ConsumableItemBehaviour : EntityBehaviour
         wordStorageManager = FindObjectOfType<WordStorageManagerUI>(true);
     }
 
+    /**
+    * For general items which is used in all entities.
+    */
     void Start()
     {
        
     }
 
+    /**
+     * Setting Up Drop Area.
+     */
     private void SetUpDropArea()
     {
         startingpos = _tf.position;
@@ -40,6 +69,9 @@ public class ConsumableItemBehaviour : EntityBehaviour
         angularVelocity = Random.insideUnitSphere.normalized;
     }
 
+    /**
+     * Animating Bounce Effect.
+     */
     private void BounceEffect()
     {
         
@@ -66,6 +98,10 @@ public class ConsumableItemBehaviour : EntityBehaviour
         
     }
 
+
+    /** OnEnable method.
+     *  To intialize more specific entity behaviours for ObjectPooling.
+     */
     private void OnEnable()
     {
         //RuntimeAnimatorController oganimator = animator.runtimeAnimatorController;
@@ -77,6 +113,9 @@ public class ConsumableItemBehaviour : EntityBehaviour
         SetUpDropArea();
     }
 
+    /**
+     * Checking Bounce Physics every frame.
+     */
     private void Update()
     {
         if (!finishedBouncing)
@@ -89,21 +128,33 @@ public class ConsumableItemBehaviour : EntityBehaviour
         }
     }
 
+    /**
+     * Retrieving item data.
+     */
     public override EntityData GetData()
     {   
         return _itemData;
     }
 
+    /**
+     * Setting Target Transform.
+     */
     public void SetTarget(GameObject go)
     {
         this.target = go.transform;
     }
 
+    /**
+     * Setting item data.
+     */
     public override void SetEntityStats(EntityData stats)
     {
         this._itemData = (ConsumableItemData) stats;
     }
 
+    /**
+     * Check if player in range.
+     */
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
@@ -130,10 +181,13 @@ public class ConsumableItemBehaviour : EntityBehaviour
         }
     }
 
+    /**
+     * Wait for audio to finish before releasing to pool.
+     */
     private IEnumerator WaitForAwhileBeforeRelease()
     {
         yield return StartCoroutine(LoadSingleAudio(_itemData.interactionAudios[0]));
-        poolManager.ReleaseObject(this);
+        Defeated();
     }
 
 
@@ -152,6 +206,9 @@ public class ConsumableItemBehaviour : EntityBehaviour
         Defeated();
     }
 
+    /**
+     * Release object to pool.
+     */
     public override void Defeated()
     {
         poolManager.ReleaseObject(this);
