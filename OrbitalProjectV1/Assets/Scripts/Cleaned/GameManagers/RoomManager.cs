@@ -231,8 +231,18 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
      */
     public void SettingExitDoor(DoorBehaviour door)
     {
-        exitDoor = door;
-
+        if (doors == null)
+        {
+            doors = new DoorBehaviour[25];
+        }
+        for (int i = 0; i < 25; i++)
+        {
+            if(doors[i] == null)
+            {
+                doors[i] = door;
+                return;
+            }
+        }
     }
 
 
