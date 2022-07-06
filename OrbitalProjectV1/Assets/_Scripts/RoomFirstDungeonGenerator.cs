@@ -17,6 +17,11 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     [SerializeField]
     private bool randomWalkRooms = false;
     private static List<Vector2Int> exits = new List<Vector2Int>();
+    private static List<Vector2Int> seen = new List<Vector2Int>();
+
+    [Header("Doors")]
+    [SerializeField]
+    private Sprite doorSprite;
 
     [Header("ItemWithText")]
     [SerializeField]
@@ -108,56 +113,57 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         rooms.Remove(currentRoom);
 
         List<RoomManager> roomMgrs = new List<RoomManager>();
-        //List<Vector2Int> roomCenters = new List<Vector2Int>();
         int i = 1;
         GameObject RoomsContainer = new GameObject("RoomsContainer");
-        
+        List<BoundsInt> allrooms = new List<BoundsInt>(rooms);
         while (rooms.Count > 0)
         {
             RoomManager roommgr = InstantiateRoom(currentRoom, i);
             roommgr.gameObject.transform.SetParent(RoomsContainer.transform);
             roomMgrs.Add(roommgr);
-            //roomCenters.Add((Vector2Int) Vector3Int.RoundToInt(room.center));
             i++;
             BoundsInt closest = FindClosestPointTo((Vector2Int)Vector3Int.RoundToInt(currentRoom.center), rooms);
             rooms.Remove(closest);
             HashSet<Vector2Int> newCorridor = CreateCorridor(currentRoom, closest);
-            AddToExit(currentRoom, closest, newCorridor,roommgr);
+            CreateDoorIfInsideAnyOtherRooms(currentRoom, closest, newCorridor, roommgr, allrooms);
             currentRoom = closest;
             corridors.UnionWith(newCorridor);
         }
         return corridors;
     }
 
-    private void AddToExit(BoundsInt currentRoom, BoundsInt closest, HashSet<Vector2Int> newCorridor, RoomManager currRoom)
+    private void CreateDoorIfInsideAnyOtherRooms(BoundsInt currentRoom, BoundsInt closest, HashSet<Vector2Int> newCorridor, RoomManager currRoom, List<BoundsInt> allRooms)
     {
-        Vector2Int exit = Vector2Int.zero;
         foreach (Vector2Int vec in newCorridor)
         {
-            if (vec.x == currentRoom.xMax ||
-                vec.x == currentRoom.xMin ||
-                vec.y == currentRoom.yMin ||
-                vec.y == currentRoom.yMax)
-            {
-                exits.Add(vec);
-                exit = vec;
-            } 
 
-            //if (vec.x == closest.xMax ||
-            //    vec.x == closest.xMin ||
-            //    vec.y == closest.yMin || 
-            //    vec.y == closest.yMax)
-            //{
-            //    exits.Add(vec);
-            //}
-        }
-        if (exit != Vector2Int.zero)
-        {
-            DoorBehaviour door = CreateDoor(exit);
-            door.transform.SetParent(currRoom.transform);
-            currRoom.SettingExitDoor(door);
-        } 
-        
+            foreach (BoundsInt room in allRooms)
+            {
+                if (insideRoom(vec, room)) {
+
+                    if (vec.x == room.xMax ||
+                    vec.x == room.xMin ||
+                    vec.y == room.yMin ||
+                    vec.y == room.yMax)
+                    {
+                        if (!seen.Contains(vec))
+                        {
+                            seen.Add(vec);
+                            exits.Add(vec);
+                            DoorBehaviour door = CreateDoor(vec);
+                            door.transform.SetParent(currRoom.transform);
+                            currRoom.SettingExitDoor(door);
+                            break;
+                        }
+                    }
+                }
+            }
+        }       
+    }
+
+    private bool insideRoom(Vector2Int vec, BoundsInt closest)
+    {
+        return closest.xMin <= vec.x && vec.x <= closest.xMax && closest.yMin <= vec.y && vec.y <= closest.yMax;
     }
 
     private HashSet<Vector2Int> CreateCorridor(BoundsInt currentRoomCenter, BoundsInt destination)
@@ -420,20 +426,6 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         return new Vector2(
             Random.Range(bounds.xMin, bounds.xMax),
             Random.Range(bounds.yMin, bounds.yMax));
-        //Vector2 randomPoint;
-        ////do
-        ////{
-        //    //AABB axis - 4 possible bounds, top left, top right, bl, br
-        //    //tl = min.x, max.y;
-        //    //bl = min.x, min.y;
-        //    //tr = max.x, max.y;
-        //    //br = max.x, min.y;
-        //    //anywhere within these 4 bounds are possible pts;
-            
-
-        ////} while (!col.OverlapPoint(randomPoint)); //&& !Physics2D.OverlapCircle(randomPoint, 1, LayerMask.GetMask("Obstacles"))
-        ////&& safeRoute.Contains(randomPoint));
-        //return randomPoint;
     }
 
     private DoorBehaviour CreateDoor(Vector2Int exit)
@@ -441,9 +433,16 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
         GameObject go = new GameObject("Door");
         go.AddComponent<Animator>();
-        go.AddComponent<BoxCollider2D>();
+        SpriteRenderer _spriteRenderer = go.AddComponent<SpriteRenderer>();
+        _spriteRenderer.sortingOrder = 1;
+        _spriteRenderer.sprite = doorSprite;
+        BoxCollider2D col = go.AddComponent<BoxCollider2D>();
+        //col.offset = col.size / 2;
+        //col.autoTiling = true;
         DoorBehaviour door = go.AddComponent<DoorBehaviour>();
         go.transform.position = new Vector2(exit.x,exit.y);
+        go.transform.position += new Vector3(0.5f, 0.5f);
+        go.transform.localScale = new Vector2(0.6f, 0.6f);
 
         return door;
     }
