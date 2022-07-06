@@ -189,7 +189,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
             else if (destination.center.x < position.x)
             {
                 position += Vector2Int.left;
-            }
+            } 
             corridor.Add(position);
         }
         return corridor;
