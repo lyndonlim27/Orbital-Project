@@ -16,6 +16,10 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     private int offset = 1;
     [SerializeField]
     private bool randomWalkRooms = false;
+
+    [Header("Random Seed")]
+    public int currentSeed = -1;
+
     private static List<Vector2Int> exits = new List<Vector2Int>();
     private static HashSet<Vector2Int> seen = new HashSet<Vector2Int>();
     private static Dictionary<BoundsInt, RoomManager> bound2Rooms = new Dictionary<BoundsInt, RoomManager>();
@@ -51,10 +55,34 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     private ItemWithTextData portal;
 
     private _GameManager gameManager;
+
+    public void GenerateRandomSeed()
+    {
+        int tempSeed = (int)System.DateTime.Now.Ticks;
+        Random.InitState(tempSeed);
+    }
+
+
+    public void SetRandomSeed(int seed)
+    {
+        Random.InitState(seed);
+    }
+
+
     protected override void RunProceduralGeneration()
     {
         gameManager = GameObject.FindObjectOfType<_GameManager>(true);
+        seen.Clear();
+        if (currentSeed == -1)
+        {
+            GenerateRandomSeed();
+        }
+        else
+        {
+            SetRandomSeed(currentSeed);
+        }
         CreateRooms();
+        ChangeRoomsToBoss();
     }
 
     private void CreateRooms()
@@ -74,7 +102,6 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
         HashSet<Vector2Int> corridors = ConnectRooms(roomsList);
         floor.UnionWith(corridors);
-
         tilemapVisualizer.PaintFloorTiles(floor);
         WallGenerator.CreateWalls(floor, tilemapVisualizer);
     }
@@ -134,7 +161,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         {
             
 
-            RoomManager roommgr = InstantiateRoomTesting(currentRoom, i, RoomsContainer);
+            RoomManager roommgr = InstantiateRoom(currentRoom, i, RoomsContainer);
             //if (i == 1)
             //{
             //    SpawnPlayer(currentRoom, roommgr);
@@ -153,7 +180,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         //for last room
         if (rooms.Count == 0)
         {
-            RoomManager roommgr = InstantiateRoomTesting(currentRoom, i, RoomsContainer);
+            RoomManager roommgr = InstantiateRoom(currentRoom, i, RoomsContainer);
             roomMgrs.Add(roommgr);
             i++;
         }
@@ -181,6 +208,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
                         bool down = vec.y == room.yMin + offset && (vec.x != room.xMax || vec.x != room.xMin);
                         if (!seen.Contains(vec))
                         {
+                            Debug.Log("seen?" + seen.Count);
                             seen.Add(vec);
                             exits.Add(vec);
                             DoorBehaviour door = CreateDoor(vec,left,down);
@@ -422,22 +450,24 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         createdroom.SetUpEntityDatas(RandomizeTreasureDatas());
         createdroom.RoomIndex = i;
         //20% chance
-        if (Random.Range(0,10) >= 8)
+        if (Random.Range(0, 10) >= 8)
         {
             createdroom.SetUpPortal(portal);
         }
-        
+
         gameManager.roomManagers.Add(createdroom);
         return createdroom;
     }
 
     private RoomManager InstantiateRoom(BoundsInt room, int i, GameObject container)
     {
-        RoomManager.ROOMTYPE randRoomType = (RoomManager.ROOMTYPE) Random.Range(0, (int) RoomManager.ROOMTYPE.COUNT);
+        RoomManager.ROOMTYPE randRoomType = (RoomManager.ROOMTYPE)Random.Range(0, (int) RoomManager.ROOMTYPE.ROOMBEFOREBOSS);
         GameObject go = new GameObject($"Room{i}");
         go.transform.SetParent(container.transform,true);
         go.transform.position = room.center;
+        go.layer = LayerMask.NameToLayer("spawnArea");
         BoxCollider2D boxCollider2D = go.AddComponent<BoxCollider2D>();
+        boxCollider2D.isTrigger = true;
         boxCollider2D.size = new Vector2(room.xMax - room.xMin - 7f, room.yMax - room.yMin - 7f);
         
         RoomManager createdroom;
@@ -449,7 +479,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
                 createdroom.SetUpEntityDatas(RandomizeTreasureDatas());
                 break;
             case RoomManager.ROOMTYPE.PUZZLE_ROOM:
-                createdroom = go.AddComponent<TorchPuzzleRoom_Mgr>();
+                createdroom = go.AddComponent<PuzzleRoom_Mgr>();
                 GameObject selectedpuzzle = RandomizePuzzle();
                 selectedpuzzle.transform.position = GetRandomPointInCollider(room);
                 selectedpuzzle.transform.SetParent(createdroom.transform);
@@ -461,40 +491,91 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
                 createdroom.SetUpEntityDatas(RandomizeEnemyDatas());
                 break;
             case RoomManager.ROOMTYPE.PUZZLE2_ROOM:
-                createdroom = go.AddComponent<PressurePlateRoom_Mgr>();
+                createdroom = go.AddComponent<PuzzleRoom_Mgr>();
                 createdroom.SetUpEntityDatas(RandomizePressureSwitchDatas());
                 break;
-            /**
-             * Everything below just uses fighting rooms as placeholders for now.
-             */
-            case RoomManager.ROOMTYPE.BOSSROOM:
-                var bossroom = go.AddComponent<FightRoom_Mgr>();
-                bossroom.waveNum = Random.Range(1, 5);
-                createdroom = bossroom;
-                createdroom.SetUpEntityDatas(RandomizeEnemyDatas());
-                break;
             case RoomManager.ROOMTYPE.HYBRID_ROOM:
-                var hybridroom = go.AddComponent<FightRoom_Mgr>();
-                hybridroom.waveNum = Random.Range(1, 5);
+                var hybridroom = go.AddComponent<HybridRoom_Mgr>();
                 createdroom = hybridroom;
                 createdroom.SetUpEntityDatas(RandomizeEnemyDatas());
                 break;
-            case RoomManager.ROOMTYPE.ROOMBEFOREBOSS:
-                var roombeforeboss = go.AddComponent<FightRoom_Mgr>();
-                roombeforeboss.waveNum = Random.Range(1, 5);
-                createdroom = roombeforeboss;
-                createdroom.SetUpEntityDatas(RandomizeEnemyDatas());
-                break;
+            
         }
 
-        
-       
+        createdroom.roomtype = randRoomType;
+        createdroom.SetUpRoomSize((Vector2Int)room.size);
         createdroom.RoomIndex = i;
         createdroom.roomtype = randRoomType;
-        
+        if (Random.Range(0, 10) >= 8)
+        {
+            createdroom.SetUpPortal(portal);
+        }
 
+        gameManager.roomManagers.Add(createdroom);
         return createdroom;
         
+    }
+
+    /// <summary>
+    /// Change 4 rooms to before boss and boss.
+    /// </summary>
+    private void ChangeRoomsToBoss()
+    {
+        int i = 2;
+        while (i-- > 0)
+        {
+            List<RoomManager> rooms = gameManager.roomManagers;
+            int rand;
+            if (i == 1)
+            {
+                rand = Random.Range((int)(0.45f * rooms.Count), (int)(0.6f * rooms.Count));
+                Debug.Log("this is 2" + rand);
+            } else
+            {
+                rand = Random.Range((int)(0.8f * rooms.Count), rooms.Count);
+                Debug.Log("this is 1" + rand);
+            }
+            Debug.Log(rooms.Count);
+            Debug.Log("Roomnum = " + rand);
+            ChangeRoom(rand, rooms, RoomManager.ROOMTYPE.BOSSROOM);
+            ChangeRoom(rand - 1, rooms, RoomManager.ROOMTYPE.ROOMBEFOREBOSS);
+        }
+        
+    }
+
+    private void ChangeRoom(int index, List<RoomManager> rooms, RoomManager.ROOMTYPE rOOMTYPE)
+    {
+        RoomManager currRoom = rooms[index];
+        DoorBehaviour[] doorsincurr = currRoom.GetDoors();
+        GameObject currroomGameObject = currRoom.gameObject;
+        DestroyImmediate(currRoom);
+        RoomManager newroom;
+        switch (rOOMTYPE)
+        {
+            default:
+            case RoomManager.ROOMTYPE.ROOMBEFOREBOSS:
+                newroom = currroomGameObject.AddComponent<TreasureRoom_Mgr>();
+                break;
+            case RoomManager.ROOMTYPE.BOSSROOM:
+                newroom = currroomGameObject.AddComponent<BossRoom_Mgr>();
+                break;
+
+        }
+        if (doorsincurr != null)
+        {
+            foreach (DoorBehaviour door in doorsincurr)
+            {
+              
+                newroom.SettingExitDoor(door);
+                
+            }
+        }
+
+        newroom.RoomIndex = index + 1;
+        newroom.roomtype = rOOMTYPE;
+        gameManager.roomManagers[index] = newroom;
+
+
     }
 
     /// <summary>
@@ -579,7 +660,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     {
         DoorData doorData = ScriptableObject.CreateInstance<DoorData>();
         doorData._name = "UNLOCK";
-        doorData.minDist = 4f;
+        doorData.minDist = 1.5f;
         doorData._type = EntityData.TYPE.DOOR;
         door.SetEntityStats(doorData);
     }

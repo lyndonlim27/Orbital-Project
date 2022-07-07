@@ -27,7 +27,8 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     protected ItemTextLogic _tl;
     protected UITextDescription uITextDescription;
     protected TorchPuzzle torchPuzzle;
-    
+    protected Vector2 playeroriginalposition;
+
     protected Vector2 originalpos;
     protected float origintensity;
     protected WeaponDescription weaponDataDisplay;
@@ -39,13 +40,13 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     public Vector2 lastvelocity;
 
     [Header("LaserBeam")]
+    public bool targetHit;
     [SerializeField] protected LineRenderer laser;
     [SerializeField] List<Vector3> laserPos;
     [SerializeField] List<GameObject> laserHits;
     [SerializeField] private float rotSpeed;
     [SerializeField] private bool mounted;
     [SerializeField] private bool laserActivated;
-    [SerializeField] public bool targetHit { get; private set; }
 
     private _GameManager gameManager;
 
@@ -72,8 +73,9 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         weaponDataDisplay = GetComponentInChildren<WeaponDescription>(true);
         gameManager = FindObjectOfType<_GameManager>();
         laser = gameObject.AddComponent<LineRenderer>();
+        laser.sortingOrder = 1;
         laserPos = new List<Vector3>();
-        rotSpeed = 5f;
+        rotSpeed = 30f;
 
     }
 
@@ -91,7 +93,8 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         CheckIfPlayerIsNearWeap();
         GetLastVelocityForBall();
         StartLaserControl();
-        
+
+
     }
 
     private void GetLastVelocityForBall()
@@ -121,11 +124,11 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         spriteRenderer.material.color = c;
         isDead = false;
         DisableAnimator();
+        SetItemBody();
         if (weaponDataDisplay != null)
         {
             weaponDataDisplay.gameObject.SetActive(false);
         }
-        SetItemBody();
         EnableAnimator();
         ResetLaser();
         spriteRenderer.sortingOrder = 2;
@@ -215,7 +218,8 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 if (data.item_type == ItemWithTextData.ITEM_TYPE.MIRROR)
                 {
                     gameObject.layer = LayerMask.NameToLayer("Mirror");
-                }
+                    gameObject.tag = "Mirror";
+                } 
                 break;    
             case ItemWithTextData.ITEM_TYPE.TOMB:
                 secondarylightsource = new GameObject();
@@ -280,10 +284,14 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
      */
     private void SettingUpColliders()
     {
-        _col.isTrigger = false;
+        if (_col.enabled)
+        {
+            _col.isTrigger = false;
 
-        _col.size = data.sprite.bounds.size;
-        _col.offset = new Vector2(0, 0);
+            _col.size = data.sprite.bounds.size;
+            _col.offset = new Vector2(0, 0);
+        }
+        
 
 
     }
@@ -362,13 +370,30 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 }   
                 break;
             case ItemWithTextData.ITEM_TYPE.LASER:
-                player.enabled = false;
+                FreezePlayer();
+                playeroriginalposition = player.transform.position;
+                player.transform.position = transform.position;
+                _col.isTrigger = true;
                 mounted = true;
                 break;
 
 
 
         }
+    }
+
+    private void FreezePlayer()
+    {
+        player.Freeze();
+        player.enabled = false;
+        player.insidePuzzle = true;
+    }
+
+    private void UnfreezePlayer()
+    {
+        player.UnFreeze();
+        player.enabled = true;
+        player.insidePuzzle = false;
     }
 
 
@@ -387,45 +412,78 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     #region laserpuzzle
     private void StartLaserControl()
     {
+        if (mounted)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                ResetLaser();
+                LaserUnmount();
+            }
+            else if (laserActivated)
+            {
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    ResetLaser();
+                }
+            } else
+            {
+                if (Input.GetKey(KeyCode.LeftArrow))
+                {
+                    transform.Rotate(0, 0, -rotSpeed * Time.fixedDeltaTime, Space.World);
+                }
+                else if (Input.GetKey(KeyCode.RightArrow))
+                {
+                    transform.Rotate(0, 0, rotSpeed * Time.fixedDeltaTime, Space.World);
+                }
+                else
+                {
+                    if (Input.GetKeyDown(KeyCode.Space))
+                    {
+                        CastLaser(transform.position, transform.right);
+                        laserActivated = true;
+                    }
+                }
 
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            transform.Rotate(0, -rotSpeed * Time.deltaTime, 0, Space.World);
+            }
+
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            transform.Rotate(0, rotSpeed * Time.deltaTime, 0, Space.World);
-        }
-        else if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            mounted = false;
-            player.enabled = true;
-            ResetLaser();
-        } else if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ResetLaser();
-            CastLaser(transform.position, transform.forward);
-        }
+        
+    }
+
+    private void LaserUnmount()
+    {
+        mounted = false;
+        UnfreezePlayer();
+        _tl.ResetWord();
+        player.transform.position = playeroriginalposition;
+        isDead = false;
+        _col.isTrigger = false;
     }
 
     private void SetUpLaser()
     {
         laser.startColor = Color.red;
         laser.endColor = Color.red;
-        laser.startWidth = 0.5f;
-        laser.endWidth = 0.5f;
+        laser.startWidth = 0.2f;
+        laser.endWidth = 0.2f;
+        laser.material = Resources.Load<Material>("Material/Defaultmat");
+        gameObject.name = "LaserBeam";
+        gameObject.layer = LayerMask.NameToLayer("Laser");
     }
 
     private void ResetLaser()
     {
-        laser.positionCount = 0;
+        laserActivated = false;
+        laser.positionCount = 1;
         laserPos.Clear();
+        laserPos.Add(transform.position);
     }
 
 
     private void CastLaser(Vector2 pos ,Vector2 dir)
     {
-        RaycastHit2D hit = Physics2D.Raycast(pos, dir, LayerMask.GetMask("Obstacles", "Doors", "Reflectable", "Player"));
+        RaycastHit2D hit = Physics2D.Raycast(pos + new Vector2(0.01f,0.01f), dir, Mathf.Infinity, LayerMask.GetMask("Obstacles", "Doors", "Mirror"));
+        Debug.Log(hit.collider);
         if (hit.collider != null) {
             CheckHit(hit,dir);
         } else
@@ -436,21 +494,31 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
 
     private void InitializeLaser()
     {
+        laser.positionCount = laserPos.Count;
+        Debug.Log(laserPos.Count);
         laser.SetPositions(laserPos.ToArray());
     }
 
     private void CheckHit(RaycastHit2D hit, Vector2 dir)
     {
-        if (hit.collider.tag == "Reflectable")
+        if (hit.collider.tag == "Target")
         {
-            Vector2 hitpoint = hit.point;
-            Vector2 reflecteddir = Vector2.Reflect(dir, hit.normal);
+            targetHit = true;
+            LaserUnmount();
+        }
 
+        if (hit.collider.tag == "Mirror")
+        {
+            Debug.Log("Reflected?CastLaser(transform.position, transform.right);");
+            Vector2 hitpoint = hit.point;
+            laserPos.Add(hitpoint);
+            Vector2 reflecteddir = Vector2.Reflect(dir, hit.normal);
             CastLaser(hitpoint, reflecteddir);
 
         } else
         {
             laserPos.Add(hit.point);
+            Debug.Log(hit.point);
             InitializeLaser();
         }
 

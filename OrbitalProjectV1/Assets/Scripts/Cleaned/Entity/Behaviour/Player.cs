@@ -10,6 +10,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
 
     public Vector2 _movement;
     public Vector2 lastdirection;
+    public bool insidePuzzle;
     private Rigidbody2D _rb;
     private Collider2D col;
     private Animator _animator;
@@ -48,7 +49,6 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     [SerializeField] private DebuffData _debuffData;
     [SerializeField] private AttackData _attackData;
     
-
 
     [Header("AudioClips")]
     Dictionary<string,AudioClip> audioClips;
@@ -108,6 +108,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         audioClips["Gold"] = Resources.Load("Sounds/UI/Gold") as AudioClip;
         buffanimator = transform.Find("BuffAnimator").gameObject.GetComponent<Animator>();
         savePoint = transform.position;
+        insidePuzzle = false;
 
     }
 

@@ -27,6 +27,10 @@ public class _GameManager : MonoBehaviour
     [SerializeField]
     GameObject PoolManager;
 
+    [Header("DamageFlicker")]
+    [SerializeField]
+    GameObject DamageFlicker;
+
     [Header("Camera")]
     [SerializeField]
     GameObject CineCamera;
@@ -34,6 +38,9 @@ public class _GameManager : MonoBehaviour
     [Header("RoomManagers")]
     public List<RoomManager> roomManagers = new List<RoomManager>();
 
+    
+    private Player player;
+    [SerializeField] private int roomIndex = 1;
     /// <summary>
     /// Loads Up all Managers required for gameplay.
     /// </summary>
@@ -74,9 +81,23 @@ public class _GameManager : MonoBehaviour
             
         }
 
-        
+        GameObject _DamageFlicker = GameObject.Find("DamageFlicker(Clone)");
+        if (_DamageFlicker == null)
+        {
+            _DamageFlicker = Instantiate(DamageFlicker);
+        }
 
 
+
+        //GameObject _AStar = GameObject.Find("A_");
+        //if (_AStar == null)
+        //{
+        //    _AStar = Instantiate(AStar);
+        //}
+
+
+        //_AStar.transform.SetParent(transform);
+        _DamageFlicker.transform.SetParent(transform);
         _audioManager.transform.SetParent(transform);
         _wordBank.transform.SetParent(transform);
         _UIManager.transform.SetParent(transform);
@@ -106,7 +127,7 @@ public class _GameManager : MonoBehaviour
     /// </summary>
     public void SpawnPlayer()
     {
-        Player player = FindObjectOfType<Player>(true);
+        player = FindObjectOfType<Player>(true);
         if (player == null)
         {
             Player playerPrefab = Resources.Load<Player>("Player 1") as Player;
@@ -116,5 +137,17 @@ public class _GameManager : MonoBehaviour
         player.SetCurrentRoom(roommgr);
         player.transform.position = roommgr.transform.position;
         SetUpCamera(player.transform);
+    }
+
+    public void SetPlayerPosition()
+    {
+        if (player == null)
+        {
+            SpawnPlayer();
+        }
+        RoomManager currRoom = roomManagers[roomIndex - 1];
+        player.SetCurrentRoom(currRoom);
+        player.transform.position = currRoom.transform.position;
+
     }
 }

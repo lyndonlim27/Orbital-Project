@@ -27,5 +27,10 @@ public class GameManagersGenerator : Editor
             generator.SpawnPlayer();
         }
 
+        if (GUILayout.Button("SetPlayerPosition"))
+        {
+            generator.SetPlayerPosition();
+        }
+
     }
 }

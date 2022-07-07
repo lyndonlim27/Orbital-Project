@@ -47,7 +47,14 @@ public class QuizPuzzle : MonoBehaviour, Puzzle
 
     public bool IsComplete()
     {
-        return curr >= lastseq;
+        if (activated)
+        {
+            return curr >= lastseq;
+        } else
+        {
+            return false;
+        }
+        
     }
 
     public void ActivatePuzzle(int _seq)
@@ -116,6 +123,7 @@ public class QuizPuzzle : MonoBehaviour, Puzzle
     public bool CheckInput()
     {
         int ans = questions[currquestion];
+        Debug.Log(currquestion);
         string guess = "";
         foreach (LetterSlotNoDnD slot in puzzleInputManager.GetCurrentGuess())
         {
@@ -143,8 +151,12 @@ public class QuizPuzzle : MonoBehaviour, Puzzle
     public void Next()
     {
         curr++;
-        currquestion = questions.Keys.ToList()[curr];
-        PullUpPuzzleMenu();
+        if (curr < lastseq)
+        {
+            currquestion = questions.Keys.ToList()[curr];
+            PullUpPuzzleMenu();
+        }
+        
     }
 
     public void Fulfill()

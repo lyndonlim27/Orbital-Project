@@ -33,11 +33,12 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         FIGHTING_ROOM,
         HYBRID_ROOM,
         TREASURE_ROOM,
-        ROOMBEFOREBOSS,
-        BOSSROOM,
         SAVE_ROOM,
         PUZZLE2_ROOM,
+        ROOMBEFOREBOSS,
+        BOSSROOM,
         COUNT,
+
     }
     public ROOMTYPE roomtype;
 
@@ -172,6 +173,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
             if (_collider != null)
             {
                 activated = true;
+                InitializeAStar();
                 SettingDialogueMgr();
                 SettingUpAudio();
                 SpawnObjects(_EntityDatas);
@@ -267,7 +269,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
      */
     private void InitializeAStar()
     {
-        if (roomtype != ROOMTYPE.FIGHTING_ROOM && roomtype != ROOMTYPE.HYBRID_ROOM)
+        if (roomtype != ROOMTYPE.FIGHTING_ROOM && roomtype != ROOMTYPE.HYBRID_ROOM && roomtype != ROOMTYPE.BOSSROOM)
         {
             return;
         }
@@ -311,7 +313,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
      */
     protected virtual void RoomChecker()
     {
-
+        Debug.Log("Can we proceed? " + CanProceed());
         if (CanProceed())
         {
             for (int i = 0; i < doors.Length; i++)
@@ -327,6 +329,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
             DisableTrapBehaviour();
             pointToObjective();
             SpawnPortal();
+            DeActivateAStar();
             if (textDescription.isActiveAndEnabled)
             {
                 textDescription.StartDescription("You hear a loud creak..");
@@ -833,8 +836,12 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
         }
 
-        player.UnFreeze();
-        player.enabled = true;
+        if (!player.insidePuzzle)
+        {
+            player.UnFreeze();
+            player.enabled = true;
+        }
+        
     }
 
 
@@ -854,8 +861,12 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
             }
 
         }
-        player.Freeze();
-        player.enabled = false;
+
+        if (!player.insidePuzzle)
+        {
+            player.Freeze();
+            player.enabled = false;
+        }
 
     }
 
