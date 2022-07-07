@@ -20,5 +20,7 @@ public class RandomDungeonGeneratorEditor : Editor
         {
             generator.GenerateDungeon();
         }
+
     }
+
 }

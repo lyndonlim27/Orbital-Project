@@ -6,9 +6,10 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class Player : EntityBehaviour, IDataPersistence, Freezable
-{   
+{
 
-    private Vector2 _movement;
+    public Vector2 _movement;
+    public Vector2 lastdirection;
     private Rigidbody2D _rb;
     private Collider2D col;
     private Animator _animator;
@@ -66,6 +67,9 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         col = GetComponent<Collider2D>();
         InCombat = false;
         healinganimator = Resources.Load("Animations/AnimatorControllers/HealBuffVFX") as RuntimeAnimatorController;
+        _healthBar = FindObjectOfType<HealthBar>(true);
+        _manaBar = FindObjectOfType<ManaBar>(true);
+        _gameOver = FindObjectOfType<GameOver>(true);
     }
 
     public bool IsDead()
@@ -84,6 +88,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         _manaBar.SetMaxMana(maxMana);
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
+        Debug.Log(_animator);
         _weaponManager = this.gameObject.GetComponentInChildren<WeaponPickup>();
         _currWeapon = _weaponManager.ActiveWeapon().GetComponent<Weapon>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -122,6 +127,10 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         {
             _movement.x = Input.GetAxisRaw("Horizontal");
             _movement.y = Input.GetAxisRaw("Vertical");
+            if (_movement != Vector2.zero)
+            {
+                lastdirection = _movement;
+            }
             _animator.SetFloat("Horizontal", _movement.x);
             _animator.SetFloat("Vertical", _movement.y);
             _animator.SetFloat("Speed", _movement.magnitude);

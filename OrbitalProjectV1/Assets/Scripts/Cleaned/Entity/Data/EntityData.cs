@@ -26,6 +26,7 @@ public class EntityData : ScriptableObject
         PUZZLEBOX,
         FODDER,
         NPCMOVABLE,
+        DOOR
     }
     public enum PATTERN
     {

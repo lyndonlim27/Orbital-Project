@@ -17,7 +17,11 @@ public class ItemWithTextData : EntityData
         TOMB,
         SAVEPOINT,
         PUZZLETORCH,
-        BOSSPROPS
+        BOSSPROPS,
+        BALL,
+        PORTAL,
+        LASER,
+        MIRROR
     }
     public ITEM_TYPE item_type;
     public Sprite secondarysprite;

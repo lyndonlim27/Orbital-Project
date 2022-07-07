@@ -16,7 +16,7 @@ public class PuzzleBox : ItemWithTextBehaviour
     {
         base.Awake();
         puzzleInputManager = FindObjectOfType<PuzzleInputManager>(true);
-        lightSwitchSystem = FindObjectOfType<LightSwitchSystem>(true);    
+        lightSwitchSystem = FindObjectOfType<LightSwitchSystem>(true);
 
     }
     

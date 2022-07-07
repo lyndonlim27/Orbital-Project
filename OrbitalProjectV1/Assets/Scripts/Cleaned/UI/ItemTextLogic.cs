@@ -35,6 +35,6 @@ public class ItemTextLogic : TextLogic
 
     protected override void PerformAction()
     {
-        parent.GetComponent<ItemWithTextBehaviour>().Defeated();
+        parent.GetComponent<EntityBehaviour>().Defeated();
     }
 }

@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
-[RequireComponent(typeof(Animator),typeof(Collider2D))]
+[RequireComponent(typeof(Animator),typeof(Collider2D), typeof(AudioSource))]
 public class DoorBehaviour : EntityBehaviour
 {
-    private Animator animator;
     public bool unlocked;
+    private Animator animator;
     private HashSet<RoomManager> roomManagers;
     private AudioClip unlockWoodenClip;
     private AudioClip lockWoodenClip;
@@ -28,12 +29,13 @@ public class DoorBehaviour : EntityBehaviour
         audioSource.volume = 0.05f;
     }
 
-    private void Start()
+    protected virtual void Start()
     {
+        isDead = false;
         unlocked = false;
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         if (unlocked)
         {
@@ -57,7 +59,7 @@ public class DoorBehaviour : EntityBehaviour
 
     }
 
-    private void CheckDoorUnlockedSound()
+    protected virtual void CheckDoorUnlockedSound()
     {
         if (!animator.GetBool(gameObject.name.Substring(0, 4)))
         {
@@ -65,7 +67,7 @@ public class DoorBehaviour : EntityBehaviour
         }
     }
 
-    private void CheckDoorLockedSound()
+    protected virtual void CheckDoorLockedSound()
     {
         if (animator.GetBool(gameObject.name.Substring(0, 4)))
         {
@@ -87,7 +89,7 @@ public class DoorBehaviour : EntityBehaviour
         throw new System.NotImplementedException();
     }
 
-    public void UnlockDoor()
+    public virtual void UnlockDoor()
     {
         animator.SetBool(gameObject.name.Substring(0, 4), true);
         GetComponent<Collider2D>().enabled = false;
@@ -95,7 +97,7 @@ public class DoorBehaviour : EntityBehaviour
         
     }
 
-    public void LockDoor()
+    public virtual void LockDoor()
     {
         animator.SetBool(gameObject.name.Substring(0, 4), false);
         GetComponent<Collider2D>().enabled = true;

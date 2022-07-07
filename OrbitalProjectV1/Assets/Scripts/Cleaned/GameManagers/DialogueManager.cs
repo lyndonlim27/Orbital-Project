@@ -53,6 +53,13 @@ public class DialogueManager : MonoBehaviour
      */
     private void Awake()
     {
+        dialoguePanel = GameObject.Find("DialoguePanel");
+        dialoguetext = dialoguePanel.GetComponentInChildren<TextMeshProUGUI>();
+        dialogueImage = dialoguePanel.transform.Find("DialogueImage").GetComponent<Image>();
+        for(int i = 0; i < choices.Length; i++)
+        {
+            choices[i] = dialoguePanel.transform.Find("Choices").Find($"Choice{i+1}").gameObject;
+        }
         //npc = roomManager.npcs;
         //_npcData = roomManager._npcData;
         //player = FindObjectOfType<Player>(true);

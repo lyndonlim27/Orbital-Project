@@ -27,13 +27,27 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     protected ItemTextLogic _tl;
     protected UITextDescription uITextDescription;
     protected TorchPuzzle torchPuzzle;
+    
     protected Vector2 originalpos;
     protected float origintensity;
     protected WeaponDescription weaponDataDisplay;
     private DataPersistenceManager dataPersistenceManager;
-    public Animator animator { get; private set; }
+    public Animator animator { get; protected set; }
     public bool lit { get; private set; }
 
+    [Header("SoccerBall")]
+    public Vector2 lastvelocity;
+
+    [Header("LaserBeam")]
+    [SerializeField] protected LineRenderer laser;
+    [SerializeField] List<Vector3> laserPos;
+    [SerializeField] List<GameObject> laserHits;
+    [SerializeField] private float rotSpeed;
+    [SerializeField] private bool mounted;
+    [SerializeField] private bool laserActivated;
+    [SerializeField] public bool targetHit { get; private set; }
+
+    private _GameManager gameManager;
 
     /** The first instance the gameobject is being activated.
      *  Retrieves all relevant data.
@@ -56,6 +70,10 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         uITextDescription = FindObjectOfType<UITextDescription>(true);
         torchPuzzle = FindObjectOfType<TorchPuzzle>(true);
         weaponDataDisplay = GetComponentInChildren<WeaponDescription>(true);
+        gameManager = FindObjectOfType<_GameManager>();
+        laser = gameObject.AddComponent<LineRenderer>();
+        laserPos = new List<Vector3>();
+        rotSpeed = 5f;
 
     }
 
@@ -71,6 +89,17 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     private void Update()
     {
         CheckIfPlayerIsNearWeap();
+        GetLastVelocityForBall();
+        StartLaserControl();
+        
+    }
+
+    private void GetLastVelocityForBall()
+    {
+        if (data.item_type == ItemWithTextData.ITEM_TYPE.BALL)
+        {
+            lastvelocity = _rb.velocity;
+        }
     }
 
     private void CheckIfPlayerIsNearWeap()
@@ -98,10 +127,15 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         }
         SetItemBody();
         EnableAnimator();
+        ResetLaser();
         spriteRenderer.sortingOrder = 2;
+        mounted = false;
+        targetHit = false;
+        laserActivated = false;
     }
 
     
+
 
     /**
      * Left it blank for now since most stuffs can be done inside onenable.
@@ -148,6 +182,10 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
      */
     private void SetItemBody()
     {
+        if (data == null)
+        {
+            return;
+        }
         switch (data.item_type)
         {
             default:
@@ -164,6 +202,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 weaponDataDisplay.SetWeaponPickUp(data.rangedData);
                 weaponDataDisplay.SetCurrWeapon(player.GetWeaponData());
                 break;
+            case ItemWithTextData.ITEM_TYPE.MIRROR:
             case ItemWithTextData.ITEM_TYPE.PUSHABLE:
                 _rb.bodyType = RigidbodyType2D.Dynamic;
                 _rb.gravityScale = 0;
@@ -173,7 +212,11 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
                 _rb.freezeRotation = true;
                 light2D.enabled = true;
-                break;
+                if (data.item_type == ItemWithTextData.ITEM_TYPE.MIRROR)
+                {
+                    gameObject.layer = LayerMask.NameToLayer("Mirror");
+                }
+                break;    
             case ItemWithTextData.ITEM_TYPE.TOMB:
                 secondarylightsource = new GameObject();
                 SpriteRenderer _spr = secondarylightsource.AddComponent<SpriteRenderer>();
@@ -192,11 +235,28 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 torchPuzzle.AddPuzzleTorch(this);
                 light2D.enabled = true;
                 break;
-
+            case ItemWithTextData.ITEM_TYPE.BALL:
+                _rb.bodyType = RigidbodyType2D.Kinematic;
+                _rb.gravityScale = 0;
+                _rb.drag = 1.5f;
+                _rb.mass = 1f;
+                originalpos = transform.position;
+                _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+                _rb.freezeRotation = true;
+                this.gameObject.layer = LayerMask.NameToLayer("Ball");
+                break;
+            case ItemWithTextData.ITEM_TYPE.PORTAL:
+                _col.enabled = false;
+                break;
+            case ItemWithTextData.ITEM_TYPE.LASER:
+                SetUpLaser();
+                break;
         }
         SettingUpColliders();
         CheckURP();
     }
+
+    
 
     /**
      * Setting Up Secondary Lights if any.
@@ -265,6 +325,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 SpawnDrops();
                 HandleAnimation();
                 break;
+
             case ItemWithTextData.ITEM_TYPE.PUSHABLE:
                 transform.position = originalpos;
                 _tl.ResetWord();
@@ -284,9 +345,117 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 _tl.ResetWord();
                 isDead = false;
                 break;
+            case ItemWithTextData.ITEM_TYPE.BALL:
+                StartCoroutine(ShootBall());
+                break;
+            case ItemWithTextData.ITEM_TYPE.PORTAL:
+                //find active rooms;
+                RoomManager[] rooms = FindObjectsOfType<RoomManager>(false);
+                int rand;
+                if (rooms.Length != 0)
+                {
+                    do
+                    {
+                        rand = Random.Range(0, rooms.Length);
+                    } while (rand != currentRoom.RoomIndex - 1);
+                    player.transform.position = rooms[rand].transform.position;
+                }   
+                break;
+            case ItemWithTextData.ITEM_TYPE.LASER:
+                player.enabled = false;
+                mounted = true;
+                break;
+
+
 
         }
     }
+
+
+    #region ballpuzzle
+    private IEnumerator ShootBall()
+    {
+        _rb.bodyType = RigidbodyType2D.Dynamic;
+        _rb.AddForce(player.lastdirection * 50f, ForceMode2D.Impulse);
+        yield return new WaitForSeconds(5f);
+        _tl.ResetWord();
+        isDead = false;
+        transform.position = originalpos;
+    }
+    #endregion
+
+    #region laserpuzzle
+    private void StartLaserControl()
+    {
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            transform.Rotate(0, -rotSpeed * Time.deltaTime, 0, Space.World);
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            transform.Rotate(0, rotSpeed * Time.deltaTime, 0, Space.World);
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            mounted = false;
+            player.enabled = true;
+            ResetLaser();
+        } else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            ResetLaser();
+            CastLaser(transform.position, transform.forward);
+        }
+    }
+
+    private void SetUpLaser()
+    {
+        laser.startColor = Color.red;
+        laser.endColor = Color.red;
+        laser.startWidth = 0.5f;
+        laser.endWidth = 0.5f;
+    }
+
+    private void ResetLaser()
+    {
+        laser.positionCount = 0;
+        laserPos.Clear();
+    }
+
+
+    private void CastLaser(Vector2 pos ,Vector2 dir)
+    {
+        RaycastHit2D hit = Physics2D.Raycast(pos, dir, LayerMask.GetMask("Obstacles", "Doors", "Reflectable", "Player"));
+        if (hit.collider != null) {
+            CheckHit(hit,dir);
+        } else
+        {
+            InitializeLaser();
+        }
+    }
+
+    private void InitializeLaser()
+    {
+        laser.SetPositions(laserPos.ToArray());
+    }
+
+    private void CheckHit(RaycastHit2D hit, Vector2 dir)
+    {
+        if (hit.collider.tag == "Reflectable")
+        {
+            Vector2 hitpoint = hit.point;
+            Vector2 reflecteddir = Vector2.Reflect(dir, hit.normal);
+
+            CastLaser(hitpoint, reflecteddir);
+
+        } else
+        {
+            laserPos.Add(hit.point);
+            InitializeLaser();
+        }
+
+    }
+    #endregion
 
     /**
      * Spawn itemwithtextbehaviours if any.
@@ -441,7 +610,26 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         lit = false;
     }
 
+    /**
+     * OnCollision Behaviour.
+     */
 
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject != null)
+        {
+            switch(data.item_type)
+            {
+                default:
+                    break;
+                case ItemWithTextData.ITEM_TYPE.BALL:
+                    Vector2 dir = Vector2.Reflect(lastvelocity.normalized, collision.contacts[0].normal);
+                    _rb.velocity = dir * Mathf.Max(lastvelocity.magnitude, 0f);
+                    break;
+            }
+
+        }
+    }
 
     //IEnumerator FadeOut()
     //{

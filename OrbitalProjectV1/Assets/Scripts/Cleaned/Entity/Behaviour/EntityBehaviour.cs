@@ -80,6 +80,7 @@ public abstract class EntityBehaviour : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
         //this.gameObject.SetActive(false);
+        Debug.Log("This is " + poolManager);
         poolManager.ReleaseObject(this);
     }
 

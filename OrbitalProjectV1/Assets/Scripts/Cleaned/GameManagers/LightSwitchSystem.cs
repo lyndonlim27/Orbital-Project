@@ -112,4 +112,18 @@ public class LightSwitchSystem : MonoBehaviour, Puzzle
         return currindex == sequence.Count;
     }
 
+    protected void ActivatePuzzle()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void Fulfill()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public bool IsActivated()
+    {
+        return activated;
+    }
 }

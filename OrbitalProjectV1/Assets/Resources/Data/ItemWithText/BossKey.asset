@@ -26,9 +26,20 @@ MonoBehaviour:
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 1
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 0
+  NotURP: 0
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios: []
   itemTextDatas: []
   ac_name: AC_Objects
   _trigger: keycollected
-  item_type: 0
+  item_type: 3
   secondarysprite: {fileID: 0}
   description: The ground starts quacking violently..
+  rangedData: {fileID: 0}

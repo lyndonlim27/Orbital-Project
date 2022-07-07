@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 //To take in input
 public class PuzzleInputManager : MonoBehaviour
@@ -11,6 +12,7 @@ public class PuzzleInputManager : MonoBehaviour
     [SerializeField] private Sprite[] letters;
     private GameObject AudioSystem;
     private Dictionary<KeyCode, AudioSource> audioSources;
+    private TextMeshProUGUI textInput;
     [SerializeField] private LetterSlotNoDnD[] letterSlots;
     private int currindex;
     private RoomManager anyRoom;
@@ -21,7 +23,7 @@ public class PuzzleInputManager : MonoBehaviour
     {
         InstantiateAudio();
         anyRoom = FindObjectOfType<RoomManager>();
-
+        textInput = transform.Find("Text").Find("InputText").GetComponent<TextMeshProUGUI>();
     }
 
     private void OnEnable()
@@ -71,13 +73,20 @@ public class PuzzleInputManager : MonoBehaviour
         
     }
 
+    public void SetUpText(string text)
+    {
+        textInput.text = text;
+    }
+
     private void ReceiveInput()
     {
+        LetterSlotNoDnD[] enabledslots = GetComponentsInChildren<LetterSlotNoDnD>(false);
+
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             audioSources[KeyCode.A].Play();
             currindex = Mathf.Max(0, currindex - 1);
-            letterSlots[currindex].ClearData();
+            enabledslots[currindex].ClearData();
             
 
         }
@@ -85,7 +94,7 @@ public class PuzzleInputManager : MonoBehaviour
         {
             if (Input.GetKeyDown((KeyCode)i))
             {
-                if (currindex >= letterSlots.Length)
+                if (currindex >= enabledslots.Length)
                 {
                     return;
                 }
@@ -93,7 +102,7 @@ public class PuzzleInputManager : MonoBehaviour
                 {
                     audioSources[KeyCode.A].Play();
                     int currnum = i - 48;
-                    letterSlots[currindex].SetData(letters[currnum], currnum);
+                    enabledslots[currindex].SetData(letters[currnum], currnum);
                     currindex++;
 
                 }

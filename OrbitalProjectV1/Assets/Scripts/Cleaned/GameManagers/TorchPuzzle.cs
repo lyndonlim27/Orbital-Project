@@ -117,6 +117,26 @@ public class TorchPuzzle : MonoBehaviour, Puzzle
 
     }
 
+    public void Next()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void Fulfill()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public bool IsComplete()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public bool IsActivated()
+    {
+        return activated;
+    }
+
     //public void RandomizePuzzlePlacement()
     //{
     //    foreach()

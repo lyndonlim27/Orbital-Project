@@ -90,6 +90,7 @@ public abstract class TextLogic : MonoBehaviour
      */
     protected virtual void Update()
     {
+        Debug.Log("Is it out of range?" + outOfRange());
         Textdisplayer.enabled = (!outOfRange()) && !parent.isDead;
         CheckInput();
     }

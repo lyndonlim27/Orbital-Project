@@ -17,11 +17,14 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     [SerializeField]
     private bool randomWalkRooms = false;
     private static List<Vector2Int> exits = new List<Vector2Int>();
-    private static List<Vector2Int> seen = new List<Vector2Int>();
+    private static HashSet<Vector2Int> seen = new HashSet<Vector2Int>();
+    private static Dictionary<BoundsInt, RoomManager> bound2Rooms = new Dictionary<BoundsInt, RoomManager>();
 
     [Header("Doors")]
     [SerializeField]
     private Sprite doorSprite;
+    [SerializeField]
+    private GameObject textCanvas;
 
     [Header("ItemWithText")]
     [SerializeField]
@@ -43,15 +46,21 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     [SerializeField]
     private GameObject[] puzzles;
 
+    [Header("PortalData")]
+    [SerializeField]
+    private ItemWithTextData portal;
+
+    private _GameManager gameManager;
     protected override void RunProceduralGeneration()
     {
+        gameManager = GameObject.FindObjectOfType<_GameManager>(true);
         CreateRooms();
     }
 
     private void CreateRooms()
     {
         var roomsList = ProceduralGenerationAlgorithms.BinarySpacePartitioning(new BoundsInt((Vector3Int)startPosition, new Vector3Int(dungeonWidth, dungeonHeight, 0)), minRoomWidth, minRoomHeight);
-
+        gameManager.roomManagers.Clear();
         HashSet<Vector2Int> floor = new HashSet<Vector2Int>();
 
         if (randomWalkRooms)
@@ -106,20 +115,31 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     //    return corridors;
     //}
 
+    /// <summary>
+    /// Connect Rooms
+    /// </summary>
+    /// <param name="rooms"></param>
+    /// <returns></returns>
     private HashSet<Vector2Int> ConnectRooms(List<BoundsInt> rooms)
     {
         HashSet<Vector2Int> corridors = new HashSet<Vector2Int>();
         var currentRoom = rooms[Random.Range(0, rooms.Count)];
+        List<BoundsInt> allrooms = new List<BoundsInt>(rooms);
         rooms.Remove(currentRoom);
-
         List<RoomManager> roomMgrs = new List<RoomManager>();
         int i = 1;
         GameObject RoomsContainer = new GameObject("RoomsContainer");
-        List<BoundsInt> allrooms = new List<BoundsInt>(rooms);
+        
         while (rooms.Count > 0)
         {
-            RoomManager roommgr = InstantiateRoom(currentRoom, i);
-            roommgr.gameObject.transform.SetParent(RoomsContainer.transform);
+            
+
+            RoomManager roommgr = InstantiateRoomTesting(currentRoom, i, RoomsContainer);
+            //if (i == 1)
+            //{
+            //    SpawnPlayer(currentRoom, roommgr);
+            //}
+            bound2Rooms[currentRoom] = roommgr;
             roomMgrs.Add(roommgr);
             i++;
             BoundsInt closest = FindClosestPointTo((Vector2Int)Vector3Int.RoundToInt(currentRoom.center), rooms);
@@ -129,30 +149,48 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
             currentRoom = closest;
             corridors.UnionWith(newCorridor);
         }
+
+        //for last room
+        if (rooms.Count == 0)
+        {
+            RoomManager roommgr = InstantiateRoomTesting(currentRoom, i, RoomsContainer);
+            roomMgrs.Add(roommgr);
+            i++;
+        }
         return corridors;
     }
 
     private void CreateDoorIfInsideAnyOtherRooms(BoundsInt currentRoom, BoundsInt closest, HashSet<Vector2Int> newCorridor, RoomManager currRoom, List<BoundsInt> allRooms)
     {
+        HashSet<BoundsInt> visited = new HashSet<BoundsInt>();
+        Debug.Log(allRooms.Count);
         foreach (Vector2Int vec in newCorridor)
         {
-
             foreach (BoundsInt room in allRooms)
             {
-                if (insideRoom(vec, room)) {
+                if (insideRoom(vec, room) /*&& !visited.Contains(room)*/) {
 
-                    if (vec.x == room.xMax ||
-                    vec.x == room.xMin ||
-                    vec.y == room.yMin ||
-                    vec.y == room.yMax)
+                    visited.Add(room);
+                    if (vec.x == room.xMax - offset||
+                    vec.x == room.xMin + offset||
+                    vec.y == room.yMin + offset||
+                    vec.y == room.yMax - offset)
                     {
+                        //string dir = CheckDoorDirection(vec,room);
+                        bool left = vec.x == room.xMin + offset && (vec.y != room.yMax || vec.y != room.yMin);
+                        bool down = vec.y == room.yMin + offset && (vec.x != room.xMax || vec.x != room.xMin);
                         if (!seen.Contains(vec))
                         {
                             seen.Add(vec);
                             exits.Add(vec);
-                            DoorBehaviour door = CreateDoor(vec);
-                            door.transform.SetParent(currRoom.transform);
+                            DoorBehaviour door = CreateDoor(vec,left,down);
+                            door.transform.SetParent(currRoom.transform,true);
                             currRoom.SettingExitDoor(door);
+                            var visitedroom = bound2Rooms.GetValueOrDefault(room, null);
+                            if (visitedroom != null)
+                            {
+                                visitedroom.SettingExitDoor(door);
+                            }
                             break;
                         }
                     }
@@ -161,9 +199,21 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         }       
     }
 
+    //private string CheckDoorDirection(Vector2Int vec, BoundsInt room)
+    //{
+    //    if (vec.x == room.xMin + offset)
+    //    {
+    //        return "left";
+    //    } else if (vec.y == room.yMin + offset)
+    //    {
+    //        return "down";
+    //    } else if (vec.x == room.xMin + offset && vec)
+        
+    //}
+
     private bool insideRoom(Vector2Int vec, BoundsInt closest)
     {
-        return closest.xMin <= vec.x && vec.x <= closest.xMax && closest.yMin <= vec.y && vec.y <= closest.yMax;
+        return closest.xMin + offset <= vec.x && vec.x <= closest.xMax - offset && closest.yMin + offset <= vec.y && vec.y <= closest.yMax - offset;
     }
 
     private HashSet<Vector2Int> CreateCorridor(BoundsInt currentRoomCenter, BoundsInt destination)
@@ -357,13 +407,39 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
     }
 
-    private RoomManager InstantiateRoom(BoundsInt room, int i)
+
+    private RoomManager InstantiateRoomTesting(BoundsInt room, int i, GameObject container)
+    {
+        GameObject go = new GameObject($"Room{i}");
+        go.transform.SetParent(container.transform, true);
+        go.transform.position = room.center;
+        go.layer = LayerMask.NameToLayer("spawnArea");
+        BoxCollider2D boxCollider2D = go.AddComponent<BoxCollider2D>();
+        boxCollider2D.isTrigger = true;
+        boxCollider2D.size = new Vector2(room.xMax - room.xMin - 7f, room.yMax - room.yMin - 7f);
+        RoomManager createdroom = go.AddComponent<TreasureRoom_Mgr>();
+        createdroom.SetUpRoomSize((Vector2Int) room.size);
+        createdroom.SetUpEntityDatas(RandomizeTreasureDatas());
+        createdroom.RoomIndex = i;
+        //20% chance
+        if (Random.Range(0,10) >= 8)
+        {
+            createdroom.SetUpPortal(portal);
+        }
+        
+        gameManager.roomManagers.Add(createdroom);
+        return createdroom;
+    }
+
+    private RoomManager InstantiateRoom(BoundsInt room, int i, GameObject container)
     {
         RoomManager.ROOMTYPE randRoomType = (RoomManager.ROOMTYPE) Random.Range(0, (int) RoomManager.ROOMTYPE.COUNT);
         GameObject go = new GameObject($"Room{i}");
+        go.transform.SetParent(container.transform,true);
+        go.transform.position = room.center;
         BoxCollider2D boxCollider2D = go.AddComponent<BoxCollider2D>();
         boxCollider2D.size = new Vector2(room.xMax - room.xMin - 7f, room.yMax - room.yMin - 7f);
-        go.transform.position = room.center;
+        
         RoomManager createdroom;
         switch (randRoomType)
         {
@@ -421,6 +497,11 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         
     }
 
+    /// <summary>
+    /// Get A Random Point in the Collider given
+    /// </summary>
+    /// <param name="bounds"></param>
+    /// <returns>Random Point</returns>
     public Vector2 GetRandomPointInCollider(BoundsInt bounds)
     {
         return new Vector2(
@@ -428,22 +509,78 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
             Random.Range(bounds.yMin, bounds.yMax));
     }
 
-    private DoorBehaviour CreateDoor(Vector2Int exit)
+    /// <summary>
+    /// Parent Method for creation of door.
+    /// </summary>
+    /// <param name="exit"></param>
+    /// <param name="left"></param>
+    /// <param name="down"></param>
+    /// <returns>Door</returns>
+    private DoorBehaviour CreateDoor(Vector2Int exit, bool left, bool down)
     {
 
         GameObject go = new GameObject("Door");
+        DoorBehaviour door = InstantiatingDoorDefaults(go);
+        SettingDoorData(door);
+        SettingDoorTransform(exit, left, down, go);
+        InstantiatingTextLogic(go);
+        return door;
+    }
+
+    /// <summary>
+    /// Instantiating default items before adding door behaviour.
+    /// </summary>
+    /// <param name="go"></param>
+    /// <returns></returns>
+    private DoorBehaviour InstantiatingDoorDefaults(GameObject go)
+    {
         go.AddComponent<Animator>();
         SpriteRenderer _spriteRenderer = go.AddComponent<SpriteRenderer>();
         _spriteRenderer.sortingOrder = 1;
         _spriteRenderer.sprite = doorSprite;
+        go.AddComponent<AudioSource>();
         BoxCollider2D col = go.AddComponent<BoxCollider2D>();
-        //col.offset = col.size / 2;
-        //col.autoTiling = true;
-        DoorBehaviour door = go.AddComponent<DoorBehaviour>();
-        go.transform.position = new Vector2(exit.x,exit.y);
-        go.transform.position += new Vector3(0.5f, 0.5f);
-        go.transform.localScale = new Vector2(0.6f, 0.6f);
-
+        DoorBehaviour door = go.AddComponent<BreakableDoorBehaviour>();
+        go.layer = LayerMask.NameToLayer("Doors");
         return door;
+    }
+
+    /// <summary>
+    /// Adding textLogic for breakable door behaviour.
+    /// </summary>
+    /// <param name="go"></param>
+    private void InstantiatingTextLogic(GameObject go)
+    {
+        GameObject Tcinstance = Instantiate(textCanvas);
+        Tcinstance.transform.SetParent(go.transform);
+        Tcinstance.transform.localPosition = new Vector3(0, 4f);
+    }
+
+
+    /// <summary>
+    /// Setting Up Door Transform.
+    /// </summary>
+    /// <param name="exit"></param>
+    /// <param name="left"></param>
+    /// <param name="down"></param>
+    /// <param name="go"></param>
+    private void SettingDoorTransform(Vector2Int exit, bool left, bool down, GameObject go)
+    {
+        go.transform.position = new Vector2(exit.x, exit.y);
+        go.transform.position += left ? new Vector3(-0.5f, 0.5f) : down ? new Vector3(0.5f, -0.5f) : new Vector3(0.5f, 0.5f);
+        go.transform.localScale = new Vector2(0.6f, 0.6f);
+    }
+
+    /// <summary>
+    /// Setting Up Door Scriptable Data.
+    /// </summary>
+    /// <param name="door"></param>
+    private void SettingDoorData(DoorBehaviour door)
+    {
+        DoorData doorData = ScriptableObject.CreateInstance<DoorData>();
+        doorData._name = "UNLOCK";
+        doorData.minDist = 4f;
+        doorData._type = EntityData.TYPE.DOOR;
+        door.SetEntityStats(doorData);
     }
 }

@@ -73,6 +73,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     [SerializeField] protected LayerMask layerMask;
     [SerializeField] protected Vector2 roomSize;
     [SerializeField] private Color _colour;
+    [SerializeField] protected ItemWithTextData portal;
     [SerializeField] protected AudioClip BossRoomAudio;
     [SerializeField] protected AudioClip BeforeBossRoomAudio;
 
@@ -315,12 +316,17 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         {
             for (int i = 0; i < doors.Length; i++)
             {
-                doors[i].unlocked = true;
+                if (doors[i] != null)
+                {
+                    doors[i].unlocked = true;
+                }
+                
 
 
             }
             DisableTrapBehaviour();
             pointToObjective();
+            SpawnPortal();
             if (textDescription.isActiveAndEnabled)
             {
                 textDescription.StartDescription("You hear a loud creak..");
@@ -428,6 +434,18 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
                 InstantiateEntity(entitydata);
             }
 
+        }
+    }
+
+    /**
+     * Spawn Portal at the end of the round.
+     */
+    public void SpawnPortal()
+    {
+        if (portal != null)
+        {
+            portal.pos = transform.position;
+            InstantiateEntity(portal);
         }
     }
 
@@ -903,7 +921,11 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         {
             foreach (DoorBehaviour door in doors)
             {
-                door.unlocked = false;
+                if (door != null)
+                {
+                    door.unlocked = false;
+                }
+                
             }
 
         }
@@ -918,7 +940,10 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
         foreach (DoorBehaviour door in doors)
         {
-            door.unlocked = true;
+            if (door != null)
+            {
+                door.unlocked = true;
+            }
         }
 
     }
@@ -1197,6 +1222,16 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     public void SetUpEntityDatas(EntityData[] entityDatas)
     {
         _EntityDatas = entityDatas;
+    }
+
+    public void SetUpRoomSize(Vector2Int size)
+    {
+        roomSize = size;
+    }
+
+    public void SetUpPortal(ItemWithTextData portalData)
+    {
+        portal = portalData;
     }
 
 }

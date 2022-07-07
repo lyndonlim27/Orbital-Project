@@ -23,6 +23,19 @@ public class UITextDescription : MonoBehaviour
     //    StopAllCoroutines();
     //}
 
+    /// <summary>
+    /// Show Text Indefinitely.
+    /// </summary>
+    /// <param name="text"></param>
+    public void ShowTextIndefinite(string text)
+    {
+        textDescription.text = text;
+    }
+
+    /// <summary>
+    /// Show text for a small amt of time.
+    /// </summary>
+    /// <param name="text"></param>
     public void StartDescription(string text)
     {
         
@@ -31,7 +44,7 @@ public class UITextDescription : MonoBehaviour
             
     }
 
-    private IEnumerator ShowDescription(string description)
+    public IEnumerator ShowDescription(string description)
     {
            
             textDescription.text = description;
