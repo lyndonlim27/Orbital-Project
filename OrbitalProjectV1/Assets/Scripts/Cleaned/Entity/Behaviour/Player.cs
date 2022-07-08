@@ -24,7 +24,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     private WeaponPickup _weaponManager;
     private DamageFlicker _flicker;
     private GoldCounter _goldCounter;
-    public int currGold { get; private set;}
+    public int currGold;
     private Animator buffanimator;
     private RuntimeAnimatorController healinganimator;
     private Vector2 savePoint;
@@ -452,5 +452,62 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         _currHealth = maxHealth;
         currMana = maxMana;
         currGold = gameData.currGold;
+    }
+
+    public bool IncreaseMaxHealth()
+    {
+        if(maxHealth < 150)
+        {
+            maxHealth += 5;
+            _healthBar.SetMaxHealth(maxHealth);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+    public bool IncreaseMaxMana()
+    {
+        if (maxMana < 150)
+        {
+            maxMana += 5;
+            _manaBar.SetMaxMana(maxMana);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
+    public bool IncreaseSpeed()
+    {
+        if (_moveSpeed < 8)
+        {
+            _moveSpeed += 0.3f;
+            _moveSpeed = Mathf.Round(_moveSpeed * 100.0f) * 0.01f;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public int GetMaxHealth()
+    {
+        return maxHealth;
+    }
+
+    public int GetMaxMana()
+    {
+        return maxMana;
+    }
+    public float GetSpeed()
+    {
+        return _moveSpeed;
     }
 }
