@@ -16,7 +16,6 @@ public class DataPersistenceManager : MonoBehaviour
     public bool LoggedIn { get; private set;}
     public bool loaded;
     public bool loadedData;
-    public string currScene;
     public bool saved;
     public GameData gameData { get; private set; }
 
@@ -287,7 +286,6 @@ public class DataPersistenceManager : MonoBehaviour
     private void OnDataSend(UpdateUserDataResult result)
     {
 
-        currScene = SceneManager.GetActiveScene().name;
         saved = true;
         Debug.Log("Saved");
     }
@@ -324,7 +322,6 @@ public class DataPersistenceManager : MonoBehaviour
     private IEnumerator LoadCoroutine(GetUserDataResult result)
     {
         GameData loadedData = JsonUtility.FromJson<GameData>(result.Data["Player"].Value);
-        currScene = loadedData.currScene;
         _dataPersistences = FindAllDataPersistenceObjects();
         foreach (IDataPersistence dataPersistence in _dataPersistences)
         {
