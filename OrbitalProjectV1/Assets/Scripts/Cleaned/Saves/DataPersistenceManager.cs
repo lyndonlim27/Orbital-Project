@@ -15,8 +15,10 @@ public class DataPersistenceManager : MonoBehaviour
     private TextMeshProUGUI _promptText;
     public bool LoggedIn { get; private set;}
     public bool loaded;
+    public bool loadedData;
     public string currScene;
     public bool saved;
+    public GameData gameData { get; private set; }
 
     [Header("for testing")]
     [SerializeField] private string _email;
@@ -47,6 +49,7 @@ public class DataPersistenceManager : MonoBehaviour
     {
         LoggedIn = false;
         loaded = false;
+        loadedData = false;
         saved = false;
     }
 
@@ -84,6 +87,13 @@ public class DataPersistenceManager : MonoBehaviour
     public void LoadGame()
     {
         PlayFabClientAPI.GetUserData(new GetUserDataRequest(), OnDataLoad, OnError);
+    }
+
+    [ContextMenu("Load Data Only")]
+    public void LoadData()
+    {
+        loadedData = false;
+        PlayFabClientAPI.GetUserData(new GetUserDataRequest(), LoadDataOnly, OnError);
     }
 
     [ContextMenu("Save")]
@@ -245,7 +255,7 @@ public class DataPersistenceManager : MonoBehaviour
         //_promptText.text = "Email already exists or invalid/ Password must be 6 characters long";
         Debug.Log(error.ToString());
 
-        if (error.ToString().Contains("exists"))
+        if (error.ToString().Contains("exists") || error.ToString().Contains("not available"))
         {
             _promptText.text = "Email already exists" + "\n";
         }
@@ -298,16 +308,14 @@ public class DataPersistenceManager : MonoBehaviour
 
     private void OnDataLoad(GetUserDataResult result)
     {
-        if (SceneManager.GetActiveScene().name == "MainMenu")
-        {
-            GameData loadedData = JsonUtility.FromJson<GameData>(result.Data["Player"].Value);
-            currScene = loadedData.currScene;
-        }
-        else
-        {
-            loaded = false;
-            StartCoroutine(LoadCoroutine(result));
-        }
+        loaded = false;
+        StartCoroutine(LoadCoroutine(result));
+    }
+
+    private void LoadDataOnly(GetUserDataResult result)
+    {
+        gameData = JsonUtility.FromJson<GameData>(result.Data["Player"].Value);
+        loadedData = true;
     }
 
     /*

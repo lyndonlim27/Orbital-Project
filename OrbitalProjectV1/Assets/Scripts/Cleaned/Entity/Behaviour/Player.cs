@@ -442,4 +442,16 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         _animator.speed = 1;
     }
+
+    public void SetStats(GameData gameData)
+    {
+        maxHealth = gameData.maxHealth;
+        maxMana = gameData.maxMana;
+        _currHealth = maxHealth;
+        currMana = gameData.currMana;
+        _healthBar.SetMaxHealth(gameData.maxHealth);
+        _manaBar.SetMaxMana(gameData.maxMana);
+        currGold = gameData.currGold;
+        _goldCounter.GoldUpdate();
+    }
 }
