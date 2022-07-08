@@ -409,7 +409,9 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         }
         _weaponManager.Swap(data.currWeapon);
         _healthBar.SetHealth(_currHealth);
+        _healthBar.SetMaxHealth(maxHealth);
         _manaBar.SetMana(currMana);
+        _manaBar.SetMaxMana(maxMana);
         _moveSpeed = data.moveSpeed;
         ranged = data.ranged;
     }
@@ -448,10 +450,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         maxHealth = gameData.maxHealth;
         maxMana = gameData.maxMana;
         _currHealth = maxHealth;
-        currMana = gameData.currMana;
-        _healthBar.SetMaxHealth(gameData.maxHealth);
-        _manaBar.SetMaxMana(gameData.maxMana);
+        currMana = maxMana;
         currGold = gameData.currGold;
-        _goldCounter.GoldUpdate();
     }
 }
