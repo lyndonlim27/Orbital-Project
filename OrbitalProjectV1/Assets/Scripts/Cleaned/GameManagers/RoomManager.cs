@@ -313,7 +313,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
      */
     protected virtual void RoomChecker()
     {
-        Debug.Log("Can we proceed? " + CanProceed());
+    
         if (CanProceed())
         {
             for (int i = 0; i < doors.Length; i++)

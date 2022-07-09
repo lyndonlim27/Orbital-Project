@@ -3,26 +3,136 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Linq;
 
 public class TilemapVisualizer : MonoBehaviour
 {
     [SerializeField]
-    private Tilemap floorTilemap, innerwallTilemap, outerwallTilemap;
+    private Tilemap floorTilemap, innerwallTilemap, outerwallTilemap, waterTilemap, dockTilemap, groundTilemap, decorativeTilemap, groundDecoTilemap;
+
+    [Header("Map Tiles")]
     [SerializeField]
     private TileBase floorTile, wallTop, wallSideRight, wallSiderLeft, wallBottom, wallFull, 
         wallInnerCornerDownLeft, wallInnerCornerDownRight, 
         wallDiagonalCornerDownRight, wallDiagonalCornerDownLeft, wallDiagonalCornerUpRight, wallDiagonalCornerUpLeft;
 
-    public void PaintFloorTiles(IEnumerable<Vector2Int> floorPositions)
+    [SerializeField]
+    private TileBase[] multifloorTiles;
+
+    [Header("Dock tiles")]
+    [SerializeField]
+    private TileBase horizontalplank, verticalplank, ldcornerplank, rdcornerplank,lucornerplank,rucornerplank;
+
+    [Header("Decorative Tiles")]
+    [SerializeField]
+    [Range(1, 100)]
+    private int decorationCount;
+
+    [SerializeField]
+    private List<TileBase> waterdecoratives;
+    [SerializeField]
+    private List<TileBase> landdecoratives;
+
+    [Header("Groundtiles")]
+    [SerializeField]
+    private List<TileBase> groundTiles;
+
+    [Header("Other decorative objects")]
+    [SerializeField]
+    private Sprite ship;
+
+    [SerializeField]
+    private GameObject ship1, ship2, ship3;
+
+    
+
+    [Header("Structures")]
+    [SerializeField]
+    private List<GameObject> frontstructures, sidestructures;
+
+
+
+    private Transform decorationContainer;
+
+    public void PaintFloorTiles(IEnumerable<Vector2Int> floorPositions, float groundOffset, List<BoundsInt> rooms)
     {
-        PaintTiles(floorPositions, floorTilemap, floorTile);
+
+        PaintGroundAndFloorTiles(floorPositions, floorTilemap, multifloorTiles[UnityEngine.Random.Range(0,multifloorTiles.Length)], groundOffset, rooms);
     }
 
     private void PaintTiles(IEnumerable<Vector2Int> positions, Tilemap tilemap, TileBase tile)
     {
         foreach (var position in positions)
         {
+
             PaintSingleTile(tilemap, tile, position, false);
+        }
+    }
+
+    private void PaintGroundAndFloorTiles(IEnumerable<Vector2Int> positions, Tilemap tilemap, TileBase tile, float offSet, List<BoundsInt> rooms)
+    {
+        foreach (var position in positions)
+        {
+            foreach (BoundsInt bounds in rooms)
+            {
+                //Debug.Log("room" + bounds);
+                if (insideRoom(position, bounds))
+                {
+                    var distancefromcenter = Vector3.Distance((Vector3Int)position, bounds.center);
+                    var radius = Vector3.Distance(bounds.max, bounds.center);
+                    var normalizeddist = distancefromcenter / radius;
+                    //Debug.Log("normalized distance = " + normalizeddist);
+                    PaintGround(offSet, position, normalizeddist);
+                    PaintGroundDecorations(offSet * 2f, position, normalizeddist);
+
+                }
+
+            }
+            PaintSingleTile(tilemap, tile, position, false);
+
+        }
+        
+    }
+
+    private void PaintGround(float groundOffset, Vector2Int position, float normalizeddist)
+    {
+        if (waterdecoratives.Count == 0)
+        {
+            Debug.LogError("No waterdecoratives added");
+        }
+        if (UnityEngine.Random.value + groundOffset >= normalizeddist)
+        {
+            PaintSingleTile(groundTilemap, groundTiles[UnityEngine.Random.Range(0, groundTiles.Count)], position, false);
+        }
+    }
+
+
+    private void PaintGroundDecorations(float decoOffset, Vector2Int position, float normalizeddist)
+    {
+        if (landdecoratives.Count == 0)
+        {
+            Debug.LogError("No landdecoratives added");
+        }
+
+        if (UnityEngine.Random.value + decoOffset <= normalizeddist)
+        {
+            PaintSingleTile(groundDecoTilemap, landdecoratives[UnityEngine.Random.Range(0, landdecoratives.Count)], position, false);
+        }
+    }
+
+    private bool insideRoom(Vector2Int vec, BoundsInt room)
+    {
+        return room.xMin <= vec.x && vec.x <= room.xMax && room.yMin <= vec.y && vec.y <= room.yMax;
+    }
+
+    
+
+    public void PaintCorridoorTiles(IEnumerable<Vector2Int> corridoor)
+    {
+        foreach (var position in corridoor)
+        {
+
+            PaintSingleTile(groundTilemap, groundTiles[UnityEngine.Random.Range(0, groundTiles.Count)], position, false);
         }
     }
 
@@ -80,6 +190,10 @@ public class TilemapVisualizer : MonoBehaviour
         floorTilemap.ClearAllTiles();
         innerwallTilemap.ClearAllTiles();
         outerwallTilemap.ClearAllTiles();
+        dockTilemap.ClearAllTiles();
+        groundTilemap.ClearAllTiles();
+        decorativeTilemap.ClearAllTiles();
+        groundDecoTilemap.ClearAllTiles();
         FindObjectOfType<EditorCode>().ClearAllRooms();
     }
 
@@ -139,4 +253,215 @@ public class TilemapVisualizer : MonoBehaviour
             }
             
     }
+
+    public void PaintDecorations()
+    {
+        List<Vector2Int> paintableTiles = new List<Vector2Int>();
+        var paintable = waterTilemap.cellBounds.allPositionsWithin;
+        foreach (var pos in paintable)
+        {
+            if (!(outerwallTilemap.HasTile(pos) || innerwallTilemap.HasTile(pos) || floorTilemap.HasTile(pos)))
+            {
+                paintableTiles.Add(new Vector2Int(pos.x, pos.y));
+            }
+
+        }
+        decorationContainer = new GameObject("DecorationContainer").transform;
+        PaintDockTiles(ref paintableTiles);
+        PaintDecorativeTiles(ref paintableTiles);
+        //SpawnSpriteDecoration(ref paintableTiles, ship, UnityEngine.Random.Range(10,25), decorationContainer);
+        SpawnGameObjectDecoration(ref paintableTiles, 3f, ship1, UnityEngine.Random.Range(10, 25), decorationContainer);
+        SpawnGameObjectDecoration(ref paintableTiles, 3f, ship2, UnityEngine.Random.Range(10, 25), decorationContainer);
+        SpawnGameObjectDecoration(ref paintableTiles, 5f, ship3, UnityEngine.Random.Range(10, 25), decorationContainer);
+        
+
+    }
+
+    private void SpawnSpriteDecoration(ref List<Vector2Int> paintableTiles, Sprite sprite, int offset, Transform decorationContainer)
+    {
+        int numofSpawns = (int)(waterTilemap.size.x / offset);
+
+        Vector2Int vec = Vector2Int.zero;
+        while (numofSpawns-- > 0)
+        {
+            int maxretries = 100;
+            do
+            {
+                vec = paintableTiles[UnityEngine.Random.Range(0, paintableTiles.Count)];
+                Debug.Log(vec);
+            } while (Physics2D.OverlapCircleAll(vec, sprite.bounds.size.x).Length > 0 && maxretries-- > 0);
+
+            if (vec != Vector2Int.zero && maxretries > 0)
+            {
+                GameObject shipgo = new GameObject("Ship");
+                shipgo.layer = LayerMask.NameToLayer("Obstacles");
+                shipgo.transform.position = new Vector2(vec.x, vec.y);
+                SpriteRenderer spr_ = shipgo.AddComponent<SpriteRenderer>();
+                spr_.sprite = ship;
+                shipgo.transform.SetParent(decorationContainer);
+                paintableTiles.Remove(vec);
+            }
+
+        }
+    }
+
+    private void SpawnGameObjectDecoration(ref List<Vector2Int> paintableTiles, float size, GameObject decorationObj, int offset, Transform decorationContainer)
+    {
+        int numofships = (int)(waterTilemap.size.x / offset);
+
+        Vector2Int vec = Vector2Int.zero;
+        while (numofships-- > 0)
+        {
+            int maxretries = 100;
+            do
+            {
+                vec = paintableTiles[UnityEngine.Random.Range(0, paintableTiles.Count)];
+            } while (Physics2D.OverlapCircleAll(vec, size).Length > 0 && maxretries-- > 0);
+
+            if (vec != Vector2Int.zero && maxretries > 0)
+            {
+                GameObject deco = Instantiate(decorationObj);
+                deco.layer = LayerMask.NameToLayer("Obstacles");
+                deco.transform.position = new Vector2(vec.x, vec.y);
+                deco.transform.SetParent(decorationContainer);
+                //deco.transform.rotation = Quaternion.Euler(0, 0, UnityEngine.Random.Range(0, 360));
+                paintableTiles.Remove(vec);
+            }
+
+        }
+
+    }
+
+    private void SpawnSingleGameObjectDecoration(Vector2Int position, float size, GameObject decorationObj, Transform decorationContainer)
+    {
+        if (!Physics2D.OverlapPoint(position))
+        {
+            GameObject deco = Instantiate(decorationObj);
+            deco.layer = LayerMask.NameToLayer("Obstacles");
+            deco.transform.position = new Vector2(position.x, position.y);
+            deco.transform.SetParent(decorationContainer);
+        }
+       
+
+    }
+
+    public void PaintDecorativeTiles(ref List<Vector2Int> paintableTiles)
+    {
+        int decorativePossible = Mathf.Min(paintableTiles.Count, decorationCount);
+        while (decorativePossible-- > 0)
+        {
+            var pos = paintableTiles[UnityEngine.Random.Range(0, paintableTiles.Count)];
+            paintableTiles.Remove(pos);
+            PaintSingleTile(decorativeTilemap, waterdecoratives[UnityEngine.Random.Range(0, waterdecoratives.Count)], pos, false);
+        }
+    }
+
+
+    public void PaintDockTiles(ref List<Vector2Int> paintableTiles)
+    {
+        int iterations = 25;
+        int walklength = 25;
+        for (int i = 0; i < iterations; i++)
+        {
+            Vector2Int startPos = paintableTiles[UnityEngine.Random.Range(0, paintableTiles.Count)];
+            RunSimpleRandomWalk(startPos, paintableTiles, walklength);
+            
+        }
+
+    }
+
+    private void RunSimpleRandomWalk(Vector2Int startPos, List<Vector2Int> randomPositions, int walklength)
+    {
+
+        string prevdirection = "";
+        Dictionary<Vector2Int, TileBase> dockPath = new Dictionary<Vector2Int, TileBase>();
+        GameObject selectedStructure = (prevdirection == "left" || prevdirection == "right") ? sidestructures[UnityEngine.Random.Range(0, sidestructures.Count)] : frontstructures[UnityEngine.Random.Range(0, frontstructures.Count)];
+        var _col = selectedStructure.GetComponent<Collider2D>();
+        while (walklength-- > 0)
+        {
+            Vector2Int left = (startPos += Vector2Int.left);
+            Vector2Int right = (startPos += Vector2Int.right);
+            Vector2Int up = (startPos += Vector2Int.up);
+            Vector2Int down = (startPos += Vector2Int.down);
+            randomPositions.Remove(startPos);
+            HashSet<Vector2Int> allDirs = new HashSet<Vector2Int>() { left, right, up, down };
+            allDirs.IntersectWith(randomPositions);
+            if (allDirs.Count == 0)
+            {
+                if (dockPath.Count >= 10)
+                {
+                    foreach (Vector2Int vec in dockPath.Keys)
+                    {
+                        PaintSingleTile(dockTilemap, dockPath[vec], vec, false);
+                    }
+
+                    SpawnStructureOnDir(startPos, prevdirection, ref selectedStructure, ref _col);
+                }
+                return;
+            }
+            else
+            {
+                Vector2Int selectedPos = allDirs.ElementAt(UnityEngine.Random.Range(0, allDirs.Count));
+                
+                if (prevdirection == "")
+                {
+                    SpawnSingleGameObjectDecoration(startPos, _col.bounds.size.magnitude, selectedStructure, decorationContainer);
+                }
+
+                else if (selectedPos == left && prevdirection == "left" || selectedPos == right && prevdirection == "right")
+                {
+                    dockPath[startPos] = horizontalplank;
+
+                }
+                else if (selectedPos == left && prevdirection == "up" || selectedPos == down && prevdirection == "right")
+                {
+                    dockPath[startPos] = rdcornerplank;
+
+                }
+                else if (selectedPos == left && prevdirection == "down" || selectedPos == up && prevdirection == "right")
+                {
+                    dockPath[startPos] = rucornerplank;
+
+                }
+                else if (selectedPos == right && prevdirection == "up" || selectedPos == down && prevdirection == "left")
+                {
+
+                    dockPath[startPos] = ldcornerplank;
+
+                }
+                else if (selectedPos == right && prevdirection == "down" || selectedPos == up && prevdirection == "left")
+                {
+                    dockPath[startPos] = lucornerplank;
+
+                }
+                else if (selectedPos == down && prevdirection == "down" || selectedPos == up && prevdirection == "up")
+                {
+                    dockPath[startPos] = verticalplank;
+                }
+                prevdirection = selectedPos == left ? "left" : selectedPos == right ? "right" : selectedPos == up ? "up" : "down";
+                startPos = selectedPos;
+
+            }
+
+        }
+
+        foreach (Vector2Int vec in dockPath.Keys)
+        {
+            PaintSingleTile(dockTilemap, dockPath[vec], vec, false);
+        }
+
+        SpawnStructureOnDir(startPos, prevdirection, ref selectedStructure, ref _col);
+
+    }
+
+    private void SpawnStructureOnDir(Vector2Int startPos, string prevdirection, ref GameObject selectedStructure, ref Collider2D _col)
+    {
+        if (prevdirection == "left" || prevdirection == "right")
+        {
+            selectedStructure = sidestructures[UnityEngine.Random.Range(0, sidestructures.Count)];
+            _col = selectedStructure.GetComponent<Collider2D>();
+        }
+        SpawnSingleGameObjectDecoration(startPos, _col.bounds.size.magnitude, selectedStructure, decorationContainer);
+    }
+
 }

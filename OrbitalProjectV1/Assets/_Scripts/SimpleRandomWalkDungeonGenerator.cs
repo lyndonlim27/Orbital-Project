@@ -10,13 +10,15 @@ public class SimpleRandomWalkDungeonGenerator : AbstractDungeonGenerator
 
     [SerializeField]
     protected SimpleRandomWalkSO randomWalkParameters;
-
+    [SerializeField]
+    [Range(0.1f, 1)]
+    private float noise = 0.8f;
 
     protected override void RunProceduralGeneration()
     {
         HashSet<Vector2Int> floorPositions = RunRandomWalk(randomWalkParameters, startPosition);
         tilemapVisualizer.Clear();
-        tilemapVisualizer.PaintFloorTiles(floorPositions);
+        tilemapVisualizer.PaintFloorTiles(floorPositions, noise, new List<BoundsInt>());
         WallGenerator.CreateWalls(floorPositions, tilemapVisualizer);
     }
 

@@ -12,10 +12,16 @@ public class EditorCode : MonoBehaviour
     {
         
         GameObject RoomContainer = GameObject.Find("RoomsContainer");
+        GameObject DecoContainer = GameObject.Find("DecorationContainer");
         if (RoomContainer != null)
         {
             DestroyImmediate(RoomContainer);
             
+        }
+
+        if (DecoContainer != null)
+        {
+            DestroyImmediate(DecoContainer);
         }
     }
 }

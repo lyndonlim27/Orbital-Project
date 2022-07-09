@@ -14,6 +14,11 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     [SerializeField]
     [Range(0,10)]
     private int offset = 1;
+
+    [SerializeField]
+    [Range(0, 1)]
+    private float groundoffSet = 0.2f;
+
     [SerializeField]
     private bool randomWalkRooms = false;
 
@@ -22,6 +27,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
     private static List<Vector2Int> exits = new List<Vector2Int>();
     private static HashSet<Vector2Int> seen = new HashSet<Vector2Int>();
+    private HashSet<Vector2Int> corridoor;
     private static Dictionary<BoundsInt, RoomManager> bound2Rooms = new Dictionary<BoundsInt, RoomManager>();
 
     [Header("Doors")]
@@ -90,7 +96,6 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         var roomsList = ProceduralGenerationAlgorithms.BinarySpacePartitioning(new BoundsInt((Vector3Int)startPosition, new Vector3Int(dungeonWidth, dungeonHeight, 0)), minRoomWidth, minRoomHeight);
         gameManager.roomManagers.Clear();
         HashSet<Vector2Int> floor = new HashSet<Vector2Int>();
-
         if (randomWalkRooms)
         {
             floor = CreateRoomsRandomly(roomsList);
@@ -102,8 +107,20 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
         HashSet<Vector2Int> corridors = ConnectRooms(roomsList);
         floor.UnionWith(corridors);
-        tilemapVisualizer.PaintFloorTiles(floor);
+        tilemapVisualizer.PaintFloorTiles(floor,groundoffSet,roomsList);
+        tilemapVisualizer.PaintCorridoorTiles(corridors);
+        
         WallGenerator.CreateWalls(floor, tilemapVisualizer);
+        tilemapVisualizer.PaintDecorations();
+    }
+
+    private void GetRoomCenters(List<BoundsInt> roomList, HashSet<Vector2Int> roomCenters)
+    {
+        foreach(BoundsInt bound in roomList)
+        {
+            roomCenters.Add((Vector2Int) Vector3Int.RoundToInt(bound.center));
+        }
+        
     }
 
     private HashSet<Vector2Int> CreateRoomsRandomly(List<BoundsInt> roomsList)
@@ -152,12 +169,12 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         HashSet<Vector2Int> corridors = new HashSet<Vector2Int>();
         var currentRoom = rooms[Random.Range(0, rooms.Count)];
         List<BoundsInt> allrooms = new List<BoundsInt>(rooms);
-        rooms.Remove(currentRoom);
+        allrooms.Remove(currentRoom);
         List<RoomManager> roomMgrs = new List<RoomManager>();
         int i = 1;
         GameObject RoomsContainer = new GameObject("RoomsContainer");
         
-        while (rooms.Count > 0)
+        while (allrooms.Count > 0)
         {
             
 
@@ -169,16 +186,17 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
             bound2Rooms[currentRoom] = roommgr;
             roomMgrs.Add(roommgr);
             i++;
-            BoundsInt closest = FindClosestPointTo((Vector2Int)Vector3Int.RoundToInt(currentRoom.center), rooms);
-            rooms.Remove(closest);
+            BoundsInt closest = FindClosestPointTo((Vector2Int)Vector3Int.RoundToInt(currentRoom.center), allrooms);
+            allrooms.Remove(closest);
             HashSet<Vector2Int> newCorridor = CreateCorridor(currentRoom, closest);
-            CreateDoorIfInsideAnyOtherRooms(currentRoom, closest, newCorridor, roommgr, allrooms);
+            
+            CreateDoorIfInsideAnyOtherRooms(currentRoom, closest, newCorridor, roommgr, rooms);
             currentRoom = closest;
             corridors.UnionWith(newCorridor);
         }
 
         //for last room
-        if (rooms.Count == 0)
+        if (allrooms.Count == 0)
         {
             RoomManager roommgr = InstantiateRoom(currentRoom, i, RoomsContainer);
             roomMgrs.Add(roommgr);
@@ -190,7 +208,6 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     private void CreateDoorIfInsideAnyOtherRooms(BoundsInt currentRoom, BoundsInt closest, HashSet<Vector2Int> newCorridor, RoomManager currRoom, List<BoundsInt> allRooms)
     {
         HashSet<BoundsInt> visited = new HashSet<BoundsInt>();
-        Debug.Log(allRooms.Count);
         foreach (Vector2Int vec in newCorridor)
         {
             foreach (BoundsInt room in allRooms)
@@ -208,7 +225,6 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
                         bool down = vec.y == room.yMin + offset && (vec.x != room.xMax || vec.x != room.xMin);
                         if (!seen.Contains(vec))
                         {
-                            Debug.Log("seen?" + seen.Count);
                             seen.Add(vec);
                             exits.Add(vec);
                             DoorBehaviour door = CreateDoor(vec,left,down);
@@ -480,9 +496,9 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
                 break;
             case RoomManager.ROOMTYPE.PUZZLE_ROOM:
                 createdroom = go.AddComponent<PuzzleRoom_Mgr>();
-                GameObject selectedpuzzle = RandomizePuzzle();
-                selectedpuzzle.transform.position = GetRandomPointInCollider(room);
-                selectedpuzzle.transform.SetParent(createdroom.transform);
+                //GameObject selectedpuzzle = RandomizePuzzle();
+                //selectedpuzzle.transform.position = GetRandomPointInCollider(room);
+                //selectedpuzzle.transform.SetParent(createdroom.transform);
                 break;
             case RoomManager.ROOMTYPE.FIGHTING_ROOM:
                 var fightroom = go.AddComponent<FightRoom_Mgr>();
@@ -529,14 +545,10 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
             if (i == 1)
             {
                 rand = Random.Range((int)(0.45f * rooms.Count), (int)(0.6f * rooms.Count));
-                Debug.Log("this is 2" + rand);
             } else
             {
                 rand = Random.Range((int)(0.8f * rooms.Count), rooms.Count);
-                Debug.Log("this is 1" + rand);
             }
-            Debug.Log(rooms.Count);
-            Debug.Log("Roomnum = " + rand);
             ChangeRoom(rand, rooms, RoomManager.ROOMTYPE.BOSSROOM);
             ChangeRoom(rand - 1, rooms, RoomManager.ROOMTYPE.ROOMBEFOREBOSS);
         }

@@ -12,6 +12,10 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     [Range(0.1f,1)]
     private float roomPercent = 0.8f;
 
+    [SerializeField]
+    [Range(0.1f, 1)]
+    private float noise = 0.6f;
+
     protected override void RunProceduralGeneration()
     {
         CorridorFirstGeneration();
@@ -32,7 +36,7 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
         floorPositions.UnionWith(roomPositions);
 
-        tilemapVisualizer.PaintFloorTiles(floorPositions);
+        tilemapVisualizer.PaintFloorTiles(floorPositions, noise, new List<BoundsInt>());
         WallGenerator.CreateWalls(floorPositions, tilemapVisualizer);
 
     }
