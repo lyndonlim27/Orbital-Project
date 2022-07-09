@@ -14,7 +14,6 @@ public class Shop : MenuBehaviour
     private bool Unlocked;
     private Player _player;
     private AudioSource _audioSource;
-    private StatsDisplay[] _statsDisplays;
 
 
     // Start is called before the first frame update
@@ -28,7 +27,6 @@ public class Shop : MenuBehaviour
         _promptText.text = "";
         _promptImage.gameObject.SetActive(false);
         _audioSource = GetComponent<AudioSource>();
-        _statsDisplays = FindObjectsOfType<StatsDisplay>(true);
     }
 
     // Update is called once per frame
@@ -200,90 +198,5 @@ public class Shop : MenuBehaviour
     {
         base.Active();
         _promptImage.gameObject.SetActive(false);
-        this.transform.GetComponentInChildren<ShopMainMenu>(true).Active();
     }
-
-    public void AddMaxHealth()
-    {
-        if(_player.currGold < 20)
-        {
-            _promptText.text = "Not enough gold";
-        }
-        else if (_player.IncreaseMaxHealth())
-        {
-            _player.UseGold(20);
-            _promptText.text = "Max health increased";
-            foreach(StatsDisplay statsDisplay in _statsDisplays)
-            {
-                if(statsDisplay._statsType == StatsDisplay.STATS_TYPE.MAX_HEALTH)
-                {
-                    statsDisplay.UpdateStatsText();
-                }
-            }
-        }
-        else
-        {
-            _promptText.text = "Max health limit reached";
-        }
-        StartCoroutine(UpdateText());
-    }
-
-    public void AddMaxMana()
-    {
-        if (_player.currGold < 20)
-        {
-            _promptText.text = "Not enough gold";
-        }
-        else if (_player.IncreaseMaxMana())
-        {
-            _player.UseGold(20);
-            _promptText.text = "Max mana increased";
-            foreach (StatsDisplay statsDisplay in _statsDisplays)
-            {
-                if (statsDisplay._statsType == StatsDisplay.STATS_TYPE.MAX_MANA)
-                {
-                    statsDisplay.UpdateStatsText();
-                }
-            }
-        }
-        else
-        {
-            _promptText.text = "Max mana limit reached";
-        }
-        StartCoroutine(UpdateText());
-    }
-
-    public void AddMaxSpeed()
-    {
-        if (_player.currGold < 20)
-        {
-            _promptText.text = "Not enough gold";
-        }
-        else if (_player.IncreaseSpeed())
-        {
-            _player.UseGold(20);
-            _promptText.text = "Speed increased";
-            foreach (StatsDisplay statsDisplay in _statsDisplays)
-            {
-                if (statsDisplay._statsType == StatsDisplay.STATS_TYPE.MAX_SPEED)
-                {
-                    statsDisplay.UpdateStatsText();
-                }
-            }
-        }
-        else
-        {
-            _promptText.text = "Speed limit reached";
-        }
-        StartCoroutine(UpdateText());
-    }
-
-    public override void Inactive()
-    {
-        base.Inactive();
-        this.transform.GetComponentInChildren<SkillTreeMenu>(true).Inactive();
-        this.transform.GetComponentInChildren<StatsMenu>(true).Inactive();
-    }
-
-
 }

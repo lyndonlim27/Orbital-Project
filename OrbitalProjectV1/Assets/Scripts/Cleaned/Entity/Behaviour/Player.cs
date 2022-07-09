@@ -24,7 +24,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     private WeaponPickup _weaponManager;
     private DamageFlicker _flicker;
     private GoldCounter _goldCounter;
-    public int currGold;
+    public int currGold { get; private set;}
     private Animator buffanimator;
     private RuntimeAnimatorController healinganimator;
     private Vector2 savePoint;
@@ -409,9 +409,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         }
         _weaponManager.Swap(data.currWeapon);
         _healthBar.SetHealth(_currHealth);
-        _healthBar.SetMaxHealth(maxHealth);
         _manaBar.SetMana(currMana);
-        _manaBar.SetMaxMana(maxMana);
         _moveSpeed = data.moveSpeed;
         ranged = data.ranged;
     }
@@ -443,71 +441,5 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     {
         _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         _animator.speed = 1;
-    }
-
-    public void SetStats(GameData gameData)
-    {
-        maxHealth = gameData.maxHealth;
-        maxMana = gameData.maxMana;
-        _currHealth = maxHealth;
-        currMana = maxMana;
-        currGold = gameData.currGold;
-    }
-
-    public bool IncreaseMaxHealth()
-    {
-        if(maxHealth < 150)
-        {
-            maxHealth += 5;
-            _healthBar.SetMaxHealth(maxHealth);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-
-    }
-    public bool IncreaseMaxMana()
-    {
-        if (maxMana < 150)
-        {
-            maxMana += 5;
-            _manaBar.SetMaxMana(maxMana);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-
-    }
-
-    public bool IncreaseSpeed()
-    {
-        if (_moveSpeed < 8)
-        {
-            _moveSpeed += 0.3f;
-            _moveSpeed = Mathf.Round(_moveSpeed * 100.0f) * 0.01f;
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public int GetMaxHealth()
-    {
-        return maxHealth;
-    }
-
-    public int GetMaxMana()
-    {
-        return maxMana;
-    }
-    public float GetSpeed()
-    {
-        return _moveSpeed;
     }
 }

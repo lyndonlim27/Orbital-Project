@@ -18,9 +18,9 @@ public class ManaBar : MonoBehaviour
     public void SetMaxMana(int mana)
     {
         slider.maxValue = mana;
-       // slider.value = mana;
+        slider.value = mana;
         fill.color = gradient.Evaluate(1f);
-        percentage.text = slider.value.ToString() + " MP";
+        percentage.text = mana.ToString() + " MP";
     }
 
     /**

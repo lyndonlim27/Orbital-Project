@@ -2,12 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
-using UnityEngine.InputSystem;
 
 public class ProjConExit : MonoBehaviour
 {
     private Player _player;
-    private WeaponPickup _weaponManager;
     private CinemachineVirtualCamera _camera;
     private Ship ship;
 
@@ -16,8 +14,6 @@ public class ProjConExit : MonoBehaviour
     {
         _player = FindObjectOfType<Player>();
         _camera = FindObjectOfType<CinemachineVirtualCamera>();
-        _weaponManager = FindObjectOfType<WeaponPickup>();
-        
         ship = FindObjectOfType<Ship>(true);
     }
 
@@ -31,9 +27,7 @@ public class ProjConExit : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            //_player.gameObject.SetActive(false);
-            _player.GetComponent<SpriteRenderer>().enabled = false;
-            _weaponManager.ActiveWeapon().GetComponent<SpriteRenderer>().enabled = false;
+            _player.gameObject.SetActive(false);
             _camera.Follow = ship.transform;
             ship.enabled = true;
             ship.GetComponent<AudioSource>().enabled = true;
