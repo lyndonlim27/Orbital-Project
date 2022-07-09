@@ -27,10 +27,11 @@ public class LoadScene : MonoBehaviour
         _dataManager = FindObjectOfType<DataPersistenceManager>();
         _canvas = GetComponentInChildren<Canvas>(true);
         DontDestroyOnLoad(this);
-
+        
 
 
     }
+    
 
     public void LoadSceneFromData()
     {
@@ -41,9 +42,14 @@ public class LoadScene : MonoBehaviour
     {
         //if (_dataManager.currScene != SceneManager.GetActiveScene().ToString())
         //{
-            
+
         //}
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Assets/Scenes/" + _dataManager.currScene + ".unity");
+        _dataManager.LoadData();
+        while (!_dataManager.loadedData)
+        {
+            yield return null;
+        }
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Assets/Scenes/" + _dataManager.gameData.currScene + ".unity");
 
         // Wait until the asynchronous scene fully loads
         while (!asyncLoad.isDone)
@@ -68,6 +74,11 @@ public class LoadScene : MonoBehaviour
     }
     private IEnumerator Next(string sceneName)
     {
+        _dataManager.SaveGame();
+        while (!_dataManager.saved)
+        {
+            yield return null;
+        }
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Assets/Scenes/" + sceneName + ".unity");
 
         // Wait until the asynchronous scene fully loads
@@ -96,8 +107,12 @@ public class LoadScene : MonoBehaviour
         Player player = FindObjectOfType<Player>(true);
         if (player != null)
         {
-            player.AddHealth(1000);
-            player.AddMana(1000);
+            _dataManager.LoadData();
+            while (!_dataManager.loadedData)
+            {
+                yield return null;
+            }
+            player.SetStats(_dataManager.gameData);
         }
 
         yield return null;
