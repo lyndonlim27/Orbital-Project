@@ -27,6 +27,11 @@ public class DoorBehaviour : EntityBehaviour
         audioSource.maxDistance = 20f;
         audioSource.pitch = 0.6f;
         audioSource.volume = 0.05f;
+
+        if (Physics2D.OverlapCircle(transform.position,0.01f, LayerMask.GetMask("Obstacles")))
+        {
+            Destroy(this.gameObject);
+        }
     }
 
     protected virtual void Start()

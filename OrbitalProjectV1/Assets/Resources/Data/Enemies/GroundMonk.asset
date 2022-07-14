@@ -15,22 +15,40 @@ MonoBehaviour:
   _name: GroundMonk
   minDist: 10
   sprite: {fileID: 1543274296, guid: a6d158557117a48a788e8f8b7131641a, type: 3}
+  pattern: 0
   condition: 0
   _type: 5
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
   random: 1
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 5
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 1
+  NotURP: 0
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios: []
   itemTextDatas: []
   ac_name: AC_GroudMonk
   _trigger: 
-  isAWeapon: 0
+  item_type: 0
+  secondarysprite: {fileID: 0}
+  description: 
+  rangedData: {fileID: 0}
   damageValue: 1
-  moveSpeed: 1
-  chaseSpeed: 1
+  moveSpeed: 5
+  chaseSpeed: 4
   attackRange: 1
   attackSpeed: 1
+  maxDist: 0
   meleetriggers:
   - Melee1
   - Melee2
@@ -42,6 +60,17 @@ MonoBehaviour:
   - Dash
   - Def
   rangedtriggers: []
+  dashattacks: []
+  rangedDatas: []
+  bossdamageprops: []
+  bossSummonprops: []
+  bossdefenceprops: []
   animatorname: AC_GroundMonk
   words: 100
   rangedcooldown: 15
+  stage2: 0
+  healStage: 0
+  enragedColor: {r: 0, g: 0, b: 0, a: 0}
+  dashoffset: 0
+  jumpheight: 0
+  body: 0

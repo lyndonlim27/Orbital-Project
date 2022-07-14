@@ -16,6 +16,7 @@ public class LightSwitchSystem : MonoBehaviour, Puzzle
     [SerializeField] PuzzleBox puzzleBox;
     private UITextDescription uITextDescription;
     public int numofCandles;
+    private RoomManager currroom;
     public bool incoroutine { get; private set; }
 
     private void Awake()
@@ -35,6 +36,16 @@ public class LightSwitchSystem : MonoBehaviour, Puzzle
         {
             light2D.GetComponent<Animator>().SetBool("candlelights",true);
         }
+    }
+
+    public void RandomizeCandlesPos()
+    {
+
+        candles[0].transform.position = currroom.transform.position + new Vector3(-10, 5);
+        candles[1].transform.position = currroom.transform.position + new Vector3(-5, 5);
+        candles[2].transform.position = currroom.transform.position + new Vector3(5, 5);
+        candles[3].transform.position = currroom.transform.position + new Vector3(10, 5);
+
     }
 
     public void ActivatePuzzle(int _numseqs)
@@ -73,7 +84,7 @@ public class LightSwitchSystem : MonoBehaviour, Puzzle
         {
             candles[i].intensity = 2f;
             Color c = candles[i].color;
-            candles[i].color = Color.red;
+            candles[i].color = Color.magenta;
             yield return new WaitForSeconds(1.5f);
             candles[i].intensity = 1f;
             candles[i].color = c;
@@ -109,7 +120,7 @@ public class LightSwitchSystem : MonoBehaviour, Puzzle
 
     public bool IsComplete()
     {
-        return currindex == sequence.Count;
+        return activated && currindex == sequence.Count;
     }
 
     protected void ActivatePuzzle()
@@ -125,5 +136,10 @@ public class LightSwitchSystem : MonoBehaviour, Puzzle
     public bool IsActivated()
     {
         return activated;
+    }
+
+    public void SetCurrentRoom(RoomManager room)
+    {
+        currroom = room;
     }
 }

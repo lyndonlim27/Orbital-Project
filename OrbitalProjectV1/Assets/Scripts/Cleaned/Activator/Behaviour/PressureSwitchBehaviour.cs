@@ -34,12 +34,13 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
     /** OnEnable method.
      *  To intialize more specific entity behaviours for ObjectPooling.
      */
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         ResettingColor();
         SettingUpColliders();
         CheckForURP();
-        spriteRenderer.sortingOrder = 0;
+        spriteRenderer.sortingOrder = 1;
     }
 
     /**

@@ -20,6 +20,11 @@ public class Weapon : EntityBehaviour
     void Start()
     {
         _animator = GetComponent<Animator>();
+        if (_animator != null)
+        {
+            _animator.keepAnimatorControllerStateOnDisable = false;
+        }
+        
         poolManager = FindObjectOfType<PoolManager>();
     }
 
@@ -81,6 +86,23 @@ public class Weapon : EntityBehaviour
     public override void Defeated()
     {
 
+    }
+
+    private void Update()
+    {
+        FlipFace();
+
+    }
+
+    private void FlipFace()
+    {
+        if (_animator != null)
+        {
+            spriteRenderer.flipX = _animator.GetFloat("Horizontal") < 0;
+            spriteRenderer.sortingOrder = _animator.GetFloat("Vertical") >= 1f ? 1 : 3;
+        }
+
+        
     }
 
     public override EntityData GetData()

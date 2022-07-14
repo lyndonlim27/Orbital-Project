@@ -30,6 +30,7 @@ public class GameData
     public string currScene;
     public bool ranged;
     public bool alreadyActive;
+    public int currentSeed;
 
     /*
      * Room Data

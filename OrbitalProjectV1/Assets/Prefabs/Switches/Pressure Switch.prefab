@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 796981598516887651}
   - component: {fileID: 8212455274303573591}
   - component: {fileID: 2098085031516162915}
+  - component: {fileID: 6863172292456111359}
   m_Layer: 0
   m_Name: Pressure Switch
   m_TagString: Untagged
@@ -116,14 +117,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9823cd341a7d341d1aee58845c6818b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentRoom: {fileID: 0}
+  audioSource: {fileID: 0}
+  inAudio: 0
+  footStep: {fileID: 0}
   isDead: 0
   inAnimation: 0
+  Debuffed: 0
   data: {fileID: 11400000, guid: 5c2af697b66464728ac04ce0287fc693, type: 2}
   layerMask:
     serializedVersion: 2
     m_Bits: 1344
   animator: {fileID: 0}
   detectionScript: {fileID: 0}
+  audioClip: {fileID: 0}
 --- !u!114 &8212455274303573591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -239,3 +246,23 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &6863172292456111359
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 796981598516887654}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

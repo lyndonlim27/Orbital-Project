@@ -15,35 +15,59 @@ MonoBehaviour:
   _name: BladeKeeper
   minDist: 10
   sprite: {fileID: 1215379371, guid: 1c5c29ed0aa944493adcb17a7cf12dcf, type: 3}
+  pattern: 0
   condition: 0
   _type: 5
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
   random: 1
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 5
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 0
+  NotURP: 0
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios: []
   itemTextDatas: []
   ac_name: AC_BladeKeeper
   _trigger: 
-  isAWeapon: 0
+  item_type: 0
+  secondarysprite: {fileID: 0}
+  description: 
+  rangedData: {fileID: 0}
   damageValue: 1
   moveSpeed: 1
-  chaseSpeed: 1
-  attackRange: 1
+  chaseSpeed: 4
+  attackRange: 5
   attackSpeed: 1
+  maxDist: 100
   meleetriggers:
-  - Melee1
-  - Melee2
-  - Melee3
-  - Melee4
   - Melee5
   defends:
   - Jump
   - Dash
   - Def
-  rangedtriggers:
-  - Cast
-  - Ranged
+  rangedtriggers: []
+  dashattacks: []
+  rangedDatas:
+  - {fileID: 11400000, guid: e6c82dc2f078742e09f53515f9205d9e, type: 2}
+  bossdamageprops: []
+  bossSummonprops: []
+  bossdefenceprops: []
   animatorname: AC_BladeKeeper
   words: 10
   rangedcooldown: 15
+  stage2: 0
+  healStage: 0
+  enragedColor: {r: 0, g: 0, b: 0, a: 0}
+  dashoffset: 0
+  jumpheight: 0
+  body: 1

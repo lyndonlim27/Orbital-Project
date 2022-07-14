@@ -42,7 +42,7 @@ public class PuzzleBox : ItemWithTextBehaviour
         puzzleTl = GetComponentInChildren<TextLogic>();
         puzzleTl.enabled = false;
         rand = UnityEngine.Random.Range(1, 5);
-        currlevel = 1;
+        currlevel = 0;
         lightSwitchSystem.ActivatePuzzle(rand);
         StartCoroutine(lightSwitchSystem.StartLightShow());
     }
@@ -62,12 +62,12 @@ public class PuzzleBox : ItemWithTextBehaviour
             if (CheckInput())
             {
                 lightSwitchSystem.Next();
+                currlevel++;
                 
             }
             else
             {
                 uITextDescription.StartDescription($"Level {currlevel}/{rand} completed");
-                currlevel++;
                 StartCoroutine(lightSwitchSystem.StartLightShow());
             }
         }
@@ -132,6 +132,11 @@ public class PuzzleBox : ItemWithTextBehaviour
 
         
         
+    }
+
+    public void SetLightSwitchSystem(LightSwitchSystem _lightSwitchSystem)
+    {
+        lightSwitchSystem = _lightSwitchSystem;
     }
 
 }

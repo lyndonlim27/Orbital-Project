@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10a1c4479d5574dac908b62726c971cb, type: 3}
   m_Name: LaserDrop
   m_EditorClassIdentifier: 
-  _name: Cannon
+  _name: Laser
   minDist: 5
-  sprite: {fileID: 21300000, guid: 67ca0236004ce47bcad724ef37b3bc22, type: 3}
+  sprite: {fileID: 21300000, guid: 7f9bf0f64f7d441169da9c02af1581b0, type: 3}
   pattern: 0
-  condition: 1
+  condition: 0
   _type: 4
   multispawns: 0
   startPos: {x: 0, y: 0}
@@ -41,5 +41,6 @@ MonoBehaviour:
   _trigger: 
   item_type: 1
   secondarysprite: {fileID: 0}
+  itemSprites: []
   description: 
   rangedData: {fileID: 11400000, guid: 75398dae7f8d342ebb59bb380f0d9c65, type: 2}

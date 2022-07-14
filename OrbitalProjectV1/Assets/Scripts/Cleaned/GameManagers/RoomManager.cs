@@ -421,6 +421,30 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     }
 
     /**
+     * Get A random point where no overlap between obstacles.
+     */
+    public Vector2 GetRandomObjectPoint()
+    {
+        Vector2 randomPoint;
+        do
+        {
+            //AABB axis - 4 possible bounds, top left, top right, bl, br
+            //tl = min.x, max.y;
+            //bl = min.x, min.y;
+            //tr = max.x, max.y;
+            //br = max.x, min.y;
+            //anywhere within these 4 bounds are possible pts;
+            randomPoint = new Vector2(
+            Random.Range(areaminBound.x + 4f, areamaxBound.x - 4f),
+            Random.Range(areaminBound.y + 4f, areamaxBound.y - 4f));
+        } while (Physics2D.OverlapCircle(randomPoint,2,LayerMask.GetMask("Obstacles"))); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
+        //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
+        return randomPoint;
+    }
+
+
+
+    /**
      * SpawnObject inside the room.
      */
     public void SpawnObject(EntityData entitydata)
@@ -672,7 +696,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     private void SettingDefaults(EntityData data, Vector2 pos, EntityBehaviour entity)
     {
         entity.SetEntityStats(data);
-        entity.GetComponent<SpriteRenderer>().sprite = data.sprite;
+        //entity.GetComponent<SpriteRenderer>().sprite = data.sprite;
         entity.transform.position = pos;
         entity.transform.localScale = new Vector2(data.scale, data.scale);
         entity.SetCurrentRoom(this);
@@ -1040,7 +1064,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     /**
      * PressurePlate Checker.
      */
-    protected void PressurePlateCheck()
+    public void PressurePlateCheck()
     {
         if (activated)
         {
@@ -1238,6 +1262,11 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     public void SetUpRoomSize(Vector2Int size)
     {
         roomSize = size;
+    }
+
+    public Vector2Int GetRoomSize()
+    {
+        return (Vector2Int) new Vector2Int((int) roomSize.x, (int) roomSize.y);
     }
 
     public void SetUpPortal(ItemWithTextData portalData)

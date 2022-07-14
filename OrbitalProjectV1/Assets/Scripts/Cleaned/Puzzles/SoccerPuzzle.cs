@@ -13,6 +13,7 @@ public class SoccerPuzzle : MonoBehaviour, Puzzle
     [SerializeField] PressureSwitchBehaviour target;
     ItemWithTextData balldata;
     ItemWithTextBehaviour ball;
+    Animator targetAnimator;
     int dir;
     bool stop;
     Transform targetTransform;
@@ -43,6 +44,8 @@ public class SoccerPuzzle : MonoBehaviour, Puzzle
         if (IsComplete())
         {
             stop = true;
+            targetAnimator.SetTrigger("Death");
+            this.enabled = false;
 
         }
     }
@@ -70,6 +73,8 @@ public class SoccerPuzzle : MonoBehaviour, Puzzle
         target.layerMask = LayerMask.GetMask("Ball");
         targetTransform = target.transform;
         target.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 1;
+        targetAnimator = target.GetComponent<Animator>();
+        targetAnimator.runtimeAnimatorController = Resources.Load("Animations/AnimatorControllers/AC_Dummy") as RuntimeAnimatorController;
 
     }
 
@@ -79,7 +84,7 @@ public class SoccerPuzzle : MonoBehaviour, Puzzle
         balldata.pos = currentRoom.transform.position;
         currentRoom.SpawnObject(balldata);
         ball = GetComponentInChildren<ItemWithTextBehaviour>();
-
+    
     }
 
     private void SpawnGoal()

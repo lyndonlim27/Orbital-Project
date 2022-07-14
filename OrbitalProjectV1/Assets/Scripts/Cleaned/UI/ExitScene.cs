@@ -34,6 +34,7 @@ public class ExitScene : MonoBehaviour
         {
             videoScreen.enabled = true;
             videoPlayer.Play();
+            Debug.Log(videoPlayer.clip.length);
             yield return new WaitForSeconds((float)videoPlayer.clip.length);
             videoPlayer.enabled = false;
             videoScreen.enabled = false;

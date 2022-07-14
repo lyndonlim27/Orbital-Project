@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7651375188045444151
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7651375188045444153}
+  - component: {fileID: 7651375188045444150}
+  m_Layer: 0
+  m_Name: RoomsFirstDungeonGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7651375188045444153
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7651375188045444151}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 16.715977, y: 26.93081, z: -1649.9796}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7651375188045444150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7651375188045444151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7349ff1a761c474b9fcaf52da55bf12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tilemapVisualizer: {fileID: 7605462181115744555, guid: b9a0c58b5b4fb4e00b1f9ef1456c9c3b, type: 3}
+  startPosition: {x: 0, y: 0}
+  randomWalkParameters: {fileID: 11400000, guid: 9853dded8cd83af488e7322a804d3d77, type: 2}
+  noise: 0.8
+  minRoomWidth: 35
+  minRoomHeight: 35
+  dungeonWidth: 400
+  dungeonHeight: 400
+  offset: 2
+  groundoffSet: 0.2
+  randomWalkRooms: 0
+  currentSeed: -1
+  doorSprite: {fileID: -1839710776, guid: 40cc76fdfa03c415ea08bcd8fa3ec591, type: 3}
+  textCanvas: {fileID: 1120695536501485629, guid: 7eba5c53e2c784c5a8ec311ea163c078, type: 3}
+  itemWithTextDatas:
+  - {fileID: 11400000, guid: b31d6c83c7c524a92a227e60a3454383, type: 2}
+  enemyDatas:
+  - {fileID: 11400000, guid: 97f7cb48e946b40f7812bd1a12e17289, type: 2}
+  - {fileID: 11400000, guid: f54f151504dda4457906ee9df5a233ca, type: 2}
+  - {fileID: 11400000, guid: 73f722faef2ce453e8d41437bb6b2083, type: 2}
+  - {fileID: 11400000, guid: e2ba91a99bfb84c05b594010d3bf8927, type: 2}
+  trapDatas:
+  - {fileID: 11400000, guid: 017e781672e1f4136868968dcef0a08c, type: 2}
+  - {fileID: 11400000, guid: 10da6f78e4022487abdecf35cac55236, type: 2}
+  switchDatas:
+  - {fileID: 11400000, guid: dd447d5d8e21c497aa6d43248c98d182, type: 2}
+  puzzles:
+  - {fileID: 1606033075419536145, guid: f2a7e2ac35ea84ca5931e451e7cc90a8, type: 3}
+  - {fileID: 4225550453536326643, guid: d3d5a7012d1634a88be631d6b912ddc5, type: 3}
+  portal: {fileID: 11400000, guid: 25daae17582e24df1897d46fb17f9548, type: 2}

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TorchPuzzleRoom_Mgr : RoomManager
+public class    TorchPuzzleRoom_Mgr : RoomManager
 {
     private TorchPuzzle torchPuzzle;
     protected override void Awake()

@@ -25,6 +25,7 @@ public class ItemWithTextData : EntityData
     }
     public ITEM_TYPE item_type;
     public Sprite secondarysprite;
+    public Sprite[] itemSprites;
     public string description;
     public RangedData rangedData;
 

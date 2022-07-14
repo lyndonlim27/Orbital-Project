@@ -49,40 +49,42 @@ public class RangedState : StateClass
                 
                 List<string> rangedtriggers = enemy.enemyData.rangedtriggers;
                 List<string> dashattacks = enemy.enemyData.dashattacks;
-                if (dashattacks.Count == 0)
-                {
-                    int random = Random.Range(0, enemy.enemyData.rangedtriggers.Count);
+                int random = Random.Range(0, enemy.enemyData.rangedtriggers.Count);
 
-                    enemy.FlipFace(enemy.player.transform.position);
-                    enemy.animator.SetTrigger(rangedtriggers[random]);
-                } else
-                {
-                    int r1 = 1;
-                   
-                    if (r1 == 1 && enemy.CheckInsideRoom())
-                    {
-                        //enemy.Dodge();
-                        int random = Random.Range(0, enemy.enemyData.dashattacks.Count);
-                        enemy.FlipFace(enemy.player.transform.position);
-                        enemy.animator.SetTrigger(dashattacks[random]);
+                enemy.FlipFace(enemy.player.transform.position);
+                enemy.animator.SetTrigger(rangedtriggers[random]);
+                enemy.inAnimation = true;
+                //if (dashattacks.Count == 0)
+                //{
+                //    int random = Random.Range(0, enemy.enemyData.rangedtriggers.Count);
 
-                    }
-                    else
-                    {
-                        int random = Random.Range(0, enemy.enemyData.rangedtriggers.Count);
-                        enemy.FlipFace(enemy.player.transform.position);
-                        enemy.animator.SetTrigger(rangedtriggers[random]);
+                //    enemy.FlipFace(enemy.player.transform.position);
+                //    enemy.animator.SetTrigger(rangedtriggers[random]);
+                //} else
+                //{
+                //    int r1 = 1;
 
-                }
+                //    if (r1 == 1 && enemy.CheckInsideRoom())
+                //    {
+                //        //enemy.Dodge();
+                //        int random = Random.Range(0, enemy.enemyData.dashattacks.Count);
+                //        enemy.FlipFace(enemy.player.transform.position);
+                //        enemy.animator.SetTrigger(dashattacks[random]);
+
+                //    }
+                //    else
+                //    {
+                //        int random = Random.Range(0, enemy.enemyData.rangedtriggers.Count);
+                //        enemy.FlipFace(enemy.player.transform.position);
+                //        enemy.animator.SetTrigger(rangedtriggers[random]);
+
+                //}
             }
-            enemy.inAnimation = true;
-        }
 
-
-                else
-                {
-                    stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
-                }
+            else
+            {
+                stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+            }
 
         }
 

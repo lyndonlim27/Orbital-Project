@@ -27,6 +27,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
     private static List<Vector2Int> exits = new List<Vector2Int>();
     private static HashSet<Vector2Int> seen = new HashSet<Vector2Int>();
+    private HashSet<DoorBehaviour> doors;
     private HashSet<Vector2Int> corridoor;
     private static Dictionary<BoundsInt, RoomManager> bound2Rooms = new Dictionary<BoundsInt, RoomManager>();
 
@@ -89,6 +90,8 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         }
         CreateRooms();
         ChangeRoomsToBoss();
+        ChangeRoom(0, gameManager.roomManagers, RoomManager.ROOMTYPE.TREASURE_ROOM);
+        gameManager.roomManagers[0].SetUpEntityDatas(RandomizeTreasureDatas());
     }
 
     private void CreateRooms()
@@ -96,6 +99,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         var roomsList = ProceduralGenerationAlgorithms.BinarySpacePartitioning(new BoundsInt((Vector3Int)startPosition, new Vector3Int(dungeonWidth, dungeonHeight, 0)), minRoomWidth, minRoomHeight);
         gameManager.roomManagers.Clear();
         HashSet<Vector2Int> floor = new HashSet<Vector2Int>();
+        doors = new HashSet<DoorBehaviour>();
         if (randomWalkRooms)
         {
             floor = CreateRoomsRandomly(roomsList);
@@ -105,13 +109,25 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
             floor = CreateSimpleRooms(roomsList);
         }
 
+
         HashSet<Vector2Int> corridors = ConnectRooms(roomsList);
+
         floor.UnionWith(corridors);
-        tilemapVisualizer.PaintFloorTiles(floor,groundoffSet,roomsList);
+        tilemapVisualizer.PaintFloorTiles(floor, groundoffSet, roomsList, corridors);
         tilemapVisualizer.PaintCorridoorTiles(corridors);
-        
         WallGenerator.CreateWalls(floor, tilemapVisualizer);
         tilemapVisualizer.PaintDecorations();
+    }
+
+    public void DestroyAllCollidingDoors()
+    {
+        foreach (DoorBehaviour door in doors)
+        {
+            if (CheckDoorsTouchingWalls(door))
+            {
+                DestroyImmediate(door.gameObject);
+            }
+        }
     }
 
     private void GetRoomCenters(List<BoundsInt> roomList, HashSet<Vector2Int> roomCenters)
@@ -208,27 +224,29 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     private void CreateDoorIfInsideAnyOtherRooms(BoundsInt currentRoom, BoundsInt closest, HashSet<Vector2Int> newCorridor, RoomManager currRoom, List<BoundsInt> allRooms)
     {
         HashSet<BoundsInt> visited = new HashSet<BoundsInt>();
+        
         foreach (Vector2Int vec in newCorridor)
         {
             foreach (BoundsInt room in allRooms)
             {
-                if (insideRoom(vec, room) /*&& !visited.Contains(room)*/) {
+                if (insideRoom(vec, room)/*&& !visited.Contains(room)*/) {
 
                     visited.Add(room);
-                    if (vec.x == room.xMax - offset||
+                    if ((vec.x == room.xMax - offset||
                     vec.x == room.xMin + offset||
                     vec.y == room.yMin + offset||
-                    vec.y == room.yMax - offset)
+                    vec.y == room.yMax - offset))
                     {
                         //string dir = CheckDoorDirection(vec,room);
-                        bool left = vec.x == room.xMin + offset && (vec.y != room.yMax || vec.y != room.yMin);
-                        bool down = vec.y == room.yMin + offset && (vec.x != room.xMax || vec.x != room.xMin);
+                        bool left = vec.x == room.xMin + offset && (vec.y != room.yMax - offset || vec.y != room.yMin + offset);
+                        bool down = vec.y == room.yMin + offset && (vec.x != room.xMax - offset || vec.x != room.xMin + offset);
                         if (!seen.Contains(vec))
                         {
                             seen.Add(vec);
                             exits.Add(vec);
                             DoorBehaviour door = CreateDoor(vec,left,down);
-                            door.transform.SetParent(currRoom.transform,true);
+                            doors.Add(door);
+                            door.transform.SetParent(currRoom.transform, true);
                             currRoom.SettingExitDoor(door);
                             var visitedroom = bound2Rooms.GetValueOrDefault(room, null);
                             if (visitedroom != null)
@@ -508,7 +526,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
                 break;
             case RoomManager.ROOMTYPE.PUZZLE2_ROOM:
                 createdroom = go.AddComponent<PuzzleRoom_Mgr>();
-                createdroom.SetUpEntityDatas(RandomizePressureSwitchDatas());
+                //createdroom.SetUpEntityDatas(RandomizePressureSwitchDatas());
                 break;
             case RoomManager.ROOMTYPE.HYBRID_ROOM:
                 var hybridroom = go.AddComponent<HybridRoom_Mgr>();
@@ -550,7 +568,12 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
                 rand = Random.Range((int)(0.8f * rooms.Count), rooms.Count);
             }
             ChangeRoom(rand, rooms, RoomManager.ROOMTYPE.BOSSROOM);
-            ChangeRoom(rand - 1, rooms, RoomManager.ROOMTYPE.ROOMBEFOREBOSS);
+            if (rand - 1 >= 0)
+            {
+                ChangeRoom(rand - 1, rooms, RoomManager.ROOMTYPE.ROOMBEFOREBOSS);
+
+            }
+            
         }
         
     }
@@ -560,6 +583,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         RoomManager currRoom = rooms[index];
         DoorBehaviour[] doorsincurr = currRoom.GetDoors();
         GameObject currroomGameObject = currRoom.gameObject;
+        Vector2Int roomSize = currRoom.GetRoomSize();
         DestroyImmediate(currRoom);
         RoomManager newroom;
         switch (rOOMTYPE)
@@ -570,6 +594,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
                 break;
             case RoomManager.ROOMTYPE.BOSSROOM:
                 newroom = currroomGameObject.AddComponent<BossRoom_Mgr>();
+                
                 break;
 
         }
@@ -585,6 +610,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
         newroom.RoomIndex = index + 1;
         newroom.roomtype = rOOMTYPE;
+        newroom.SetUpRoomSize(roomSize);
         gameManager.roomManagers[index] = newroom;
 
 
@@ -630,7 +656,6 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         go.AddComponent<Animator>();
         SpriteRenderer _spriteRenderer = go.AddComponent<SpriteRenderer>();
         _spriteRenderer.sortingOrder = 1;
-        _spriteRenderer.sprite = doorSprite;
         go.AddComponent<AudioSource>();
         BoxCollider2D col = go.AddComponent<BoxCollider2D>();
         DoorBehaviour door = go.AddComponent<BreakableDoorBehaviour>();
@@ -662,6 +687,8 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         go.transform.position = new Vector2(exit.x, exit.y);
         go.transform.position += left ? new Vector3(-0.5f, 0.5f) : down ? new Vector3(0.5f, -0.5f) : new Vector3(0.5f, 0.5f);
         go.transform.localScale = new Vector2(0.6f, 0.6f);
+        
+        
     }
 
     /// <summary>
@@ -673,7 +700,23 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         DoorData doorData = ScriptableObject.CreateInstance<DoorData>();
         doorData._name = "UNLOCK";
         doorData.minDist = 1.5f;
+        doorData.sprite = doorSprite;
         doorData._type = EntityData.TYPE.DOOR;
         door.SetEntityStats(doorData);
+    }
+
+    private bool CheckDoorsTouchingWalls(DoorBehaviour door)
+    {
+        bool isTouching = Physics2D.OverlapCircle(door.transform.position, 0.01f, LayerMask.GetMask("Obstacles"));
+        //List<Collider2D> colliders = new List<Collider2D>();
+        //ContactFilter2D contactFilter2D = new ContactFilter2D();
+        //contactFilter2D.SetLayerMask(LayerMask.GetMask("Obstacles"));
+        //int isTouching = door.GetComponent<Collider2D>().OverlapCollider(contactFilter2D, colliders);
+        Debug.Log("Are we touching?" + door + isTouching);
+        if (isTouching)
+        {
+            return true;
+        }
+        return false;
     }
 }

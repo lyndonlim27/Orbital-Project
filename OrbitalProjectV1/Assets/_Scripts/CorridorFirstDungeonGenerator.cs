@@ -36,7 +36,7 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
         floorPositions.UnionWith(roomPositions);
 
-        tilemapVisualizer.PaintFloorTiles(floorPositions, noise, new List<BoundsInt>());
+        tilemapVisualizer.PaintFloorTiles(floorPositions, noise, new List<BoundsInt>(), roomPositions);
         WallGenerator.CreateWalls(floorPositions, tilemapVisualizer);
 
     }

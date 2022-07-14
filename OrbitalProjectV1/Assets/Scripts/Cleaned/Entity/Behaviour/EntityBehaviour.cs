@@ -33,6 +33,16 @@ public abstract class EntityBehaviour : MonoBehaviour
    
     }
 
+    protected virtual void OnEnable()
+    {
+        if (GetData() != null)
+        {
+            Debug.Log("This is sprite" + GetData().sprite);
+            spriteRenderer.sprite = GetData().sprite;
+        }
+        
+    }
+
     public abstract void SetEntityStats(EntityData stats);
 
     public abstract void Defeated();

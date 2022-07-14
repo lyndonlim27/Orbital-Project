@@ -5,12 +5,16 @@ using System.Linq;
 
 public class TorchPuzzle : MonoBehaviour, Puzzle
 {
-    List<ItemWithTextBehaviour> torchLights;
+    List<ItemWithTextData> puzzleTorchesData;
+    [SerializeField] List<ItemWithTextBehaviour> torchLights;
+    RoomManager currRoom;
     HealingBehaviour healingFountain;
     [SerializeField] private string unlockcode;
+    [SerializeField] private string remainingcode;
     [SerializeField] private string input;
     [SerializeField] private int numtorches;
     UITextDescription uITextDescription;
+    int currindex;
 
     public bool activated;
     public bool isComplete;
@@ -18,26 +22,55 @@ public class TorchPuzzle : MonoBehaviour, Puzzle
     private void Awake()
     {
         torchLights = new List<ItemWithTextBehaviour>();
+        puzzleTorchesData = new List<ItemWithTextData>();
+        numtorches = 4;
+        CreateTorchdata();
         healingFountain = GetComponentInChildren<HealingBehaviour>(true);
         activated = false;
         isComplete = false;
         uITextDescription = FindObjectOfType<UITextDescription>(true);
+        currindex = 0;
+    }
+
+    private void CreateTorchdata()
+    {
+        var puzzleTorchdata = Resources.Load("Data/ItemWithText/PuzzleTorch1") as ItemWithTextData;
+        for (int i = 0; i < numtorches; i++)
+        {
+            var datacopy = Instantiate(puzzleTorchdata);
+            puzzleTorchesData.Add(datacopy);
+
+        }
     }
 
     private void Update()
     {
-        numtorches = torchLights.Count;
     }
 
     public void ActivatePuzzle(int seq)
     {
-        GetRandomOrder();
         activated = true;
+        currRoom.SpawnObjects(puzzleTorchesData.ToArray());
+        torchLights = GetComponentsInChildren<ItemWithTextBehaviour>().ToList();
+        RandomizeTorches();
+        GetRandomOrder();
+        remainingcode = unlockcode;
     }
 
-    public void AddPuzzleTorch(ItemWithTextBehaviour torch)
+    //public void AddPuzzleTorch(ItemWithTextBehaviour torch)
+    //{
+    //    torchLights.Add(torch);
+    //    torch.SetTorchPuzzle(this);
+    //}
+
+    private void RandomizeTorches()
     {
-        torchLights.Add(torch);
+        torchLights[0].transform.localPosition = new Vector3(-10f,10f);
+        torchLights[1].transform.localPosition = new Vector3(10f, 10f);
+        torchLights[2].transform.localPosition = new Vector3(-10f, -10f);
+        torchLights[3].transform.localPosition = new Vector3(10f, -10f);
+
+
     }
 
     private void GetRandomOrder()
@@ -57,14 +90,17 @@ public class TorchPuzzle : MonoBehaviour, Puzzle
         {
             int r = Random.Range(0, torchLights.Count);
             lightthese.Add(r);
+            
 
         }
 
         for (int i = 0; i < torchLights.Count; i++)
         {
-            if (lightthese.Contains(i))
+            string curr = torchLights[i].GetInstanceID().ToString();
+            if (lightthese.Contains(i) || remainingcode.StartsWith(curr))
             {
                 torchLights[i].LightUp();
+                
             }
             else
             {
@@ -75,21 +111,42 @@ public class TorchPuzzle : MonoBehaviour, Puzzle
 
     public void Input(ItemWithTextBehaviour torchlight)
     {
-        input += torchlight.GetInstanceID();
-        CheckInput();
+        input = torchlight.GetInstanceID().ToString();
+        CheckInput(input);
     }
 
-    private void CheckInput()
+    private void CheckInput(string input)
     {
-        if (input.Contains(unlockcode))
+        if (remainingcode.StartsWith(input))
         {
-            LightUpAllTorch();
+            remainingcode = ReplaceFirstOccurrence(remainingcode, input, "");
+            RandomLightUp();
+            uITextDescription.StartDescription("----");
         }
         else
         {
-            RandomLightUp();
-
+            remainingcode = unlockcode;
+            uITextDescription.StartDescription("Wrong code, please reattempt");
         }
+
+        if (remainingcode == "")
+        {
+            LightUpAllTorch();
+        }
+           
+    }
+
+
+    /**
+     * Replace the first occurence of the string.
+     * @return the new string with the first char replaced.
+     */
+    private string ReplaceFirstOccurrence(string Source, string Find, string Replace)
+    {
+        int Place = Source.IndexOf(Find);
+
+        string result = Source.Remove(Place, Find.Length).Insert(Place, Replace.ToString());
+        return result;
     }
 
     private void LightUpAllTorch()
@@ -129,7 +186,7 @@ public class TorchPuzzle : MonoBehaviour, Puzzle
 
     public bool IsComplete()
     {
-        throw new System.NotImplementedException();
+        return isComplete;
     }
 
     public bool IsActivated()
@@ -137,8 +194,15 @@ public class TorchPuzzle : MonoBehaviour, Puzzle
         return activated;
     }
 
+    public void SetCurrentRoom(RoomManager room)
+    {
+        this.currRoom = room;
+    }
+
     //public void RandomizePuzzlePlacement()
     //{
     //    foreach()
     //}
+
+    // 1 4 3 2 -> hit torch 4. -> random num of torches -> one of the torch is 1. ->  
 }

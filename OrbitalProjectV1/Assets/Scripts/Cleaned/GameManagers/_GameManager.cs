@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
-public class _GameManager : MonoBehaviour
+public class _GameManager : MonoBehaviour, IDataPersistence
 {  
     [Header("AudioManager")]
     [SerializeField]
@@ -20,12 +20,15 @@ public class _GameManager : MonoBehaviour
 
     [Header("Dialogue Manager")]
     [SerializeField]
-    GameObject DialogueManager;
-
+    GameObject DialogueManager;    
 
     [Header("Pool Manager")]
     [SerializeField]
     GameObject PoolManager;
+
+    [Header("VideoManager")]
+    [SerializeField]
+    GameObject VideoManager;
 
     [Header("DamageFlicker")]
     [SerializeField]
@@ -38,8 +41,24 @@ public class _GameManager : MonoBehaviour
     [Header("RoomManagers")]
     public List<RoomManager> roomManagers = new List<RoomManager>();
 
-    
+    [Header("MapGenerator")]
+    [SerializeField]
+    RoomFirstDungeonGenerator mapgenerator;
+
+    private GameData gameData;
     private Player player;
+
+    [Header("Local Managers")]
+
+    private DamageFlicker _damageFlickerl;
+    private VideoManager _vidManagerl;
+    private GameObject _audioManagerl;
+    private WordBank _wordBankl;
+    private PuzzleInputManager _puzzleInputManagerl;
+    private DialogueManager _dialogueManagerl;
+    private PoolManager _poolManagerl;
+
+
     [SerializeField] private int roomIndex = 1;
     /// <summary>
     /// Loads Up all Managers required for gameplay.
@@ -87,6 +106,12 @@ public class _GameManager : MonoBehaviour
             _DamageFlicker = Instantiate(DamageFlicker);
         }
 
+        GameObject _VideoManager = GameObject.Find("VideoManager(Clone)");
+        if (_VideoManager == null)
+        {
+            _VideoManager = Instantiate(VideoManager);
+        }
+
 
 
         //GameObject _AStar = GameObject.Find("A_");
@@ -103,7 +128,17 @@ public class _GameManager : MonoBehaviour
         _UIManager.transform.SetParent(transform);
         _DialogueManager.transform.SetParent(transform);
         _PoolManager.transform.SetParent(transform);
-        
+        _VideoManager.transform.SetParent(transform);
+
+        // local copies.
+        _audioManagerl = _audioManager;
+        _wordBankl = _wordBank.GetComponent<WordBank>();
+        _damageFlickerl = _DamageFlicker.GetComponent<DamageFlicker>();
+        _vidManagerl = _VideoManager.GetComponent<VideoManager>();
+        _dialogueManagerl = _DialogueManager.GetComponent<DialogueManager>();
+        _puzzleInputManagerl = _UIManager.GetComponentInChildren<PuzzleInputManager>();
+        _poolManagerl = _PoolManager.GetComponent<PoolManager>();
+        mapgenerator = FindObjectOfType<RoomFirstDungeonGenerator>();
 
     }
 
@@ -149,5 +184,52 @@ public class _GameManager : MonoBehaviour
         player.SetCurrentRoom(currRoom);
         player.transform.position = currRoom.transform.position;
 
+    }
+
+    public void GenerateMap(int seed)
+    {
+        mapgenerator.currentSeed = seed;
+        mapgenerator.GenerateDungeon();
+    }
+
+    private void PlayIntroScene()
+    {
+        if (_vidManagerl == null)
+        {
+            Debug.LogError("No vid manager found");
+        } else
+        {
+            _vidManagerl.PlayVideo("LastLevelStartScene");
+        }
+    }
+
+    private void PlayEndScene()
+    {
+        _vidManagerl.PlayVideo("EndScene");
+    }
+
+    private void Awake()
+    {
+        Debug.Log("Debug Awake");
+        GenerateManagers();
+        //GenerateMap(-1);        
+    }
+
+    private void Start()
+    {
+        //PlayIntroScene();
+        //SpawnPlayer();
+    }
+
+    public void LoadData(GameData data)
+    {
+        GenerateMap(data.currentSeed);
+               
+    }
+
+
+    public void SaveData(ref GameData data)
+    {
+        data.currentSeed = mapgenerator.currentSeed;
     }
 }

@@ -10,14 +10,16 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
 
     public Vector2 _movement;
     public Vector2 lastdirection;
+    public Transform _transform;
     public bool insidePuzzle;
-    private Rigidbody2D _rb;
+    public Rigidbody2D _rb { get; private set; }
     private Collider2D col;
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
     private float _time = 0;
     private float _timeDelay = 0;
     private DialogueManager dialMgr;
+    private Weapon originalWeapon;
     private int _currHealth;
     public int currMana { get; private set;}
     private Weapon _currWeapon;
@@ -59,7 +61,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     [SerializeField] private GameOver _gameOver;
     [SerializeField] private HealthBar _healthBar;
     [SerializeField] private ManaBar _manaBar;
-    public bool InCombat { get; private set; }
+    public bool InCombat;
 
     protected override void Awake()
     {
@@ -70,6 +72,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         _healthBar = FindObjectOfType<HealthBar>(true);
         _manaBar = FindObjectOfType<ManaBar>(true);
         _gameOver = FindObjectOfType<GameOver>(true);
+        _transform = transform;
     }
 
     public bool IsDead()
@@ -147,16 +150,21 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     {
         for (int i = (int)KeyCode.A; i <= (int)KeyCode.Z; i++)
         {
-            if (Input.GetKeyDown((KeyCode)i))
+            if (Input.GetKeyDown((KeyCode)i) && !InCombat)
             {
-                InCombat = true;
+                StartCoroutine(InitCombat());
             }
-            else
-            {
-                InCombat = false;
-            }
+            
         }
     }
+
+    private IEnumerator InitCombat()
+    {
+        InCombat = true;
+        yield return new WaitForSeconds(2f);
+        InCombat = false;
+    }
+
 
     private void FixedUpdate()
     {
@@ -269,7 +277,6 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         _animator.SetFloat("Speed", point2Target.magnitude);
     }
 
-
     public void FreezeRb()
     {
         _rb.constraints = RigidbodyConstraints2D.FreezeAll;
@@ -306,7 +313,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
 
     public override EntityData GetData()
     {
-        throw new NotImplementedException();
+        return null;
     }
 
     public void SetSpeed(float speed)
@@ -510,4 +517,19 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     {
         return _moveSpeed;
     }
+
+    public void SwitchToFist()
+    {
+        originalWeapon = _currWeapon;
+        _weaponManager.Swap("Fist");
+
+        
+    }
+
+    public void SwitchBack()
+    {
+        Debug.Log(originalWeapon.WeaponName);
+        _weaponManager.Swap(originalWeapon.WeaponName);
+    }
+        
 }

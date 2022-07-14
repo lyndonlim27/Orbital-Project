@@ -407,6 +407,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea68dd1b580324fa494756d64201e353, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inAudio: 0
 --- !u!1 &2179533726655706156
 GameObject:
   m_ObjectHideFlags: 0
@@ -622,17 +623,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c4d8d1790a5a4d9c94ac6f5e6ecd31d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentRoom: {fileID: 0}
+  audioSource: {fileID: 0}
+  inAudio: 0
+  footStep: {fileID: 0}
   isDead: 0
   inAnimation: 0
+  Debuffed: 0
   data: {fileID: 0}
   consumableItemDatas: []
+  lastvelocity: {x: 0, y: 0}
+  targetHit: 0
+  laser: {fileID: 0}
+  laserPos: []
+  laserHits: []
+  rotSpeed: 0
+  mounted: 0
+  laserActivated: 0
   _healthBar: {fileID: 0}
   enemyData: {fileID: 11400000, guid: 255ce7ff4f1134e8e81f7a4bde57e1e6, type: 2}
   currstate: 0
   insideStage2: 0
   detectionScript: {fileID: 2179533726655646673}
+  malesTakeDamageAudio: []
+  malesDoDamageAudio: []
+  femalesTakeDamageAudio: []
+  femalesDoDamageAudio: []
+  nonhumanTakeDamageAudio: []
   Dashcooldown: 0
   cooldown: 0
+  healStagecooldown: 0
+  animatorspeed: 0
 --- !u!114 &5430114440634477450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -790,9 +811,41 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 507028398229191764, guid: 7fb209273d56f40c5b183bc44d229dbc, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 507028398229191764, guid: 7fb209273d56f40c5b183bc44d229dbc, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 507028398229191764, guid: 7fb209273d56f40c5b183bc44d229dbc, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 507028398229191764, guid: 7fb209273d56f40c5b183bc44d229dbc, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2714725609455888750, guid: 7fb209273d56f40c5b183bc44d229dbc, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4203990219952630149, guid: 7fb209273d56f40c5b183bc44d229dbc, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4203990219952630149, guid: 7fb209273d56f40c5b183bc44d229dbc, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4203990219952630149, guid: 7fb209273d56f40c5b183bc44d229dbc, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4203990219952630149, guid: 7fb209273d56f40c5b183bc44d229dbc, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8108476394582516651, guid: 7fb209273d56f40c5b183bc44d229dbc, type: 3}
       propertyPath: m_Pivot.x

@@ -22,11 +22,11 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     public Player player { get; protected set; }
     protected Light2D light2D;
     protected Rigidbody2D _rb;
+    protected TorchPuzzle torchPuzzle;
     protected CapsuleCollider2D _col;
     protected GameObject secondarylightsource;
     protected ItemTextLogic _tl;
     protected UITextDescription uITextDescription;
-    protected TorchPuzzle torchPuzzle;
     protected Vector2 playeroriginalposition;
 
     protected Vector2 originalpos;
@@ -38,6 +38,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
 
     [Header("SoccerBall")]
     public Vector2 lastvelocity;
+    private bool attachedToPlayer;
 
     [Header("LaserBeam")]
     public bool targetHit;
@@ -69,14 +70,13 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         _col = GetComponent<CapsuleCollider2D>();
         _tl = GetComponentInChildren<ItemTextLogic>();
         uITextDescription = FindObjectOfType<UITextDescription>(true);
-        torchPuzzle = FindObjectOfType<TorchPuzzle>(true);
         weaponDataDisplay = GetComponentInChildren<WeaponDescription>(true);
         gameManager = FindObjectOfType<_GameManager>();
         laser = gameObject.AddComponent<LineRenderer>();
         laser.sortingOrder = 1;
         laserPos = new List<Vector3>();
         rotSpeed = 30f;
-
+        attachedToPlayer = false;
     }
 
     /**
@@ -91,10 +91,58 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     private void Update()
     {
         CheckIfPlayerIsNearWeap();
+        AttachToPlayer();
         GetLastVelocityForBall();
+        StopBallRolling();
         StartLaserControl();
+        FollowPlayer();
 
 
+    }
+
+
+    private void AttachToPlayer()
+    {
+        if (data.item_type == ItemWithTextData.ITEM_TYPE.BALL)
+        {
+            if (Physics2D.OverlapCircle(transform.position,1.5f,LayerMask.GetMask("Player")) && !player.InCombat)
+            {
+                if (!attachedToPlayer)
+                {
+                    attachedToPlayer = true;
+                    player.SwitchToFist();
+                }
+               
+            }
+            else 
+            {
+                if (attachedToPlayer)
+                {
+                    attachedToPlayer = false;
+                    player.SwitchBack();
+                    _rb.position = transform.position;
+                }
+            }
+        }
+    }
+
+    private void FollowPlayer()
+    {
+        if (attachedToPlayer)
+        {
+            _rb.position = player._rb.position + (Vector2)player._movement * (0.5f);
+        } 
+    }
+
+    private void StopBallRolling()
+    {
+        if (data.item_type == ItemWithTextData.ITEM_TYPE.BALL)
+        {
+            if (_rb.velocity == Vector2.zero)
+            {
+                animator.enabled = false;
+            }
+        }
     }
 
     private void GetLastVelocityForBall()
@@ -107,6 +155,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
 
     private void CheckIfPlayerIsNearWeap()
     {
+        
         if (weaponDataDisplay != null && data.item_type == ItemWithTextData.ITEM_TYPE.WEAPON)
         {
             weaponDataDisplay.gameObject.SetActive(Vector2.Distance(player.transform.position, transform.position) < 2f);
@@ -116,14 +165,16 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     /** OnEnable method.
      *  To intialize more specific entity behaviours for ObjectPooling.
      */
-    protected virtual void OnEnable()
+    protected override void OnEnable()
     {
+        DisableAnimator();
+        base.OnEnable();
         ResetLight();
         Color c = spriteRenderer.material.color;
         c.a = 1;
         spriteRenderer.material.color = c;
         isDead = false;
-        DisableAnimator();
+        
         SetItemBody();
         if (weaponDataDisplay != null)
         {
@@ -192,10 +243,15 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         switch (data.item_type)
         {
             default:
+                light2D.enabled = true;
+                light2D.pointLightOuterRadius = 2f;
+                _rb.bodyType = RigidbodyType2D.Kinematic;
+                break;
             case ItemWithTextData.ITEM_TYPE.CHEST:
                 light2D.enabled = true;
                 light2D.pointLightOuterRadius = 2f;
                 _rb.bodyType = RigidbodyType2D.Kinematic;
+                spriteRenderer.sprite = data.itemSprites[Random.Range(0, data.itemSprites.Length - 1)];
                 break;
             case ItemWithTextData.ITEM_TYPE.WEAPON:
                 _rb.bodyType = RigidbodyType2D.Kinematic;
@@ -219,7 +275,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 {
                     gameObject.layer = LayerMask.NameToLayer("Mirror");
                     gameObject.tag = "Mirror";
-                } 
+                }
                 break;    
             case ItemWithTextData.ITEM_TYPE.TOMB:
                 secondarylightsource = new GameObject();
@@ -236,8 +292,9 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 light2D.color = data.defaultcolor;
                 break;
             case ItemWithTextData.ITEM_TYPE.PUZZLETORCH:
-                torchPuzzle.AddPuzzleTorch(this);
                 light2D.enabled = true;
+                torchPuzzle = currentRoom.transform.Find("TorchLightPuzzle(Clone)").GetComponent<TorchPuzzle>();
+                transform.SetParent(torchPuzzle.transform);
                 break;
             case ItemWithTextData.ITEM_TYPE.BALL:
                 _rb.bodyType = RigidbodyType2D.Kinematic;
@@ -248,6 +305,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
                 _rb.freezeRotation = true;
                 this.gameObject.layer = LayerMask.NameToLayer("Ball");
+                animator.runtimeAnimatorController = Resources.Load("Animations/AnimatorControllers/AC_Objects") as RuntimeAnimatorController;
                 break;
             case ItemWithTextData.ITEM_TYPE.PORTAL:
                 _col.enabled = false;
@@ -260,7 +318,10 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         CheckURP();
     }
 
-    
+    /**
+     * Set Torchpuzzle
+     */
+
 
     /**
      * Setting Up Secondary Lights if any.
@@ -331,7 +392,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
             case ItemWithTextData.ITEM_TYPE.CHEST:
                 SpawnObjects();
                 SpawnDrops();
-                HandleAnimation();
+                StartCoroutine(HandleChestAnimation());
                 break;
 
             case ItemWithTextData.ITEM_TYPE.PUSHABLE:
@@ -354,7 +415,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 isDead = false;
                 break;
             case ItemWithTextData.ITEM_TYPE.BALL:
-                StartCoroutine(ShootBall());
+                ShootBall();
                 break;
             case ItemWithTextData.ITEM_TYPE.PORTAL:
                 //find active rooms;
@@ -382,6 +443,19 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         }
     }
 
+    private IEnumerator HandleChestAnimation()
+    {
+        int undscore_index = data.sprite.name.LastIndexOf('_');
+        int currnum = int.Parse(data.sprite.name.Substring(undscore_index + 1));
+        int newnum = currnum + 5;
+        string newspritename = data.sprite.name.Substring(0, undscore_index) + newnum;
+        Debug.Log(newspritename);
+        spriteRenderer.sprite = Resources.Load($"Sprites/{newspritename}") as Sprite;
+        yield return new WaitForSeconds(0.8f);
+        poolManager.ReleaseObject(this);
+
+    }
+
     private void FreezePlayer()
     {
         player.Freeze();
@@ -398,14 +472,16 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
 
 
     #region ballpuzzle
-    private IEnumerator ShootBall()
+    private void ShootBall()
     {
         _rb.bodyType = RigidbodyType2D.Dynamic;
         _rb.AddForce(player.lastdirection * 50f, ForceMode2D.Impulse);
-        yield return new WaitForSeconds(5f);
+        //yield return new WaitForSeconds(5f);
+        animator.SetBool("Rolling", true);
+        animator.enabled = true;
         _tl.ResetWord();
         isDead = false;
-        transform.position = originalpos;
+        //transform.position = originalpos;
     }
     #endregion
 
@@ -530,21 +606,30 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
      */
     private void SpawnObjects()
     {
-        List<ItemWithTextData> edClones = new List<ItemWithTextData>();
-
-        Array.ForEach(data.itemTextDatas, (d) =>
+        //List<ItemWithTextData> edClones = new List<ItemWithTextData>();
+        float rand2 = Random.value;
+        if (rand2 >= 0.4f)
         {
-            ItemWithTextData e = Instantiate(d);
-            e.random = false;
-            e.spawnAtStart = true;
+            int rand = Random.Range(0, data.itemTextDatas.Length);
 
-            e.pos = transform.position + new Vector3(UnityEngine.Random.Range(-2, 2) * data.scale, UnityEngine.Random.Range(-2, 2) * data.scale, 1);
-            edClones.Add(e);
+            //Array.ForEach(data.itemTextDatas, (d) =>
+            //{
+            //    ItemWithTextData e = Instantiate(d);
+            //    e.random = false;
+            //    e.spawnAtStart = true;
 
-        });
+            //    e.pos = transform.position + new Vector3(UnityEngine.Random.Range(-2, 2) * data.scale, UnityEngine.Random.Range(-2, 2) * data.scale, 1);
+            //    edClones.Add(e);
 
-        currentRoom.SpawnObjects(edClones.ToArray());
-
+            //});
+            //currentRoom.SpawnObjects(edClones.ToArray());
+            Debug.Log(rand);
+            ItemWithTextData clone = Instantiate(data.itemTextDatas[rand]) as ItemWithTextData;
+            clone.pos = transform.position + Random.insideUnitSphere;
+            clone.random = false;
+            currentRoom.SpawnObject(clone);
+        }
+        
     }
 
     /**

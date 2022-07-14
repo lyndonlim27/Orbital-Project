@@ -53,8 +53,9 @@ public class TrapBehaviour : ActivatorBehaviour
     /** OnEnable method.
      *  To intialize more specific entity behaviours for ObjectPooling.
      */
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         animator.enabled = false;
         _transform = transform;
         SettingUpCollider();

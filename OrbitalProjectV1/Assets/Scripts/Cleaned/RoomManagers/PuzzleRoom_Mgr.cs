@@ -9,6 +9,9 @@ public class PuzzleRoom_Mgr : RoomManager
         QUIZ,
         SOCCER,
         LASER,
+        LIGHTSWITCH,
+        TORCH,
+        PRESSURE,
         COUNT,
     }
 
@@ -20,7 +23,8 @@ public class PuzzleRoom_Mgr : RoomManager
     protected override void Awake()
     {
         base.Awake();
-        puzzle_type = (PUZZLE_TYPE)Random.Range(0, (int) PUZZLE_TYPE.COUNT);
+        //puzzle_type = (PUZZLE_TYPE)Random.Range(0, (int) PUZZLE_TYPE.COUNT);
+        puzzle_type = PUZZLE_TYPE.PRESSURE;
     }
     void Start()
     {
@@ -46,6 +50,26 @@ public class PuzzleRoom_Mgr : RoomManager
                 var laser = gameObject.AddComponent<LaserPuzzle>();
                 puzzle = laser;
                 puzzleMono = laser;
+                break;
+            case PUZZLE_TYPE.LIGHTSWITCH:
+                var lightswitch = gameObject.AddComponent<LightUpPuzzle>();
+                puzzle = lightswitch;
+                puzzleMono = lightswitch;
+                break;
+            case PUZZLE_TYPE.TORCH:
+                GameObject torchprefab = Resources.Load("PuzzlePrefab/TorchLightPuzzle") as GameObject;
+                GameObject go = Instantiate(torchprefab);
+                go.transform.SetParent(this.transform);
+                go.transform.position = transform.position;
+                var torchPuzzle = go.GetComponent<TorchPuzzle>();
+                torchPuzzle.SetCurrentRoom(this);
+                puzzle = torchPuzzle;
+                puzzleMono = torchPuzzle;
+                break;
+            case PUZZLE_TYPE.PRESSURE:
+                var pressurePuzzle = gameObject.AddComponent<PressurePuzzle1>();
+                puzzle = pressurePuzzle;
+                puzzleMono = pressurePuzzle;
                 break;
         }
         puzzleMono.enabled = false;

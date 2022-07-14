@@ -32,6 +32,7 @@ MonoBehaviour:
   defaultcolor: {r: 0, g: 0, b: 0, a: 0}
   floating: 0
   moveable: 1
+  NotURP: 0
   attackAudios:
   - {fileID: 8300000, guid: 0c367f8b6ee494311a488a7f93c75481, type: 3}
   miscellaneousAudios: []
@@ -42,6 +43,7 @@ MonoBehaviour:
   item_type: 0
   secondarysprite: {fileID: 0}
   description: 
+  rangedData: {fileID: 0}
   damageValue: 5
   moveSpeed: 4
   chaseSpeed: 5
@@ -75,4 +77,5 @@ MonoBehaviour:
   stage2: 1
   healStage: 0
   enragedColor: {r: 0.5568628, g: 0.32941177, b: 0.32941177, a: 1}
+  dashoffset: 12
   body: 0

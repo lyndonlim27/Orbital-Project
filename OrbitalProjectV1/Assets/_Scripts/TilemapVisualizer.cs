@@ -8,7 +8,7 @@ using System.Linq;
 public class TilemapVisualizer : MonoBehaviour
 {
     [SerializeField]
-    private Tilemap floorTilemap, innerwallTilemap, outerwallTilemap, waterTilemap, dockTilemap, groundTilemap, decorativeTilemap, groundDecoTilemap;
+    private Tilemap floorTilemap, innerwallTilemap, outerwallTilemap, waterTilemap, dockTilemap, groundTilemap, decorativeTilemap, treeBottomTilemap, treeTop1Tilemap, treeTop2Tilemap, treeTop3Tilemap, groundDecoTilemap;
 
     [Header("Map Tiles")]
     [SerializeField]
@@ -44,7 +44,9 @@ public class TilemapVisualizer : MonoBehaviour
     [SerializeField]
     private GameObject ship1, ship2, ship3;
 
-    
+    [SerializeField]
+    private TileBase[] treeBottoms, treeTops;
+
 
     [Header("Structures")]
     [SerializeField]
@@ -54,10 +56,23 @@ public class TilemapVisualizer : MonoBehaviour
 
     private Transform decorationContainer;
 
-    public void PaintFloorTiles(IEnumerable<Vector2Int> floorPositions, float groundOffset, List<BoundsInt> rooms)
+    //public void ActivateTilemapColliders()
+    //{
+    //    innerwallTilemap.gameObject.AddComponent<TilemapCollider2D>();
+    //    outerwallTilemap.gameObject.AddComponent<TilemapCollider2D>();
+
+    //}
+
+    //public void DeactivateTilemapColliders()
+    //{
+    //    DestroyImmediate(innerwallTilemap.GetComponent<TilemapCollider2D>());
+    //    DestroyImmediate(outerwallTilemap.GetComponent<TilemapCollider2D>());
+    //}
+
+    public void PaintFloorTiles(IEnumerable<Vector2Int> floorPositions, float groundOffset, List<BoundsInt> rooms, HashSet<Vector2Int> corridoorVectors)
     {
 
-        PaintGroundAndFloorTiles(floorPositions, floorTilemap, multifloorTiles[UnityEngine.Random.Range(0,multifloorTiles.Length)], groundOffset, rooms);
+        PaintGroundAndFloorTiles(floorPositions, floorTilemap, multifloorTiles[UnityEngine.Random.Range(0,multifloorTiles.Length)], groundOffset, rooms, corridoorVectors);
     }
 
     private void PaintTiles(IEnumerable<Vector2Int> positions, Tilemap tilemap, TileBase tile)
@@ -69,14 +84,14 @@ public class TilemapVisualizer : MonoBehaviour
         }
     }
 
-    private void PaintGroundAndFloorTiles(IEnumerable<Vector2Int> positions, Tilemap tilemap, TileBase tile, float offSet, List<BoundsInt> rooms)
+    private void PaintGroundAndFloorTiles(IEnumerable<Vector2Int> positions, Tilemap tilemap, TileBase tile, float offSet, List<BoundsInt> rooms, HashSet<Vector2Int> corridoors)
     {
         foreach (var position in positions)
         {
             foreach (BoundsInt bounds in rooms)
             {
                 //Debug.Log("room" + bounds);
-                if (insideRoom(position, bounds))
+                if (insideRoom(position, bounds) && !corridoors.Contains(position))
                 {
                     var distancefromcenter = Vector3.Distance((Vector3Int)position, bounds.center);
                     var radius = Vector3.Distance(bounds.max, bounds.center);
@@ -109,6 +124,14 @@ public class TilemapVisualizer : MonoBehaviour
 
     private void PaintGroundDecorations(float decoOffset, Vector2Int position, float normalizeddist)
     {
+
+        if (Physics2D.OverlapCircle(position, 0.01f, LayerMask.GetMask("Doors")))
+        {
+            return;
+        }
+
+        
+
         if (landdecoratives.Count == 0)
         {
             Debug.LogError("No landdecoratives added");
@@ -116,13 +139,48 @@ public class TilemapVisualizer : MonoBehaviour
 
         if (UnityEngine.Random.value + decoOffset <= normalizeddist)
         {
-            PaintSingleTile(groundDecoTilemap, landdecoratives[UnityEngine.Random.Range(0, landdecoratives.Count)], position, false);
+            
+            int toPutTreeOrNot = UnityEngine.Random.Range(0, 10);
+            
+            
+
+            if (toPutTreeOrNot <= 2)
+            {
+
+                PaintSingleTile(groundDecoTilemap, landdecoratives[UnityEngine.Random.Range(0, landdecoratives.Count)], position, false);
+            }
+            else
+            {
+                int rand = UnityEngine.Random.Range(0, 3);
+                Tilemap selectedlayer;
+                switch (rand)
+                {
+                    default:
+                    case 1:
+                        selectedlayer = treeTop1Tilemap;
+                        break;
+                    case 2:
+                        selectedlayer = treeTop2Tilemap;
+                        break;
+                    case 3:
+                        selectedlayer = treeTop3Tilemap;
+                        break;
+                }
+                PaintSingleTile(treeBottomTilemap, treeBottoms[UnityEngine.Random.Range(0,treeBottoms.Length)], position, false);
+                PaintSingleTile(selectedlayer, treeTops[UnityEngine.Random.Range(0, treeBottoms.Length)], position + Vector2Int.up, false);
+            }
+
         }
+
+
+
+
     }
+
 
     private bool insideRoom(Vector2Int vec, BoundsInt room)
     {
-        return room.xMin <= vec.x && vec.x <= room.xMax && room.yMin <= vec.y && vec.y <= room.yMax;
+        return room.xMin + 3f <= vec.x && vec.x <= room.xMax - 3.5f && room.yMin + 3f <= vec.y && vec.y <= room.yMax - 3f;
     }
 
     
@@ -193,6 +251,10 @@ public class TilemapVisualizer : MonoBehaviour
         dockTilemap.ClearAllTiles();
         groundTilemap.ClearAllTiles();
         decorativeTilemap.ClearAllTiles();
+        treeBottomTilemap.ClearAllTiles();
+        treeTop1Tilemap.ClearAllTiles();
+        treeTop2Tilemap.ClearAllTiles();
+        treeTop3Tilemap.ClearAllTiles();
         groundDecoTilemap.ClearAllTiles();
         FindObjectOfType<EditorCode>().ClearAllRooms();
     }
@@ -257,7 +319,7 @@ public class TilemapVisualizer : MonoBehaviour
     public void PaintDecorations()
     {
         List<Vector2Int> paintableTiles = new List<Vector2Int>();
-        var paintable = waterTilemap.cellBounds.allPositionsWithin;
+        var paintable = innerwallTilemap.cellBounds.allPositionsWithin;
         foreach (var pos in paintable)
         {
             if (!(outerwallTilemap.HasTile(pos) || innerwallTilemap.HasTile(pos) || floorTilemap.HasTile(pos)))
@@ -316,7 +378,7 @@ public class TilemapVisualizer : MonoBehaviour
             do
             {
                 vec = paintableTiles[UnityEngine.Random.Range(0, paintableTiles.Count)];
-            } while (Physics2D.OverlapCircleAll(vec, size).Length > 0 && maxretries-- > 0);
+            } while (NoDecorationInVicinity(vec,(int) size) && maxretries-- > 0); /*Physics2D.OverlapCircleAll(vec, size).Length > 0*/
 
             if (vec != Vector2Int.zero && maxretries > 0)
             {
@@ -330,6 +392,20 @@ public class TilemapVisualizer : MonoBehaviour
 
         }
 
+    }
+
+    private bool NoDecorationInVicinity(Vector2Int vec, int size)
+    {
+        for (int i = -size; i < size; i ++)
+        {
+            for (int j = -size; j <size; j++)
+            {
+                if (decorativeTilemap.HasTile(new Vector3Int(vec.x + i , vec.y + j))) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private void SpawnSingleGameObjectDecoration(Vector2Int position, float size, GameObject decorationObj, Transform decorationContainer)

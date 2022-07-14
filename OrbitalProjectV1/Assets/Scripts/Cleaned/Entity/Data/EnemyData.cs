@@ -32,5 +32,7 @@ public class EnemyData : ItemWithTextData
         WOMEN,
         MONSTER,
     }
+    public float dashoffset;
+    public float jumpheight;
     public BODYTYPE body;
 }

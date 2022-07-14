@@ -75,8 +75,9 @@ public class RangedBehaviour : EntityBehaviour, Freezable
     /** OnEnable method.
      *  To intialize more specific ranged behaviours for ObjectPooling.
      */
-    protected void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         DisableAnimator();
         SettingUpCollider();
         EnableAnimator();
@@ -332,11 +333,6 @@ public class RangedBehaviour : EntityBehaviour, Freezable
         if (!alreadyAttacked)
         {
             DisableAnimation();
-            stopMovement();
-            alreadyAttacked = true;
-            GameObject go = collision.gameObject;
-            ApplyDamage(go);
-
             if (rangedData.impact_trigger != "")
             {
                 _animator.SetBool(rangedData.impact_trigger, true);
@@ -346,6 +342,12 @@ public class RangedBehaviour : EntityBehaviour, Freezable
                 Defeated();
 
             }
+            stopMovement();
+            alreadyAttacked = true;
+            GameObject go = collision.gameObject;
+            ApplyDamage(go);
+
+            
         }
 
 

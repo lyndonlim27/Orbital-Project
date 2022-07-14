@@ -102,11 +102,12 @@ public class ConsumableItemBehaviour : EntityBehaviour
     /** OnEnable method.
      *  To intialize more specific entity behaviours for ObjectPooling.
      */
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         //RuntimeAnimatorController oganimator = animator.runtimeAnimatorController;
         //animator = null;
-        spriteRenderer.sprite = _itemData.sprite;
+        //spriteRenderer.sprite = _itemData.sprite;
         animator.Play(_itemData._name);
         finishedBouncing = false;
         GetComponent<TrailRenderer>().startColor = _itemData.defaultcolor;
