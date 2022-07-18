@@ -7,7 +7,7 @@ using UnityEngine.Rendering.Universal;
 public class DoorBehaviour : EntityBehaviour
 {
     public bool unlocked;
-    private Animator animator;
+    protected Animator animator;
     private HashSet<RoomManager> roomManagers;
     private AudioClip unlockWoodenClip;
     private AudioClip lockWoodenClip;

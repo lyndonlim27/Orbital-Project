@@ -51,10 +51,15 @@ public abstract class TextLogic : MonoBehaviour
         if (parent != null)
         {
             Textdisplayer.enabled = !outOfRange() && !parent.isDead;
-            minDist = parent.GetData().minDist;
+            EntityData entityData = parent.GetData();
+            if (entityData != null)
+            {
+                minDist = entityData.minDist;
+                remainingword = "";
+                GenerateNewWord();
+            }
         }
-        remainingword = "";
-        GenerateNewWord();
+        
         //InstantiateAudio();
         
     }
@@ -154,6 +159,7 @@ public abstract class TextLogic : MonoBehaviour
                 {
                     if (parent.isDead)
                     {
+                        Debug.Log("??? is it dead");
                         return;
                     } else
                     {

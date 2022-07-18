@@ -17,6 +17,9 @@ using UnityEngine.UI;
 public class DialogueManager : MonoBehaviour
 {
     //null in the beginning
+
+    public static DialogueManager instance { get; private set; }
+
     private Story currentstory;
 
     private TextMeshProUGUI[] choicesText;
@@ -53,6 +56,10 @@ public class DialogueManager : MonoBehaviour
      */
     private void Awake()
     {
+        if (instance == null)
+        {
+            instance = this;
+        }
         dialoguePanel = GameObject.Find("DialoguePanel");
         dialoguetext = dialoguePanel.GetComponentInChildren<TextMeshProUGUI>();
         dialogueImage = dialoguePanel.transform.Find("DialogueImage").GetComponent<Image>();

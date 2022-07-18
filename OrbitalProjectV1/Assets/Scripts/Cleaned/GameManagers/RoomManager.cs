@@ -4,7 +4,6 @@ using UnityEngine;
 using Pathfinding;
 using System.Linq;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.Pool;
 
 /**
  * RoomManager.
@@ -57,8 +56,10 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     public List<NPCBehaviour> npcs { get; protected set; }
     public Light2D[] lights;
     protected UITextDescription textDescription;
+    protected RoomDesign roomDesigner;
     private UIObjectivePointer pointer;
     private GlobalAudioManager globalAudioManager;
+
 
     /**
      * Prefabs.
@@ -129,11 +130,10 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         items = new List<EntityBehaviour>();
         enemies = new List<EnemyBehaviour>();
         npcs = new List<NPCBehaviour>();
-        player = GameObject.FindObjectOfType<Player>(true);
-        dialMgr = GameObject.FindObjectOfType<DialogueManager>(true);
-        typingTestTL = GameObject.FindObjectOfType<TypingTestTL>(true);
+        
+        //typingTestTL = GameObject.FindObjectOfType<TypingTestTL>(true);
         popUpSettings = FindObjectOfType<PopUpSettings>(true);
-        poolManager = FindObjectOfType<PoolManager>(true);
+        //poolManager = FindObjectOfType<PoolManager>(true);
         //doorManager = FindObjectOfType<DoorManager>(true);
         astarPath = FindObjectOfType<AstarPath>(true);
         spawnlater = new List<EntityData>();
@@ -141,9 +141,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         {
             light.GetComponent<Animator>().SetBool(light.name, true);
         }
-        textDescription = FindObjectOfType<UITextDescription>(true);
-        pointer = FindObjectOfType<UIObjectivePointer>(true);
-        globalAudioManager = FindObjectOfType<GlobalAudioManager>(true);
+        //textDescription = FindObjectOfType<UITextDescription>(true);
+        //pointer = FindObjectOfType<UIObjectivePointer>(true);
+        //globalAudioManager = FindObjectOfType<GlobalAudioManager>(true);
         GenerateGuid();
 
 
@@ -154,10 +154,16 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     //    InitializeAStar();
     //}
 
-    private void Start()
+    protected virtual void Start()
     {
-
-
+        player = Player.instance;
+        dialMgr = DialogueManager.instance;
+        typingTestTL = TypingTestTL.instance;
+        poolManager = PoolManager.instance;
+        textDescription = UITextDescription.instance;
+        pointer = UIObjectivePointer.instance;
+        globalAudioManager = GlobalAudioManager.instance;
+        roomDesigner = RoomDesign.instance;
     }
 
     protected void OnDisable()
@@ -173,6 +179,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
             if (_collider != null)
             {
                 activated = true;
+                DecorateRoom();
                 InitializeAStar();
                 SettingDialogueMgr();
                 SettingUpAudio();
@@ -183,6 +190,11 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         }
 
         conditionSize = conditions.Count;
+    }
+
+    private void DecorateRoom()
+    {
+        roomDesigner.GenerateRoomDesign(roomtype, this);
     }
 
     private void SettingUpAudio()
@@ -437,11 +449,57 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
             randomPoint = new Vector2(
             Random.Range(areaminBound.x + 4f, areamaxBound.x - 4f),
             Random.Range(areaminBound.y + 4f, areamaxBound.y - 4f));
-        } while (Physics2D.OverlapCircle(randomPoint,2,LayerMask.GetMask("Obstacles"))); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
+        } while (Physics2D.OverlapCircle(randomPoint,2,LayerMask.GetMask("Obstacles","HouseExterior","HouseInterior"))); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
         //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
         return randomPoint;
     }
 
+
+    /**
+    * Get A random point where no overlap between obstacles given a size.
+    */
+    public Vector2 GetRandomObjectPointGivenSize(float size)
+    {
+        Vector2 randomPoint = Vector2.zero;
+        int iterations = 100;
+        do
+        {
+            //AABB axis - 4 possible bounds, top left, top right, bl, br
+            //tl = min.x, max.y;
+            //bl = min.x, min.y;
+            //tr = max.x, max.y;
+            //br = max.x, min.y;
+            //anywhere within these 4 bounds are possible pts;
+            randomPoint = new Vector2(
+            Random.Range(areaminBound.x + 4f, areamaxBound.x - 4f),
+            Random.Range(areaminBound.y + 4f, areamaxBound.y - 4f));
+            iterations--;
+        } while (Physics2D.OverlapCircle(randomPoint, size, LayerMask.GetMask("Obstacles")) && iterations > 0); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
+        //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
+        return randomPoint;
+    }
+
+    /**
+     * Get A random point where no overlap between obstacles.
+     */
+    public Vector2Int GetRandomTilePointGivenPoints(Vector2Int minArea, Vector2Int maxArea, bool insideArea, LayerMask layerMask)
+    {
+        Vector2Int randomPoint;
+        do
+        {
+            //AABB axis - 4 possible bounds, top left, top right, bl, br
+            //tl = min.x, max.y;
+            //bl = min.x, min.y;
+            //tr = max.x, max.y;
+            //br = max.x, min.y;
+            //anywhere within these 4 bounds are possible pts;
+            randomPoint = new Vector2Int(
+            Random.Range(minArea.x, maxArea.x),
+            Random.Range(minArea.y, maxArea.y));
+        } while (insideArea ? !Physics2D.OverlapPoint(randomPoint,layerMask) : Physics2D.OverlapPoint(randomPoint, layerMask));
+        //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
+        return randomPoint;
+    }
 
 
     /**
@@ -491,7 +549,6 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         {
 
             EntityData _item = entityDatas[i];
-            //EntityBehaviour initprop;
 
             if (_item.condition == 1)
             {
@@ -603,7 +660,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
      */
     public void InstantiateEntity(EntityData data)
     {
-        Vector2 pos = data.random ? GetRandomPoint() : data.pos;
+        Vector2 pos = data.random ? GetRandomObjectPoint() : data.pos;
         EntityBehaviour entity = poolManager.GetObject(data._type);
         InitializeEntity(data, pos, entity);
 
@@ -1257,6 +1314,26 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     public void SetUpEntityDatas(EntityData[] entityDatas)
     {
         _EntityDatas = entityDatas;
+    }
+
+    public void SetUpEntityData(EntityData entityData)
+    {
+        if (_EntityDatas == null)
+        {
+            _EntityDatas = new EntityData[20];
+        }
+
+
+        // basically shudve used list from the start... but ok i dont want to reinitialize the tut_level1 so i will just do this.
+        for (int i = 0; i < _EntityDatas.Length; i++)
+        {
+            if (_EntityDatas[i] == null)
+            {
+                _EntityDatas[i] = entityData;
+                break;
+            }
+        }
+        
     }
 
     public void SetUpRoomSize(Vector2Int size)

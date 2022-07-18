@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class UIObjectivePointer : MonoBehaviour
 {
+    public static UIObjectivePointer instance { get; private set; }
 
     private Vector2 objectivePos;
     private RectTransform pointer;
@@ -24,6 +25,10 @@ public class UIObjectivePointer : MonoBehaviour
         pointerImage = GetComponentInChildren<Image>();
         pointerImage.sprite = arrow;
         gameObject.SetActive(false);
+        if (instance == null)
+        {
+            instance = this;
+        }
         //player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         
     }

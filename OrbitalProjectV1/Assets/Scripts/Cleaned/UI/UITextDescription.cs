@@ -6,12 +6,17 @@ using TMPro;
 public class UITextDescription : MonoBehaviour
 {
     TextMeshProUGUI textDescription;
+    public static UITextDescription instance { get; private set; }
 
     private void Awake()
     {
 
         textDescription = GetComponentInChildren<TextMeshProUGUI>();
         textDescription.enabled = false;
+        if (instance == null)
+        {
+            instance = this;
+        }
     }
     //private void OnEnable()
     //{

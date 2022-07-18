@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 845c6ab78fdba427cba536b1d1e6a84c, type: 3}
+  m_Name: Swamp
+  m_EditorClassIdentifier: 
+  room_design: 1
+  floorTile: {fileID: 11400000, guid: d47e9bbc8e6ae4cddbd63294bc07dede, type: 2}
+  grassTile: {fileID: 11400000, guid: 91b5fb04a70a4445c89e1043ff59f013, type: 2}
+  luwall: {fileID: 11400000, guid: 252fbd50c9af649c4b098d132f98ee95, type: 2}
+  ldwall: {fileID: 11400000, guid: db77771ca7bdb45c1b48d9925b617398, type: 2}
+  ruwall: {fileID: 11400000, guid: a03b5c85c9c0c49798a34a6717b16aee, type: 2}
+  rdwall: {fileID: 11400000, guid: 7b9a793c474c74dccac14c6b284f0a80, type: 2}
+  vertwall: {fileID: 11400000, guid: dbc8886a3e6dd49d6898fac5ec5bf2ef, type: 2}
+  horizwall: {fileID: 11400000, guid: 3593503ca4f1e46f89f71114a298aa2e, type: 2}
+  allardwall: {fileID: 11400000, guid: 4c2bc446916bf4ff897983f8dea8ab6e, type: 2}
+  terrainObjects:
+  - {fileID: 25227757875230708, guid: 9abcae20b95f040ff98231ec7d6d590b, type: 3}
+  - {fileID: 7425367485755228537, guid: 06f0ef0bb476249dca5fe321eee11066, type: 3}

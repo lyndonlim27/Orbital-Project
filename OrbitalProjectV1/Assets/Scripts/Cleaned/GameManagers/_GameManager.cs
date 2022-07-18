@@ -39,7 +39,7 @@ public class _GameManager : MonoBehaviour, IDataPersistence
     GameObject CineCamera;
 
     [Header("RoomManagers")]
-    public List<RoomManager> roomManagers = new List<RoomManager>();
+    public static List<RoomManager> roomManagers = new List<RoomManager>();
 
     [Header("MapGenerator")]
     [SerializeField]

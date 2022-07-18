@@ -91,10 +91,8 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     protected override void Awake()
     {
         base.Awake();
-        player = GameObject.FindObjectOfType<Player>(true);
         melee = GetComponentInChildren<MeleeComponent>(true);
         ranged = GetComponentInChildren<RangedComponent>(true);
-        _flicker = GameObject.FindObjectOfType<DamageFlicker>();
         seeker = GetComponent<Pathfinding.Seeker>();
         tl = GetComponentInChildren<MonsterTextLogic>(true);
         light2D = GetComponentInChildren<Light2D>(true);
@@ -107,48 +105,100 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         
     }
 
+    private void Start()
+    {
+        player = Player.instance;
+        _flicker = DamageFlicker.instance;
+        rb = GetComponentInParent<Rigidbody2D>();
+        SetRbMass();
+    }
+
     /** OnEnable method.
      *  To intialize more specific entity behaviours for ObjectPooling.
      */
     protected override void OnEnable()
     {
         base.OnEnable();
-        health = enemyData.words;
-        maxhealth = enemyData.words;
-        Debuffed = false;
-        isDead = false;
-        inAnimation = false;
+        ResettingLocalBools();
         DisableAnimator();
         ResetTransform();
         SettingUpColliders();
         EnableAnimator();
-        _healthBar.SetMaxHealth(maxhealth);
+        ResettingEnemyDatas();
+        ResetHp();
+        ResettingLineRenderer();
+        ResettingColor();
+        ResettingLights();
+        ResettingDamageValue();
+        DestroyAllParticles();
+
+
+    }
+
+    private void ResettingLights()
+    {
+        light2D.color = spriteRenderer.color;
+        light2D.pointLightOuterRadius = enemyData.scale * 2;
+    }
+
+    private void ResettingEnemyDatas()
+    {
         ranged.gameObject.SetActive(enemyData.rangedtriggers.Count > 0);
+        ranged.rangeds = enemyData.rangedDatas;
+        melee.gameObject.SetActive(enemyData.meleetriggers.Count > 0);
+        maxDist = enemyData.maxDist;
+        health = enemyData.words;
+        maxhealth = enemyData.words;
+        healStagecooldown = 0;
+    }
+
+    private void ResetHp()
+    {
+        _healthBar.SetMaxHealth(maxhealth);
+    }
+
+    private void ResettingLocalBools()
+    {
+        Debuffed = false;
+        isDead = false;
+        inAnimation = false;
+        insideStage2 = false;
+    }
+
+    /**
+* Resets lineRenderer component.
+*/
+    private void ResettingLineRenderer()
+    {
         if (ranged.isActiveAndEnabled)
         {
             lineController.ResetLineRenderer();
 
         }
         lineController.SetParent(this);
-        ranged.rangeds = enemyData.rangedDatas;
-        melee.gameObject.SetActive(enemyData.meleetriggers.Count > 0);
-        ResettingColor();
-        light2D.color = spriteRenderer.color;
-        light2D.pointLightOuterRadius = enemyData.scale * 2;
-        insideStage2 = false;
-        maxDist = enemyData.maxDist;
-        rb = GetComponentInParent<Rigidbody2D>();
-        healStagecooldown = 0;
+    }
+
+    /**
+     * Resets damageValue component.
+     */
+    private void ResettingDamageValue()
+    {
+        if (damageApplier != null)
+        {
+            damageApplier.SettingUpDamage(enemyData.damageValue);
+        }
+    }
+
+    /**
+     * SetRb
+     */
+    private void SetRbMass()
+    {
         if (rb != null)
         {
             originalmass = rb.mass;
             rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         }
-        if (damageApplier != null)
-        {
-            damageApplier.SettingUpDamage(enemyData.damageValue);
-        }
-        DestroyAllParticles();
     }
 
     /**
@@ -817,13 +867,11 @@ public class EnemyBehaviour : ItemWithTextBehaviour
                 FlipFace(player.transform.position);
                 break;
             case ANIMATION_CODE.ATTACK_END:
-
                 UnlockMovement();
                 resetPosition();
                 inAnimation = false;
                 InstantiateDamageAudio();
                 stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
-
                 break;
             case ANIMATION_CODE.CAST_START:
                 FlipFace(player.transform.position);
@@ -835,10 +883,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
                 Shoot();
                 InstantiateDamageAudio();
                 resetPosition();
-
                 break;
             case ANIMATION_CODE.CAST_END:
-
+                inAnimation = false;
                 UnlockMovement();
                 resetPosition();
                 resetCooldown();
@@ -846,6 +893,13 @@ public class EnemyBehaviour : ItemWithTextBehaviour
             case ANIMATION_CODE.WEAP_TRIGGER:
                 WeapAttack();
                 break;
+            case ANIMATION_CODE.HURT_END:
+                UnlockMovement();
+                resetPosition();
+                inAnimation = false;
+                stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+                break;
+
         }
     }
 
@@ -916,6 +970,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         _flicker.Flicker(this);
         base.TakeDamage(damage);
         InstantiateHurtAudio();
+        Debug.Log("Health is: " + health);
         _healthBar.SetHealth(health);
         animator.SetTrigger("Hurt");
     }

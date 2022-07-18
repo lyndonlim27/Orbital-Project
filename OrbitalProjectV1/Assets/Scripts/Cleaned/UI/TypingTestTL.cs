@@ -8,6 +8,8 @@ public class  TypingTestTL : TextLogic
 {
     [SerializeField] private TextAsset text;
 
+    public static TypingTestTL instance { get; private set; }
+
     private float seconds;
     private int wordCount;
     private TextConverter textConverter;
@@ -35,7 +37,10 @@ public class  TypingTestTL : TextLogic
             }
 
         }
-        
+        if (instance == null)
+        {
+            instance = this;
+        }
         CanvasDisplayer = GetComponent<TextMeshProUGUI>();
         textConverter = GetComponent<TextConverter>();
         dialogueDetection = FindObjectOfType<DialogueDetection>(true);

@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 public class Player : EntityBehaviour, IDataPersistence, Freezable
 {
 
+    public static Player instance { get; private set; }
+
     public Vector2 _movement;
     public Vector2 lastdirection;
     public Transform _transform;
@@ -30,6 +32,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     private Animator buffanimator;
     private RuntimeAnimatorController healinganimator;
     private Vector2 savePoint;
+    
 
     private bool _invulnerable;
     private int playerprogress;
@@ -66,6 +69,10 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     protected override void Awake()
     {
         base.Awake();
+        if (instance == null)
+        {
+            instance = this;
+        }
         col = GetComponent<Collider2D>();
         InCombat = false;
         healinganimator = Resources.Load("Animations/AnimatorControllers/HealBuffVFX") as RuntimeAnimatorController;
@@ -95,8 +102,8 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         _weaponManager = this.gameObject.GetComponentInChildren<WeaponPickup>();
         _currWeapon = _weaponManager.ActiveWeapon().GetComponent<Weapon>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _flicker = GameObject.FindObjectOfType<DamageFlicker>();
-        dialMgr = GameObject.FindObjectOfType<DialogueManager>();
+        _flicker = DamageFlicker.instance;
+        dialMgr = DialogueManager.instance;
         _goldCounter = FindObjectOfType<GoldCounter>(true);
         _goldCounter.GoldUpdate();
         _buffBehaviour = FindObjectOfType<BuffBehaviour>(true);

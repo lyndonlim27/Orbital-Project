@@ -45,6 +45,10 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     [SerializeField]
     private EnemyData[] enemyDatas;
 
+    [Header("BossData")]
+    [SerializeField]
+    private List<EnemyData> bosses;
+
     [Header("TrapDatas")]
     [SerializeField]
     private TrapData[] trapDatas;
@@ -63,6 +67,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
     private _GameManager gameManager;
 
+
     public void GenerateRandomSeed()
     {
         int tempSeed = (int)System.DateTime.Now.Ticks;
@@ -78,7 +83,6 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
     protected override void RunProceduralGeneration()
     {
-        gameManager = GameObject.FindObjectOfType<_GameManager>(true);
         seen.Clear();
         if (currentSeed == -1)
         {
@@ -90,14 +94,14 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         }
         CreateRooms();
         ChangeRoomsToBoss();
-        ChangeRoom(0, gameManager.roomManagers, RoomManager.ROOMTYPE.TREASURE_ROOM);
-        gameManager.roomManagers[0].SetUpEntityDatas(RandomizeTreasureDatas());
+        ChangeRoom(0, _GameManager.roomManagers, RoomManager.ROOMTYPE.TREASURE_ROOM);
+        _GameManager.roomManagers[0].SetUpEntityDatas(RandomizeTreasureDatas());
     }
 
     private void CreateRooms()
     {
         var roomsList = ProceduralGenerationAlgorithms.BinarySpacePartitioning(new BoundsInt((Vector3Int)startPosition, new Vector3Int(dungeonWidth, dungeonHeight, 0)), minRoomWidth, minRoomHeight);
-        gameManager.roomManagers.Clear();
+        _GameManager.roomManagers.Clear();
         HashSet<Vector2Int> floor = new HashSet<Vector2Int>();
         doors = new HashSet<DoorBehaviour>();
         if (randomWalkRooms)
@@ -489,7 +493,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
             createdroom.SetUpPortal(portal);
         }
 
-        gameManager.roomManagers.Add(createdroom);
+        _GameManager.roomManagers.Add(createdroom);
         return createdroom;
     }
 
@@ -545,7 +549,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
             createdroom.SetUpPortal(portal);
         }
 
-        gameManager.roomManagers.Add(createdroom);
+        _GameManager.roomManagers.Add(createdroom);
         return createdroom;
         
     }
@@ -558,7 +562,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         int i = 2;
         while (i-- > 0)
         {
-            List<RoomManager> rooms = gameManager.roomManagers;
+            List<RoomManager> rooms = _GameManager.roomManagers;
             int rand;
             if (i == 1)
             {
@@ -594,6 +598,15 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
                 break;
             case RoomManager.ROOMTYPE.BOSSROOM:
                 newroom = currroomGameObject.AddComponent<BossRoom_Mgr>();
+                if (bosses.Count == 0)
+                {
+                    Debug.LogError("Did not allocate any bosses");
+                } else
+                {
+                    EnemyData selectedboss = bosses[UnityEngine.Random.Range(0, bosses.Count - 1)];
+                    bosses.Remove(selectedboss);
+                    newroom.SetUpEntityData(selectedboss);
+                }
                 
                 break;
 
@@ -611,7 +624,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         newroom.RoomIndex = index + 1;
         newroom.roomtype = rOOMTYPE;
         newroom.SetUpRoomSize(roomSize);
-        gameManager.roomManagers[index] = newroom;
+        _GameManager.roomManagers[index] = newroom;
 
 
     }
@@ -697,12 +710,14 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     /// <param name="door"></param>
     private void SettingDoorData(DoorBehaviour door)
     {
+        door.enabled = false;
         DoorData doorData = ScriptableObject.CreateInstance<DoorData>();
         doorData._name = "UNLOCK";
         doorData.minDist = 1.5f;
         doorData.sprite = doorSprite;
         doorData._type = EntityData.TYPE.DOOR;
         door.SetEntityStats(doorData);
+        door.enabled = true;
     }
 
     private bool CheckDoorsTouchingWalls(DoorBehaviour door)
@@ -719,4 +734,5 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         }
         return false;
     }
+
 }

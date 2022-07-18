@@ -9,11 +9,7 @@ public class TreasureRoom_Mgr : RoomManager
     {
         base.Awake();
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    
 
     protected override void Update()
     {

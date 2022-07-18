@@ -57,12 +57,13 @@ class MeleeState : StateClass
                 enemy.inAnimation = true;
                 int random = Random.Range(0, meleetriggers.Count);
                 enemy.animator.SetTrigger(meleetriggers[random]);
-                
-                    
-            } else
-            {
-                stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+
             }
+                    
+            //} else
+            //{
+            //    stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+            //}
                 
         }
                        

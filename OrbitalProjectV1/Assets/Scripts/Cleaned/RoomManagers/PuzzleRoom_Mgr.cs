@@ -26,8 +26,9 @@ public class PuzzleRoom_Mgr : RoomManager
         //puzzle_type = (PUZZLE_TYPE)Random.Range(0, (int) PUZZLE_TYPE.COUNT);
         puzzle_type = PUZZLE_TYPE.PRESSURE;
     }
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         LoadPuzzle();
     }
 

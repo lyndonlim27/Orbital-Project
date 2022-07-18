@@ -6,8 +6,9 @@ public class FightRoom_Mgr : RoomManager
 {
     public int waveNum;
     
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         startNum = 1;
     }
 

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class DamageFlicker : MonoBehaviour
 {
+
+    public static DamageFlicker instance { get; private set; }
+
     private Material _flickerMaterial; 
     private float _duration = 0.125f;
     private SpriteRenderer _spriteRenderer;
@@ -12,6 +15,13 @@ public class DamageFlicker : MonoBehaviour
     private Coroutine _flickerRoutine;
     // Start is called before the first frame update
 
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
 
     void Start()
     {

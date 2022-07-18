@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 845c6ab78fdba427cba536b1d1e6a84c, type: 3}
+  m_Name: Plantation
+  m_EditorClassIdentifier: 
+  room_design: 2
+  floorTile: {fileID: 11400000, guid: b9bad9b0e39aa4b708d60658140d2b22, type: 2}
+  grassTile: {fileID: 11400000, guid: 1c1a2bfefaca44164b24fbcca6b8f176, type: 2}
+  luwall: {fileID: 11400000, guid: 36094a42d38bd47af875c73cf773eb2f, type: 2}
+  ldwall: {fileID: 11400000, guid: 713aad77cd0ae4f488bea5aa855c4f98, type: 2}
+  ruwall: {fileID: 11400000, guid: b91fe616a3e8f44429a4b4408d309b08, type: 2}
+  rdwall: {fileID: 11400000, guid: 7e03fb1d5d75e49cb95e490a3f677db6, type: 2}
+  vertwall: {fileID: 11400000, guid: b930e0f499b874b9495d41ce332ac709, type: 2}
+  horizwall: {fileID: 11400000, guid: d57bbce8c6b9d42198d2879db4f9ef22, type: 2}
+  allardwall: {fileID: 11400000, guid: 0eafe6a3d2e5f424a9ea3f25051a0bbe, type: 2}
+  terrainObjects: []
+  intterrainDecorations:
+  - {fileID: 11400000, guid: c1c003e34b0d1487dac090a3d9c5d434, type: 2}
+  - {fileID: 11400000, guid: 611811b75b3954d99ba6ff4be0887fed, type: 2}
+  - {fileID: 11400000, guid: be7ac7ebf112141459b437f48deaa28c, type: 2}
+  - {fileID: 11400000, guid: 4fcfe184fefdd4a20bdfd8ac17d6132d, type: 2}
+  - {fileID: 11400000, guid: f9336a0e07ed6492cad5cba5fb71bb76, type: 2}
+  - {fileID: 11400000, guid: 6cffea1c93334460f8de7695aac3530e, type: 2}
+  - {fileID: 11400000, guid: a275d6fcd095940049553edcc3de2740, type: 2}
+  - {fileID: 11400000, guid: fbcbdf43757d9460a8912e45b1d8296b, type: 2}
+  - {fileID: 11400000, guid: 61147d9901d0a410eb15960dd00f2143, type: 2}
+  - {fileID: 11400000, guid: 79ee7139fae7a4c268a9d31904110d3a, type: 2}
+  - {fileID: 11400000, guid: 6f28e4cad541c403f825742fc174f59b, type: 2}
+  - {fileID: 11400000, guid: c4fa21f8746994b06b0b42590b8defe0, type: 2}
+  - {fileID: 11400000, guid: 9950ed4cf4caf4704b15889b40894749, type: 2}
+  - {fileID: 11400000, guid: 3dae824433fd9413baad4eb48ef17bb0, type: 2}
+  - {fileID: 11400000, guid: e082e47ea3c8b4539abc2660c64ed98e, type: 2}
+  - {fileID: 11400000, guid: 049466d0f57d54967b4a00dae36a5cde, type: 2}
+  - {fileID: 11400000, guid: 7590e81b776cf46febea4d48baca09cc, type: 2}
+  extterrainDecorations:
+  - {fileID: 11400000, guid: d187e2d8fc47d4c199f748366c8b15fa, type: 2}
+  - {fileID: 11400000, guid: 5de9820c36e254cbebcdb9949098c7dc, type: 2}
+  - {fileID: 11400000, guid: 7e7f6a97117a04fd89beb98d5a4da17e, type: 2}
+  - {fileID: 11400000, guid: 4e66fdb1b5e874f4d993ced254ff5788, type: 2}
+  - {fileID: 11400000, guid: afaef622a9511475d802084658a9073a, type: 2}
+  - {fileID: 11400000, guid: 4cfab3c70f6144bbbacd9cb5bb26a5ba, type: 2}
+  - {fileID: 11400000, guid: 2d2b5c7678cc946ef8e23b51da55a026, type: 2}
+  - {fileID: 11400000, guid: 54ef84eb07eae4b9cacf3361190bd4db, type: 2}
+  frequency: 0.7
+  offset: 28
+  normalizer: 0.203

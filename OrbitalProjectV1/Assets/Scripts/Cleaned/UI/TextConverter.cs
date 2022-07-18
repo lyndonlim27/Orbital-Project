@@ -63,7 +63,7 @@ public class TextConverter : MonoBehaviour
     private void Start()
     {
 
-        if (tmp != null)
+        if (tmp != null && textlogic.remainingword != null)
         {
             tmp.text = ConvertToCustomSprites(textlogic.remainingword);
         }
@@ -71,7 +71,7 @@ public class TextConverter : MonoBehaviour
 
     private void Update()
     {
-        if (tmp != null)
+        if (tmp != null && textlogic.remainingword != null)
         {
             tmp.text = ConvertToCustomSprites(textlogic.remainingword);
         }

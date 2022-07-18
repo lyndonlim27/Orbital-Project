@@ -135,6 +135,14 @@ MonoBehaviour:
   consumableItemDatas:
   - {fileID: 11400000, guid: 23532790317044ebe8de1e951381e273, type: 2}
   - {fileID: 11400000, guid: 9faedf14fbaf146ba91e4c54a6d1b9aa, type: 2}
+  lastvelocity: {x: 0, y: 0}
+  targetHit: 0
+  laser: {fileID: 0}
+  laserPos: []
+  laserHits: []
+  rotSpeed: 0
+  mounted: 0
+  laserActivated: 0
 --- !u!82 &98932954468447521
 AudioSource:
   m_ObjectHideFlags: 0
@@ -375,6 +383,14 @@ PrefabInstance:
     - target: {fileID: 1120695536501485629, guid: 7eba5c53e2c784c5a8ec311ea163c078, type: 3}
       propertyPath: m_Name
       value: ItemCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 1924925843928705402, guid: 7eba5c53e2c784c5a8ec311ea163c078, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -537219507
+      objectReference: {fileID: 0}
+    - target: {fileID: 3161281838798441322, guid: 7eba5c53e2c784c5a8ec311ea163c078, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6178997182029396402, guid: 7eba5c53e2c784c5a8ec311ea163c078, type: 3}
       propertyPath: m_AnchoredPosition.x

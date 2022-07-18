@@ -15,11 +15,7 @@ public class HybridRoom_Mgr : RoomManager
         base.Awake();
         
     }
-    void Start()
-    {
-        
-    }
-
+    
     protected override void Update()
     {
         base.Update();

@@ -144,12 +144,12 @@ public class TilemapVisualizer : MonoBehaviour
             
             
 
-            if (toPutTreeOrNot <= 2)
+            if (toPutTreeOrNot <= 2 && toPutTreeOrNot <= 6)
             {
 
                 PaintSingleTile(groundDecoTilemap, landdecoratives[UnityEngine.Random.Range(0, landdecoratives.Count)], position, false);
             }
-            else
+            else if (toPutTreeOrNot >= 6)
             {
                 int rand = UnityEngine.Random.Range(0, 3);
                 Tilemap selectedlayer;

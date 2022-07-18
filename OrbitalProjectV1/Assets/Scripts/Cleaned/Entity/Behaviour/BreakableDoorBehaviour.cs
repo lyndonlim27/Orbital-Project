@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class BreakableDoorBehaviour : DoorBehaviour
 {
-    private GameObject textCanvas;
-    private WeaponDescription weaponDataDisplay;
-    [SerializeField] private DoorData doorData;
+    protected GameObject textCanvas;
+    protected WeaponDescription weaponDataDisplay;
+    [SerializeField] protected DoorData doorData;
 
     protected override void Awake()
     {
@@ -14,6 +14,14 @@ public class BreakableDoorBehaviour : DoorBehaviour
         textCanvas = GetComponentInChildren<TextLogic>().gameObject;
         weaponDataDisplay = GetComponentInChildren<WeaponDescription>(true);
         weaponDataDisplay.gameObject.SetActive(false);
+        
+
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        GetComponent<BoxCollider2D>().size = spriteRenderer.sprite.bounds.size;
     }
 
     protected override void Start()

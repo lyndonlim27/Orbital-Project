@@ -319,7 +319,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
+  m_SortingLayerID: -537219507
   m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!114 &5928977218067530235
@@ -499,6 +499,14 @@ MonoBehaviour:
   Debuffed: 0
   data: {fileID: 11400000, guid: 05486bde68e8e43c48368df23c9e44b2, type: 2}
   consumableItemDatas: []
+  lastvelocity: {x: 0, y: 0}
+  targetHit: 0
+  laser: {fileID: 0}
+  laserPos: []
+  laserHits: []
+  rotSpeed: 0
+  mounted: 0
+  laserActivated: 0
 --- !u!70 &2057017466831945173
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

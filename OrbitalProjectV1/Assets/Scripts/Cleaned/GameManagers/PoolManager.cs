@@ -6,6 +6,9 @@ using UnityEngine.Pool;
 public class PoolManager : MonoBehaviour
 {
     [SerializeField] EntityBehaviour[] entityPrefabs;
+
+    public static PoolManager instance { get; private set; }
+
     //[SerializeField] GameObject prefab;
     //private ObjectPool<EntityBehaviour> entities;
     /**
@@ -19,6 +22,10 @@ public class PoolManager : MonoBehaviour
     private void Awake()
     {
         InitializePool();
+        if (instance == null)
+        {
+            instance = this;
+        }
     }
         
 

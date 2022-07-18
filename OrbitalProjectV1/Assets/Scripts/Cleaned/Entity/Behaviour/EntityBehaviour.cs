@@ -37,7 +37,6 @@ public abstract class EntityBehaviour : MonoBehaviour
     {
         if (GetData() != null)
         {
-            Debug.Log("This is sprite" + GetData().sprite);
             spriteRenderer.sprite = GetData().sprite;
         }
         
