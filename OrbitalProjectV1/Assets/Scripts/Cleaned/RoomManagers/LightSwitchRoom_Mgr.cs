@@ -16,12 +16,6 @@ public class LightSwitchRoom_Mgr : RoomManager
         
     }
 
-    protected void Start()
-    {
-        
-    }
-
-
     protected override void Update()
     {
         base.Update();

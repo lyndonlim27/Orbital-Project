@@ -247,16 +247,19 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 light2D.pointLightOuterRadius = 2f;
                 _rb.bodyType = RigidbodyType2D.Kinematic;
                 break;
+            case ItemWithTextData.ITEM_TYPE.MONSTERTRAPBOX:
             case ItemWithTextData.ITEM_TYPE.CHEST:
                 light2D.enabled = true;
                 light2D.pointLightOuterRadius = 2f;
                 _rb.bodyType = RigidbodyType2D.Kinematic;
-                spriteRenderer.sprite = data.itemSprites[Random.Range(0, data.itemSprites.Length - 1)];
+                if (data.itemSprites.Length > 0)
+                {
+                    spriteRenderer.sprite = data.itemSprites[Random.Range(0, data.itemSprites.Length - 1)];
+                }
                 break;
             case ItemWithTextData.ITEM_TYPE.WEAPON:
                 _rb.bodyType = RigidbodyType2D.Kinematic;
                 light2D.enabled = true;
-                Debug.Log("We entered");
                 weaponDataDisplay.gameObject.SetActive(true);
                 weaponDataDisplay.SetWeaponPickUp(data.rangedData);
                 weaponDataDisplay.SetCurrWeapon(player.GetWeaponData());
@@ -293,7 +296,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 break;
             case ItemWithTextData.ITEM_TYPE.PUZZLETORCH:
                 light2D.enabled = true;
-                torchPuzzle = currentRoom.transform.Find("TorchLightPuzzle(Clone)").GetComponent<TorchPuzzle>();
+                torchPuzzle = currentRoom.transform.Find("TorchLightPuzzle").GetComponent<TorchPuzzle>();
                 transform.SetParent(torchPuzzle.transform);
                 break;
             case ItemWithTextData.ITEM_TYPE.BALL:
@@ -389,6 +392,10 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 FindObjectOfType<WeaponPickup>().Swap(data._name);
                 HandleAnimation();
                 break;
+            case ItemWithTextData.ITEM_TYPE.MONSTERTRAPBOX:
+                SpawnEnemies();
+                StartCoroutine(HandleChestAnimation());
+                break;
             case ItemWithTextData.ITEM_TYPE.CHEST:
                 SpawnObjects();
                 SpawnDrops();
@@ -449,7 +456,6 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         int currnum = int.Parse(data.sprite.name.Substring(undscore_index + 1));
         int newnum = currnum + 5;
         string newspritename = data.sprite.name.Substring(0, undscore_index) + newnum;
-        Debug.Log(newspritename);
         spriteRenderer.sprite = Resources.Load($"Sprites/{newspritename}") as Sprite;
         yield return new WaitForSeconds(0.8f);
         poolManager.ReleaseObject(this);
@@ -559,7 +565,6 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     private void CastLaser(Vector2 pos ,Vector2 dir)
     {
         RaycastHit2D hit = Physics2D.Raycast(pos + new Vector2(0.01f,0.01f), dir, Mathf.Infinity, LayerMask.GetMask("Obstacles", "Doors", "Mirror"));
-        Debug.Log(hit.collider);
         if (hit.collider != null) {
             CheckHit(hit,dir);
         } else
@@ -571,7 +576,6 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     private void InitializeLaser()
     {
         laser.positionCount = laserPos.Count;
-        Debug.Log(laserPos.Count);
         laser.SetPositions(laserPos.ToArray());
     }
 
@@ -594,7 +598,6 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         } else
         {
             laserPos.Add(hit.point);
-            Debug.Log(hit.point);
             InitializeLaser();
         }
 
@@ -602,28 +605,38 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     #endregion
 
     /**
+     * Spawn all enemies inside the monstertrap.
+     */
+    private void SpawnEnemies()
+    {
+        List<ItemWithTextData> edClones = new List<ItemWithTextData>();
+        Array.ForEach(data.itemTextDatas, (d) =>
+        {
+            ItemWithTextData e = Instantiate(d);
+            e.random = false;
+            e.spawnAtStart = true;
+
+            e.pos = transform.position + new Vector3(UnityEngine.Random.Range(-2, 2) * data.scale, UnityEngine.Random.Range(-2, 2) * data.scale, 1);
+            edClones.Add(e);
+
+        });
+        currentRoom.SpawnObjects(edClones.ToArray());
+    }
+
+
+    /**
      * Spawn itemwithtextbehaviours if any.
      */
     private void SpawnObjects()
     {
-        //List<ItemWithTextData> edClones = new List<ItemWithTextData>();
+        if (data.itemTextDatas.Length == 0)
+        {
+            return;
+        }
         float rand2 = Random.value;
         if (rand2 >= 0.4f)
         {
             int rand = Random.Range(0, data.itemTextDatas.Length);
-
-            //Array.ForEach(data.itemTextDatas, (d) =>
-            //{
-            //    ItemWithTextData e = Instantiate(d);
-            //    e.random = false;
-            //    e.spawnAtStart = true;
-
-            //    e.pos = transform.position + new Vector3(UnityEngine.Random.Range(-2, 2) * data.scale, UnityEngine.Random.Range(-2, 2) * data.scale, 1);
-            //    edClones.Add(e);
-
-            //});
-            //currentRoom.SpawnObjects(edClones.ToArray());
-            Debug.Log(rand);
             ItemWithTextData clone = Instantiate(data.itemTextDatas[rand]) as ItemWithTextData;
             clone.pos = transform.position + Random.insideUnitSphere;
             clone.random = false;

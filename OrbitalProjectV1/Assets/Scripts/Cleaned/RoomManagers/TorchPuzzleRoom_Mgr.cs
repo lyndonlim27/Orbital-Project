@@ -9,6 +9,7 @@ public class    TorchPuzzleRoom_Mgr : RoomManager
     {
         base.Awake();
         torchPuzzle = GetComponentInChildren<TorchPuzzle>();
+        torchPuzzle.SetCurrentRoom(this);
     }
 
     protected override void Update()
@@ -17,7 +18,9 @@ public class    TorchPuzzleRoom_Mgr : RoomManager
         base.Update();
         if (activated && !torchPuzzle.activated)
         {
+            torchPuzzle.GetTorches();
             torchPuzzle.ActivatePuzzle(1);
+            
         }
         RoomChecker();
         CheckRunningEvents();

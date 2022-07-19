@@ -50,11 +50,21 @@ public class TorchPuzzle : MonoBehaviour, Puzzle
     public void ActivatePuzzle(int seq)
     {
         activated = true;
-        currRoom.SpawnObjects(puzzleTorchesData.ToArray());
-        torchLights = GetComponentsInChildren<ItemWithTextBehaviour>().ToList();
-        RandomizeTorches();
         GetRandomOrder();
         remainingcode = unlockcode;
+
+    }
+
+    public void SpawnTorches()
+    {
+        currRoom.SpawnObjects(puzzleTorchesData.ToArray());
+        GetTorches();
+        RandomizeTorches();
+    }
+
+    public void GetTorches()
+    {
+        torchLights = GetComponentsInChildren<ItemWithTextBehaviour>().ToList();
     }
 
     //public void AddPuzzleTorch(ItemWithTextBehaviour torch)

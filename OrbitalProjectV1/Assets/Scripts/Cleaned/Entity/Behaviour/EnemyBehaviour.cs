@@ -322,6 +322,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
             {
                 StartCoroutine(FootStepAudio());
             }
+
         }
 
 
@@ -872,6 +873,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
                 inAnimation = false;
                 InstantiateDamageAudio();
                 stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+                
                 break;
             case ANIMATION_CODE.CAST_START:
                 FlipFace(player.transform.position);
@@ -885,7 +887,6 @@ public class EnemyBehaviour : ItemWithTextBehaviour
                 resetPosition();
                 break;
             case ANIMATION_CODE.CAST_END:
-                inAnimation = false;
                 UnlockMovement();
                 resetPosition();
                 resetCooldown();
@@ -1235,10 +1236,11 @@ public class EnemyBehaviour : ItemWithTextBehaviour
             float x = float.Parse(mPos[0]);
             float y = float.Parse(mPos[1]);
             RaycastHit2D hit = Physics2D.Linecast(transform.position, new Vector2(transform.position.x + x, transform.position.y + y), LayerMask.GetMask("Obstacles"));
+            
             if (facingRight)
             {
 
-                rb.MovePosition(hit ? hit.point: new Vector2(_transform.position.x - transform.right.x * x, _transform.position.y + y));
+                rb.MovePosition(hit ? hit.point : new Vector2(_transform.position.x - transform.right.x * x, _transform.position.y + y));
             }
             else
             {

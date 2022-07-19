@@ -60,10 +60,12 @@ public class PuzzleRoom_Mgr : RoomManager
             case PUZZLE_TYPE.TORCH:
                 GameObject torchprefab = Resources.Load("PuzzlePrefab/TorchLightPuzzle") as GameObject;
                 GameObject go = Instantiate(torchprefab);
+                go.name = "TorchLightPuzzle";
                 go.transform.SetParent(this.transform);
                 go.transform.position = transform.position;
                 var torchPuzzle = go.GetComponent<TorchPuzzle>();
                 torchPuzzle.SetCurrentRoom(this);
+                torchPuzzle.SpawnTorches();
                 puzzle = torchPuzzle;
                 puzzleMono = torchPuzzle;
                 break;

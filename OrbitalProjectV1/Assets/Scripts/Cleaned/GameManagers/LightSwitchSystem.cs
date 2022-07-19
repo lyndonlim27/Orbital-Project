@@ -112,7 +112,7 @@ public class LightSwitchSystem : MonoBehaviour, Puzzle
         currindex++;
         if (!IsComplete())
         {
-            uITextDescription.StartDescription("Input is wrong, lights reflickers...");
+            uITextDescription.StartDescription("Light reflickers..");
             StartCoroutine(StartLightShow());
         } 
         

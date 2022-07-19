@@ -14,7 +14,7 @@ public class NPCBehaviour : EntityBehaviour
     //public bool fulfilled;
     protected bool proceedable;
     protected Animator animator;
-    protected bool fulfilled;
+    public bool fulfilled { get; private set; }
     protected DialogueDetection dialogueDetection;
 
     /** The first instance the gameobject is being activated.
@@ -31,9 +31,10 @@ public class NPCBehaviour : EntityBehaviour
     /** OnEnable method.
      *  To intialize more specific entity behaviours for ObjectPooling.
      */
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        this.spriteRenderer.sprite = data.sprite;
+        base.OnEnable();
+        //this.spriteRenderer.sprite = data.sprite;
         if (data._animator != "")
         {
             animator.runtimeAnimatorController = Resources.Load($"Animations/AnimatorControllers/{data._animator}") as RuntimeAnimatorController;
@@ -80,21 +81,20 @@ public class NPCBehaviour : EntityBehaviour
     internal virtual void Fulfill()
     {
         //this.gameObject.SetActive(false);
+        
         fulfilled = true;
         proceedable = false;
         animator.enabled = false;
         if (data.condition == 1)
         {
-            currentRoom.conditions.Remove(data._name + data.GetInstanceID());
+            currentRoom.FulfillCondition(data._name + data.GetInstanceID());
         }
         if (data.dropData.Length > 0)
         {
             currentRoom.SpawnObjects(data.dropData);
         }
-       
- 
     }
-
+        
     /**
      * Despawn behaviour.
      */
@@ -129,7 +129,7 @@ public class NPCBehaviour : EntityBehaviour
             switch (data._npcAction)
             {
                 case NPCData.NPCActions.TYPINGTEST:
-                    TypingTestTL _tl = FindObjectOfType<TypingTestTL>(true);
+                    TypingTestTL _tl = TypingTestTL.instance;
                     _tl.SetActive();
                     break;
             }

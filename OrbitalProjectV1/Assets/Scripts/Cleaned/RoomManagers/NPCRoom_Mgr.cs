@@ -13,11 +13,6 @@ public class NPCRoom_Mgr : RoomManager
 
     }
 
-    private void Start()
-    {
-        //added = false;
-    }
-
     protected override void Update()
     {
         base.Update();

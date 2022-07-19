@@ -194,7 +194,11 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     private void DecorateRoom()
     {
-        roomDesigner.GenerateRoomDesign(roomtype, this);
+        if (roomDesigner != null)
+        {
+            roomDesigner.GenerateRoomDesign(roomtype, this);
+        }
+        
     }
 
     private void SettingUpAudio()
@@ -294,6 +298,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         gg.collision.use2D = true;
         gg.collision.mask = CollisionObjects;
         AstarPath.active.Scan(gg);
+        AstarPath.active.logPathResults =  Pathfinding.PathLog.None;
 
     }
 
@@ -447,9 +452,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
             //br = max.x, min.y;
             //anywhere within these 4 bounds are possible pts;
             randomPoint = new Vector2(
-            Random.Range(areaminBound.x + 4f, areamaxBound.x - 4f),
-            Random.Range(areaminBound.y + 4f, areamaxBound.y - 4f));
-        } while (Physics2D.OverlapCircle(randomPoint,2,LayerMask.GetMask("Obstacles","HouseExterior","HouseInterior"))); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
+            Random.Range(areaminBound.x, areamaxBound.x),
+            Random.Range(areaminBound.y, areamaxBound.y));
+        } while (!roomArea.OverlapPoint(randomPoint) || Physics2D.OverlapCircle(randomPoint,1,LayerMask.GetMask("Obstacles","HouseExterior","HouseInterior"))); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
         //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
         return randomPoint;
     }
@@ -973,10 +978,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
             if (collision.CompareTag("Player") || collision.CompareTag("Stealth"))
 
             {
-
-                //Debug.Log("Room is activated" + activated);
-                //if (activated && player.GetCurrentRoom() != this)
-                //{
+                
                 if (player.GetCurrentRoom() != this)
                 {
                     if (textDescription != null && textDescription.isActiveAndEnabled)

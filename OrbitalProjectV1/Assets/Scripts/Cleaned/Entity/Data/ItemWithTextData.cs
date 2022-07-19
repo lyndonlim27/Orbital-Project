@@ -21,7 +21,8 @@ public class ItemWithTextData : EntityData
         BALL,
         PORTAL,
         LASER,
-        MIRROR
+        MIRROR,
+        MONSTERTRAPBOX
     }
     public ITEM_TYPE item_type;
     public Sprite secondarysprite;

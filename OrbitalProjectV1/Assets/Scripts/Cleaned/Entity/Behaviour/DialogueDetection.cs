@@ -18,7 +18,7 @@ public class DialogueDetection : MonoBehaviour
      */
     private void Awake()
     {
-        dialMgr = GameObject.FindObjectOfType<DialogueManager>(false);
+        
         dialogueAlert.SetActive(false);
         
     }
@@ -28,7 +28,8 @@ public class DialogueDetection : MonoBehaviour
     void Start()
     {
         detectionScript = GetComponent<DetectionScript>();
-        player = GameObject.FindObjectOfType<Player>();
+        dialMgr = DialogueManager.instance;
+        player = Player.instance;
         currentNPC = GetComponentInParent<NPCBehaviour>();
 
     }

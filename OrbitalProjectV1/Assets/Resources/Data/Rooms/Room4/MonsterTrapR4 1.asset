@@ -32,6 +32,7 @@ MonoBehaviour:
   defaultcolor: {r: 0, g: 0, b: 0, a: 0}
   floating: 0
   moveable: 0
+  NotURP: 0
   attackAudios: []
   miscellaneousAudios: []
   interactionAudios: []
@@ -44,6 +45,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 73f722faef2ce453e8d41437bb6b2083, type: 2}
   ac_name: Chest
   _trigger: defaultOpen
-  item_type: 2
+  item_type: 12
   secondarysprite: {fileID: 0}
+  itemSprites: []
   description: 
+  rangedData: {fileID: 0}

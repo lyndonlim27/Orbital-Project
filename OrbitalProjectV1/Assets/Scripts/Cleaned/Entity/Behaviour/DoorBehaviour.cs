@@ -86,12 +86,12 @@ public class DoorBehaviour : EntityBehaviour
 
     public override EntityData GetData()
     {
-        throw new System.NotImplementedException();
+        return null;
     }
 
     public override void SetEntityStats(EntityData stats)
     {
-        throw new System.NotImplementedException();
+        return;
     }
 
     public virtual void UnlockDoor()

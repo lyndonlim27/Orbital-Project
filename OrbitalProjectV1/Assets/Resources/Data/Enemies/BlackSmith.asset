@@ -42,6 +42,7 @@ MonoBehaviour:
   _trigger: 
   item_type: 0
   secondarysprite: {fileID: 0}
+  itemSprites: []
   description: 
   rangedData: {fileID: 0}
   damageValue: 5
@@ -53,14 +54,14 @@ MonoBehaviour:
   meleetriggers:
   - NormalAttack
   - SpinAttack
+  - LeapAttack
+  - MultiAttack1
+  - JumpAttack
   defends:
   - Dash
   rangedtriggers:
   - ShootLaser
-  dashattacks:
-  - LeapAttack
-  - MultiAttack1
-  - JumpAttack
+  dashattacks: []
   rangedDatas:
   - {fileID: 11400000, guid: fd44465a58f324a7c916d0a7e9e2c9b4, type: 2}
   bossdamageprops:
@@ -73,9 +74,10 @@ MonoBehaviour:
   bossdefenceprops: []
   animatorname: AC_BlackSmith
   words: 100
-  rangedcooldown: 2
+  rangedcooldown: 15
   stage2: 1
   healStage: 0
   enragedColor: {r: 0.5568628, g: 0.32941177, b: 0.32941177, a: 1}
   dashoffset: 12
+  jumpheight: 0
   body: 0

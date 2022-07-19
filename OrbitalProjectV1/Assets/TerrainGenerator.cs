@@ -18,13 +18,13 @@ public class TerrainGenerator : MonoBehaviour
     private int height;
 
     [SerializeField]
-    private Tilemap terrainTilemap,terrainWallTilemap, groundDecoTilemap;
+    private Tilemap terrainTilemap,terrainWallTilemap, groundDecoTilemap, kruskalVisualizer;
 
     [SerializeField]
     private TileBase horizwall, vertwall, luwall, ldwall, ruwall, rdwall, allardwall;
 
     [SerializeField]
-    private TileBase terraintile, grassTile;
+    private TileBase terraintile, grassTile, kruskalTile;
 
     [SerializeField]
     private TileBase[] terrainInteriorDecorations, terrainExteriorDecorations;
@@ -74,9 +74,11 @@ public class TerrainGenerator : MonoBehaviour
         terrainTilemap.ClearAllTiles();
         terrainWallTilemap.ClearAllTiles();
         groundDecoTilemap.ClearAllTiles();
+        kruskalVisualizer.ClearAllTiles();
         map = GenerateMapTesting();
         PaintWalls(map);
         PaintTerrainTile(map);
+        CreateConnections(width,height);
         
     }
 
@@ -152,7 +154,6 @@ public class TerrainGenerator : MonoBehaviour
             return;
         }
         bool place = UnityEngine.Random.Range(0, 100) >= offset + frequency * 100;
-        //Debug.Log(random.Next());
         if (place)
         {
             groundDecoTilemap.SetTile(pos, decorations[UnityEngine.Random.Range(0, decorations.Length)]);
@@ -358,116 +359,298 @@ public class TerrainGenerator : MonoBehaviour
         normalizer = levelDesign.normalizer;
     }
 
+
+
+
     // Look For all Enclosed Spaces, find MST to every other enclosed spaces.
     // do dsu first to connect all spaces in 1 object.
     // Remove all decorations/walls in this path.
 
-    private void MinimumSpanTree(int width, int height)
+    /// <summary>
+    /// Initialize segments and create pavement.
+    /// </summary>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    private void CreateConnections(int width, int height)
     {
-        for (int i = 0; i < width; i++ )
+        List<List<Vector3Int>> segments = PartitionSegments();
+        List<Edge> graph = CreateGraph(segments);
+
+        // now that we have the areas segmented and sorted, we just need to do a simple MST to find the shortest path that connects all these segments.
+        // choice of union : by size
+        List<Edge> minconnectors = Kruskal(segments, graph);
+        foreach(Edge edge in minconnectors)
         {
-            for (int j = 0; j < height; j++ )
+            ClearPavement(GetMidPoint(segments[edge.src]), GetMidPoint(segments[edge.dest]));
+        }
+
+    }
+
+    /// <summary>
+    /// Clear Pavement using RandomWalk
+    /// </summary>
+    /// <param name="curr"></param>
+    /// <param name="dest"></param>
+    private void ClearPavement(Vector3Int curr, Vector3Int dest)
+    {
+        List<Vector3Int> pathing = new List<Vector3Int>();
+        while (curr != dest)
+        {
+            pathing.Add(curr);
+            curr = GetNextPosition(curr,dest);
+        }
+
+
+        foreach (Vector3Int vec in pathing)
+        {
+            Collider2D col = Physics2D.OverlapPoint((Vector2Int)vec);
+            RemoveWall(vec);
+            if (col != null)
             {
-
+                DestroyImmediate(col.gameObject);
             }
+
         }
     }
-}
 
-
-// ## do this tmr
-// do i need to use this.
-// 1. Start at 0,0.
-// 2. do simple 8dir-dfs, find all neighbouring cells that are not 1, add into set. If cell == 1, stop.
-// 3. Get a random point in the bound that is not inside this set. // instead of using a random point, can just create multiple sets like dsu. Randompoint will add computational time.
-// 4. Repeat step2.
-// 5. Connect the individual sets using Manhattan distance of the center of the sets.
-// 6. Use djikstra to create a path between sets.
-// 7. Remove all decorations/walls in the path.
-
-public class MST
-{
-    //if i use two hashset, i dont have to use a separate node class.
-    Dictionary<Vector2Int, int> map;
-    List<Node> path;
-
-    public MST(Dictionary<Vector2Int,int> _map)
+    private void RemoveWall(Vector3Int vec)
     {
-        map = _map;
-        InitializeDSU();
+        
+        terrainWallTilemap.SetTile(vec, null);
+        terrainTilemap.SetTile(vec, grassTile);
+        kruskalVisualizer.SetTile(vec, kruskalTile);
     }
 
-    private void InitializeDSU()
+    private Vector3Int GetNextPosition(Vector3Int curr, Vector3Int dest)
     {
-        // need to sort first, dict unsorted.
-        // 
-        foreach(Vector2Int vec in map.Keys)
+        Vector3Int vec = Vector3Int.zero;
+        IncrementVector(curr, dest, ref vec, UnityEngine.Random.value >= 0.5f);
+        Vector3Int newpos = curr + vec;
+        return newpos;
+
+    }
+
+    private void IncrementVector(Vector3Int curr, Vector3Int dest, ref Vector3Int vec, bool horizontal)
+    {
+        int lastval = horizontal ? dest.x : dest.y;
+        int startval = horizontal ? curr.x : curr.y;
+        if (lastval > startval)
         {
-            if (map[vec] == 0)
+            vec += horizontal ? Vector3Int.right : Vector3Int.up;
+        }
+        else if (lastval < startval)
+        {
+            vec += horizontal ? Vector3Int.left : Vector3Int.down;
+        }
+    }
+
+    /// <summary>
+    /// Finding minimum number of connections to connect all segments.
+    /// </summary>
+    /// <param name="segments"></param>
+    /// <param name="graph"></param>
+    /// <returns></returns>
+    private List<Edge> Kruskal(List<List<Vector3Int>> segments, List<Edge> graph)
+    {
+        int[] parent = new int[segments.Count];
+        int[] size = new int[segments.Count];
+        MakeSets(segments, parent, size);
+        List<Edge> minconnections = new List<Edge>();
+        foreach (Edge edge in graph)
+        {
+            Union(parent, size, edge, minconnections);
+        }
+
+        return minconnections;
+    }
+
+    /// <summary>
+    /// Find root parent of current subset.
+    /// </summary>
+    /// <param name="parent"></param>
+    /// <param name="subset"></param>
+    /// <returns></returns>
+    private int Find(int[] parent, int subset)
+    {
+        if (parent[subset] == subset)
+        {
+            return subset;
+        }
+        return Find(parent, parent[subset]);
+    }
+
+    /// <summary>
+    /// Union two subsets.
+    /// </summary>
+    /// <param name="parent"></param>
+    /// <param name="size"></param>
+    /// <param name="edge"></param>
+    /// <param name="minconnections"></param>
+    private void Union(int[] parent, int[] size, Edge edge, List<Edge> minconnections)
+    {
+        var p1 = Find(parent,edge.src);
+        var p2 = Find(parent, edge.dest);
+        if (p1 != p2)
+        {
+            if (size[p1] >= size[p2])
             {
-                
+                parent[p2] = p1;
+            } else
+            {
+                parent[p1] = p2;
             }
+            minconnections.Add(edge);
         }
+        
     }
 
-    public void MakeSet(Node a)
+    /// <summary>
+    /// Create subset.
+    /// </summary>
+    /// <param name="segments"></param>
+    /// <param name="parent"></param>
+    /// <param name="size"></param>
+    private void MakeSets(List<List<Vector3Int>> segments, int[] parent, int[] size)
     {
-        if (a.parent == null)
+        for (int i = 0; i < segments.Count; i++)
         {
-            a.parent = a;
-            a.size = 1;
-            a.rank = 1;
+            parent[i] = i;
+            size[i] = 1;
         }
     }
 
-    public void Union(Node a, Node b)
+    /// <summary>
+    /// Partitioning segments using dfs.
+    /// </summary>
+    /// <returns></returns>
+    private List<List<Vector3Int>> PartitionSegments()
     {
-        var aparent = findParent(a);
-        var bparent = findParent(b);
+        List<Vector3Int> keys = new List<Vector3Int>(map.Keys);
+        //should i sort them? then getting the center will just be /2, but this adds complexity. Does it even matter. /2 will always be approximately center.
+        HashSet<Vector3Int> visited = new HashSet<Vector3Int>();
+        List<List<Vector3Int>> sets = new List<List<Vector3Int>>();
+        foreach (Vector3Int vec in keys)
+        {
+            if (Valid(visited, vec))
+            {
+                var curr = vec;
+                List<Vector3Int> neighbours = new List<Vector3Int>();
+                AddAllConnectedCells(curr, neighbours, visited);
+                sets.Add(neighbours);
+            }
 
-        //already in the same set
-        if (aparent == bparent)
+        }
+
+        return sets;
+    }
+
+    private bool Valid(HashSet<Vector3Int> visited, Vector3Int vec)
+    {
+        return !visited.Contains(vec) && map[vec] == 0; //&& vec.x != 0 && vec.x != width && vec.y != 0 && vec.y != height;
+    }
+
+    /// <summary>
+    /// Finding all neighbouring cells.
+    /// </summary>
+    /// <param name="curr"></param>
+    /// <param name="neighbours"></param>
+    /// <param name="visited"></param>
+    private void AddAllConnectedCells(Vector3Int curr, List<Vector3Int> neighbours, HashSet<Vector3Int> visited)
+    {
+        if (map[curr] == 1)
         {
             return;
-        } else
+        }
+        else
         {
-            if (aparent.size >= bparent.size)
+            neighbours.Add(curr);
+            visited.Add(curr);
+            for (int i = -1; i <= 1; i++)
             {
-                bparent.parent = aparent;
-                aparent.size += bparent.size;
-                path.Add(b);
+                for (int j = -1; j <= 1; j++)
+                {
+
+                    var nextposition = curr + new Vector3Int(i, j);
+                    if (map.ContainsKey(nextposition) && !neighbours.Contains(nextposition) && Valid(visited,nextposition))
+                    {
+                        AddAllConnectedCells(nextposition, neighbours, visited);
+                    }
+
+                }
             }
         }
+              
     }
 
-    public Node findParent(Node node)
+    /// <summary>
+    /// Creating graph of edges with euclidean distance as cost between segments.
+    /// </summary>
+    /// <param name="sets"></param>
+    /// <returns></returns>
+    private List<Edge> CreateGraph(List<List<Vector3Int>> sets)
     {
-        if (node.parent != node)
+        List<Edge> connections = new List<Edge>();
+        //Create at least one edges for all vertices using their euclidean distance as the cost.
+        for (int i = 0; i < sets.Count; i++)
         {
-            //recursive function to find the base node.
-            node.parent = findParent(node.parent);
-            
+            for (int j = i; j < sets.Count; j++)
+            {
+                float cost = GetEuclideanDistance(sets[i], sets[j]);
+                Edge edge = new Edge(i, j, cost);
+                connections.Add(edge);
+            }
         }
-        return node.parent;
+
+        //after sorting 
+        connections.Sort();
+        return connections;
+
     }
 
-}
-
-
-public class Node
-{
-    //at the start all node's parent is themselves.
-    //rank = 0;
-    //size = 0;
-
-    public Node parent;
-    public int size;
-    public int rank;
-    public Vector2Int vec;
-
-
-    public Node(Vector2Int _vec)
+    /// <summary>
+    /// Getting the manhattandistance between two points.
+    /// </summary>
+    /// <param name="vector3Ints1"></param>
+    /// <param name="vector3Ints2"></param>
+    /// <returns></returns>
+    private float GetEuclideanDistance(List<Vector3Int> vector3Ints1, List<Vector3Int> vector3Ints2)
     {
-        vec = _vec;
+        //just gonna assume that midpoint of the list of vectors is roughly the midpoint of the segment.
+        Vector3Int midPoint1 = GetMidPoint(vector3Ints1);
+        Vector3Int midPoint2 = GetMidPoint(vector3Ints2);
+        return Vector3Int.Distance(midPoint1, midPoint2);
+
+    }
+
+    /// <summary>
+    /// Get Midpoint of the segment.
+    /// </summary>
+    /// <param name="vector3Ints1"></param>
+    /// <returns></returns>
+    private Vector3Int GetMidPoint(List<Vector3Int> vector3Ints1)
+    {
+        int index = (int)(vector3Ints1.Count / 2);
+        return vector3Ints1[Mathf.Max(index - 1, 0)];
+    }
+
+    
+}
+
+public class Edge : IComparable<Edge>
+{
+    public int src, dest;
+    public float weight;
+
+    public Edge(int index1, int index2, float _weight)
+    {
+        src = index1;
+        dest = index2;
+        weight = _weight;
+    }
+
+    public int CompareTo(Edge other)
+    {
+        return (int) (this.weight - other.weight);
     }
 }
+
