@@ -7,18 +7,11 @@ using Random = UnityEngine.Random;
 
 public class RoomDesign : MonoBehaviour
 {
-
+    #region Variables
+    #region DefaultProperties
     public static RoomDesign instance { get; private set; }
     private TerrainGenerator terrainGenerator;
     private List<Vector3> structpoints;
-    [SerializeField]
-    [Range(0,100)]
-    private float minDistBwStructs;
-
-    [SerializeField]
-    [Range(0, 100)]
-    private float minDistfromCenter;
-
     public enum ROOM_DESIGNS
     {
         SWAMP,
@@ -28,31 +21,54 @@ public class RoomDesign : MonoBehaviour
         TEMPLE,
         FARM,
         FOREST, /**DEFAULT**/
+        FIREKNIGHTROOM,
+        WATERMAGEROOM,
+        BLADEKEEPERROOM,
+
 
     }
+    #endregion
 
+    #region PhysicsFactors
+    [SerializeField]
+    [Range(0, 100)]
+    private float minDistBwStructs;
+
+    [SerializeField]
+    [Range(0, 100)]
+    private float minDistfromCenter;
+    #endregion
+
+    #region DecorativeMaterials
     [Header("Decorations")]
+
+    #region Town
     [Header("Town")]
     public GameObject[] houses;
-    //public Dictionary<GameObject,GameObject> housesProto;
     public GameObject[] townmandatoryDecorations;
-    // decided to do it inside house prefab instead.
-    //public Tilemap houseInterior;
-    //public TileBase interiorlu, interiorru, interirorld, interiorrd, interiorhoriz, interiorvert, interiorbase;
+    #endregion 
 
-
+    #region Farm
     [Header("Farm")]
     public GameObject[] farms;
     public GameObject[] farmDecorations;
+    #endregion
 
-
+    #region Camp
     [Header("Camp")]
     public GameObject[] camps;
     public GameObject[] campDecorations;
+    #endregion
 
+    #region BossRoomDecoratives
+    //some decoratives for bossrooms.
+    #endregion
 
+    #endregion
 
+    #endregion
 
+    #region Monobehaviour
     private void Awake()
     {
         if (instance == null)
@@ -69,42 +85,58 @@ public class RoomDesign : MonoBehaviour
     {
         terrainGenerator = TerrainGenerator.instance;
     }
+    #endregion
 
-    //private void CreateProtoTypes()
-    //{
-    //    foreach(GameObject house in houses)
-    //    {
-    //        var proto = Instantiate(house);
-    //        proto.SetActive(false);
-    //        housesProto.Add(house,proto);
-    //    }
-    //}
-
+    #region Client-Access Methods
     public void GenerateRoomDesign(RoomManager.ROOMTYPE roomtype, RoomManager _currRoom)
     {
+        _currRoom.terrainGenerated = true;
         switch (roomtype)
         {
+            default:
             case RoomManager.ROOMTYPE.SAVE_ROOM:
             case RoomManager.ROOMTYPE.TREASURE_ROOM:
-                //Town(_currRoom);
-                Farm(_currRoom);
+                int random = Random.Range(0, 3);
+                switch (random)
+                {
+                    case 0:
+                        Town(_currRoom);
+                        break;
+                    case 1:
+                        Farm(_currRoom);
+                        break;
+                    case 2:
+                        Plantation(_currRoom);
+                        break;
+                }
+                break;
+            case RoomManager.ROOMTYPE.BOSSROOM:
+                EntityData entityData = _currRoom.GetBossData();
+                switch (entityData._name)
+                {
+                    case "WaterMage":
+                        WaterMageRoom(_currRoom);
+                        break;
+                    case "FireKnight":
+                        FireKnightRoom(_currRoom);
+                        break;
+                    case "BladeKeeper":
+                        BladeKeeperRoom(_currRoom);
+                        break;
+                    case "Hashinshin":
+                        HashinshinRoom(_currRoom);
+                        break;
+                    case "GroundMonk":
+                        GroundMonkRoom(_currRoom);
+                        break;
+                }
                 break;
         }
 
     }
+    #endregion
 
-
-    /// <summary>
-    /// A randomly generated town design.
-    /// </summary>
-    private void Town(RoomManager currRoom)
-    {
-
-        SpawnGameObjects(houses, true, 4, 6, currRoom);
-        SpawnMandatoryObject(townmandatoryDecorations, currRoom);
-
-    }
-
+    #region InternalMethods
     private void SpawnMandatoryObject(GameObject[] mandatoryObjs, RoomManager currRoom)
     {
         var selectedDeco = mandatoryObjs[Random.Range(0, mandatoryObjs.Length)];
@@ -121,7 +153,7 @@ public class RoomDesign : MonoBehaviour
         {
 
             List<GameObject> shuffledDeck = Shuffle(decorations);
-            foreach(GameObject deco in shuffledDeck)
+            foreach (GameObject deco in shuffledDeck)
             {
                 var col = deco.GetComponentInChildren<HouseExteriorDesign>().col;
                 Vector2 size = col.size;
@@ -139,11 +171,7 @@ public class RoomDesign : MonoBehaviour
                     break;
                 }
             }
-            
-            //GameObject prototype = housesProto[selecteddeco];
-            
-            
-            
+
         }
 
 
@@ -168,21 +196,8 @@ public class RoomDesign : MonoBehaviour
     private bool CheckNotOutofBounds(Vector2 size, Vector3 pos, RoomManager currRoom)
     {
 
-        return Physics2D.OverlapBox(pos, size, 0f, LayerMask.GetMask("Obstacles","HouseExterior","HouseInterior"));
-        //return !prototype.GetComponentInChildren<HouseExteriorDesign>(true).col.IsTouchingLayers(LayerMask.GetMask("Obstacles"));
+        return Physics2D.OverlapBox(pos, size, 0f, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior"));
     }
-
-
-    //public void CalculateBounds(GameObject go)
-    //{
-    //    Bounds bounds = go.gameObject.GetComponent<Collider2D>().bounds;
-    //    bounds.size = Vector3.zero; // reset
-    //    Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
-    //    foreach (Collider2D col in colliders)
-    //    {
-    //        bounds.Encapsulate(col.bounds);
-    //    }
-    //}
 
     private bool CheckDistanceFromStrucs(Vector3 pos, Vector3 roomcenter)
     {
@@ -198,29 +213,23 @@ public class RoomDesign : MonoBehaviour
         return false;
 
     }
+    #endregion
 
-    //private void DrawHouseInterior(Bounds boundsInt) 
-    //{
-    //    var min = Vector2Int.FloorToInt(boundsInt.min);
-    //    var max = Vector2Int.FloorToInt(boundsInt.max);
-    //    for (int i = min.x; i < max.x; i++)
-    //    {
-    //        for (int j = min.y; j < max.y; j++)
-    //        {
-    //            TileBase paintedTile;
-    //            //handling corners
-    //            if (i == min.x && j == min.y)
-    //            {
+    #region RoomGenerations
+    /// <summary>
+    /// A randomly generated town design.
+    /// </summary>
+    #region OtherRoomTypes
+    private void Town(RoomManager currRoom)
+    {
+        SpawnGameObjects(houses, true, 4, 6, currRoom);
+        SpawnMandatoryObject(townmandatoryDecorations, currRoom);
 
-    //            }
-    //            //houseInterior.SetTile()
-    //        }
-    //    }
-    //}
+    }
 
     public void Swamp()
     {
-        
+
 
     }
 
@@ -240,15 +249,75 @@ public class RoomDesign : MonoBehaviour
 
     }
 
-    public void Farm(RoomManager currRoom)
-    {
-        terrainGenerator.GenerateTerrain(currRoom);
-    }
-
-
     public void Forest()
     {
 
     }
+    #endregion
 
+    #region perlinRooms
+
+    public void Farm(RoomManager currRoom)
+    {
+        LoadRoomData("Farm", currRoom);
+    }
+
+    public void Plantation(RoomManager currRoom)
+    {
+        LoadRoomData("Plantation", currRoom);
+    }
+
+    #region BossRooms
+    public void FireKnightRoom(RoomManager currRoom)
+    {
+        LoadRoomData("FireKnightRoom", currRoom);
+    }
+
+    public void WaterMageRoom(RoomManager currRoom)
+    {
+        LoadRoomData("WaterMageRoom", currRoom);
+    }
+
+    public void HashinshinRoom(RoomManager currRoom)
+    {
+        LoadRoomData("HashinshinRoom", currRoom);
+    }
+
+    public void GroundMonkRoom(RoomManager currRoom)
+    {
+        LoadRoomData("GroundMonkRoom", currRoom);
+    }
+
+    public void BladeKeeperRoom(RoomManager currRoom)
+    {
+        LoadRoomData("BladeKeeperRoom", currRoom);
+    }
+
+    private void LoadRoomData(string dataname, RoomManager currRoom)
+    {
+        float randomOffset = Random.Range(-0.05f, 0.05f);
+        var RoomData = Resources.Load<LevelDesign>($"Data/LevelDesignData/{dataname}");
+        RoomData.frequency += randomOffset;
+        RoomData.normalizer += randomOffset;
+        terrainGenerator.LoadLevelData(RoomData);
+        terrainGenerator.GenerateTerrainType2(currRoom);
+    }
+    #endregion BossRooms
+
+    #endregion PerlinRooms
+    #endregion
+
+    #region ToBeConsidered
+    //private void CalculateBounds(GameObject go)
+    //{
+    //    Bounds bounds = go.gameObject.GetComponent<Collider2D>().bounds;
+    //    bounds.size = Vector3.zero; // reset
+    //    Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
+    //    foreach (Collider2D col in colliders)
+    //    {
+    //        bounds.Encapsulate(col.bounds);
+    //    }
+    //}
+
+    #endregion
 }

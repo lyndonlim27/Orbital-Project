@@ -21,6 +21,11 @@ public class TerrainGeneratorInspector : Editor
             generator.GenerateTerrain();
         }
 
+        if (GUILayout.Button("Generate TerrainType2"))
+        {
+            generator.GenerateTerrainType2();
+        }
+
         if (GUILayout.Button("Load Level Data"))
         {
             generator.LoadLevel();

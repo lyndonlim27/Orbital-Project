@@ -9,15 +9,16 @@ using UnityEngine.Rendering.Universal;
  * RoomManager.
  * Manage all entities in the room.
  */
-
-
 public abstract class RoomManager : MonoBehaviour, IDataPersistence
 {
-
+    #region Variables
+    #region RoomData_VAR
     /**
      * Data Generation
      */
     [SerializeField] private string id;
+    [SerializeField] protected LayerMask layerMask;
+    [SerializeField] protected Vector2 roomSize;
     [ContextMenu("Generate id")]
     private void GenerateGuid()
     {
@@ -40,12 +41,20 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     }
     public ROOMTYPE roomtype;
+    protected AstarPath astarPath;
 
     /**
-     * Concrete classes
-     * Every room starts with their own conditions.
-     * Each room will have their list of 
+     * Data.
      */
+
+    public bool terrainGenerated;
+    #endregion
+
+    #region EntityBehaviours_VAR
+    /**
+     * Entity Behaviours
+     */
+    public EntityData[] _EntityDatas;
     public HashSet<string> conditions { get; protected set; }
     public int conditionSize;
     public List<EntityBehaviour> items { get; protected set; }
@@ -54,45 +63,44 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     public List<PressureSwitchBehaviour> pressureitems;
     public LayerMask CollisionObjects;
     public List<NPCBehaviour> npcs { get; protected set; }
+    #endregion
+
+    #region UI_VAR
+    /*
+     * UI
+     */
+    protected PopUpSettings popUpSettings;
+    private PoolManager poolManager;
     public Light2D[] lights;
     protected UITextDescription textDescription;
     protected RoomDesign roomDesigner;
     private UIObjectivePointer pointer;
-    private GlobalAudioManager globalAudioManager;
+    [SerializeField] private Color _colour;
+    #endregion
 
-
+    #region Doors_and_Portals_VAR
     /**
      * Prefabs.
      */
-    [Header("Prefabs")]
-    //[SerializeField] GameObject[] enemyPrefabs;
-    //[SerializeField] EntityBehaviour[] entityPrefabs;
-    //   [SerializeField] NPCBehaviour NPCPrefab;
+    [Header("Doors and Portal")]
     [SerializeField] protected DoorBehaviour pressureSwitchDoor;
     [SerializeField] protected DoorBehaviour entryDoor;
     [SerializeField] protected DoorBehaviour exitDoor;
     [SerializeField] protected DoorBehaviour[] doors;
-    [SerializeField] protected LayerMask layerMask;
-    [SerializeField] protected Vector2 roomSize;
-    [SerializeField] private Color _colour;
     [SerializeField] protected ItemWithTextData portal;
+
+    #endregion
+
+    #region Audio_VAR
+    private GlobalAudioManager globalAudioManager;
     [SerializeField] protected AudioClip BossRoomAudio;
     [SerializeField] protected AudioClip BeforeBossRoomAudio;
+    #endregion
 
-
-    protected AstarPath astarPath;
-    protected DoorManager doorManager;
-
-
-    /**
-     * Data.
-     */
-    public EntityData[] _EntityDatas;
-
+    #region RoomComponents_VAR
     /**
      * Room.
      */
-    //protected PolygonCollider2D roomArea;
     protected Collider2D roomArea;
     protected bool activated;
     protected bool pressureRoomComplete;
@@ -103,19 +111,10 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     private TypingTestTL typingTestTL;
     protected Collider2D _collider;
     private HashSet<Vector3> safeRoute;
-    //protected RoomManager[] rooms;
+    #endregion
+    #endregion
 
-
-    //private AstarPath AstarGraph;
-
-
-    /*
-     * UI
-     */
-    protected PopUpSettings popUpSettings;
-    private PoolManager poolManager;
-
-
+    #region MonoBehaviour
     /**
      * Retrieving of Data.
      */
@@ -131,28 +130,17 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         enemies = new List<EnemyBehaviour>();
         npcs = new List<NPCBehaviour>();
         
-        //typingTestTL = GameObject.FindObjectOfType<TypingTestTL>(true);
         popUpSettings = FindObjectOfType<PopUpSettings>(true);
-        //poolManager = FindObjectOfType<PoolManager>(true);
-        //doorManager = FindObjectOfType<DoorManager>(true);
         astarPath = FindObjectOfType<AstarPath>(true);
         spawnlater = new List<EntityData>();
         foreach (Light2D light in lights)
         {
             light.GetComponent<Animator>().SetBool(light.name, true);
         }
-        //textDescription = FindObjectOfType<UITextDescription>(true);
-        //pointer = FindObjectOfType<UIObjectivePointer>(true);
-        //globalAudioManager = FindObjectOfType<GlobalAudioManager>(true);
         GenerateGuid();
 
 
     }
-
-    //protected void OnEnable()
-    //{
-    //    InitializeAStar();
-    //}
 
     protected virtual void Start()
     {
@@ -192,6 +180,10 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         conditionSize = conditions.Count;
     }
 
+    #endregion
+
+    #region Internal Methods
+    #region RoomSettings
     private void DecorateRoom()
     {
         if (roomDesigner != null)
@@ -264,22 +256,10 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         }
     }
 
+    #endregion
 
-
-    /**
-     * DeActivate Astar.
-     */
-    private void DeActivateAStar()
-    {
-
-        AstarPath astar = gameObject.GetComponent<AstarPath>();
-        if (astar != null)
-        {
-            Destroy(astar);
-        }
-
-    }
-
+    #region AStarGraph
+   
     /**
      * Initialize AStarPath.
      */
@@ -303,210 +283,22 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     }
 
     /**
-     * Fulfill condiitons for current room.
+     * DeActivate Astar.
      */
-    public virtual void FulfillCondition(string key)
+    private void DeActivateAStar()
     {
-        if (conditions.Contains(key))
-        {
-            conditions.Remove(key);
-        }
-    }
 
-    /**
-     * Unfulfill condiitons for current room.
-     */
-    public virtual void UnfulfillCondition(string key)
-    {
-        if (!conditions.Contains(key))
+        AstarPath astar = gameObject.GetComponent<AstarPath>();
+        if (astar != null)
         {
-            conditions.Add(key);
+            Destroy(astar);
         }
 
     }
 
-    /**
-     * Check If Room Proceedable.
-     */
-    protected virtual void RoomChecker()
-    {
-    
-        if (CanProceed())
-        {
-            for (int i = 0; i < doors.Length; i++)
-            {
-                if (doors[i] != null)
-                {
-                    doors[i].unlocked = true;
-                }
-                
+    #endregion    
 
-
-            }
-            DisableTrapBehaviour();
-            pointToObjective();
-            SpawnPortal();
-            DeActivateAStar();
-            if (textDescription.isActiveAndEnabled)
-            {
-                textDescription.StartDescription("You hear a loud creak..");
-            }
-            this.enabled = false;
-        }
-        //} else
-        //{
-        //    LockDoorsOnThisLevel();
-        //}
-
-    }
-
-    /**
-     * Disable All Trap Behaviours.
-     */
-    private void DisableTrapBehaviour()
-    {
-        TrapBehaviour[] trapBehaviours = GetComponentsInChildren<TrapBehaviour>();
-        TrapMovementBehaviour[] trapMovementBehaviours = GetComponentsInChildren<TrapMovementBehaviour>();
-        if (trapBehaviours != null)
-        {
-            foreach (TrapBehaviour trap in trapBehaviours)
-            {
-                trap.enabled = false;
-            }
-        }
-
-        if (trapMovementBehaviours != null)
-        {
-            foreach (TrapMovementBehaviour trapmvmt in trapMovementBehaviours)
-            {
-                trapmvmt.enabled = false;
-            }
-        }
-
-    }
-
-
-    /** 
-     * Get a random position inside the room.
-     * @param minBound, maxBound
-     * Boundaries of the room. 
-     * @return get randompoint within the radius.
-     */
-    public Vector2 GetRandomPoint()
-    {
-        Vector2 randomPoint;
-        do
-        {
-            //AABB axis - 4 possible bounds, top left, top right, bl, br
-            //tl = min.x, max.y;
-            //bl = min.x, min.y;
-            //tr = max.x, max.y;
-            //br = max.x, min.y;
-            //anywhere within these 4 bounds are possible pts;
-            randomPoint = new Vector2(
-            Random.Range(areaminBound.x, areamaxBound.x),
-            Random.Range(areaminBound.y, areamaxBound.y));
-
-        } while (!roomArea.OverlapPoint(randomPoint)); //&& !Physics2D.OverlapCircle(randomPoint, 1, LayerMask.GetMask("Obstacles"))
-        //&& safeRoute.Contains(randomPoint));
-        return randomPoint;
-    }
-
-    /** 
-     * Get a random position inside 2 given vectors.
-     * @param minBound, maxBound
-     * Boundaries of the room. 
-     * @return get randompoint within the radius.
-     */
-    public Vector2 GetRandomPoint(Vector2 minArea, Vector2 maxArea)
-    {
-        Vector2 randomPoint;
-        do
-        {
-            //AABB axis - 4 possible bounds, top left, top right, bl, br
-            //tl = min.x, max.y;
-            //bl = min.x, min.y;
-            //tr = max.x, max.y;
-            //br = max.x, min.y;
-            //anywhere within these 4 bounds are possible pts;
-            randomPoint = new Vector2(
-            Random.Range(minArea.x, maxArea.x),
-            Random.Range(minArea.y, maxArea.y));
-        } while (!roomArea.OverlapPoint(randomPoint)); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
-        //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
-        return randomPoint;
-    }
-
-    /**
-     * Get A random point where no overlap between obstacles.
-     */
-    public Vector2 GetRandomObjectPoint()
-    {
-        Vector2 randomPoint;
-        do
-        {
-            //AABB axis - 4 possible bounds, top left, top right, bl, br
-            //tl = min.x, max.y;
-            //bl = min.x, min.y;
-            //tr = max.x, max.y;
-            //br = max.x, min.y;
-            //anywhere within these 4 bounds are possible pts;
-            randomPoint = new Vector2(
-            Random.Range(areaminBound.x, areamaxBound.x),
-            Random.Range(areaminBound.y, areamaxBound.y));
-        } while (!roomArea.OverlapPoint(randomPoint) || Physics2D.OverlapCircle(randomPoint,1,LayerMask.GetMask("Obstacles","HouseExterior","HouseInterior"))); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
-        //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
-        return randomPoint;
-    }
-
-
-    /**
-    * Get A random point where no overlap between obstacles given a size.
-    */
-    public Vector2 GetRandomObjectPointGivenSize(float size)
-    {
-        Vector2 randomPoint = Vector2.zero;
-        int iterations = 100;
-        do
-        {
-            //AABB axis - 4 possible bounds, top left, top right, bl, br
-            //tl = min.x, max.y;
-            //bl = min.x, min.y;
-            //tr = max.x, max.y;
-            //br = max.x, min.y;
-            //anywhere within these 4 bounds are possible pts;
-            randomPoint = new Vector2(
-            Random.Range(areaminBound.x + 4f, areamaxBound.x - 4f),
-            Random.Range(areaminBound.y + 4f, areamaxBound.y - 4f));
-            iterations--;
-        } while (Physics2D.OverlapCircle(randomPoint, size, LayerMask.GetMask("Obstacles")) && iterations > 0); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
-        //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
-        return randomPoint;
-    }
-
-    /**
-     * Get A random point where no overlap between obstacles.
-     */
-    public Vector2Int GetRandomTilePointGivenPoints(Vector2Int minArea, Vector2Int maxArea, bool insideArea, LayerMask layerMask)
-    {
-        Vector2Int randomPoint;
-        do
-        {
-            //AABB axis - 4 possible bounds, top left, top right, bl, br
-            //tl = min.x, max.y;
-            //bl = min.x, min.y;
-            //tr = max.x, max.y;
-            //br = max.x, min.y;
-            //anywhere within these 4 bounds are possible pts;
-            randomPoint = new Vector2Int(
-            Random.Range(minArea.x, maxArea.x),
-            Random.Range(minArea.y, maxArea.y));
-        } while (insideArea ? !Physics2D.OverlapPoint(randomPoint,layerMask) : Physics2D.OverlapPoint(randomPoint, layerMask));
-        //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
-        return randomPoint;
-    }
-
-
+    #region Spawning Methods
     /**
      * SpawnObject inside the room.
      */
@@ -554,7 +346,10 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         {
 
             EntityData _item = entityDatas[i];
-
+            if (_item == null)
+            {
+                return;
+            }
             if (_item.condition == 1)
             {
 
@@ -617,49 +412,11 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         }
     }
 
-    /**
-     * Get current room bounds.
-     */
-    public Bounds GetRoomAreaBounds()
-    {
-        return roomArea.bounds;
-    }
+    #endregion
 
-    /**
-    * SafePath for room.
-    */
-    private void SafePath()
-    {
-        safeRoute = new HashSet<Vector3>();
+    #region Entities Settings
 
-        var startPosition = entryDoor.transform.position;
-        foreach (DoorBehaviour door in doors)
-        {
-            Vector2 _doorpos = door.transform.position;
-            //if (_doorpos.x > roomArea.bounds.max.x)
-            //{
-            //    _doorpos.x = roomArea.bounds.max.x;
-            //}
-            //else if (_doorpos.x < roomArea.bounds.min.x)
-            //{
-            //    _doorpos.x = roomArea.bounds.min.x;
-            //}
-
-            //if (_doorpos.y > roomArea.bounds.max.y)
-            //{
-            //    _doorpos.y = roomArea.bounds.max.y;
-            //}
-            //else if (_doorpos.y < roomArea.bounds.min.y)
-            //{
-            //    _doorpos.y = roomArea.bounds.min.y;
-            //
-            //Debug.Log(ABPath.Construct(GetRandomPoint(), GetRandomPoint()).vectorPath.Count);
-            safeRoute.UnionWith(ABPath.Construct(startPosition, door.transform.position).vectorPath);
-        }
-
-    }
-
-
+    #region Initializers
     /**
      * Instantiating single entity.
      */
@@ -714,8 +471,6 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     }
 
-
-
     /**
      * Initializing Entities.
      */
@@ -747,7 +502,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         }
         entity.gameObject.SetActive(true);
     }
+    #endregion
 
+    #region Entities Data Setting
     // <summary>
     // Setting Datas for entities.
     // </summary>
@@ -812,96 +569,11 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         go.transform.SetParent(transform);
         enemies.Add(emf);
     }
+    #endregion
 
-    /**
-     * Get all doors controlled by current room.
-     */
+    #endregion
 
-    public DoorBehaviour[] GetDoors()
-    {
-        return this.doors;
-    }
-
-
-    /**
-     * Storing conditional NPCs.
-     */
-    /*
-    protected void AddConditionalNPCS()
-    {
-        foreach (NPCData _npcd in _npcData)
-        {
-            int conditional = _npcd.condition;
-            if (conditional == 1)
-            {
-                conditions.Add(_npcd._name);
-                Debug.Log(_npcd._name);
-            }
-
-            NPCBehaviour initNPC = Instantiate(NPCPrefab, _npcd.pos, Quaternion.identity);
-            initNPC.SetEntityStats(_npcd);
-            initNPC.SetCurrentRoom(this);
-        }
-
-    }*/
-
-    /**
-     * Check that every conditions are fulfilled and enemies are dead.
-     * @return true when conditions are fulfilled.
-     */
-    protected virtual bool CanProceed()
-    {
-        if (activated)
-        {
-
-            return conditions.Count == 0 && CheckEnemiesDead();
-        }
-        else
-        {
-            return false;
-        }
-
-    }
-
-    protected virtual bool ConditionsCleared()
-    {
-        return conditions.Count == 0;
-    }
-
-    /**
-     * Check that all enemies are dead.
-     * @return true when enemies are dead.
-     */
-    protected bool CheckEnemiesDead()
-    {
-        return enemies.TrueForAll(enemy => enemy.isDead);
-    }
-
-
-    /**
-    * Pause/Unpause game when dialogue is/is not running.
-    */
-    protected virtual void CheckRunningEvents()
-    {
-        if (activated)
-        {
-            if (dialMgr.playing || typingTestTL.isActiveAndEnabled || popUpSettings.gameObject.activeInHierarchy)
-            {
-
-                PauseGame();
-            }
-            else
-            {
-                ResumeGame();
-
-            }
-
-        }
-
-    }
-
-
-
+    #region Pause/Resume
     /**
      * Resume game.
      */
@@ -930,8 +602,6 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         
     }
 
-
-
     /**
      * Pause game.
      */
@@ -955,7 +625,9 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         }
 
     }
+    #endregion
 
+    #region Collider-Related methods
     /**
      * Initialize rooom when is player is first detected.
      * @param collision 
@@ -1007,6 +679,17 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     }
 
     /**
+     * Disable room collider.
+     */
+    public void DisableCollider()
+    {
+        this.roomArea.enabled = false;
+    }
+
+    #endregion
+
+    #region Doors Handling
+    /**
      * Lock all doors controlled by current room.
      */
     protected void LockDoorsOnThisLevel()
@@ -1043,61 +726,26 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     }
 
     /**
-     * Disable room collider.
+     * Get all doors controlled by current room.
      */
-    public void DisableCollider()
+
+    public DoorBehaviour[] GetDoors()
     {
-        this.roomArea.enabled = false;
+        return this.doors;
     }
 
-    //private void OnTriggerExit2D(Collider2D collision)
-    //{
-    //    if (collision.CompareTag("Player") || collision.CompareTag("Stealth"))
-    //    {
-    //        player.SetCurrentRoom(null);
-    //    }
-    //}
-
-    //private void OnTriggerExit2D(Collider2D collision)
-    //{
-    //    if (collision.CompareTag("Player"))
-    //    {
-    //        playerInRoom = false;
-    //        if (CanProceed())
-    //        {
-    //            Debug.Log("DAFuq?");
-    //            foreach(DoorBehaviour door in doors)
-    //            {
-    //                door.LockDoor();
-    //            }
-    //            this.enabled = false;
-    //        }
-    //    }
-    //}
-
-    /**
-     * Roomsize Drawing.
+    /** TempDoor Opener.
+     * Open doors temporary for pressureplates.
      */
-    private void OnDrawGizmos()
+    private IEnumerator OpenDoorsTemp(float duration)
     {
-        Gizmos.color = _colour;
-        Gizmos.DrawWireCube(transform.position, roomSize);
-
-
+        pressureSwitchDoor.unlocked = true;
+        yield return new WaitForSeconds(duration);
+        pressureSwitchDoor.unlocked = conditions.Count == 0;
     }
+    #endregion
 
-    /**
-     * Initialize pointer.
-     */
-    private void pointToObjective()
-    {
-        if (exitDoor != null)
-        {
-            pointer.StartNavi(exitDoor.transform.position);
-        }
-
-    }
-
+    #region Room Conditions Checkers
     // <summary>
     // Room Conditions Checker. 
     // </summary>
@@ -1123,7 +771,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     /**
      * PressurePlate Checker.
      */
-    public void PressurePlateCheck()
+    protected void PressurePlateCheck()
     {
         if (activated)
         {
@@ -1172,6 +820,90 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         }
     }
 
+    protected virtual bool CanProceed()
+    {
+        if (activated)
+        {
+
+            return conditions.Count == 0 && CheckEnemiesDead();
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
+    protected virtual bool ConditionsCleared()
+    {
+        return conditions.Count == 0;
+    }
+
+    /**
+     * Check that all enemies are dead.
+     * @return true when enemies are dead.
+     */
+    protected bool CheckEnemiesDead()
+    {
+        return enemies.TrueForAll(enemy => enemy.isDead);
+    }
+
+
+    /**
+    * Pause/Unpause game when dialogue is/is not running.
+    */
+    protected virtual void CheckRunningEvents()
+    {
+        if (activated)
+        {
+            if (dialMgr.playing || typingTestTL.isActiveAndEnabled || popUpSettings.gameObject.activeInHierarchy)
+            {
+
+                PauseGame();
+            }
+            else
+            {
+                ResumeGame();
+
+            }
+
+        }
+
+    }
+
+    /**
+     * Check If Room Proceedable.
+     */
+    protected virtual void RoomChecker()
+    {
+
+        if (CanProceed())
+        {
+            for (int i = 0; i < doors.Length; i++)
+            {
+                if (doors[i] != null)
+                {
+                    doors[i].unlocked = true;
+                }
+
+
+
+            }
+            DisableTrapBehaviour();
+            pointToObjective();
+            SpawnPortal();
+            DeActivateAStar();
+            if (textDescription.isActiveAndEnabled)
+            {
+                textDescription.StartDescription("You hear a loud creak..");
+            }
+            this.enabled = false;
+        }
+
+    }
+    #endregion
+
+    #region De-Activation Behaviour
     /**
      * PressureRoom afterAction.
      */
@@ -1218,15 +950,33 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         );
     }
 
-    /** TempDoor Opener.
-     * Open doors temporary for pressureplates.
+    /**
+     * Disable All Trap Behaviours.
      */
-    private IEnumerator OpenDoorsTemp(float duration)
+    private void DisableTrapBehaviour()
     {
-        pressureSwitchDoor.unlocked = true;
-        yield return new WaitForSeconds(duration);
-        pressureSwitchDoor.unlocked = conditions.Count == 0;
+        TrapBehaviour[] trapBehaviours = GetComponentsInChildren<TrapBehaviour>();
+        TrapMovementBehaviour[] trapMovementBehaviours = GetComponentsInChildren<TrapMovementBehaviour>();
+        if (trapBehaviours != null)
+        {
+            foreach (TrapBehaviour trap in trapBehaviours)
+            {
+                trap.enabled = false;
+            }
+        }
+
+        if (trapMovementBehaviours != null)
+        {
+            foreach (TrapMovementBehaviour trapmvmt in trapMovementBehaviours)
+            {
+                trapmvmt.enabled = false;
+            }
+        }
+
     }
+    #endregion
+
+    #region UI-Related
 
     /** Navigator Reset.
      *  Restart the navigation.
@@ -1261,6 +1011,200 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     }
 
+    /**
+     * Roomsize Drawing.
+     */
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = _colour;
+        Gizmos.DrawWireCube(transform.position, roomSize);
+
+
+    }
+
+    /**
+     * Initialize pointer.
+     */
+    private void pointToObjective()
+    {
+        if (exitDoor != null)
+        {
+            pointer.StartNavi(exitDoor.transform.position);
+        }
+
+    }
+    #endregion
+
+    #endregion
+
+    #region Client-Access Methods
+
+    #region Setters
+    public void SetUpEntityDatas(EntityData[] entityDatas)
+    {
+        _EntityDatas = entityDatas;
+    }
+
+    public void SetUpEntityData(EntityData entityData)
+    {
+        if (_EntityDatas == null)
+        {
+            _EntityDatas = new EntityData[20];
+        }
+
+
+        // basically shudve used list from the start... but ok i dont want to reinitialize the tut_level1 so i will just do this.
+        for (int i = 0; i < _EntityDatas.Length; i++)
+        {
+            if (_EntityDatas[i] == null)
+            {
+                _EntityDatas[i] = entityData;
+                break;
+            }
+        }
+        
+    }
+
+    public void SetUpRoomSize(Vector2Int size)
+    {
+        roomSize = size;
+    }
+
+    public void SetUpPortal(ItemWithTextData portalData)
+    {
+        portal = portalData;
+    }
+    #endregion
+
+    #region Getters
+    /**
+     * Get current room bounds.
+     */
+    public Bounds GetRoomAreaBounds()
+    {
+        return roomArea.bounds;
+    }
+
+    public EntityData GetBossData()
+    {
+        if (roomtype == ROOMTYPE.BOSSROOM)
+        {
+            return _EntityDatas.First(entity => entity._type == EntityData.TYPE.BOSS);
+        } else
+        {
+            throw new MissingComponentException();
+        }
+    }
+
+    public Vector2Int GetRoomSize()
+    {
+        return (Vector2Int) new Vector2Int((int) roomSize.x, (int) roomSize.y);
+    }
+    #endregion
+
+    #region Room-Fulfilling
+    /**
+     * Fulfill condiitons for current room.
+     */
+    public virtual void FulfillCondition(string key)
+    {
+        if (conditions.Contains(key))
+        {
+            conditions.Remove(key);
+        }
+    }
+
+    /**
+     * Unfulfill condiitons for current room.
+     */
+    public virtual void UnfulfillCondition(string key)
+    {
+        if (!conditions.Contains(key))
+        {
+            conditions.Add(key);
+        }
+
+    }
+    #endregion
+
+    #region RandomPoint Helpers
+    /** 
+     * Get a random position inside 2 given vectors.
+     * @param minBound, maxBound
+     * Boundaries of the room. 
+     * @return get randompoint within the radius.
+     */
+    public Vector2 GetRandomPoint(Vector2 minArea, Vector2 maxArea)
+    {
+        Vector2 randomPoint;
+        do
+        {
+            randomPoint = new Vector2(
+            Random.Range(minArea.x, maxArea.x),
+            Random.Range(minArea.y, maxArea.y));
+        } while (!roomArea.OverlapPoint(randomPoint) || Physics2D.OverlapCircle(randomPoint, 1, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior"))); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
+        //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
+        return randomPoint;
+    }
+
+    /** 
+     * Get a random position inside the room.
+     * @param minBound, maxBound
+     * Boundaries of the room. 
+     * @return get randompoint within the radius.
+     */
+    public Vector2 GetRandomObjectPoint()
+    {
+        Vector2 randomPoint;
+        do
+        {
+            randomPoint = new Vector2(
+            Random.Range(areaminBound.x, areamaxBound.x),
+            Random.Range(areaminBound.y, areamaxBound.y));
+        } while (!roomArea.OverlapPoint(randomPoint) || Physics2D.OverlapCircle(randomPoint, 1, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior"))); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
+        //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
+        return randomPoint;
+    }
+
+
+    /**
+    * Get A random point where no overlap between obstacles given a size.
+    */
+    public Vector2 GetRandomObjectPointGivenSize(float size)
+    {
+        Vector2 randomPoint = Vector2.zero;
+        int iterations = 100;
+        do
+        {
+            randomPoint = new Vector2(
+            Random.Range(areaminBound.x + 4f, areamaxBound.x - 4f),
+            Random.Range(areaminBound.y + 4f, areamaxBound.y - 4f));
+            iterations--;
+        } while (Physics2D.OverlapCircle(randomPoint, size, LayerMask.GetMask("Obstacles")) && iterations > 0); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
+        //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
+        return randomPoint;
+    }
+
+    /**
+     * Get A random point where no overlap between obstacles.
+     */
+    public Vector2Int GetRandomTilePointGivenPoints(Vector2Int minArea, Vector2Int maxArea, bool insideArea, LayerMask layerMask)
+    {
+        Vector2Int randomPoint;
+        do
+        {
+            randomPoint = new Vector2Int(
+            Random.Range(minArea.x, maxArea.x),
+            Random.Range(minArea.y, maxArea.y));
+        } while (insideArea ? !Physics2D.OverlapPoint(randomPoint, layerMask) : Physics2D.OverlapPoint(randomPoint, layerMask));
+        //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
+        return randomPoint;
+    }
+
+
+    #endregion
+
+    #region Game Save/Loads
     /** Healpoints reactivation.
      *  ReActivate All HealingPoints upon load.
      */
@@ -1312,45 +1256,96 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
 
     }
+    #endregion
 
-    public void SetUpEntityDatas(EntityData[] entityDatas)
-    {
-        _EntityDatas = entityDatas;
-    }
-
-    public void SetUpEntityData(EntityData entityData)
-    {
-        if (_EntityDatas == null)
-        {
-            _EntityDatas = new EntityData[20];
-        }
-
-
-        // basically shudve used list from the start... but ok i dont want to reinitialize the tut_level1 so i will just do this.
-        for (int i = 0; i < _EntityDatas.Length; i++)
-        {
-            if (_EntityDatas[i] == null)
-            {
-                _EntityDatas[i] = entityData;
-                break;
-            }
-        }
-        
-    }
-
-    public void SetUpRoomSize(Vector2Int size)
-    {
-        roomSize = size;
-    }
-
-    public Vector2Int GetRoomSize()
-    {
-        return (Vector2Int) new Vector2Int((int) roomSize.x, (int) roomSize.y);
-    }
-
-    public void SetUpPortal(ItemWithTextData portalData)
-    {
-        portal = portalData;
-    }
-
+    #endregion
 }
+
+#region Unused Methods
+
+/**
+    //* SafePath for room.
+    //*/
+//private void SafePath()
+//{
+//    safeRoute = new HashSet<Vector3>();
+
+//    var startPosition = entryDoor.transform.position;
+//    foreach (DoorBehaviour door in doors)
+//    {
+//        Vector2 _doorpos = door.transform.position;
+//        //if (_doorpos.x > roomArea.bounds.max.x)
+//        //{
+//        //    _doorpos.x = roomArea.bounds.max.x;
+//        //}
+//        //else if (_doorpos.x < roomArea.bounds.min.x)
+//        //{
+//        //    _doorpos.x = roomArea.bounds.min.x;
+//        //}
+
+//        //if (_doorpos.y > roomArea.bounds.max.y)
+//        //{
+//        //    _doorpos.y = roomArea.bounds.max.y;
+//        //}
+//        //else if (_doorpos.y < roomArea.bounds.min.y)
+//        //{
+//        //    _doorpos.y = roomArea.bounds.min.y;
+//        //
+//        //Debug.Log(ABPath.Construct(GetRandomPoint(), GetRandomPoint()).vectorPath.Count);
+//        safeRoute.UnionWith(ABPath.Construct(startPosition, door.transform.position).vectorPath);
+//    }
+
+//}
+
+/**
+     * Storing conditional NPCs.
+     */
+/*
+protected void AddConditionalNPCS()
+{
+    foreach (NPCData _npcd in _npcData)
+    {
+        int conditional = _npcd.condition;
+        if (conditional == 1)
+        {
+            conditions.Add(_npcd._name);
+            Debug.Log(_npcd._name);
+        }
+
+        NPCBehaviour initNPC = Instantiate(NPCPrefab, _npcd.pos, Quaternion.identity);
+        initNPC.SetEntityStats(_npcd);
+        initNPC.SetCurrentRoom(this);
+    }
+
+}*/
+
+/**
+ * Check that every conditions are fulfilled and enemies are dead.
+ * @return true when conditions are fulfilled.
+ */
+
+//private void OnTriggerExit2D(Collider2D collision)
+//{
+//    if (collision.CompareTag("Player") || collision.CompareTag("Stealth"))
+//    {
+//        player.SetCurrentRoom(null);
+//    }
+//}
+
+//private void OnTriggerExit2D(Collider2D collision)
+//{
+//    if (collision.CompareTag("Player"))
+//    {
+//        playerInRoom = false;
+//        if (CanProceed())
+//        {
+//            Debug.Log("DAFuq?");
+//            foreach(DoorBehaviour door in doors)
+//            {
+//                door.LockDoor();
+//            }
+//            this.enabled = false;
+//        }
+//    }
+//}
+#endregion

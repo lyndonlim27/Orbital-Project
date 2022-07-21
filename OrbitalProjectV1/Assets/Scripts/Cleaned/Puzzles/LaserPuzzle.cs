@@ -72,7 +72,7 @@ public class LaserPuzzle : MonoBehaviour, Puzzle
         target.layer = LayerMask.NameToLayer("Obstacles");
         target.AddComponent<BoxCollider2D>();
         target.transform.SetParent(currentRoom.transform);
-        target.transform.position = currentRoom.GetRandomPoint();
+        target.transform.position = currentRoom.GetRandomObjectPoint();
     }
     #endregion 
 

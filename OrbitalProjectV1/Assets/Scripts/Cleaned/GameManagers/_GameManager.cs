@@ -5,7 +5,9 @@ using UnityEngine;
 using Cinemachine;
 
 public class _GameManager : MonoBehaviour, IDataPersistence
-{  
+{
+    #region Variables
+    #region ManagerPrefabs
     [Header("AudioManager")]
     [SerializeField]
     GameObject audioManager;
@@ -45,9 +47,15 @@ public class _GameManager : MonoBehaviour, IDataPersistence
     [SerializeField]
     RoomFirstDungeonGenerator mapgenerator;
 
+    #endregion
+
+    #region Player and GameData
     private GameData gameData;
     private Player player;
+    [SerializeField] private int roomIndex = 1;
+    #endregion
 
+    #region LocalManagers
     [Header("Local Managers")]
 
     private DamageFlicker _damageFlickerl;
@@ -57,9 +65,12 @@ public class _GameManager : MonoBehaviour, IDataPersistence
     private PuzzleInputManager _puzzleInputManagerl;
     private DialogueManager _dialogueManagerl;
     private PoolManager _poolManagerl;
+    #endregion
+    #endregion
 
+    #region Public Methods
 
-    [SerializeField] private int roomIndex = 1;
+    #region Generation and Player Spawn
     /// <summary>
     /// Loads Up all Managers required for gameplay.
     /// </summary>
@@ -111,17 +122,6 @@ public class _GameManager : MonoBehaviour, IDataPersistence
         {
             _VideoManager = Instantiate(VideoManager);
         }
-
-
-
-        //GameObject _AStar = GameObject.Find("A_");
-        //if (_AStar == null)
-        //{
-        //    _AStar = Instantiate(AStar);
-        //}
-
-
-        //_AStar.transform.SetParent(transform);
         _DamageFlicker.transform.SetParent(transform);
         _audioManager.transform.SetParent(transform);
         _wordBank.transform.SetParent(transform);
@@ -142,19 +142,10 @@ public class _GameManager : MonoBehaviour, IDataPersistence
 
     }
 
-    /// <summary>
-    /// Set Up Camera to follow player transform.
-    /// </summary>
-    /// <param name="player"></param>
-    private void SetUpCamera(Transform player)
+    public void GenerateMap(int seed)
     {
-        GameObject _CineCamera = GameObject.Find("CineCamera(Clone)");
-        if (_CineCamera == null)
-        {
-            _CineCamera = Instantiate(CineCamera);
-        }
-        _CineCamera.transform.SetParent(transform);
-        _CineCamera.GetComponent<CinemachineVirtualCamera>().Follow = player;
+        mapgenerator.currentSeed = seed;
+        mapgenerator.GenerateDungeon();
     }
 
     /// <summary>
@@ -185,12 +176,41 @@ public class _GameManager : MonoBehaviour, IDataPersistence
         player.transform.position = currRoom.transform.position;
 
     }
+    #endregion
 
-    public void GenerateMap(int seed)
+    #region Save and Loads
+    public void LoadData(GameData data)
     {
-        mapgenerator.currentSeed = seed;
-        mapgenerator.GenerateDungeon();
+        GenerateMap(data.currentSeed);
+
     }
+
+
+    public void SaveData(ref GameData data)
+    {
+        data.currentSeed = mapgenerator.currentSeed;
+    }
+    #endregion
+
+    #endregion
+
+    #region Private Methods
+    /// <summary>
+    /// Set Up Camera to follow player transform.
+    /// </summary>
+    /// <param name="player"></param>
+    private void SetUpCamera(Transform player)
+    {
+        GameObject _CineCamera = GameObject.Find("CineCamera(Clone)");
+        if (_CineCamera == null)
+        {
+            _CineCamera = Instantiate(CineCamera);
+        }
+        _CineCamera.transform.SetParent(transform);
+        _CineCamera.GetComponent<CinemachineVirtualCamera>().Follow = player;
+    }
+
+    
 
     private void PlayIntroScene()
     {
@@ -208,6 +228,9 @@ public class _GameManager : MonoBehaviour, IDataPersistence
         _vidManagerl.PlayVideo("EndScene");
     }
 
+    #endregion
+
+    #region Monobehaviour
     private void Awake()
     {
         Debug.Log("Debug Awake");
@@ -220,16 +243,6 @@ public class _GameManager : MonoBehaviour, IDataPersistence
         //PlayIntroScene();
         //SpawnPlayer();
     }
+    #endregion
 
-    public void LoadData(GameData data)
-    {
-        GenerateMap(data.currentSeed);
-               
-    }
-
-
-    public void SaveData(ref GameData data)
-    {
-        data.currentSeed = mapgenerator.currentSeed;
-    }
 }

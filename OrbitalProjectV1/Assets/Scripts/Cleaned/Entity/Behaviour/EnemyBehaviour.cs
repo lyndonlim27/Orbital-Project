@@ -7,8 +7,8 @@ using Pathfinding;
 //[RequireComponent(typeof(EnemyData), typeof(ConsumableItemData))]
 public class EnemyBehaviour : ItemWithTextBehaviour
 {
-    [SerializeField] private FodderHealthBar _healthBar;
-
+    #region Variables
+    #region StateMachine Data
     //animation handler;
     public enum ANIMATION_CODE
     {
@@ -21,8 +21,6 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         CAST_START,
     }
 
-    //data;
-
     public EnemyData enemyData;
     public StateMachine stateMachine;
     public StateMachine.STATE currstate;
@@ -30,13 +28,15 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     public RangedComponent ranged { get; protected set; }
     public Rigidbody2D rb { get; protected set; }
     public bool insideStage2;
+    [Header("Cooldowns")]
+    [SerializeField] protected float Dashcooldown;
+    [SerializeField] protected float cooldown;
+    [SerializeField] protected float healStagecooldown;
+    [SerializeField] protected float animatorspeed;
+    #endregion
 
-
-    public Vector2 roamPos { get; protected set; }
-    public float maxDist { get; protected set; }
-    public Vector2 startingpos { get; protected set; }
-
-    public bool facingRight { get; protected set; }
+    #region EnemyComponents
+    [SerializeField] private FodderHealthBar _healthBar;
     protected MonsterTextLogic tl;
     protected Transform _transform;
     protected DamageFlicker _flicker;
@@ -44,7 +44,10 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     private CapsuleCollider2D body;
     private LineController lineController;
     private AstarPath astarPath;
+    private DamageApplier damageApplier;
+    #endregion
 
+    #region AudioClips
     /**
      * AudioSources
      */
@@ -58,7 +61,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     public List<AudioClip> nonhumanTakeDamageAudio;
 
+    #endregion
 
+    #region PathfindingMovement
     /** Pathfinding Movement
      * 
      */
@@ -73,18 +78,16 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     private Patterns patterns;
     private int maxhealth;
     private float detectionRange;
-    private DamageApplier damageApplier;
     private Vector2 velocityCheckPoint;
     private const float jumpHeight = 8f;
     private float originalmass;
+    public Vector2 roamPos { get; protected set; }
+    public float maxDist { get; protected set; }
+    public Vector2 startingpos { get; protected set; }
+    public bool facingRight { get; protected set; }
+    #endregion
 
-    [Header("Cooldowns")]
-    [SerializeField] protected float Dashcooldown;
-    [SerializeField] protected float cooldown;
-    [SerializeField] protected float healStagecooldown;
-    [SerializeField] protected float animatorspeed;
-
-
+    #region Monobehaviour
     /** The first instance the gameobject is being activated.
      *  Retrieves all relevant data.
      */
@@ -102,15 +105,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         spriteRenderer.sortingOrder = 3;
         astarPath = FindObjectOfType<AstarPath>(true);
         velocityCheckPoint = new Vector2(0.5f, 0.5f);
-        
-    }
 
-    private void Start()
-    {
-        player = Player.instance;
-        _flicker = DamageFlicker.instance;
-        rb = GetComponentInParent<Rigidbody2D>();
-        SetRbMass();
     }
 
     /** OnEnable method.
@@ -135,6 +130,65 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     }
 
+    /**
+     * Initializing enemy animator and cooldown and startingpos after spawn animation.
+     */
+    public virtual void Initialize()
+    {
+        animator.SetBool("isAlive", true);
+        animator.SetBool("NotSpawned", true);
+        bounds = currentRoom.GetRoomAreaBounds();
+        cooldown = 2.5f;
+        startingpos = _transform.position;
+
+    }
+
+    private void Start()
+    {
+        player = Player.instance;
+        _flicker = DamageFlicker.instance;
+        rb = GetComponentInParent<Rigidbody2D>();
+        SetRbMass();
+    }
+
+    /**
+     * Check for change of states every frame.
+     */
+    public virtual void Update()
+    {
+        currstate = stateMachine.currState;
+        if (isDead)
+        {
+            return;
+        }
+        CheckForStage2();
+        CheckForHealStage();
+        CheckHealStageInteruption();
+        stateMachine.Update();
+        animatorspeed = this.animator.speed;
+        Tick();
+    }
+
+    /**
+     * Check for change in entity movement every frame.
+     */
+    public virtual void FixedUpdate()
+    {
+        if (rb != null)
+        {
+            if (rb.velocity != Vector2.zero)
+            {
+                StartCoroutine(FootStepAudio());
+            }
+
+        }
+
+
+    }
+    #endregion
+    #endregion
+
+    #region GarbageCollector
     private void ResettingLights()
     {
         light2D.color = spriteRenderer.color;
@@ -279,124 +333,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
 
     }
+    #endregion
 
-    /**
-     * Initializing enemy animator and cooldown and startingpos after spawn animation.
-     */
-    public virtual void Initialize()
-    {
-        animator.SetBool("isAlive", true);
-        animator.SetBool("NotSpawned", true);
-        bounds = currentRoom.GetRoomAreaBounds();
-        cooldown = 2.5f;
-        startingpos = _transform.position;
-
-    }
-
-    /**
-     * Check for change of states every frame.
-     */
-    public virtual void Update()
-    {
-        currstate = stateMachine.currState;
-        if (isDead)
-        {
-            return;
-        }
-        CheckForStage2();
-        CheckForHealStage();
-        CheckHealStageInteruption();
-        stateMachine.Update();
-        animatorspeed = this.animator.speed;
-        Tick();
-    }
-
-    /**
-     * Check for change in entity movement every frame.
-     */
-    public virtual void FixedUpdate()
-    {
-        if (rb != null)
-        {
-            if (rb.velocity != Vector2.zero)
-            {
-                StartCoroutine(FootStepAudio());
-            }
-
-        }
-
-
-    }
-
-    /**
-     * AStarPathfinding on complete.
-     */
-    void OnPathComplete(Pathfinding.Path p)
-    {
-
-        p.Claim(this);
-        if (!p.error)
-        {
-            if (path != null) path.Release(this);
-            path = p;
-            // Reset the waypoint counter so that we start to move towards the first point in the path
-            currentWaypoint = 0;
-        }
-        else
-        {
-            p.Release(this);
-        }
-    }
-
-    //private void OnCollisionEnter2D(Collision2D collision)
-    //{
-    //    if (collision.gameObject.CompareTag("Obstacles") || collision.gameObject.CompareTag("enemy") || collision.gameObject.CompareTag("Door"))
-    //    {
-
-    //        if (currstate == StateMachine.STATE.ROAMING)
-    //        {
-
-    //            ABPath.Construct(transform.position, roamPos);
-
-    //        }
-    //        else if (currstate == StateMachine.STATE.CHASE)
-    //        {
-    //            ABPath.Construct(transform.position, player.transform.position);
-
-    //        }
-
-    //        //stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
-    //    }
-    //}
-
-    /**
-     * Check if skill on cooldown.
-     */
-    public bool onCooldown()
-    {
-        if (ranged != null)
-        {
-            return this.cooldown > 0 || inAnimation;
-        }
-        else
-        {
-            return true;
-        }
-
-    }
-
-    /**
-     * Decrement cooldown timer.
-     */
-    public void Tick()
-    {
-        if (cooldown > 0)
-        {
-            cooldown -= Time.deltaTime;
-            healStagecooldown -= Time.deltaTime;
-        }
-    }
-
+    #region EnemyAudios
     /**
      * Instantiate damage audio.
      */
@@ -474,61 +413,6 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     }
 
     /**
-     * Reset Position after animation ends.
-     */
-    public virtual void resetPosition()
-    {
-
-        if (animator.applyRootMotion == true)
-        {
-            //_transform.position = transform.position;
-            //transform.position = Vector3.zero;
-            //_transform.position = _transform.TransformPoint(secondaryBody.bounds.center);
-            //transform.position = Vector3.zero;
-        }
-
-    }
-
-    /**
-     * Reset Cooldown.
-     */
-    public virtual void resetCooldown()
-    {
-        // use enemydata.rangedcooldown, nexttime then i add numbers to the enemy datas. for now just use 10.
-        this.cooldown = enemyData.rangedcooldown;
-        inAnimation = false;
-        stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
-
-    }
-
-    /**
-     * Get new Roam Positon.
-     */
-    public void getNewRoamPosition()
-    {
-        //roamPos = new Vector2(Random.Range(-5f, 5f), Random.Range(-5f, 5f));
-        roamPos = this.currentRoom.GetRandomPoint();
-
-
-    }
-
-    /**
-     * Move To Roam Positon.
-     */
-    public void moveToRoam()
-    {
-        if (!reachedEndOfPath)
-        {
-            if (body.IsTouchingLayers(LayerMask.GetMask("Obstacles", "enemy", "door")))
-            {
-                getNewRoamPosition();
-            }
-        }
-        AStarMove(roamPos, enemyData.moveSpeed);
-        FlipFace(roamPos);
-    }
-
-    /**
      * FootStep Audio.
      */
     protected override IEnumerator FootStepAudio()
@@ -542,6 +426,29 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     }
 
+    #endregion
+
+    #region AStarPathFinding
+
+    /**
+     * AStarPathfinding on complete.
+     */
+    void OnPathComplete(Pathfinding.Path p)
+    {
+
+        p.Claim(this);
+        if (!p.error)
+        {
+            if (path != null) path.Release(this);
+            path = p;
+            // Reset the waypoint counter so that we start to move towards the first point in the path
+            currentWaypoint = 0;
+        }
+        else
+        {
+            p.Release(this);
+        }
+    }
     /**
      * AStar Pathing.
      */
@@ -619,18 +526,47 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     }
 
     /**
+     * Move To Roam Positon.
+     */
+    public void moveToRoam()
+    {
+        if (!reachedEndOfPath)
+        {
+            if (body.IsTouchingLayers(LayerMask.GetMask("Obstacles", "enemy", "door")))
+            {
+                getNewRoamPosition();
+            }
+        }
+        AStarMove(roamPos, enemyData.moveSpeed);
+        FlipFace(roamPos);
+    }
+
+    /**
      * Move To Starting Position.
      */
     public void MoveToStartPos()
     {
         if (body.IsTouchingLayers(LayerMask.GetMask("Obstacles", "enemy", "door", "Trap")))
         {
-            startingpos = currentRoom.GetRandomPoint();
+            startingpos = currentRoom.GetRandomObjectPoint();
         }
         AStarMove(startingpos, enemyData.moveSpeed);
         FlipFace(startingpos);
     }
 
+    /**
+     * Get new Roam Positon.
+     */
+    public void getNewRoamPosition()
+    {
+        //roamPos = new Vector2(Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+        roamPos = this.currentRoom.GetRandomObjectPoint();
+
+
+    }
+    #endregion
+
+    #region Movement Checkers
     /**
      * Check if reached.
      */
@@ -640,6 +576,38 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         return Vector2.Distance(roamPos, transform.position) <= 0.1f;
     }
 
+    /**
+    * Check if enemy travelled too far from original position.
+    */
+    public bool TravelToofar()
+    {
+        return Vector2.Distance(_transform.position, startingpos) >= maxDist;
+    }
+
+    /**
+     * Check if enemy still inside room.
+     * To prevent the object from jumping outside. technically shudnt happen when there are colliders but well.
+     */
+    public bool CheckInsideRoom()
+    {
+        //bool insidex = Mathf.Abs(_transform.position.x - currentRoom.GetRoomAreaBounds().max.x) > 2.5f && Mathf.Abs(_transform.position.x - currentRoom.GetRoomAreaBounds().min.x) > 2.5f;
+        //bool insidey = Mathf.Abs(_transform.position.y - currentRoom.GetRoomAreaBounds().max.y) > 2.5f&& Mathf.Abs(_transform.position.y - currentRoom.GetRoomAreaBounds().min.y) > 2.5f;
+        //Debug.Log("This is face" + facingRight);
+        if (transform.localScale.x > 0) // facing left, 
+        {
+            RaycastHit2D hit = Physics2D.Linecast(transform.position, new Vector2(transform.position.x + enemyData.dashoffset, transform.position.y), LayerMask.GetMask("Obstacles"));
+            return !hit;
+        }
+        else
+        {
+            RaycastHit2D hit = Physics2D.Linecast(transform.position, new Vector2(transform.position.x - enemyData.dashoffset, transform.position.y), LayerMask.GetMask("Obstacles"));
+            return !hit;
+        }
+    }
+
+    #endregion
+
+    #region FlippingGameObject
     /**
      * Flip transform to face target.
      */
@@ -700,27 +668,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         }
     }
 
-    //public void RotateTowardsTarget(Vector3 pos)
-    //{
+    #endregion
 
-    //    Vector3 dir = (pos - transform.parent.position).normalized;
-    //    float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90;
-    //    Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-    //    transform.parent.rotation = Quaternion.Slerp(transform.parent.rotation, rotation, 1f * Time.deltaTime);
-    //    //Quaternion targetRotation = Quaternion.identity;
-    //    //do
-    //    //{
-    //    //    Debug.Log("do rotation");
-
-    //    //    Vector2 targetDirection = (pos - (Vector2) transform.parent.position).normalized;
-    //    //    targetRotation = Quaternion.LookRotation(targetDirection);
-    //    //    transform.parent.rotation = Quaternion.RotateTowards(transform.parent.rotation, targetRotation, Time.deltaTime);
-
-    //    //    yield return null;
-
-    //    //} while (Quaternion.Angle(transform.parent.rotation, targetRotation) > 0.01f);
-    //}
-
+    #region Teleport Behaviour
     /**
      * Teleport tranform to roam position.
      */
@@ -734,24 +684,11 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
         this.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
     }
+    #endregion
 
-    /**
-     * Check for Stage2.
-     */
-    public void CheckForStage2()
-    {
-        bool canActivate = !insideStage2 && enemyData.stage2 && health <= (0.5f * maxhealth) && !inAnimation;
-        if (canActivate)
-        {
-            animator.SetTrigger("stage2intro");
-            animator.SetBool("stage2", true);
-            SummonOffensiveProps();
-            insideStage2 = true;
-            spriteRenderer.material.color = enemyData.enragedColor;
-            light2D.color = enemyData.enragedColor;
-        }
-    }
+    #region BossBehaviour
 
+    #region SummoningBehaviour
     /**
      * Summoning of Offensive Props.
      */
@@ -776,7 +713,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     {
         currentRoom.SpawnObjects(enemyData.bossSummonprops.ToArray());
     }
+    #endregion
 
+    #region BossCheckers
     /**
      * Checking for Heal Stages.
      */
@@ -818,13 +757,33 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     }
 
     /**
+     * Check for Stage2.
+     */
+    public void CheckForStage2()
+    {
+        bool canActivate = !insideStage2 && enemyData.stage2 && health <= (0.5f * maxhealth) && !inAnimation;
+        if (canActivate)
+        {
+            animator.SetTrigger("stage2intro");
+            animator.SetBool("stage2", true);
+            SummonOffensiveProps();
+            insideStage2 = true;
+            spriteRenderer.material.color = enemyData.enragedColor;
+            light2D.color = enemyData.enragedColor;
+        }
+    }
+    #endregion
+
+    /**
      * Resetting healing cooldown.
      */
     private void ResetHealingCooldown()
     {
         healStagecooldown = 40f;
     }
+    #endregion
 
+    #region EnemyBehaviour
     /**
      * MeleeAttacks.
      */
@@ -858,6 +817,49 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     }
 
     /**
+     * Check if skill on cooldown.
+     */
+    public bool onCooldown()
+    {
+        if (ranged != null)
+        {
+            return this.cooldown > 0 || inAnimation;
+        }
+        else
+        {
+            return true;
+        }
+
+    }
+
+    /**
+     * Reset Cooldown.
+     */
+    public virtual void resetCooldown()
+    {
+        // use enemydata.rangedcooldown, nexttime then i add numbers to the enemy datas. for now just use 10.
+        this.cooldown = enemyData.rangedcooldown;
+        inAnimation = false;
+        stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+
+    }
+
+    /**
+     * Decrement cooldown timer.
+     */
+    public void Tick()
+    {
+        if (cooldown > 0)
+        {
+            cooldown -= Time.deltaTime;
+            healStagecooldown -= Time.deltaTime;
+        }
+    }
+
+    #endregion
+
+    #region AnimationBreaks
+    /**
      * Animation breaks to next state.
      */
     public virtual void AnimationBreak(ANIMATION_CODE code)
@@ -869,11 +871,10 @@ public class EnemyBehaviour : ItemWithTextBehaviour
                 break;
             case ANIMATION_CODE.ATTACK_END:
                 UnlockMovement();
-                resetPosition();
                 inAnimation = false;
                 InstantiateDamageAudio();
                 stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
-                
+
                 break;
             case ANIMATION_CODE.CAST_START:
                 FlipFace(player.transform.position);
@@ -884,11 +885,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
                 FlipFace(player.transform.position);
                 Shoot();
                 InstantiateDamageAudio();
-                resetPosition();
                 break;
             case ANIMATION_CODE.CAST_END:
                 UnlockMovement();
-                resetPosition();
                 resetCooldown();
                 break;
             case ANIMATION_CODE.WEAP_TRIGGER:
@@ -896,7 +895,6 @@ public class EnemyBehaviour : ItemWithTextBehaviour
                 break;
             case ANIMATION_CODE.HURT_END:
                 UnlockMovement();
-                resetPosition();
                 inAnimation = false;
                 stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
                 break;
@@ -904,6 +902,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         }
     }
 
+    #endregion
+
+    #region EnemyHelpers
     /**
      * Lock Enemy Movement.
      */
@@ -1021,60 +1022,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         SpawnDrops();
         poolManager.ReleaseObject(this);
 
-    }
-
-    /**
-     * Setting Enemy Stats.
-     */
-    public override void SetEntityStats(EntityData stats)
-    {
-        this.enemyData = Instantiate((EnemyData)stats);
-    }
-
-    /**
-     * Retrieving Enemy Stats.
-     */
-    public override EntityData GetData()
-    {
-        return enemyData;
-    }
-
-    /**
-     * Getting Current Room.
-     */
-    public RoomManager GetCurrentRoom()
-    {
-        return this.currentRoom;
-    }
-
-    /**
-     * Check if enemy travelled too far from original position.
-     */
-    public bool TravelToofar()
-    {
-        return Vector2.Distance(_transform.position, startingpos) >= maxDist;
-    }
-
-    /**
-     * Check if enemy still inside room.
-     * To prevent the object from jumping outside. technically shudnt happen when there are colliders but well.
-     */
-    public bool CheckInsideRoom()
-    {
-        //bool insidex = Mathf.Abs(_transform.position.x - currentRoom.GetRoomAreaBounds().max.x) > 2.5f && Mathf.Abs(_transform.position.x - currentRoom.GetRoomAreaBounds().min.x) > 2.5f;
-        //bool insidey = Mathf.Abs(_transform.position.y - currentRoom.GetRoomAreaBounds().max.y) > 2.5f&& Mathf.Abs(_transform.position.y - currentRoom.GetRoomAreaBounds().min.y) > 2.5f;
-        //Debug.Log("This is face" + facingRight);
-        if (transform.localScale.x > 0) // facing left, 
-        {
-            RaycastHit2D hit = Physics2D.Linecast(transform.position, new Vector2(transform.position.x + enemyData.dashoffset, transform.position.y), LayerMask.GetMask("Obstacles"));
-            return !hit;
-        }
-        else
-        {
-            RaycastHit2D hit = Physics2D.Linecast(transform.position, new Vector2(transform.position.x - enemyData.dashoffset, transform.position.y), LayerMask.GetMask("Obstacles"));
-            return !hit;
-        }
-    }
+    }  
 
     /**
      * Enemy dodge motion.
@@ -1145,7 +1093,6 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         inAnimation = false;
         //transform.parent.position = transform.position;
         //transform.localPosition = Vector3.zero;
-        resetPosition();
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
         EnableAttackComps();
     }
@@ -1221,7 +1168,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         FlipFace(player.transform.position);
         Vector2 vectorToPlayer = (player.transform.position - transform.position).normalized;
         rb.AddForce(vectorToPlayer * 1000f, ForceMode2D.Impulse);
-        
+
     }
 
     public void MoveBy(string movePos)
@@ -1229,14 +1176,15 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         if (movePos == "")
         {
             Debug.LogError("No input position given");
-        } else
+        }
+        else
         {
             UnlockMovement();
             string[] mPos = movePos.Split(":");
             float x = float.Parse(mPos[0]);
             float y = float.Parse(mPos[1]);
             RaycastHit2D hit = Physics2D.Linecast(transform.position, new Vector2(transform.position.x + x, transform.position.y + y), LayerMask.GetMask("Obstacles"));
-            
+
             if (facingRight)
             {
 
@@ -1247,7 +1195,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
                 rb.MovePosition(hit ? hit.point : new Vector2(_transform.position.x + transform.right.x * x, _transform.position.y + y));
             }
         }
-        
+
 
     }
 
@@ -1257,60 +1205,83 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         {
             return;
         }
-        
+
         if (facingRight)
         {
             rb.MovePosition(player.transform.position + transform.right);
-        } else
+        }
+        else
         {
             rb.MovePosition(player.transform.position - transform.right);
         }
-        
+
     }
 
-    public void DashBackwards()
+    #endregion
+
+    #region Data Methods
+    /**
+     * Setting Enemy Stats.
+     */
+    public override void SetEntityStats(EntityData stats)
     {
-
+        this.enemyData = Instantiate((EnemyData)stats);
     }
 
-    //public void LandForward()
-    //{
-    //    UnlockMovement();
-    //    if (facingRight)
-    //    {
-    //        rb.MovePosition(new Vector2(_transform.position.x -transform.right.x * jumpHeight, _transform.position.y - jumpHeight));
-    //    }
-    //    else
-    //    {
-    //        rb.MovePosition(new Vector2(_transform.position.x + transform.right.x * jumpHeight, _transform.position.y - jumpHeight));
-    //    }
-    //}
+    /**
+     * Retrieving Enemy Stats.
+     */
+    public override EntityData GetData()
+    {
+        return enemyData;
+    }
 
-    //public void LandForwardImmediate()
-    //{
-    //    UnlockMovement();
-    //    StartCoroutine(ChangeMassForAframe());
-        
-    //}
-
-
-    //public IEnumerator ChangeMassForAframe()
-    //{
-    //    rb.mass = 50f;
-    //    yield return null;
-    //    LandForward();
-    //    rb.mass = originalmass;
-    //}
-
-    //public void JumpUp()
-    //{
-    //    //rb.AddForce(new Vector2(0, jumpHeight) * 1000f, ForceMode2D.Impulse);
-    //    rb.MovePosition(new Vector2(_transform.position.x, _transform.position.y + jumpHeight));
-    //}
-        
-
-
+    /**
+     * Getting Current Room.
+     */
+    public RoomManager GetCurrentRoom()
+    {
+        return this.currentRoom;
+    }
+    #endregion
 }
+
+#region UnusedCodes
+//public void LandForward()
+//{
+//    UnlockMovement();
+//    if (facingRight)
+//    {
+//        rb.MovePosition(new Vector2(_transform.position.x -transform.right.x * jumpHeight, _transform.position.y - jumpHeight));
+//    }
+//    else
+//    {
+//        rb.MovePosition(new Vector2(_transform.position.x + transform.right.x * jumpHeight, _transform.position.y - jumpHeight));
+//    }
+//}
+
+//public void LandForwardImmediate()
+//{
+//    UnlockMovement();
+//    StartCoroutine(ChangeMassForAframe());
+
+//}
+
+
+//public IEnumerator ChangeMassForAframe()
+//{
+//    rb.mass = 50f;
+//    yield return null;
+//    LandForward();
+//    rb.mass = originalmass;
+//}
+
+//public void JumpUp()
+//{
+//    //rb.AddForce(new Vector2(0, jumpHeight) * 1000f, ForceMode2D.Impulse);
+//    rb.MovePosition(new Vector2(_transform.position.x, _transform.position.y + jumpHeight));
+//}
+
 
 //public class MovePosition : AnimationEvent
 //{
@@ -1324,3 +1295,45 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 //    }
 //}
 
+//public void RotateTowardsTarget(Vector3 pos)
+//{
+
+//    Vector3 dir = (pos - transform.parent.position).normalized;
+//    float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90;
+//    Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+//    transform.parent.rotation = Quaternion.Slerp(transform.parent.rotation, rotation, 1f * Time.deltaTime);
+//    //Quaternion targetRotation = Quaternion.identity;
+//    //do
+//    //{
+//    //    Debug.Log("do rotation");
+
+//    //    Vector2 targetDirection = (pos - (Vector2) transform.parent.position).normalized;
+//    //    targetRotation = Quaternion.LookRotation(targetDirection);
+//    //    transform.parent.rotation = Quaternion.RotateTowards(transform.parent.rotation, targetRotation, Time.deltaTime);
+
+//    //    yield return null;
+
+//    //} while (Quaternion.Angle(transform.parent.rotation, targetRotation) > 0.01f);
+//}
+//private void OnCollisionEnter2D(Collision2D collision)
+//{
+//    if (collision.gameObject.CompareTag("Obstacles") || collision.gameObject.CompareTag("enemy") || collision.gameObject.CompareTag("Door"))
+//    {
+
+//        if (currstate == StateMachine.STATE.ROAMING)
+//        {
+
+//            ABPath.Construct(transform.position, roamPos);
+
+//        }
+//        else if (currstate == StateMachine.STATE.CHASE)
+//        {
+//            ABPath.Construct(transform.position, player.transform.position);
+
+//        }
+
+//        //stateMachine.ChangeState(StateMachine.STATE.ROAMING, null);
+//    }
+//}
+
+#endregion

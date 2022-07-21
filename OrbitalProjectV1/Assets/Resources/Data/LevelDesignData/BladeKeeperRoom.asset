@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 845c6ab78fdba427cba536b1d1e6a84c, type: 3}
+  m_Name: BladeKeeperRoom
+  m_EditorClassIdentifier: 
+  room_design: 5
+  floorTile: {fileID: 11400000, guid: 8be6354f3dc5240f0b4ff9da6638b90c, type: 2}
+  grassTile: {fileID: 11400000, guid: 8e4d20213ac9d4f1eb80b92033f1aaef, type: 2}
+  luwall: {fileID: 11400000, guid: 9bfe420ad735f409e8e237072fe22ad9, type: 2}
+  ldwall: {fileID: 11400000, guid: 3c0c32bd7c9fc47b093741a71caa1a5a, type: 2}
+  ruwall: {fileID: 11400000, guid: d25c42eb71e0f4b3a9a8640051c13a34, type: 2}
+  rdwall: {fileID: 11400000, guid: a8087464c76364893b10fcac990df8f9, type: 2}
+  vertwall: {fileID: 0}
+  horizwall: {fileID: 0}
+  allardwall: {fileID: 0}
+  topwall: {fileID: 11400000, guid: b4c9eede7a1534d4a859b5bb499cb599, type: 2}
+  bottomwall: {fileID: 11400000, guid: 901f376f0c3a64806b8aa55a7b8f48c1, type: 2}
+  leftwall: {fileID: 11400000, guid: 9e0e471d213674ec4907e1cc2f9b86f1, type: 2}
+  rightwall: {fileID: 11400000, guid: c22b1ce299f7e454a8188052aa152602, type: 2}
+  lucorner: {fileID: 0}
+  rucorner: {fileID: 0}
+  ldcorner: {fileID: 0}
+  rdcorner: {fileID: 0}
+  terrainObjects: []
+  intterrainDecorations: []
+  extterrainDecorations: []
+  frequency: 90
+  offset: 0
+  normalizer: 0.205

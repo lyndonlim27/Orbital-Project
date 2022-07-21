@@ -11,12 +11,10 @@ public class MiniMapImage : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     [SerializeField] private Camera _miniMapCamera;
 
     [SerializeField]
-    private GameObject minimapIcon;
-
-    [SerializeField]
     private float offset;
 
-    private Transform minimapTransform;
+    [SerializeField]
+    private Transform minimapIcon;
 
     private float originalSize;
 
@@ -25,7 +23,7 @@ public class MiniMapImage : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     void Start()
     {
         _hovering = false;
-        minimapTransform = minimapIcon.transform;
+       
         originalSize = _miniMapCamera.orthographicSize;
 
     }
@@ -43,17 +41,17 @@ public class MiniMapImage : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         offset = 2 * Input.GetAxis("Mouse ScrollWheel");
         _miniMapCamera.orthographicSize -= offset;
-        var scale = minimapTransform.localScale;
+        var scale = minimapIcon.localScale;
         scale /=  Mathf.Abs(((originalSize + 2*offset)/originalSize));
         if (scale.x < 5)
         {
-            minimapTransform.localScale = new Vector2(Mathf.Max(scale.x, 5), Mathf.Max(scale.y, 5));
+            minimapIcon.localScale = new Vector2(Mathf.Max(scale.x, 5), Mathf.Max(scale.y, 5));
         } else if (scale.x > 20)
         {
-            minimapTransform.localScale = new Vector2(Mathf.Min(scale.x, 20), Mathf.Min(scale.y, 20));
+            minimapIcon.localScale = new Vector2(Mathf.Min(scale.x, 20), Mathf.Min(scale.y, 20));
         } else
         {
-            minimapTransform.localScale = scale;
+            minimapIcon.localScale = scale;
         }
         
 

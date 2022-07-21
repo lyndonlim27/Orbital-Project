@@ -5,6 +5,7 @@ using UnityEngine.Pool;
 
 public class PoolManager : MonoBehaviour
 {
+    #region Variables
     [SerializeField] EntityBehaviour[] entityPrefabs;
 
     public static PoolManager instance { get; private set; }
@@ -16,19 +17,9 @@ public class PoolManager : MonoBehaviour
      */
     private Dictionary<EntityData.TYPE, ObjectPool<EntityBehaviour>> objectPools = new Dictionary<EntityData.TYPE, ObjectPool<EntityBehaviour>>();
 
+    #endregion
 
-
-
-    private void Awake()
-    {
-        InitializePool();
-        if (instance == null)
-        {
-            instance = this;
-        }
-    }
-        
-
+    #region Internal Methods
 
     private void OnGetEntity(EntityBehaviour instance)
     {
@@ -55,6 +46,38 @@ public class PoolManager : MonoBehaviour
 
     }
 
+    private void InitializePool()
+    {
+        foreach (EntityBehaviour entity in entityPrefabs)
+        {
+            if (entity.GetType() == typeof(RangedBehaviour))
+            {
+                ObjectPool<EntityBehaviour> pool = new ObjectPool<EntityBehaviour>(() => CreatePooledEntity(entity),
+                OnGetEntity, OnReleaseEntity, OnDestroyEntity, false, 200, 1000);
+                objectPools.Add(EntityData.TYPE.CAST_ONTARGET, pool);
+                objectPools.Add(EntityData.TYPE.CAST_SELF, pool);
+                objectPools.Add(EntityData.TYPE.PROJECTILE, pool);
+            }
+            else if (entity.GetType() == typeof(ItemWithTextBehaviour))
+            {
+
+                ObjectPool<EntityBehaviour> pool = new ObjectPool<EntityBehaviour>(() => CreatePooledEntity(entity),
+                OnGetEntity, OnReleaseEntity, OnDestroyEntity, false, 100, 500);
+                objectPools.Add(EntityData.TYPE.ITEM, pool);
+                objectPools.Add(EntityData.TYPE.BOSSPROPS, pool);
+            }
+            else
+            {
+                objectPools.Add(entity.GetData()._type, new ObjectPool<EntityBehaviour>(() => CreatePooledEntity(entity),
+                OnGetEntity, OnReleaseEntity, OnDestroyEntity, false, 100, 500));
+            }
+
+        }
+    }
+
+    #endregion
+
+    #region Client-Accessible Methods
     public EntityBehaviour GetObject(EntityData.TYPE _type)
     {
         return objectPools[_type].Get();
@@ -68,16 +91,6 @@ public class PoolManager : MonoBehaviour
         ranged.SetEntityStats(rangedData);
         ranged.GetComponent<SpriteRenderer>().sprite = rangedData.sprite;
         ranged.transform.SetParent(null);
-        //if (rangedData._type == EntityData.TYPE.PROJECTILE)
-        //{
-        //    ranged.transform.SetParent(null);
-        //}
-        //else
-        //{
-        //    ranged.transform.SetParent(go.transform);
-        //}
-
-
         return ranged;
 
         
@@ -89,48 +102,18 @@ public class PoolManager : MonoBehaviour
         instance.StopCoroutine(instance.FadeOut());
         objectPools[instance.GetData()._type].Release(instance);
     }
+    #endregion
 
-
-    private void InitializePool()
+    #region Monobehaviour
+    private void Awake()
     {
-        foreach (EntityBehaviour entity in entityPrefabs)
+        InitializePool();
+        if (instance == null)
         {
-            if (entity.GetType() == typeof(RangedBehaviour))
-            {
-                ObjectPool<EntityBehaviour> pool = new ObjectPool<EntityBehaviour>(() => CreatePooledEntity(entity),
-                OnGetEntity, OnReleaseEntity, OnDestroyEntity, false, 200, 1000);
-                objectPools.Add(EntityData.TYPE.CAST_ONTARGET, pool);
-                objectPools.Add(EntityData.TYPE.CAST_SELF, pool);
-                objectPools.Add(EntityData.TYPE.PROJECTILE, pool);
-            }
-            else if (entity.GetType() == typeof(ItemWithTextBehaviour)) 
-            {
-
-                ObjectPool<EntityBehaviour> pool = new ObjectPool<EntityBehaviour>(() => CreatePooledEntity(entity),
-                OnGetEntity, OnReleaseEntity, OnDestroyEntity, false, 100, 500);
-                objectPools.Add(EntityData.TYPE.ITEM, pool);
-                objectPools.Add(EntityData.TYPE.BOSSPROPS, pool);
-            } else
-            {
-                objectPools.Add(entity.GetData()._type, new ObjectPool<EntityBehaviour>(() => CreatePooledEntity(entity),
-                OnGetEntity, OnReleaseEntity, OnDestroyEntity, false, 100, 500));
-            }
-
+            instance = this;
         }
-
     }
+    #endregion
 
-    /**
-     * Debugging
-     */
-    //private void OnGUI()
-    //{
-    //    foreach(EntityData.TYPE type in objectPools.Keys)
-    //    {
-    //        GUI.Label(new Rect(10, 10, 150, 50), $"PoolSize: {type} = {objectPools[type].CountAll}");
-    //    }
-        
-
-    //}
 }
-//}
+
