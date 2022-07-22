@@ -121,21 +121,13 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     protected virtual void Awake()
     {
         activated = false;
-        
-        
         conditions = new HashSet<string>();
         items = new List<EntityBehaviour>();
         enemies = new List<EnemyBehaviour>();
         npcs = new List<NPCBehaviour>();
-        
         popUpSettings = FindObjectOfType<PopUpSettings>(true);
         astarPath = FindObjectOfType<AstarPath>(true);
         spawnlater = new List<EntityData>();
-        foreach (Light2D light in lights)
-        {
-            
-            light.GetComponent<Animator>().SetBool(light.name, true);
-        }
         GenerateGuid();
 
 
@@ -155,6 +147,20 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         this.areaminBound = roomArea.bounds.min;
         this.areamaxBound = roomArea.bounds.max;
         terrainGenerated = false;
+        LightUpLights();
+    }
+
+    private void LightUpLights()
+    {
+        if (lights == null)
+        {
+            return;
+        }
+        foreach (Light2D light in lights)
+        {
+
+            light.GetComponent<Animator>().SetBool(light.name, true);
+        }
     }
 
     protected void OnDisable()

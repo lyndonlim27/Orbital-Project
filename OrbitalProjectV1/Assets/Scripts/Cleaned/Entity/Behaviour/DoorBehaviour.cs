@@ -33,10 +33,11 @@ public class DoorBehaviour : EntityBehaviour
         audioSource.pitch = 0.6f;
         audioSource.volume = 0.05f;
 
-        if (Physics2D.OverlapCircle(transform.position,0.01f, LayerMask.GetMask("Obstacles")))
-        {
-            Destroy(this.gameObject);
-        }
+        //Collider2D col = Physics2D.OverlapCircle(transform.position, 0.01f, LayerMask.GetMask("Obstacles"));
+        //if (col.transform != transform)
+        //{
+        //    //Destroy(this.gameObject);
+        //}
     }
 
     protected virtual void Start()
@@ -50,12 +51,12 @@ public class DoorBehaviour : EntityBehaviour
     public void RemoveTerrainWalls()
     {
         bool terraingenerated = _GameManager.allTerrainsGenerated;
-        Debug.Log("Generated?" + terraingenerated);
         if (terraingenerated && !removed)
         {
-            Debug.Log("Yes we entered removal");
+            
             removed = true;
             TerrainGenerator _tergen = TerrainGenerator.instance;
+            Debug.Log("This is terraingen" + _tergen);
             if (_tergen == null)
             {
                 return;
@@ -63,11 +64,9 @@ public class DoorBehaviour : EntityBehaviour
             else
             {
                 terrainWallTilemap = _tergen.GetTerrainWall();
-                Vector3Int currentpos = Vector3Int.RoundToInt(transform.position);
-                RecursiveRemovalofTerrainWalls(currentpos + Vector3Int.left);
-                RecursiveRemovalofTerrainWalls(currentpos + Vector3Int.right);
-                RecursiveRemovalofTerrainWalls(currentpos + Vector3Int.up);
-                RecursiveRemovalofTerrainWalls(currentpos + Vector3Int.down);
+                Vector3Int currentpos = Vector3Int.FloorToInt(transform.position);
+                Debug.Log("This is current position" + currentpos);
+                RecursiveRemovalofTerrainWalls(currentpos);
             }
         }
     }
@@ -222,15 +221,26 @@ public class DoorBehaviour : EntityBehaviour
 
     private void RecursiveRemovalofTerrainWalls(Vector3Int pos)
     {
-        if (!terrainWallTilemap.HasTile(pos))
+
+        bool stop = false;
+        for (int i = -1; i < 1 && i != 0; i++)
         {
-            Debug.Log("This is the end of the path");
-            return;
+            var pos1 = pos + new Vector3Int(i, 0);
+            var pos2 = pos + new Vector3Int(0, i);
+            if (!terrainWallTilemap.HasTile(pos1) || !terrainWallTilemap.HasTile(pos2))
+            {
+                stop = true;
+            }
+            
         }
-        terrainWallTilemap.SetTile(pos, null);
-        RecursiveRemovalofTerrainWalls(pos + Vector3Int.left);
-        RecursiveRemovalofTerrainWalls(pos + Vector3Int.right);
-        RecursiveRemovalofTerrainWalls(pos + Vector3Int.up);
-        RecursiveRemovalofTerrainWalls(pos + Vector3Int.down);
+
+        if (!stop)
+        {
+            RecursiveRemovalofTerrainWalls(pos + Vector3Int.left);
+            RecursiveRemovalofTerrainWalls(pos + Vector3Int.right);
+            RecursiveRemovalofTerrainWalls(pos + Vector3Int.up);
+            RecursiveRemovalofTerrainWalls(pos + Vector3Int.down);
+        }
+        
     }
 }

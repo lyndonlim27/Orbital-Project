@@ -16,15 +16,16 @@ public class BreakableDoorBehaviour : DoorBehaviour
     protected override void OnEnable()
     {
         base.OnEnable();
-        textCanvas = GetComponentInChildren<TextLogic>().gameObject;
-        weaponDataDisplay = GetComponentInChildren<WeaponDescription>(true);
-        weaponDataDisplay.gameObject.SetActive(false);
-        GetComponent<BoxCollider2D>().size = spriteRenderer.sprite.bounds.size;
+        
     }
 
     protected override void Start()
     {
         base.Start();
+        textCanvas = GetComponentInChildren<TextLogic>().gameObject;
+        weaponDataDisplay = GetComponentInChildren<WeaponDescription>(true);
+        weaponDataDisplay.gameObject.SetActive(false);
+        GetComponent<BoxCollider2D>().size = spriteRenderer.sprite.bounds.size;
         LockDoor();
 
     }
