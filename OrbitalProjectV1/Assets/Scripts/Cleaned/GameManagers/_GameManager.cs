@@ -42,7 +42,7 @@ public class _GameManager : MonoBehaviour, IDataPersistence
 
     [Header("RoomManagers")]
     public static List<RoomManager> roomManagers = new List<RoomManager>();
-    public static bool roomGenerated { get; private set; }
+    public static bool allTerrainsGenerated { get; private set; }
 
     [Header("MapGenerator")]
     [SerializeField]
@@ -235,7 +235,7 @@ public class _GameManager : MonoBehaviour, IDataPersistence
     private void Awake()
     {
         Debug.Log("Debug Awake");
-        roomGenerated = false;
+        allTerrainsGenerated = false;
         GenerateManagers();
         GenerateMap(-1);
     }
@@ -243,12 +243,12 @@ public class _GameManager : MonoBehaviour, IDataPersistence
     private void Start()
     {
         //PlayIntroScene();
-        //SpawnPlayer();
+        SpawnPlayer();
     }
 
     private void Update()
     {
-        roomGenerated = roomManagers.TrueForAll(room => room.terrainGenerated);
+        allTerrainsGenerated = roomManagers.TrueForAll(room => room.terrainGenerated);
     }
     #endregion
 

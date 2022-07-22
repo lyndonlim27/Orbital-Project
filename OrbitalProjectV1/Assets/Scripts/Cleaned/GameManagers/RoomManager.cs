@@ -121,9 +121,8 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     protected virtual void Awake()
     {
         activated = false;
-        roomArea = GetComponent<Collider2D>();
-        this.areaminBound = roomArea.bounds.min;
-        this.areamaxBound = roomArea.bounds.max;
+        
+        
         conditions = new HashSet<string>();
         items = new List<EntityBehaviour>();
         enemies = new List<EnemyBehaviour>();
@@ -134,6 +133,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         spawnlater = new List<EntityData>();
         foreach (Light2D light in lights)
         {
+            
             light.GetComponent<Animator>().SetBool(light.name, true);
         }
         GenerateGuid();
@@ -151,12 +151,15 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         pointer = UIObjectivePointer.instance;
         globalAudioManager = GlobalAudioManager.instance;
         roomDesigner = RoomDesign.instance;
+        roomArea = GetComponent<Collider2D>();
+        this.areaminBound = roomArea.bounds.min;
+        this.areamaxBound = roomArea.bounds.max;
         terrainGenerated = false;
     }
 
     protected void OnDisable()
     {
-        UnlockDoorsOnThisLevel();
+        //UnlockDoorsOnThisLevel();
     }
 
     protected virtual void Update()

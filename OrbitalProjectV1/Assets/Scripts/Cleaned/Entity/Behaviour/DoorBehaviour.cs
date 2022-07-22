@@ -49,7 +49,7 @@ public class DoorBehaviour : EntityBehaviour
 
     public void RemoveTerrainWalls()
     {
-        bool terraingenerated = RoomFirstDungeonGenerator.roomGenerated;
+        bool terraingenerated = _GameManager.allTerrainsGenerated;
         Debug.Log("Generated?" + terraingenerated);
         if (terraingenerated && !removed)
         {
