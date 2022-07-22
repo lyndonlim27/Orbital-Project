@@ -63,6 +63,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     #endregion
 
+
     #region PathfindingMovement
     /** Pathfinding Movement
      * 
@@ -85,6 +86,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     public float maxDist { get; protected set; }
     public Vector2 startingpos { get; protected set; }
     public bool facingRight { get; protected set; }
+    #endregion
     #endregion
 
     #region Monobehaviour
@@ -137,7 +139,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     {
         animator.SetBool("isAlive", true);
         animator.SetBool("NotSpawned", true);
-        bounds = currentRoom.GetRoomAreaBounds();
+        bounds = currentRoom.GetSpawnAreaBound();
         cooldown = 2.5f;
         startingpos = _transform.position;
 
@@ -186,8 +188,8 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     }
     #endregion
-    #endregion
-
+    
+    #region Internal Methods
     #region GarbageCollector
     private void ResettingLights()
     {
@@ -856,6 +858,14 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         }
     }
 
+    /**
+     * lazy to remove this animation event from all animations so im keeping it here.
+     */
+    public void resetPosition()
+    {
+
+    }
+
     #endregion
 
     #region AnimationBreaks
@@ -1243,6 +1253,10 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     {
         return this.currentRoom;
     }
+    #endregion
+    #endregion
+
+    #region Client-Access Methods
     #endregion
 }
 

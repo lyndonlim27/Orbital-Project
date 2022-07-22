@@ -41,13 +41,15 @@ MonoBehaviour:
   _trigger: 
   item_type: 0
   secondarysprite: {fileID: 0}
+  itemSprites: []
   description: 
+  rangedData: {fileID: 0}
   damageValue: 1
   moveSpeed: 1.5
   chaseSpeed: 2.5
   attackRange: 1
   attackSpeed: 1
-  maxDist: 0
+  maxDist: 100
   meleetriggers:
   - Melee1
   - Melee2
@@ -60,7 +62,10 @@ MonoBehaviour:
   - Wave
   - Ulti
   dashattacks: []
-  rangedDatas: []
+  rangedDatas:
+  - {fileID: 11400000, guid: bf8a31cfe9c08424492f57a1db7b243f, type: 2}
+  - {fileID: 11400000, guid: 0e3b9ff1477124f9dbedfe773f489b6a, type: 2}
+  - {fileID: 11400000, guid: 9f12151c4d7864bbf80bc982054b71f0, type: 2}
   bossdamageprops: []
   bossSummonprops: []
   bossdefenceprops: []
@@ -70,4 +75,6 @@ MonoBehaviour:
   stage2: 0
   healStage: 0
   enragedColor: {r: 0, g: 0, b: 0, a: 0}
+  dashoffset: 0
+  jumpheight: 0
   body: 0

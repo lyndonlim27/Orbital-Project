@@ -56,18 +56,6 @@ public class TilemapVisualizer : MonoBehaviour
 
     private Transform decorationContainer;
 
-    //public void ActivateTilemapColliders()
-    //{
-    //    innerwallTilemap.gameObject.AddComponent<TilemapCollider2D>();
-    //    outerwallTilemap.gameObject.AddComponent<TilemapCollider2D>();
-
-    //}
-
-    //public void DeactivateTilemapColliders()
-    //{
-    //    DestroyImmediate(innerwallTilemap.GetComponent<TilemapCollider2D>());
-    //    DestroyImmediate(outerwallTilemap.GetComponent<TilemapCollider2D>());
-    //}
 
     public void PaintFloorTiles(IEnumerable<Vector2Int> floorPositions, float groundOffset, List<BoundsInt> rooms, HashSet<Vector2Int> corridoorVectors)
     {

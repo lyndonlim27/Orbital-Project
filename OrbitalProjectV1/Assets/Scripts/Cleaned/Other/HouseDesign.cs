@@ -14,7 +14,6 @@ public abstract class HouseDesign : MonoBehaviour
     protected virtual void Awake()
     {
         currRoom = GetComponentInParent<RoomManager>();
-        Debug.Log("This is currroom" + currRoom);
         interiorTilemap = GameObject.Find("InteriorTilemap").GetComponent<Tilemap>();
         exteriorTilemap = GameObject.Find("ExteriorTilemap").GetComponent<Tilemap>();
         nearWallTilemap = GameObject.Find("NearWallTilemap").GetComponent<Tilemap>();
@@ -55,7 +54,6 @@ public abstract class HouseDesign : MonoBehaviour
         BoxCollider2D _col = door.GetComponent<BoxCollider2D>();
         float dist = Vector3.Distance(randompoint, new Vector3(_col.bounds.center.x,_col.bounds.min.y));
         bool insideRange = dist <= (_col.bounds.size.magnitude / 2) + dooroffset;
-        Debug.Log("Distance of point " + randompoint + "from" + _col.bounds.center + "is"  + dist);
         if (insideRange)
         {
             return true;

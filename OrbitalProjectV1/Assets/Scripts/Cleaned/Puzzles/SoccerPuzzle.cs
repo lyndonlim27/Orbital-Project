@@ -21,7 +21,7 @@ public class SoccerPuzzle : MonoBehaviour, Puzzle
     private void Awake()
     {
         currentRoom = GetComponent<RoomManager>();
-        boundaries = currentRoom.GetRoomAreaBounds();
+        boundaries = currentRoom.GetSpawnAreaBound();
         doors = currentRoom.GetDoors();
         doorpositions = new List<Vector2>();
         foreach (DoorBehaviour door in doors)

@@ -43,6 +43,7 @@ public class BreakableDoorBehaviour : DoorBehaviour
 
     protected override void Update()
     {
+        RemoveTerrainWalls();
         if (unlocked)
         {
             UnlockDoor();

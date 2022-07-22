@@ -1838,7 +1838,14 @@ AnimationClip:
     intParameter: 2
     messageOptions: 0
   - time: 0.93333334
-    functionName: DashForward
+    functionName: DashForwardBy
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 800
+    intParameter: 0
+    messageOptions: 0
+  - time: 1.1333333
+    functionName: Flip
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
@@ -1851,10 +1858,10 @@ AnimationClip:
     floatParameter: 0
     intParameter: 6
     messageOptions: 0
-  - time: 4.6666665
-    functionName: resetPosition
+  - time: 4.866667
+    functionName: AnimationBreak
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
-    intParameter: 0
+    intParameter: 1
     messageOptions: 0

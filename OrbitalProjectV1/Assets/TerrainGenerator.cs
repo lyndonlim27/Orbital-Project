@@ -20,7 +20,7 @@ public class TerrainGenerator : MonoBehaviour
     private int height;
 
     [SerializeField]
-    private Tilemap terrainTilemap,terrainWallTilemap, groundDecoTilemap, kruskalVisualizer;
+    private Tilemap terrainTilemap,terrainWallTilemap, groundDecoTilemap, wallTilemap, outerwallTilemap, kruskalVisualizer;
 
     [SerializeField]
     private TileBase horizwall, vertwall, luwall, ldwall, ruwall, rdwall, allardwall, topwall,bottomwall, leftwall, rightwall,
@@ -66,14 +66,15 @@ public class TerrainGenerator : MonoBehaviour
         {
             instance = this;
         }
-        
+        ClearAllTerrainObjects();
         TerrainObjectHolder = new GameObject("TerrainObjectHolder");
         frequency = 0.5f;
-        LoadLevel();
     }
     #endregion
 
     #region Client-Access Methods
+
+    #region Generation
     public void GenerateTerrain()
     {
         ClearAllTerrainObjects();
@@ -96,33 +97,26 @@ public class TerrainGenerator : MonoBehaviour
 
     public void GenerateTerrain(RoomManager currRoom)
     {
-        ClearAllTerrainObjects();
         map = GenerateMap(currRoom);
         PaintWalls(map);
         PaintTerrainTile(map);
         TerrainObjectHolder.transform.SetParent(currRoom.transform);
         CreateConnections();
-    }
-
-    
-
-    private void FillTerrainLand()
-    {
-        foreach(Vector3Int vec in map.Keys)
-        {
-            terrainTilemap.SetTile(vec, grassTile);
-        }
+        
     }
 
     public void GenerateTerrainType2(RoomManager currRoom)
     {
-        ClearAllTerrainObjects();
         map = GenerateMap(currRoom);
         Paint8DirectWalls();
+        FillTerrainLand();
         CreateConnections();
         
     }
 
+    #endregion
+
+    #region LoadingData
     /// <summary>
     /// Testing from inspector.
     /// </summary>
@@ -137,6 +131,14 @@ public class TerrainGenerator : MonoBehaviour
             LoadTiles(levelDesignData);
         }
     }
+    #endregion
+
+    #region Getters
+    public Tilemap GetTerrainWall()
+    {
+        return terrainWallTilemap;
+    }
+    #endregion
     #endregion
 
     #region Internal Methods
@@ -508,6 +510,14 @@ public class TerrainGenerator : MonoBehaviour
             
     }
 
+    private void FillTerrainLand()
+    {
+        foreach (Vector3Int vec in map.Keys)
+        {
+            terrainTilemap.SetTile(vec, grassTile);
+        }
+    }
+
     private void ClearAllTerrainObjects()
     {
         DestroyImmediate(TerrainObjectHolder);
@@ -548,23 +558,34 @@ public class TerrainGenerator : MonoBehaviour
     #region Generators
     private Dictionary<Vector3Int, int> GenerateMap(RoomManager currRoom)
     {
-        Bounds _bounds = currRoom.GetRoomAreaBounds();
+        //BoundsInt _bounds = currRoom.GetTileBounds();
+        Vector3Int roomSize = (Vector3Int) currRoom.GetRoomSize();
         map = new Dictionary<Vector3Int, int>();
-        Vector3Int minVec = Vector3Int.RoundToInt(_bounds.min);
-        Vector3Int maxVec = Vector3Int.RoundToInt(_bounds.max);
+        
+        Vector3Int minVec = Vector3Int.RoundToInt(currRoom.transform.position) - roomSize / 2 + Vector3Int.one;
+        Vector3Int maxVec = Vector3Int.RoundToInt(currRoom.transform.position) + roomSize / 2 - Vector3Int.one * 2;
+        
         for (int i = minVec.x; i <= maxVec.x; i++)
         {
             for (int j = minVec.y; j <= maxVec.y; j++)
             {
-                if (i == minVec.x || i == maxVec.x || j == minVec.y || j == maxVec.y)
+                var currpos = new Vector3Int(i, j);
+                if (wallTilemap.HasTile(currpos) || outerwallTilemap.HasTile(currpos))
                 {
-                    map[new Vector3Int(i, j)] = 1;
+                    continue;
                 } else
                 {
-                    
-                    map[new Vector3Int(i,j)] = Mathf.RoundToInt(Mathf.PerlinNoise((i - minVec.x) * normalizer, (j - minVec.y) * normalizer));
-                }
+                    if (i == minVec.x || i == maxVec.x || j == minVec.y || j == maxVec.y)
+                    {
+                        map[currpos] = 1;
+                    }
+                    else
+                    {
 
+                        map[currpos] = Mathf.RoundToInt(Mathf.PerlinNoise((i - minVec.x) * normalizer, (j - minVec.y) * normalizer));
+                    }
+                }
+                
             }
         }
 
@@ -666,7 +687,6 @@ public class TerrainGenerator : MonoBehaviour
             //KDTree
             Tuple<Vector3Int, Vector3Int, double> shortestPair = GetShortestPair(segments[edge.src], segments[edge.dest]);
             ClearPavement(shortestPair.Item1, shortestPair.Item2);
-
             //MidPoint
             //ClearPavement(GetMidPoint(segments[edge.src]), GetMidPoint(segments[edge.dest]));
             
@@ -695,7 +715,7 @@ public class TerrainGenerator : MonoBehaviour
         {
             Collider2D col = Physics2D.OverlapPoint((Vector2Int)vec, LayerMask.GetMask("Obstacles","HouseExterior","HouseInterior"));
             RemoveWall(vec);
-            if (col != null)
+            if (col != null && !col.CompareTag("Tiles"))
             {
                 DestroyImmediate(col.gameObject);
             }
@@ -798,7 +818,6 @@ public class TerrainGenerator : MonoBehaviour
     private List<List<Vector3Int>> PartitionSegments()
     {
         List<Vector3Int> keys = new List<Vector3Int>(map.Keys);
-        //should i sort them? then getting the center will just be /2, but this adds complexity. Does it even matter. /2 will always be approximately center.
         HashSet<Vector3Int> visited = new HashSet<Vector3Int>();
         List<List<Vector3Int>> sets = new List<List<Vector3Int>>();
         foreach (Vector3Int vec in keys)
@@ -813,6 +832,7 @@ public class TerrainGenerator : MonoBehaviour
 
         }
 
+ 
         return sets;
     }
 
@@ -874,7 +894,7 @@ public class TerrainGenerator : MonoBehaviour
 
     }
     #endregion
-   
+
     #region Helper Methods
     /// <summary>
     /// Get Squared distance between two vectors.
@@ -1020,6 +1040,39 @@ public class TerrainGenerator : MonoBehaviour
         int index = (int)(vector3Ints1.Count / 2);
         return vector3Ints1[Mathf.Max(index - 1, 0)];
     }
+
+    //private void ClearPathToDoors(DoorBehaviour[] doors)
+    //{
+
+    //    HashSet<Tuple<Vector3Int, Vector3Int>> points = new HashSet<Tuple<Vector3Int, Vector3Int>>();
+    //    foreach (DoorBehaviour door in doors)
+    //    {
+    //        double distance = Mathf.Infinity;
+    //        Vector3Int nearestpointtodoor = -Vector3Int.one;
+    //        Vector3Int doorpoint = Vector3Int.RoundToInt(door.transform.position);
+    //        foreach (KDTreeImpl tree in cachedTrees.Values)
+    //        {
+
+    //            Vector3Int nearest = tree.findNearest(doorpoint);
+    //            double sqrdist = GetSquaredDist(nearest, doorpoint);
+    //            if (sqrdist < distance)
+    //            {
+    //                distance = sqrdist;
+    //                nearestpointtodoor = nearest;
+    //            }
+    //        }
+    //        points.Add(new Tuple<Vector3Int, Vector3Int>(nearestpointtodoor, doorpoint));
+    //    }
+
+    //    foreach (Tuple<Vector3Int, Vector3Int> path in points)
+    //    {
+    //        if (path.Item1 != -Vector3Int.one)
+    //        {
+    //            Debug.Log($"This is {path.Item1} && {path.Item2}");
+    //            ClearPavement(path.Item1, path.Item2);
+    //        }
+    //    }
+    //}
 
     #endregion
 

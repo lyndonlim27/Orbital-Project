@@ -90,7 +90,6 @@ public class RoomDesign : MonoBehaviour
     #region Client-Access Methods
     public void GenerateRoomDesign(RoomManager.ROOMTYPE roomtype, RoomManager _currRoom)
     {
-        _currRoom.terrainGenerated = true;
         switch (roomtype)
         {
             default:
@@ -147,8 +146,6 @@ public class RoomDesign : MonoBehaviour
     {
         int rand = Random.Range(min, max);
         int iterations = 200;
-        Debug.Log(rand);
-        Debug.Log("We decorated");
         while (iterations-- > 0 && rand > 0)
         {
 
@@ -157,11 +154,11 @@ public class RoomDesign : MonoBehaviour
             {
                 var col = deco.GetComponentInChildren<HouseExteriorDesign>().col;
                 Vector2 size = col.size;
-                Vector3 roomCenter = currRoom.GetRoomAreaBounds().center;
+                Vector3 roomCenter = currRoom.GetSpawnAreaBound().center;
                 Vector3 pos = currRoom.GetRandomObjectPointGivenSize(size.magnitude);
                 Vector3 offSet = col.offset;
                 float dist = Vector3.Distance(pos + offSet, roomCenter);
-                float maxDist = Vector3.Distance(roomCenter, currRoom.GetRoomAreaBounds().max);
+                float maxDist = Vector3.Distance(roomCenter, currRoom.GetSpawnAreaBound().max);
                 bool withinCertainRadius = dist / maxDist <= 0.5f;
                 if (pos != Vector3.zero && withinCertainRadius && CheckDistanceFromStrucs(pos + offSet, roomCenter) && !CheckNotOutofBounds(size, pos + offSet, currRoom))
                 {
@@ -260,64 +257,74 @@ public class RoomDesign : MonoBehaviour
     public void Farm(RoomManager currRoom)
     {
         LoadRoomData("Farm", currRoom);
+        terrainGenerator.GenerateTerrain(currRoom);
     }
 
     public void Plantation(RoomManager currRoom)
     {
         LoadRoomData("Plantation", currRoom);
+        terrainGenerator.GenerateTerrain(currRoom);
     }
 
     #region BossRooms
     public void FireKnightRoom(RoomManager currRoom)
     {
         LoadRoomData("FireKnightRoom", currRoom);
+        terrainGenerator.GenerateTerrainType2(currRoom);
     }
 
     public void WaterMageRoom(RoomManager currRoom)
     {
         LoadRoomData("WaterMageRoom", currRoom);
+        terrainGenerator.GenerateTerrainType2(currRoom);
     }
 
     public void HashinshinRoom(RoomManager currRoom)
     {
         LoadRoomData("HashinshinRoom", currRoom);
+        terrainGenerator.GenerateTerrainType2(currRoom);
     }
 
     public void GroundMonkRoom(RoomManager currRoom)
     {
         LoadRoomData("GroundMonkRoom", currRoom);
+        terrainGenerator.GenerateTerrainType2(currRoom);
     }
 
     public void BladeKeeperRoom(RoomManager currRoom)
     {
         LoadRoomData("BladeKeeperRoom", currRoom);
+        terrainGenerator.GenerateTerrainType2(currRoom);
     }
 
     private void LoadRoomData(string dataname, RoomManager currRoom)
     {
         float randomOffset = Random.Range(-0.05f, 0.05f);
-        var RoomData = Resources.Load<LevelDesign>($"Data/LevelDesignData/{dataname}");
+
+        var RoomDataPrefab = Resources.Load<LevelDesign>($"Data/LevelDesignData/{dataname}");
+        var RoomData = Instantiate(RoomDataPrefab);
         RoomData.frequency += randomOffset;
         RoomData.normalizer += randomOffset;
         terrainGenerator.LoadLevelData(RoomData);
-        terrainGenerator.GenerateTerrainType2(currRoom);
+        terrainGenerator.LoadLevel();
+        
     }
     #endregion BossRooms
 
     #endregion PerlinRooms
     #endregion
-
-    #region ToBeConsidered
-    //private void CalculateBounds(GameObject go)
-    //{
-    //    Bounds bounds = go.gameObject.GetComponent<Collider2D>().bounds;
-    //    bounds.size = Vector3.zero; // reset
-    //    Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
-    //    foreach (Collider2D col in colliders)
-    //    {
-    //        bounds.Encapsulate(col.bounds);
-    //    }
-    //}
-
-    #endregion
 }
+
+#region Unused Methods
+//private void CalculateBounds(GameObject go)
+//{
+//    Bounds bounds = go.gameObject.GetComponent<Collider2D>().bounds;
+//    bounds.size = Vector3.zero; // reset
+//    Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
+//    foreach (Collider2D col in colliders)
+//    {
+//        bounds.Encapsulate(col.bounds);
+//    }
+//}
+
+#endregion

@@ -22,6 +22,14 @@ MonoBehaviour:
   vertwall: {fileID: 11400000, guid: b930e0f499b874b9495d41ce332ac709, type: 2}
   horizwall: {fileID: 11400000, guid: d57bbce8c6b9d42198d2879db4f9ef22, type: 2}
   allardwall: {fileID: 11400000, guid: 0eafe6a3d2e5f424a9ea3f25051a0bbe, type: 2}
+  topwall: {fileID: 0}
+  bottomwall: {fileID: 0}
+  leftwall: {fileID: 0}
+  rightwall: {fileID: 0}
+  lucorner: {fileID: 0}
+  rucorner: {fileID: 0}
+  ldcorner: {fileID: 0}
+  rdcorner: {fileID: 0}
   terrainObjects: []
   intterrainDecorations:
   - {fileID: 11400000, guid: c1c003e34b0d1487dac090a3d9c5d434, type: 2}
@@ -52,4 +60,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 54ef84eb07eae4b9cacf3361190bd4db, type: 2}
   frequency: 0.7
   offset: 28
-  normalizer: 0.203
+  normalizer: 0.205

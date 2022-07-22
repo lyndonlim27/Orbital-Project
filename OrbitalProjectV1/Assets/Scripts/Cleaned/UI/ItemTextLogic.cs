@@ -39,7 +39,6 @@ public class ItemTextLogic : TextLogic
 
     protected override void GenerateNewWord()
     {
-        Debug.Log("Entered?" + parent.GetData()._name.ToLower());
         this.remainingword = parent.GetData()._name.ToLower();
     }
 

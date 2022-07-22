@@ -146,7 +146,7 @@ public class TrapBehaviour : ActivatorBehaviour
     {
         if (currentRoom != null)
         {
-            Bounds roombounds = currentRoom.GetRoomAreaBounds();
+            Bounds roombounds = currentRoom.GetSpawnAreaBound();
             return _boxColl.bounds.max.x > roombounds.max.x || _boxColl.bounds.max.x < roombounds.min.x ||
                 _boxColl.bounds.max.y > roombounds.max.y || _boxColl.bounds.max.y < roombounds.min.y;
         } else

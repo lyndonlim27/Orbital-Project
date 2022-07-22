@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Tilemaps;
 
 [RequireComponent(typeof(Animator),typeof(Collider2D), typeof(AudioSource))]
 public class DoorBehaviour : EntityBehaviour
@@ -13,6 +15,9 @@ public class DoorBehaviour : EntityBehaviour
     private AudioClip lockWoodenClip;
     private AudioClip unlockSteelClip;
     private AudioClip unlockTutorialClip;
+
+    private Tilemap terrainWallTilemap;
+    private bool removed;
 
     private List<string> conditions;
     protected override void Awake()
@@ -38,6 +43,33 @@ public class DoorBehaviour : EntityBehaviour
     {
         isDead = false;
         unlocked = false;
+        removed = false;
+
+    }
+
+    public void RemoveTerrainWalls()
+    {
+        bool terraingenerated = RoomFirstDungeonGenerator.roomGenerated;
+        Debug.Log("Generated?" + terraingenerated);
+        if (terraingenerated && !removed)
+        {
+            Debug.Log("Yes we entered removal");
+            removed = true;
+            TerrainGenerator _tergen = TerrainGenerator.instance;
+            if (_tergen == null)
+            {
+                return;
+            }
+            else
+            {
+                terrainWallTilemap = _tergen.GetTerrainWall();
+                Vector3Int currentpos = Vector3Int.RoundToInt(transform.position);
+                RecursiveRemovalofTerrainWalls(currentpos + Vector3Int.left);
+                RecursiveRemovalofTerrainWalls(currentpos + Vector3Int.right);
+                RecursiveRemovalofTerrainWalls(currentpos + Vector3Int.up);
+                RecursiveRemovalofTerrainWalls(currentpos + Vector3Int.down);
+            }
+        }
     }
 
     protected virtual void Update()
@@ -186,5 +218,19 @@ public class DoorBehaviour : EntityBehaviour
     public HashSet<RoomManager> GetRoomManagers()
     {
         return roomManagers;
+    }
+
+    private void RecursiveRemovalofTerrainWalls(Vector3Int pos)
+    {
+        if (!terrainWallTilemap.HasTile(pos))
+        {
+            Debug.Log("This is the end of the path");
+            return;
+        }
+        terrainWallTilemap.SetTile(pos, null);
+        RecursiveRemovalofTerrainWalls(pos + Vector3Int.left);
+        RecursiveRemovalofTerrainWalls(pos + Vector3Int.right);
+        RecursiveRemovalofTerrainWalls(pos + Vector3Int.up);
+        RecursiveRemovalofTerrainWalls(pos + Vector3Int.down);
     }
 }

@@ -122,7 +122,6 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     {
         activated = false;
         roomArea = GetComponent<Collider2D>();
-        Debug.Log(roomArea);
         this.areaminBound = roomArea.bounds.min;
         this.areamaxBound = roomArea.bounds.max;
         conditions = new HashSet<string>();
@@ -152,6 +151,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         pointer = UIObjectivePointer.instance;
         globalAudioManager = GlobalAudioManager.instance;
         roomDesigner = RoomDesign.instance;
+        terrainGenerated = false;
     }
 
     protected void OnDisable()
@@ -161,13 +161,13 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     protected virtual void Update()
     {
+        DecorateRoom();
         if (activated == false)
         {
             _collider = Physics2D.OverlapBox(transform.position, roomSize, 0, LayerMask.GetMask("Player"));
             if (_collider != null)
             {
                 activated = true;
-                DecorateRoom();
                 InitializeAStar();
                 SettingDialogueMgr();
                 SettingUpAudio();
@@ -180,17 +180,37 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         conditionSize = conditions.Count;
     }
 
+    
+
     #endregion
 
     #region Internal Methods
     #region RoomSettings
     private void DecorateRoom()
     {
-        if (roomDesigner != null)
+        if (terrainGenerated)
         {
-            roomDesigner.GenerateRoomDesign(roomtype, this);
+            return;
+        } else
+        {
+            if (roomDesigner != null)
+            {
+                roomDesigner.GenerateRoomDesign(roomtype, this);
+                terrainGenerated = true;
+            }
         }
-        
+           
+    }
+
+    private void RemovalOfTerrainWalls()
+    {
+        foreach (DoorBehaviour door in doors)
+        {
+            if (door != null)
+            {
+                door.RemoveTerrainWalls();
+            }
+        }
     }
 
     private void SettingUpAudio()
@@ -1074,13 +1094,14 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     {
         portal = portalData;
     }
+
     #endregion
 
     #region Getters
     /**
      * Get current room bounds.
      */
-    public Bounds GetRoomAreaBounds()
+    public Bounds GetSpawnAreaBound()
     {
         return roomArea.bounds;
     }
@@ -1089,7 +1110,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     {
         if (roomtype == ROOMTYPE.BOSSROOM)
         {
-            return _EntityDatas.First(entity => entity._type == EntityData.TYPE.BOSS);
+            return _EntityDatas.First(entity => entity._type == EntityData.TYPE.ENEMY);
         } else
         {
             throw new MissingComponentException();
@@ -1100,6 +1121,8 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     {
         return (Vector2Int) new Vector2Int((int) roomSize.x, (int) roomSize.y);
     }
+
+    
     #endregion
 
     #region Room-Fulfilling
@@ -1142,7 +1165,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
             randomPoint = new Vector2(
             Random.Range(minArea.x, maxArea.x),
             Random.Range(minArea.y, maxArea.y));
-        } while (!roomArea.OverlapPoint(randomPoint) || Physics2D.OverlapCircle(randomPoint, 1, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior"))); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
+        } while (!roomArea.OverlapPoint(randomPoint) && Physics2D.OverlapCircle(randomPoint, 1, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior"))); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
         //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
         return randomPoint;
     }
@@ -1161,7 +1184,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
             randomPoint = new Vector2(
             Random.Range(areaminBound.x, areamaxBound.x),
             Random.Range(areaminBound.y, areamaxBound.y));
-        } while (!roomArea.OverlapPoint(randomPoint) || Physics2D.OverlapCircle(randomPoint, 1, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior"))); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
+        } while (!roomArea.OverlapPoint(randomPoint) && Physics2D.OverlapCircle(randomPoint, 1, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior"))); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
         //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
         return randomPoint;
     }

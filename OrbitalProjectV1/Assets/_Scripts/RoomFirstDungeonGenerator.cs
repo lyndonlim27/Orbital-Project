@@ -83,6 +83,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
     protected override void RunProceduralGeneration()
     {
+        roomGenerated = false;
         seen.Clear();
         if (currentSeed == -1)
         {
