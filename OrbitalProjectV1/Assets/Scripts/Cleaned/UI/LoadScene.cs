@@ -80,7 +80,7 @@ public class LoadScene : MonoBehaviour
             yield return null;
         }
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Assets/Scenes/" + sceneName + ".unity");
-
+        _dataManager.gameData.rooms = null;
         // Wait until the asynchronous scene fully loads
         while (!asyncLoad.isDone)
         {
@@ -92,7 +92,11 @@ public class LoadScene : MonoBehaviour
         {
             yield return null;
         }
-
+        _dataManager.LoadData();
+        while (!_dataManager.loadedData)
+        {
+            yield return null;
+        }
         _dataManager.LoadGame();
         while (!_dataManager.loaded)
         {

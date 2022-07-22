@@ -211,23 +211,9 @@ public class _GameManager : MonoBehaviour, IDataPersistence
         _CineCamera.GetComponent<CinemachineVirtualCamera>().Follow = player;
     }
 
-    
 
-    private void PlayIntroScene()
-    {
-        if (_vidManagerl == null)
-        {
-            Debug.LogError("No vid manager found");
-        } else
-        {
-            _vidManagerl.PlayVideo("LastLevelStartScene");
-        }
-    }
 
-    private void PlayEndScene()
-    {
-        _vidManagerl.PlayVideo("EndScene");
-    }
+
 
     #endregion
 

@@ -8,13 +8,14 @@ public class ExitScene : MonoBehaviour
 {
 
     [SerializeField] private string _nextSceneName;
-    [SerializeField] private VideoPlayer videoPlayer;
-    [SerializeField] private RawImage videoScreen;
+    //[SerializeField] private VideoPlayer videoPlayer;
+    //[SerializeField] private RawImage videoScreen;
+    [SerializeField] private string videoName;
     private LoadScene _loadScene;
 
     private void Awake()
     {
-        videoPlayer = GetComponent<VideoPlayer>();
+       // videoPlayer = GetComponent<VideoPlayer>();
     }
 
     // Start is called before the first frame update
@@ -30,17 +31,24 @@ public class ExitScene : MonoBehaviour
 
     private IEnumerator WaitForCutScene()
     {
-        if (videoPlayer!= null && videoScreen != null)
-        {
-            videoScreen.enabled = true;
-            videoPlayer.Play();
-            Debug.Log(videoPlayer.clip.length);
-            yield return new WaitForSeconds((float)videoPlayer.clip.length);
-            videoPlayer.enabled = false;
-            videoScreen.enabled = false;
-            
-        }
+        //if (videoPlayer!= null && videoScreen != null)
+        //{
+        //    videoScreen.enabled = true;
+        //    videoPlayer.Play();
+        //    Debug.Log(videoPlayer.clip.length);
+        //    yield return new WaitForSeconds((float)videoPlayer.clip.length);
+        //    videoPlayer.enabled = false;
+        //    videoScreen.enabled = false;
 
-        _loadScene.NextScene(_nextSceneName);
+        //}
+        if (videoName != "" && videoName != null)
+        {
+            VideoManager videoManager = FindObjectOfType<VideoManager>();
+            videoManager.PlayVideo(videoName);
+            VideoPlayer vidplayer = videoManager.GetComponent<VideoPlayer>();
+            while (vidplayer.enabled)
+                yield return null;
+        }
+       _loadScene.NextScene(_nextSceneName);
     }
 }
