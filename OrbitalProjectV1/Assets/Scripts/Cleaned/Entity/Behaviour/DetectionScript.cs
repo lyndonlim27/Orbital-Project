@@ -7,17 +7,20 @@ public class DetectionScript : MonoBehaviour
 {
     public bool playerDetected;
     private Collider2D col;
+    private EnemyBehaviour enemy;
+    public bool _dialoguePlayed;
 
     private void Awake()
     {
         col = GetComponent<Collider2D>();
         playerDetected = false;
-        
+        enemy = GetComponentInParent<EnemyBehaviour>();
     }
 
     private void OnEnable()
     {
         playerDetected = false;
+        _dialoguePlayed = false;
     }
 
 
@@ -27,6 +30,7 @@ public class DetectionScript : MonoBehaviour
         if(collision.gameObject.CompareTag("Player"))
         {
             playerDetected = true;
+            StartDialogue();
         }
         
     }
@@ -50,4 +54,17 @@ public class DetectionScript : MonoBehaviour
             playerDetected = false;
         }
     }
+
+    private void StartDialogue()
+    {
+        if (!_dialoguePlayed)
+        {
+            if (enemy != null)
+            {
+                enemy.StartDialogue();
+            }
+            _dialoguePlayed = true;
+        }
+    }
+
 }

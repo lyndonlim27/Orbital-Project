@@ -18,7 +18,7 @@ public abstract class AttackComponent : MonoBehaviour
     {
         target = GameObject.FindObjectOfType<Player>();
         poolManager = FindObjectOfType<PoolManager>(true);
-        detectionScript = GetComponent<DetectionScript>();
+        detectionScript = transform.parent.GetComponentInChildren<DetectionScript>();
         parent = transform.parent.GetComponent<EnemyBehaviour>();
         if (parent != null)
         {
