@@ -246,7 +246,7 @@ public class _GameManager : MonoBehaviour, IDataPersistence
         SpawnPlayer();
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         allTerrainsGenerated = roomManagers.TrueForAll(room => room.terrainGenerated);
     }

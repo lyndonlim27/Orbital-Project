@@ -7,6 +7,7 @@ using System.Linq;
 
 public class TilemapVisualizer : MonoBehaviour
 {
+
     [SerializeField]
     private Tilemap floorTilemap, innerwallTilemap, outerwallTilemap, waterTilemap, dockTilemap, groundTilemap, decorativeTilemap, treeBottomTilemap, treeTop1Tilemap, treeTop2Tilemap, treeTop3Tilemap, groundDecoTilemap;
 
@@ -528,4 +529,14 @@ public class TilemapVisualizer : MonoBehaviour
         SpawnSingleGameObjectDecoration(startPos, _col.bounds.size.magnitude, selectedStructure, decorationContainer);
     }
 
+
+    public Tilemap GetOuterWallTilemap()
+    {
+        return outerwallTilemap;
+    }
+
+    public Tilemap GetInnerWallTilemap()
+    {
+        return innerwallTilemap;
+    }
 }

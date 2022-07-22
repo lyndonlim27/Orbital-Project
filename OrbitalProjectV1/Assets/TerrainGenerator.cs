@@ -138,6 +138,27 @@ public class TerrainGenerator : MonoBehaviour
     {
         return terrainWallTilemap;
     }
+
+    public void ClearCorridoor(Vector3Int point)
+    {
+        double distance = Mathf.Infinity;
+        Vector3Int nearestpointtodoor = Vector3Int.back;
+        foreach (KDTreeImpl tree in cachedTrees.Values)
+        {
+
+            Vector3Int nearest = tree.findNearest(point);
+            double sqrdist = GetSquaredDist(nearest, point);
+            if (sqrdist < distance)
+            {
+                distance = sqrdist;
+                nearestpointtodoor = nearest;
+            }
+        }
+        if (nearestpointtodoor != Vector3Int.back)
+        {
+            ClearPavement(point, nearestpointtodoor);
+        }
+    }
     #endregion
     #endregion
 
@@ -562,7 +583,7 @@ public class TerrainGenerator : MonoBehaviour
         Vector3Int roomSize = (Vector3Int) currRoom.GetRoomSize();
         map = new Dictionary<Vector3Int, int>();
         
-        Vector3Int minVec = Vector3Int.RoundToInt(currRoom.transform.position) - roomSize / 2 + Vector3Int.one;
+        Vector3Int minVec = Vector3Int.RoundToInt(currRoom.transform.position) - roomSize / 2 + Vector3Int.one ;
         Vector3Int maxVec = Vector3Int.RoundToInt(currRoom.transform.position) + roomSize / 2 - Vector3Int.one * 2;
         
         for (int i = minVec.x; i <= maxVec.x; i++)
@@ -727,7 +748,10 @@ public class TerrainGenerator : MonoBehaviour
     {
         
         terrainWallTilemap.SetTile(vec, null);
-        terrainTilemap.SetTile(vec, grassTile);
+        if (!terrainTilemap.HasTile(vec))
+        {
+            terrainTilemap.SetTile(vec, grassTile);
+        }
         kruskalVisualizer.SetTile(vec, kruskalTile);
     }
 

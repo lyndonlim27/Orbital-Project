@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
-[RequireComponent(typeof(Animator),typeof(Collider2D), typeof(AudioSource))]
+[RequireComponent(typeof(Animator), typeof(Collider2D), typeof(AudioSource))]
 public class DoorBehaviour : EntityBehaviour
 {
     public bool unlocked;
@@ -17,6 +17,11 @@ public class DoorBehaviour : EntityBehaviour
     private AudioClip unlockTutorialClip;
 
     private Tilemap terrainWallTilemap;
+    private Tilemap innerWallTilemap;
+    private Tilemap outerWallTilemap;
+
+    private GridsHolder gridsHolder;
+
     private bool removed;
 
     private List<string> conditions;
@@ -45,18 +50,22 @@ public class DoorBehaviour : EntityBehaviour
         isDead = false;
         unlocked = false;
         removed = false;
+        gridsHolder = GridsHolder.instance;
+        innerWallTilemap = gridsHolder.GetTilemap("Wall");
+        outerWallTilemap = gridsHolder.GetTilemap("Outerwall");
 
     }
 
     public void RemoveTerrainWalls()
     {
         bool terraingenerated = _GameManager.allTerrainsGenerated;
+
         if (terraingenerated && !removed)
         {
-            
+
             removed = true;
             TerrainGenerator _tergen = TerrainGenerator.instance;
-            Debug.Log("This is terraingen" + _tergen);
+
             if (_tergen == null)
             {
                 return;
@@ -65,10 +74,81 @@ public class DoorBehaviour : EntityBehaviour
             {
                 terrainWallTilemap = _tergen.GetTerrainWall();
                 Vector3Int currentpos = Vector3Int.FloorToInt(transform.position);
-                Debug.Log("This is current position" + currentpos);
-                RecursiveRemovalofTerrainWalls(currentpos);
+
+                Vector3Int startingPos = Vector3Int.back;
+                for (int i = -1; i <= 1; i++)
+                {
+                    if (i ==0)
+                    {
+                        continue;
+                    }
+                    var pos1 = currentpos + new Vector3Int(i, 0);
+                    var pos2 = currentpos + new Vector3Int(0, i);
+
+
+                    if (terrainWallTilemap.HasTile(pos1))
+                    {
+                        startingPos = pos1;
+                        
+                    }
+
+                    if (terrainWallTilemap.HasTile(pos2))
+                    {
+                        startingPos = pos2;
+                    }
+
+                }
+
+                if (startingPos != Vector3Int.back)
+                {
+                    //means there is wall blocking the entrace.
+                    FindCheapestPath(startingPos, currentpos);
+                }
+
             }
         }
+
+    }
+
+    private void ClearPavement(Vector3Int curr, Vector3Int dest)
+    {
+        List<Vector3Int> path = new List<Vector3Int>();
+        path.Add(curr);
+        while (curr != dest)
+        {
+
+            if (curr.x < dest.x)
+            {
+                var newpos = curr + Vector3Int.right;
+                path.Add(newpos);
+                curr = newpos;
+            } else if (curr.x > dest.x)
+            {
+                var newpos = curr + Vector3Int.left;
+                path.Add(newpos);
+                curr = newpos;
+            } else
+            {
+                if (curr.y < dest.y)
+                {
+                    var newpos = curr + Vector3Int.up;
+                    path.Add(newpos);
+                    curr = newpos;
+                } else
+                {
+                    var newpos = curr + Vector3Int.down;
+                    path.Add(newpos);
+                    curr = newpos;
+                }
+
+            }
+        }
+
+        foreach(Vector3Int vec in path)
+        {
+            terrainWallTilemap.SetTile(vec, null);
+        }
+
     }
 
     protected virtual void Update()
@@ -78,19 +158,19 @@ public class DoorBehaviour : EntityBehaviour
 
             CheckDoorUnlockedSound();
             UnlockDoor();
-             
-            
+
+
             //CheckDoorUnlockedSound();
 
         }
-        else 
+        else
         {
             CheckDoorLockedSound();
             LockDoor();
-            
-            
-            
-            
+
+
+
+
         }
 
     }
@@ -112,7 +192,7 @@ public class DoorBehaviour : EntityBehaviour
     }
     public override void Defeated()
     {
-        
+
     }
 
     public override EntityData GetData()
@@ -129,8 +209,8 @@ public class DoorBehaviour : EntityBehaviour
     {
         animator.SetBool(gameObject.name.Substring(0, 4), true);
         GetComponent<Collider2D>().enabled = false;
-        
-        
+
+
     }
 
     public virtual void LockDoor()
@@ -138,12 +218,12 @@ public class DoorBehaviour : EntityBehaviour
         animator.SetBool(gameObject.name.Substring(0, 4), false);
         GetComponent<Collider2D>().enabled = true;
     }
-        
+
 
 
     public override IEnumerator FadeOut()
     {
-        for (float f = 1f; f > 0 ; f -= 0.05f)
+        for (float f = 1f; f > 0; f -= 0.05f)
         {
             Color c = spriteRenderer.material.color;
             c.a = f;
@@ -219,28 +299,105 @@ public class DoorBehaviour : EntityBehaviour
         return roomManagers;
     }
 
-    private void RecursiveRemovalofTerrainWalls(Vector3Int pos)
+    private void FindCheapestPath(Vector3Int currentpos, Vector3Int startingPos)
     {
-
-        bool stop = false;
-        for (int i = -1; i < 1 && i != 0; i++)
+        List<Vector3Int> pointsTocheck = new List<Vector3Int>();
+        System.Comparison<Vector3Int> comparer = (a, b) => Vector3Int.Distance(a, startingPos).CompareTo(Vector3Int.Distance(b, startingPos));
+        pointsTocheck.Add(currentpos);
+        Vector3Int destination = Vector3Int.back;
+        List<Vector3Int> visited = new List<Vector3Int>();
+        List<Vector3Int> path = new List<Vector3Int>();
+        while (pointsTocheck.Count > 0)
         {
-            var pos1 = pos + new Vector3Int(i, 0);
-            var pos2 = pos + new Vector3Int(0, i);
-            if (!terrainWallTilemap.HasTile(pos1) || !terrainWallTilemap.HasTile(pos2))
+            List<Vector3Int> newlist = new List<Vector3Int>();
+            bool found = false;
+            foreach (Vector3Int vec in pointsTocheck)
             {
-                stop = true;
+                
+                if (vec == startingPos || visited.Contains(vec) || CheckInsideWall(vec))
+                {
+                    continue;
+                }
+                if (!terrainWallTilemap.HasTile(vec))
+                {
+                    destination = vec;
+                    found = true;
+
+                } else
+                {
+                    visited.Add(vec);
+                    for (int i = -1; i <= 1; i++)
+                    {
+                        if (i == 0)
+                        {
+                            continue;
+                        } else
+                        {
+                            newlist.Add(vec + new Vector3Int(i, 0));
+                            newlist.Add(vec + new Vector3Int(0, i));
+                        }
+                        
+                    }
+                }
             }
-            
+            if (found)
+            {
+                
+                break;
+            } else
+            {
+                pointsTocheck = newlist;
+                pointsTocheck.Sort(comparer);
+            }
+
         }
 
-        if (!stop)
+        if (destination == Vector3Int.back)
         {
-            RecursiveRemovalofTerrainWalls(pos + Vector3Int.left);
-            RecursiveRemovalofTerrainWalls(pos + Vector3Int.right);
-            RecursiveRemovalofTerrainWalls(pos + Vector3Int.up);
-            RecursiveRemovalofTerrainWalls(pos + Vector3Int.down);
+            Debug.Log("No path found, this is weird");
+        } else
+        {
+            ClearPavement(currentpos, destination);
+
         }
-        
     }
+
+    private bool CheckInsideWall(Vector3Int vec)
+    {
+        return innerWallTilemap.HasTile(vec) || outerWallTilemap.HasTile(vec);
+    }
+
+
+
+    //if (!terrainWallTilemap.HasTile(goal))
+    //{
+    //    return path;
+    //}
+    //else
+    //{
+    //    path.Add(goal);
+    //    visited.Add(goal);
+    //    List<List<Vector3Int>> shortestPath = new List<List<Vector3Int>>();
+    //    for (int i = -1; i < 1 && i != 0; i++)
+    //    {
+    //        var pos1 = goal + new Vector3Int(i, 0);
+    //        if (pos1 != startingPos && currentRoom.GetSpawnAreaBound().Contains(pos1) && !visited.Contains(pos1))
+    //        {
+    //            shortestPath.Add(FindCheapestPath(pos1, startingPos, path, visited));
+    //        }
+
+    //        var pos2 = goal + new Vector3Int(0, i);
+    //        if (pos2 != startingPos && currentRoom.GetSpawnAreaBound().Contains(pos2) && !visited.Contains(pos2))
+    //        {
+    //            shortestPath.Add(FindCheapestPath(pos2, startingPos, path, visited));
+    //        }
+    //    }
+
+    //    shortestPath.Sort((a, b) => a.Count - b.Count);
+    //    Debug.Log(shortestPath.Count);
+    //    return shortestPath[0];
+
+
+    //}
+
 }

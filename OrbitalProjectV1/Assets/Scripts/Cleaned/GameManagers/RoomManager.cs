@@ -1205,14 +1205,14 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     public Vector2 GetRandomObjectPointGivenSize(float size)
     {
         Vector2 randomPoint = Vector2.zero;
-        int iterations = 100;
+        int iterations = 1000;
         do
         {
             randomPoint = new Vector2(
             Random.Range(areaminBound.x + 4f, areamaxBound.x - 4f),
             Random.Range(areaminBound.y + 4f, areamaxBound.y - 4f));
             iterations--;
-        } while (Physics2D.OverlapCircle(randomPoint, size, LayerMask.GetMask("Obstacles")) && iterations > 0); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
+        } while (!roomArea.OverlapPoint(randomPoint) && Physics2D.OverlapCircle(randomPoint, size, LayerMask.GetMask("Obstacles")) && iterations > 0); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
         //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
         return randomPoint;
     }
