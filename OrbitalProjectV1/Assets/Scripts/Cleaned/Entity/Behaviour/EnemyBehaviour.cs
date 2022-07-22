@@ -128,16 +128,13 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         ResettingLights();
         ResettingDamageValue();
         DestroyAllParticles();
-        StartDialogue();
-
-
     }
 
-    private void StartDialogue()
+    public void StartDialogue()
     {
         if (enemyData.story != null)
         {
-
+            FindObjectOfType<DialogueManager>().EnterDialogue(this);
         }
     }
 

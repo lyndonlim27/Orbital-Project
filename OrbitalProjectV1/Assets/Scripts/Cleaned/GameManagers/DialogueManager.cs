@@ -207,7 +207,7 @@ public class DialogueManager : MonoBehaviour
         playing = true;
         dialogueImage.sprite = _enemyData.sprite;
         dialoguePanel.SetActive(true);
-
+        ContinueStory();
     }
 
     /**
