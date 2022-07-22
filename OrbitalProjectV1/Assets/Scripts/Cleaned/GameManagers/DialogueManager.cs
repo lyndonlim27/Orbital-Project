@@ -30,6 +30,8 @@ public class DialogueManager : MonoBehaviour
 
     private NPCData _npcData;
 
+    private EnemyData _enemyData;
+
     private Coroutine coroutine;
 
     private string nextline;
@@ -197,6 +199,16 @@ public class DialogueManager : MonoBehaviour
 
     }
 
+    public void EnterDialogue(EnemyBehaviour enemy)
+    {
+        currentNPC = null;
+        _enemyData = (EnemyData)enemy.GetData();
+        currentstory = new Story(_enemyData.story.text);
+        playing = true;
+        dialogueImage.sprite = _enemyData.sprite;
+        dialoguePanel.SetActive(true);
+
+    }
 
     /**
      * Continue Story.
@@ -208,7 +220,7 @@ public class DialogueManager : MonoBehaviour
             nextline = currentstory.Continue();
             coroutine = StartCoroutine(TypeSentence(nextline));
 
-            if (currentstory.currentTags.Count > 0 &&
+            if (currentNPC != null && currentstory.currentTags.Count > 0 &&
                 currentstory.currentTags[currentstory.currentTags.Count - 1] == "NPC")
             {
                 if (!currentNPC.fulfilled)
@@ -253,7 +265,11 @@ public class DialogueManager : MonoBehaviour
     {
         inExit = true;
         yield return new WaitForSeconds(0.5f);
-        currentNPC.NPCAfterAction();
+        if(currentNPC != null)
+        {
+            currentNPC.NPCAfterAction();
+        }
+
         playing = false;
         dialoguePanel.SetActive(false);
         inExit = false;

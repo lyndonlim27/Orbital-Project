@@ -249,15 +249,18 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
                             seen.Add(vec);
                             exits.Add(vec);
                             DoorBehaviour door = CreateDoor(vec,left,down);
-                            doors.Add(door);
-                            door.transform.SetParent(currRoom.transform, true);
-                            currRoom.SettingExitDoor(door);
-                            var visitedroom = bound2Rooms.GetValueOrDefault(room, null);
-                            if (visitedroom != null)
+                            if (door != null)
                             {
-                                visitedroom.SettingExitDoor(door);
+                                doors.Add(door);
+                                door.transform.SetParent(currRoom.transform, true);
+                                currRoom.SettingExitDoor(door);
+                                var visitedroom = bound2Rooms.GetValueOrDefault(room, null);
+                                if (visitedroom != null)
+                                {
+                                    visitedroom.SettingExitDoor(door);
+                                }
+                                break;
                             }
-                            break;
                         }
                     }
                 }
@@ -650,13 +653,21 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     /// <returns>Door</returns>
     private DoorBehaviour CreateDoor(Vector2Int exit, bool left, bool down)
     {
-
         GameObject go = new GameObject("Door");
+        go.layer = LayerMask.NameToLayer("Doors");
         DoorBehaviour door = InstantiatingDoorDefaults(go);
         SettingDoorData(door);
-        SettingDoorTransform(exit, left, down, go);
-        InstantiatingTextLogic(go);
-        return door;
+        SettingDoorTransform(exit, left, down, door);
+        if (CheckDoorsTouchingWalls(door))
+        {
+            Destroy(door);
+            return null;
+        } else
+        {
+            InstantiatingTextLogic(go);
+            return door;
+        }
+        
     }
 
     /// <summary>
@@ -672,7 +683,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         go.AddComponent<AudioSource>();
         BoxCollider2D col = go.AddComponent<BoxCollider2D>();
         DoorBehaviour door = go.AddComponent<BreakableDoorBehaviour>();
-        go.layer = LayerMask.NameToLayer("Doors");
+     
         return door;
     }
 
@@ -695,11 +706,11 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     /// <param name="left"></param>
     /// <param name="down"></param>
     /// <param name="go"></param>
-    private void SettingDoorTransform(Vector2Int exit, bool left, bool down, GameObject go)
+    private void SettingDoorTransform(Vector2Int exit, bool left, bool down, DoorBehaviour door)
     {
-        go.transform.position = new Vector2(exit.x, exit.y);
-        go.transform.position += left ? new Vector3(-0.5f, 0.5f) : down ? new Vector3(0.5f, -0.5f) : new Vector3(0.5f, 0.5f);
-        go.transform.localScale = new Vector2(0.6f, 0.6f);
+        door.transform.position = new Vector2(exit.x, exit.y);
+        door.transform.position += left ? new Vector3(-0.5f, 0.5f) : down ? new Vector3(0.5f, -0.5f) : new Vector3(0.5f, 0.5f);
+        door.transform.localScale = new Vector2(0.6f, 0.6f);
         
         
     }
@@ -727,7 +738,6 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         //ContactFilter2D contactFilter2D = new ContactFilter2D();
         //contactFilter2D.SetLayerMask(LayerMask.GetMask("Obstacles"));
         //int isTouching = door.GetComponent<Collider2D>().OverlapCollider(contactFilter2D, colliders);
-        Debug.Log("Are we touching?" + door + isTouching);
         if (isTouching)
         {
             return true;
