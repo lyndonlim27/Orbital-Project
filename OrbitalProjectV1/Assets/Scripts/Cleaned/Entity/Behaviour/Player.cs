@@ -411,6 +411,10 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         this.currGold = data.currGold;
         this.transform.position = data.currPos;
         this._fragments = data.fragments;
+        if(_fragmentUI != null)
+        {
+            _fragmentUI.SetFragmentUI(data.fragments);
+        }
         _goldCounter.GoldUpdate();
         if(data.debuffDataName != "")
         {
