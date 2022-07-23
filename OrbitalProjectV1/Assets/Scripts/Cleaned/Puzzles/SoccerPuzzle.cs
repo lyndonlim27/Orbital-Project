@@ -17,6 +17,7 @@ public class SoccerPuzzle : MonoBehaviour, Puzzle
     int dir;
     bool stop;
     Transform targetTransform;
+    Player player;
 
     private void Awake()
     {
@@ -39,6 +40,11 @@ public class SoccerPuzzle : MonoBehaviour, Puzzle
         stop = false;
     }
 
+    private void Start()
+    {
+        player = Player.instance;
+    }
+
     private void Update()
     {
         if (IsComplete())
@@ -46,7 +52,8 @@ public class SoccerPuzzle : MonoBehaviour, Puzzle
             stop = true;
             targetAnimator.SetTrigger("Death");
             this.enabled = false;
-
+            player.SwitchBack();
+            ball.enabled = false;
         }
     }
 
@@ -138,13 +145,12 @@ public class SoccerPuzzle : MonoBehaviour, Puzzle
         {
             
             MoveUpandDown();
-        }
-        /// go left and right
-        else if (target.transform.position.y == boundaries.min.y || target.transform.position.y == boundaries.max.y)
+
+        } else if (target.transform.position.y == boundaries.min.y || target.transform.position.y == boundaries.max.y)
         {
-         
             MoveLeftAndRight();
         }
+            
     }
 
     private void MoveUpandDown()

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Tilemaps;
 
 /// <summary>
 /// This is a general class for pressure switches.
@@ -41,6 +42,36 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
         SettingUpColliders();
         CheckForURP();
         spriteRenderer.sortingOrder = 1;
+        DestroyAnyObstacles();
+    }
+
+    private void DestroyAnyObstacles()
+    {
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 3, LayerMask.GetMask("Obstacles"));
+        foreach(Collider2D col in colliders)
+        {
+            if (col.CompareTag("Tiles"))
+            {
+                //col.GetComponent<Tilemap>().SetTile(Vector3Int.RoundToInt(col.transform.position), null);
+                GridsHolder.instance.GetTilemap("GroundDecoTilemap").SetTile(Vector3Int.RoundToInt(col.transform.position), null);
+                GridsHolder.instance.GetTilemap("ExteriorTilemap").SetTile(Vector3Int.RoundToInt(col.transform.position), null);
+                GridsHolder.instance.GetTilemap("InteriorTilemap").SetTile(Vector3Int.RoundToInt(col.transform.position), null);
+                GridsHolder.instance.GetTilemap("NearWallTilemap").SetTile(Vector3Int.RoundToInt(col.transform.position), null);
+                DestroyTree(col);
+            }
+            else
+            {
+                Destroy(col.gameObject);
+            }
+        }
+    }
+
+    private static void DestroyTree(Collider2D col)
+    {
+        GridsHolder.instance.GetTilemap("TreeBottomLayer").SetTile(Vector3Int.RoundToInt(col.transform.position), null);
+        GridsHolder.instance.GetTilemap("TreeTopLayer1").SetTile(Vector3Int.RoundToInt(col.transform.position) + Vector3Int.up, null);
+        GridsHolder.instance.GetTilemap("TreeTopLayer2").SetTile(Vector3Int.RoundToInt(col.transform.position) + Vector3Int.up, null);
+        GridsHolder.instance.GetTilemap("TreeTopLayer3").SetTile(Vector3Int.RoundToInt(col.transform.position) + Vector3Int.up, null);
     }
 
     /**

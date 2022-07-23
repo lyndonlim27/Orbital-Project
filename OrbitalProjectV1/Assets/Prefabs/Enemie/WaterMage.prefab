@@ -363,6 +363,7 @@ GameObject:
   - component: {fileID: 1614311675035005018}
   - component: {fileID: 1614311675035005013}
   - component: {fileID: 83811224924120534}
+  - component: {fileID: 7118254462315602782}
   m_Layer: 19
   m_Name: MeleeComponent
   m_TagString: Untagged
@@ -545,6 +546,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7118254462315602782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1614311675035005015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98d06726639a143acb4c83d03d3254ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerDetected: 0
+  _dialoguePlayed: 0
 --- !u!1 &1614311675345910074
 GameObject:
   m_ObjectHideFlags: 0
@@ -557,6 +572,7 @@ GameObject:
   - component: {fileID: 1614311675345910073}
   - component: {fileID: 1614311675345910072}
   - component: {fileID: 1614311675345910078}
+  - component: {fileID: 2866404167115579065}
   m_Layer: 19
   m_Name: RangedComponent
   m_TagString: Untagged
@@ -625,6 +641,20 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 4
+--- !u!114 &2866404167115579065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1614311675345910074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98d06726639a143acb4c83d03d3254ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerDetected: 0
+  _dialoguePlayed: 0
 --- !u!1 &4554517168792641530
 GameObject:
   m_ObjectHideFlags: 0

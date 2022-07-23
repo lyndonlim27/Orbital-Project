@@ -11,6 +11,7 @@ public class RoomDesign : MonoBehaviour
     #region DefaultProperties
     public static RoomDesign instance { get; private set; }
     private TerrainGenerator terrainGenerator;
+    private TilemapVisualizer tilemapVisualizer;
     private List<Vector3> structpoints;
     public enum ROOM_DESIGNS
     {
@@ -84,6 +85,7 @@ public class RoomDesign : MonoBehaviour
     private void Start()
     {
         terrainGenerator = TerrainGenerator.instance;
+        tilemapVisualizer = TilemapVisualizer.instance;
     }
     #endregion
 
@@ -108,6 +110,9 @@ public class RoomDesign : MonoBehaviour
                         Plantation(_currRoom);
                         break;
                 }
+                break;
+            case RoomManager.ROOMTYPE.PUZZLE_ROOM:
+                Town(_currRoom);
                 break;
             case RoomManager.ROOMTYPE.BOSSROOM:
                 EntityData entityData = _currRoom.GetBossData();
@@ -153,7 +158,7 @@ public class RoomDesign : MonoBehaviour
             foreach (GameObject deco in shuffledDeck)
             {
                 var col = deco.GetComponentInChildren<HouseExteriorDesign>().col;
-                Vector2 size = col.size;
+                Vector2 size = col.size + Vector2.one * 3;
                 Vector3 roomCenter = currRoom.GetSpawnAreaBound().center;
                 Vector3 pos = currRoom.GetRandomObjectPointGivenSize(size.magnitude);
                 Vector3 offSet = col.offset;
@@ -173,6 +178,8 @@ public class RoomDesign : MonoBehaviour
 
 
     }
+
+
 
     private List<GameObject> Shuffle(GameObject[] decorations)
     {
@@ -221,7 +228,8 @@ public class RoomDesign : MonoBehaviour
     {
         SpawnGameObjects(houses, true, 4, 6, currRoom);
         SpawnMandatoryObject(townmandatoryDecorations, currRoom);
-
+        LoadRoomData("Town", currRoom);
+        terrainGenerator.GenerateTerrainType3(currRoom);
     }
 
     public void Swamp()

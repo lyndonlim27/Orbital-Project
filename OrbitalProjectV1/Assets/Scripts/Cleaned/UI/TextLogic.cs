@@ -29,9 +29,9 @@ public abstract class TextLogic : MonoBehaviour
      */
     protected virtual void Awake()
     {
-        Textdisplayer = GetComponent<TextMeshProUGUI>();
+        
         player = GameObject.FindObjectOfType<Player>(true);
-        parent = GetComponentInParent<EntityBehaviour>();
+        Textdisplayer = GetComponent<TextMeshProUGUI>();
         InstantiateAudio();
         
         //Textdisplayer.alignment = TextAlignmentOptions.Center;
@@ -43,15 +43,16 @@ public abstract class TextLogic : MonoBehaviour
     protected virtual void Start()
     {
         
-
     }
 
     protected virtual void OnEnable()
     {
+        parent = GetComponentInParent<EntityBehaviour>(true);
         if (parent != null)
         {
             Textdisplayer.enabled = !outOfRange() && !parent.isDead;
             EntityData entityData = parent.GetData();
+            Debug.Log(entityData);
             if (entityData != null)
             {
                 minDist = entityData.minDist;
@@ -201,7 +202,6 @@ public abstract class TextLogic : MonoBehaviour
     {
         if (player != null)
         {
-
             return Vector2.Distance(player.transform.position, parent.transform.position) > minDist;
 
         } else

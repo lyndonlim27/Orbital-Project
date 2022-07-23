@@ -7,14 +7,16 @@ using System.Linq;
 
 public class TilemapVisualizer : MonoBehaviour
 {
+    public static TilemapVisualizer instance { get; private set; }
+
     [SerializeField]
-    private Tilemap floorTilemap, innerwallTilemap, outerwallTilemap, waterTilemap, dockTilemap, groundTilemap, decorativeTilemap, treeBottomTilemap, treeTop1Tilemap, treeTop2Tilemap, treeTop3Tilemap, groundDecoTilemap;
+    private Tilemap floorTilemap, innerwallTilemap, outerwallTilemap, waterTilemap, dockTilemap, groundTilemap, decorativeTilemap, treeBottomTilemap, treeTop1Tilemap, treeTop2Tilemap, treeTop3Tilemap, groundDecoTilemap, kruskalTilemap;
 
     [Header("Map Tiles")]
     [SerializeField]
     private TileBase floorTile, wallTop, wallSideRight, wallSiderLeft, wallBottom, wallFull, 
         wallInnerCornerDownLeft, wallInnerCornerDownRight, 
-        wallDiagonalCornerDownRight, wallDiagonalCornerDownLeft, wallDiagonalCornerUpRight, wallDiagonalCornerUpLeft;
+        wallDiagonalCornerDownRight, wallDiagonalCornerDownLeft, wallDiagonalCornerUpRight, wallDiagonalCornerUpLeft, kruskalTile;
 
     [SerializeField]
     private TileBase[] multifloorTiles;
@@ -53,7 +55,13 @@ public class TilemapVisualizer : MonoBehaviour
     private List<GameObject> frontstructures, sidestructures;
 
 
-
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
     private Transform decorationContainer;
 
 
@@ -78,17 +86,18 @@ public class TilemapVisualizer : MonoBehaviour
         {
             foreach (BoundsInt bounds in rooms)
             {
+                var radius = Vector3.Distance(bounds.max, bounds.center);
                 //Debug.Log("room" + bounds);
                 if (insideRoom(position, bounds) && !corridoors.Contains(position))
                 {
                     var distancefromcenter = Vector3.Distance((Vector3Int)position, bounds.center);
-                    var radius = Vector3.Distance(bounds.max, bounds.center);
+                    
                     var normalizeddist = distancefromcenter / radius;
                     //Debug.Log("normalized distance = " + normalizeddist);
                     PaintGround(offSet, position, normalizeddist);
-                    PaintGroundDecorations(offSet * 2f, position, normalizeddist);
+                    //PaintGroundDecorations(offSet * 2f, position, normalizeddist);
 
-                }
+                } 
 
             }
             PaintSingleTile(tilemap, tile, position, false);
@@ -110,7 +119,7 @@ public class TilemapVisualizer : MonoBehaviour
     }
 
 
-    private void PaintGroundDecorations(float decoOffset, Vector2Int position, float normalizeddist)
+    public void PaintGroundDecorations(float decoOffset, Vector2Int position, float normalizeddist)
     {
 
         if (Physics2D.OverlapCircle(position, 0.01f, LayerMask.GetMask("Doors")))
@@ -125,9 +134,9 @@ public class TilemapVisualizer : MonoBehaviour
             Debug.LogError("No landdecoratives added");
         }
 
-        if (UnityEngine.Random.value + decoOffset <= normalizeddist)
+        if (UnityEngine.Random.value + decoOffset <= normalizeddist && !Physics2D.OverlapCircle(position, 2, LayerMask.GetMask("HouseExterior", "HouseInterior")))
         {
-            
+
             int toPutTreeOrNot = UnityEngine.Random.Range(0, 10);
             
             
@@ -159,9 +168,6 @@ public class TilemapVisualizer : MonoBehaviour
             }
 
         }
-
-
-
 
     }
 
@@ -528,4 +534,14 @@ public class TilemapVisualizer : MonoBehaviour
         SpawnSingleGameObjectDecoration(startPos, _col.bounds.size.magnitude, selectedStructure, decorationContainer);
     }
 
+
+    public Tilemap GetOuterWallTilemap()
+    {
+        return outerwallTilemap;
+    }
+
+    public Tilemap GetInnerWallTilemap()
+    {
+        return innerwallTilemap;
+    }
 }

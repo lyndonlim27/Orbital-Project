@@ -17,6 +17,7 @@ public class LevelDesign : ScriptableObject
         BLADEKEEPER_ROOM,
         GROUNDMONK_ROOM,
         WINDGUY_ROOM,
+        TOWN,
     }
     public ROOM_DESIGN room_design;
     public TileBase floorTile,grassTile;

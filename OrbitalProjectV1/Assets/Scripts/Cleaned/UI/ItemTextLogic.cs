@@ -14,18 +14,8 @@ public class ItemTextLogic : TextLogic
 
     protected override void OnEnable()
     {
-        if (parent != null)
-        {
-            EntityData entityData = parent.GetData();
-            if (entityData != null)
-            {
-                currentword = entityData._name.ToLower();
-            }
-
-        }
-        
         base.OnEnable();
-        
+           
     }
     protected override bool CheckInternalInput()
     {
@@ -39,6 +29,7 @@ public class ItemTextLogic : TextLogic
 
     protected override void GenerateNewWord()
     {
+        currentword = parent.GetData()._name.ToLower();
         this.remainingword = parent.GetData()._name.ToLower();
     }
 

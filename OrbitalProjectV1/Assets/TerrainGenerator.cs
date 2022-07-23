@@ -50,11 +50,13 @@ public class TerrainGenerator : MonoBehaviour
 
     #region Internal Properties
     public static TerrainGenerator instance { get; private set; }
+    private TilemapVisualizer tilemapVisualizer;
     private GameObject TerrainObjectHolder;
     private float frequency;
     private int offset;
     private Dictionary<List<Vector3Int>, KDTreeImpl> cachedTrees;
     private Dictionary<Vector3Int, int> map;
+    public HashSet<Vector3Int> unWalkableTiles;
     #endregion
 
     #endregion
@@ -69,6 +71,12 @@ public class TerrainGenerator : MonoBehaviour
         ClearAllTerrainObjects();
         TerrainObjectHolder = new GameObject("TerrainObjectHolder");
         frequency = 0.5f;
+        unWalkableTiles = new HashSet<Vector3Int>();
+    }
+
+    private void Start()
+    {
+        tilemapVisualizer = TilemapVisualizer.instance;
     }
     #endregion
 
@@ -80,7 +88,7 @@ public class TerrainGenerator : MonoBehaviour
         ClearAllTerrainObjects();
         map = GenerateMapTesting();
         PaintWalls(map);
-        PaintTerrainTile(map);
+        PaintTerrainTile(map, null);
         CreateConnections();
         
     }
@@ -99,9 +107,10 @@ public class TerrainGenerator : MonoBehaviour
     {
         map = GenerateMap(currRoom);
         PaintWalls(map);
-        PaintTerrainTile(map);
-        TerrainObjectHolder.transform.SetParent(currRoom.transform);
         CreateConnections();
+        PaintTerrainTile(map, currRoom);
+        TerrainObjectHolder.transform.SetParent(currRoom.transform);
+        
         
     }
 
@@ -109,10 +118,24 @@ public class TerrainGenerator : MonoBehaviour
     {
         map = GenerateMap(currRoom);
         Paint8DirectWalls();
-        FillTerrainLand();
         CreateConnections();
-        
+        FillTerrainLand(currRoom);
+
+
     }
+
+    public void GenerateTerrainType3(RoomManager currRoom)
+    {
+        map = GenerateEmptyMap(currRoom);
+        FillTerrainLand(currRoom);
+        //Paint8DirectWalls();
+        //CreateConnections();
+        //FillTerrainLand(currRoom);
+
+
+    }
+
+    
 
     #endregion
 
@@ -137,6 +160,27 @@ public class TerrainGenerator : MonoBehaviour
     public Tilemap GetTerrainWall()
     {
         return terrainWallTilemap;
+    }
+
+    public void ClearCorridoor(Vector3Int point)
+    {
+        double distance = Mathf.Infinity;
+        Vector3Int nearestpointtodoor = Vector3Int.back;
+        foreach (KDTreeImpl tree in cachedTrees.Values)
+        {
+
+            Vector3Int nearest = tree.findNearest(point);
+            double sqrdist = GetSquaredDist(nearest, point);
+            if (sqrdist < distance)
+            {
+                distance = sqrdist;
+                nearestpointtodoor = nearest;
+            }
+        }
+        if (nearestpointtodoor != Vector3Int.back)
+        {
+            ClearPavement(point, nearestpointtodoor);
+        }
     }
     #endregion
     #endregion
@@ -359,7 +403,7 @@ public class TerrainGenerator : MonoBehaviour
             if (map[vec] == 1)
             {
                 string neighbours = GetNeighbours(vec, map);
-
+                unWalkableTiles.Add(vec);
                 switch (neighbours)
                 {
                     default:
@@ -432,15 +476,32 @@ public class TerrainGenerator : MonoBehaviour
     #endregion
 
     #region Painting Methods.
-    private void PaintTerrainTile(Dictionary<Vector3Int, int> map)
+    private void PaintTerrainTile(Dictionary<Vector3Int, int> map, RoomManager room)
     {
-        foreach(Vector3Int vec in map.Keys)
+        
+        
+        
+        foreach (Vector3Int vec in map.Keys)
         {
             string neighbours = "";
 
-            if (map[vec] == 1)
+            if (map[vec] == 1 && !kruskalVisualizer.HasTile(vec) && !Physics2D.OverlapCircle((Vector2Int) vec, 3, LayerMask.GetMask("Doors")))
             {
-
+                unWalkableTiles.Add(vec);
+                if (room != null)
+                {
+                    var bounds = room.GetSpawnAreaBound();
+                    var radius = Vector3.Distance(bounds.max, bounds.center);
+                    var distancefromcenter = Vector3.Distance(vec, bounds.center);
+                    var normalizeddist = distancefromcenter / radius;
+                    if (!terrainWallTilemap.HasTile(vec))
+                    {
+                        tilemapVisualizer.PaintGroundDecorations(2 * 0.2f, (Vector2Int)vec, normalizeddist);
+                    }
+                    
+           
+                }
+                
                 neighbours += GetNeighbours(vec, map);
                 neighbours += GetNeighboursDiag(vec, map);
                 if (neighbours == "11111111")
@@ -451,6 +512,7 @@ public class TerrainGenerator : MonoBehaviour
                 if (!terrainWallTilemap.HasTile(vec))
                 {
                     PlaceDecorationCon(terrainInteriorDecorations, vec);
+                    
                 }
                 
                 
@@ -512,10 +574,31 @@ public class TerrainGenerator : MonoBehaviour
 
     private void FillTerrainLand()
     {
+       
         foreach (Vector3Int vec in map.Keys)
         {
+     
             terrainTilemap.SetTile(vec, grassTile);
         }
+    }
+
+    private void FillTerrainLand(RoomManager room)
+    {
+        var bounds = room.GetSpawnAreaBound();
+        var radius = Vector3.Distance(bounds.max, bounds.center);
+        foreach(Vector3Int vec in map.Keys)
+        {
+            if (map[vec] == 0 && !kruskalVisualizer.HasTile(vec) && !Physics2D.OverlapCircle((Vector2Int) vec, 3, LayerMask.GetMask("Doors")))
+            {
+                var distancefromcenter = Vector3.Distance(vec, bounds.center);
+                var normalizeddist = distancefromcenter / radius;
+                tilemapVisualizer.PaintGroundDecorations(2 * 0.2f, (Vector2Int)vec, normalizeddist);
+                
+            }
+            terrainTilemap.SetTile(vec, grassTile);
+
+        }
+
     }
 
     private void ClearAllTerrainObjects()
@@ -562,8 +645,8 @@ public class TerrainGenerator : MonoBehaviour
         Vector3Int roomSize = (Vector3Int) currRoom.GetRoomSize();
         map = new Dictionary<Vector3Int, int>();
         
-        Vector3Int minVec = Vector3Int.RoundToInt(currRoom.transform.position) - roomSize / 2 + Vector3Int.one;
-        Vector3Int maxVec = Vector3Int.RoundToInt(currRoom.transform.position) + roomSize / 2 - Vector3Int.one * 2;
+        Vector3Int minVec = Vector3Int.RoundToInt(currRoom.transform.position) - roomSize / 2;
+        Vector3Int maxVec = Vector3Int.RoundToInt(currRoom.transform.position) + roomSize / 2 - Vector3Int.one;
         
         for (int i = minVec.x; i <= maxVec.x; i++)
         {
@@ -575,10 +658,16 @@ public class TerrainGenerator : MonoBehaviour
                     continue;
                 } else
                 {
-                    if (i == minVec.x || i == maxVec.x || j == minVec.y || j == maxVec.y)
+                    //this only works for terraintype1
+                    //doesnt really create path for type2
+                    if (Physics2D.OverlapCircle((Vector2Int)currpos, 3, LayerMask.GetMask("Doors")))
                     {
-                        map[currpos] = 1;
+                        map[currpos] = 0;
                     }
+                    //else if (i == minVec.x || i == maxVec.x || j == minVec.y || j == maxVec.y)
+                    //{
+                    //    map[currpos] = 1;
+
                     else
                     {
 
@@ -608,6 +697,26 @@ public class TerrainGenerator : MonoBehaviour
                     map[new Vector3Int(i, j)] = Mathf.RoundToInt(Mathf.PerlinNoise(i * normalizer,j * normalizer));
                 }
 
+            }
+        }
+
+        return map;
+    }
+
+    private Dictionary<Vector3Int, int> GenerateEmptyMap(RoomManager currRoom)
+    {
+        map = new Dictionary<Vector3Int, int>();
+        Vector3Int roomSize = (Vector3Int)currRoom.GetRoomSize();
+
+        Vector3Int minVec = Vector3Int.RoundToInt(currRoom.transform.position) - roomSize / 2;
+        Vector3Int maxVec = Vector3Int.RoundToInt(currRoom.transform.position) + roomSize / 2 - Vector3Int.one;
+
+        for (int i = minVec.x; i <= maxVec.x; i++)
+        {
+            for (int j = minVec.y; j <= maxVec.y; j++)
+            {
+                var currpos = new Vector3Int(i, j);
+                map[currpos] = 0;
             }
         }
 
@@ -715,7 +824,7 @@ public class TerrainGenerator : MonoBehaviour
         {
             Collider2D col = Physics2D.OverlapPoint((Vector2Int)vec, LayerMask.GetMask("Obstacles","HouseExterior","HouseInterior"));
             RemoveWall(vec);
-            if (col != null && !col.CompareTag("Tiles"))
+            if (col != null && !col.CompareTag("Tiles") && !col.CompareTag("House"))
             {
                 DestroyImmediate(col.gameObject);
             }
@@ -727,7 +836,11 @@ public class TerrainGenerator : MonoBehaviour
     {
         
         terrainWallTilemap.SetTile(vec, null);
-        terrainTilemap.SetTile(vec, grassTile);
+        groundDecoTilemap.SetTile(vec, null);
+        if (!terrainTilemap.HasTile(vec))
+        {
+            terrainTilemap.SetTile(vec, grassTile);
+        }
         kruskalVisualizer.SetTile(vec, kruskalTile);
     }
 
