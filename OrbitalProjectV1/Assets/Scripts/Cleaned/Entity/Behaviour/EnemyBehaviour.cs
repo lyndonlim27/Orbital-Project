@@ -134,7 +134,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     {
         if (enemyData.story != null)
         {
-            FindObjectOfType<DialogueManager>().EnterDialogue(this);
+           // FindObjectOfType<DialogueManager>().EnterDialogue(this);
         }
     }
 
@@ -1038,7 +1038,9 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         SpawnDrops();
         poolManager.ReleaseObject(this);
 
-    }  
+    }
+
+
 
     /**
      * Enemy dodge motion.

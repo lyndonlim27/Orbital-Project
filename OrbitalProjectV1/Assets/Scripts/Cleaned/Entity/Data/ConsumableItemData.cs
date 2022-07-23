@@ -14,6 +14,7 @@ public class ConsumableItemData : EntityData
         GOLD,
         LETTER,
         MANA,
+        FRAGMENTS,
     }
     public CONSUMABLE _consumableType;
     public Sprite[] letters;

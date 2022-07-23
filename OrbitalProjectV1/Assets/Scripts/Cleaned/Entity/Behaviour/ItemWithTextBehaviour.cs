@@ -6,6 +6,7 @@ using UnityEngine.Rendering.Universal;
 using TMPro;
 using Random = UnityEngine.Random;
 using System.Reflection;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// This is a general class for item with texts.
@@ -16,6 +17,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
 {
     [SerializeField] protected ItemWithTextData data;
     [SerializeField] protected List<ConsumableItemData> consumableItemDatas;
+    protected ConsumableItemData fragmentData;
 
 
     private FieldInfo _LightCookieSprite = typeof(Light2D).GetField("m_LightCookieSprite", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -77,6 +79,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         laserPos = new List<Vector3>();
         rotSpeed = 30f;
         attachedToPlayer = false;
+        fragmentData = Resources.Load<ConsumableItemData>("Data/ConsumableItemData/Fragment");
     }
 
     /**
@@ -86,6 +89,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     {
         dataPersistenceManager = FindObjectOfType<DataPersistenceManager>(true);
         
+
     }
 
     private void Update()
@@ -96,8 +100,6 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         StopBallRolling();
         StartLaserControl();
         FollowPlayer();
-
-
     }
 
 
@@ -652,6 +654,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     {
         int rand = Random.Range(0, 5);
 
+
         for (int i = 0; i < rand; i++)
         {
 
@@ -670,6 +673,17 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 wordBank.passcode = passcode.Substring(0, randomnum) + passcode.Substring(randomnum, passcode.Length - (randomnum + 1));
 
             }
+            con.SetEntityStats(temp);
+            con.transform.position = transform.position + new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f));
+            con.SetTarget(player.gameObject);
+            con.gameObject.SetActive(true);
+        }
+        if (currentRoom.roomtype == RoomManager.ROOMTYPE.BOSSROOM && SceneManager.GetActiveScene().name == "PCGMapbackup")
+        {
+            ConsumableItemBehaviour con = poolManager.GetObject(EntityData.TYPE.CONSUMABLE_ITEM) as ConsumableItemBehaviour;
+            con.gameObject.SetActive(false);
+            ConsumableItemData condata = fragmentData;
+            ConsumableItemData temp = Instantiate(condata);
             con.SetEntityStats(temp);
             con.transform.position = transform.position + new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f));
             con.SetTarget(player.gameObject);

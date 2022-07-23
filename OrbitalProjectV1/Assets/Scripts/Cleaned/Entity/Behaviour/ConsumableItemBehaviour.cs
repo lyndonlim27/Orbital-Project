@@ -176,6 +176,9 @@ public class ConsumableItemBehaviour : EntityBehaviour
                 case ConsumableItemData.CONSUMABLE.LETTER:
                     WordStorageManagerUI.instance.AddItem(_itemData);
                     break;
+                case ConsumableItemData.CONSUMABLE.FRAGMENTS:
+                    player.AddFragments();
+                    break;
             }
             StartCoroutine(WaitForAwhileBeforeRelease());
 
@@ -214,7 +217,4 @@ public class ConsumableItemBehaviour : EntityBehaviour
     {
         poolManager.ReleaseObject(this);
     }
-
-
-
 }

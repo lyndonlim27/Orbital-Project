@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
+
 public class Player : EntityBehaviour, IDataPersistence, Freezable
 {
 
@@ -32,6 +33,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     private Animator buffanimator;
     private RuntimeAnimatorController healinganimator;
     private Vector2 savePoint;
+    private int _fragments;
     
 
     private bool _invulnerable;
@@ -64,6 +66,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     [SerializeField] private GameOver _gameOver;
     [SerializeField] private HealthBar _healthBar;
     [SerializeField] private ManaBar _manaBar;
+    [SerializeField] private FragmentUI _fragmentUI;
     public bool InCombat;
 
     protected override void Awake()
@@ -79,6 +82,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         _healthBar = FindObjectOfType<HealthBar>(true);
         _manaBar = FindObjectOfType<ManaBar>(true);
         _gameOver = FindObjectOfType<GameOver>(true);
+        _fragmentUI = FindObjectOfType<FragmentUI>(true);
         _transform = transform;
     }
 
@@ -406,6 +410,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         this.currMana = data.currMana;
         this.currGold = data.currGold;
         this.transform.position = data.currPos;
+        this._fragments = data.fragments;
         _goldCounter.GoldUpdate();
         if(data.debuffDataName != "")
         {
@@ -445,6 +450,7 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         data.moveSpeed = this._moveSpeed;
         data.currScene = SceneManager.GetActiveScene().name;
         data.ranged = this.ranged;
+        data.fragments = this._fragments;
     }
 
     public void Freeze()
@@ -538,5 +544,10 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         Debug.Log(originalWeapon.WeaponName);
         _weaponManager.Swap(originalWeapon.WeaponName);
     }
-        
+
+    public void AddFragments()
+    {
+        _fragments += 1;
+        _fragmentUI.SetFragmentUI(_fragments);
+    }
 }

@@ -31,6 +31,7 @@ public class GameData
     public bool ranged;
     public bool alreadyActive;
     public int currentSeed;
+    public int fragments;
 
     /*
      * Room Data
@@ -46,6 +47,7 @@ public class GameData
         this.currMana = 100;
         this.maxMana = 100;
         this.currGold = 0;
+        this.fragments = 0;
         this.currWeapon = "Fists";
         this.currPos = Vector2.zero;
         this.attackDataName = null;
