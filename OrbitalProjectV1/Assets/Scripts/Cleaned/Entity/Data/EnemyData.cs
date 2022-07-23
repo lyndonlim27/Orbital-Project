@@ -36,4 +36,5 @@ public class EnemyData : ItemWithTextData
     public float jumpheight;
     public BODYTYPE body;
     public TextAsset story;
+    public bool teleportable;
 }

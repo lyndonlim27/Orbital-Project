@@ -28,7 +28,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     private static List<Vector2Int> exits = new List<Vector2Int>();
     private static HashSet<Vector2Int> seen = new HashSet<Vector2Int>();
     private HashSet<DoorBehaviour> doors;
-    private HashSet<Vector2Int> corridoor;
+    public HashSet<Vector2Int> corridors { get; private set; }
     private static Dictionary<BoundsInt, RoomManager> bound2Rooms = new Dictionary<BoundsInt, RoomManager>();
 
     [Header("Doors")]
@@ -114,7 +114,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         }
 
 
-        HashSet<Vector2Int> corridors = ConnectRooms(roomsList);
+        corridors = ConnectRooms(roomsList);
 
         floor.UnionWith(corridors);
         tilemapVisualizer.PaintFloorTiles(floor, groundoffSet, roomsList, corridors);
@@ -544,7 +544,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         }
 
         createdroom.roomtype = randRoomType;
-        createdroom.SetUpRoomSize((Vector2Int)room.size);
+        createdroom.SetUpRoomSize((Vector2Int)room.size - Vector2Int.one * 3);
         createdroom.RoomIndex = i;
         createdroom.roomtype = randRoomType;
         if (Random.Range(0, 10) >= 8)

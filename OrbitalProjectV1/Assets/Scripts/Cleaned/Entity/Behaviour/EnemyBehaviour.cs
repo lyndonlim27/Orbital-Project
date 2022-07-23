@@ -24,6 +24,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     public EnemyData enemyData;
     public StateMachine stateMachine;
     public StateMachine.STATE currstate;
+    public StateMachine.STATE prevstate;
     public MeleeComponent melee { get; protected set; }
     public RangedComponent ranged { get; protected set; }
     public Rigidbody2D rb { get; protected set; }
@@ -117,6 +118,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     {
         base.OnEnable();
         ResettingLocalBools();
+        SetRbMass();
         DisableAnimator();
         ResetTransform();
         SettingUpColliders();
@@ -155,8 +157,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     {
         player = Player.instance;
         _flicker = DamageFlicker.instance;
-        rb = GetComponentInParent<Rigidbody2D>();
-        SetRbMass();
+        
     }
 
     /**
@@ -175,6 +176,17 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         stateMachine.Update();
         animatorspeed = this.animator.speed;
         Tick();
+        DashToEnemy();
+    }
+
+    private void DashToEnemy()
+    {
+        if (Dashcooldown < 0 && !inAnimation)
+        {
+            _transform.position = player.transform.position + Random.insideUnitSphere;
+            animator.SetTrigger(enemyData.defends[Random.Range(0, enemyData.defends.Count)]);
+            ResetDash();
+        }
     }
 
     /**
@@ -212,6 +224,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         health = enemyData.words;
         maxhealth = enemyData.words;
         healStagecooldown = 0;
+        Dashcooldown = enemyData.defends.Count > 0 ? 10f : Mathf.Infinity;
     }
 
     private void ResetHp()
@@ -256,6 +269,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
      */
     private void SetRbMass()
     {
+        rb = GetComponentInParent<Rigidbody2D>();
         if (rb != null)
         {
             originalmass = rb.mass;
@@ -686,11 +700,10 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     {
         //_transform.position = currentRoom.GetRandomPoint();
         transform.localPosition = Vector3.zero;
-        Dashcooldown = 30f;
+        Dashcooldown = 10f;
         inAnimation = false;
         EnableAttackComps();
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
-        this.stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
     }
     #endregion
 
@@ -860,7 +873,17 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         if (cooldown > 0)
         {
             cooldown -= Time.deltaTime;
+            
+        }
+
+        if (healStagecooldown > 0)
+        {
             healStagecooldown -= Time.deltaTime;
+        }
+
+        if (Dashcooldown > 0)
+        {
+            Dashcooldown -= Time.deltaTime;
         }
     }
 
@@ -912,7 +935,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
             case ANIMATION_CODE.HURT_END:
                 UnlockMovement();
                 inAnimation = false;
-                stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+                stateMachine.ChangeState(prevstate, null);
                 break;
 
         }
@@ -991,6 +1014,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         Debug.Log("Health is: " + health);
         _healthBar.SetHealth(health);
         animator.SetTrigger("Hurt");
+        prevstate = currstate;
     }
 
     /*
@@ -1105,10 +1129,10 @@ public class EnemyBehaviour : ItemWithTextBehaviour
      */
     public void ResetDash()
     {
-        Dashcooldown = 15f;
+        Dashcooldown = 10f;
         inAnimation = false;
         //transform.parent.position = transform.position;
-        //transform.localPosition = Vector3.zero;
+        transform.localPosition = Vector3.zero;
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
         EnableAttackComps();
     }

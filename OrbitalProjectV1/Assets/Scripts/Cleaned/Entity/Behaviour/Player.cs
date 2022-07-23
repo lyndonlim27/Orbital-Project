@@ -527,7 +527,10 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
 
     public void SwitchToFist()
     {
+        
         originalWeapon = _currWeapon;
+        
+        
         _weaponManager.Swap("Fist");
 
         

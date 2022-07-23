@@ -244,13 +244,13 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         {
             default:
                 light2D.enabled = true;
-                light2D.pointLightOuterRadius = 2f;
+                light2D.pointLightOuterRadius = 5f;
                 _rb.bodyType = RigidbodyType2D.Kinematic;
                 break;
             case ItemWithTextData.ITEM_TYPE.MONSTERTRAPBOX:
             case ItemWithTextData.ITEM_TYPE.CHEST:
                 light2D.enabled = true;
-                light2D.pointLightOuterRadius = 2f;
+                light2D.pointLightOuterRadius = 5f;
                 _rb.bodyType = RigidbodyType2D.Kinematic;
                 if (data.itemSprites.Length > 0)
                 {
@@ -307,6 +307,8 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 originalpos = transform.position;
                 _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
                 _rb.freezeRotation = true;
+                light2D.color = Color.blue;
+                light2D.pointLightOuterRadius = 5f;
                 this.gameObject.layer = LayerMask.NameToLayer("Ball");
                 animator.runtimeAnimatorController = Resources.Load("Animations/AnimatorControllers/AC_Objects") as RuntimeAnimatorController;
                 break;
@@ -480,11 +482,17 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
     #region ballpuzzle
     private void ShootBall()
     {
+        
         _rb.bodyType = RigidbodyType2D.Dynamic;
         _rb.AddForce(player.lastdirection * 50f, ForceMode2D.Impulse);
+        if (animator != null)
+        {
+            animator.SetBool("Rolling", true);
+            animator.enabled = true;
+
+        }
         //yield return new WaitForSeconds(5f);
-        animator.SetBool("Rolling", true);
-        animator.enabled = true;
+        
         _tl.ResetWord();
         isDead = false;
         //transform.position = originalpos;

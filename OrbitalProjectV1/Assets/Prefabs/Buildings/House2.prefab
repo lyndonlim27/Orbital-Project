@@ -2208,7 +2208,7 @@ GameObject:
   - component: {fileID: 2042435654}
   m_Layer: 28
   m_Name: HouseInterior
-  m_TagString: Untagged
+  m_TagString: House
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3169,7 +3169,7 @@ GameObject:
   - component: {fileID: 3632513865789415943}
   m_Layer: 29
   m_Name: HouseCollider
-  m_TagString: Untagged
+  m_TagString: House
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3242,7 +3242,7 @@ GameObject:
   - component: {fileID: 1458731865}
   m_Layer: 28
   m_Name: ChangingSpriteAlphaEnter (1)
-  m_TagString: Untagged
+  m_TagString: House
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3327,7 +3327,7 @@ GameObject:
   - component: {fileID: 972966417901603667}
   m_Layer: 0
   m_Name: House2
-  m_TagString: Untagged
+  m_TagString: House
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3532,7 +3532,7 @@ GameObject:
   - component: {fileID: 158159525}
   m_Layer: 16
   m_Name: HouseExterior2
-  m_TagString: Untagged
+  m_TagString: House
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3615,7 +3615,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1180756455640985151, guid: 6c23431fe0b484119b249ea81083f3f4, type: 3}
       propertyPath: m_Layer
-      value: 29
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1531316901085418857, guid: 6c23431fe0b484119b249ea81083f3f4, type: 3}
       propertyPath: m_RootOrder
@@ -3663,15 +3663,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3493559124177431918, guid: 6c23431fe0b484119b249ea81083f3f4, type: 3}
       propertyPath: m_Layer
-      value: 29
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4848895179869333618, guid: 6c23431fe0b484119b249ea81083f3f4, type: 3}
       propertyPath: m_Layer
-      value: 29
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4980863968282784733, guid: 6c23431fe0b484119b249ea81083f3f4, type: 3}
       propertyPath: m_Layer
-      value: 29
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5410659385111991325, guid: 6c23431fe0b484119b249ea81083f3f4, type: 3}
       propertyPath: m_SortingLayer
@@ -3683,7 +3683,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5765917942612310643, guid: 6c23431fe0b484119b249ea81083f3f4, type: 3}
       propertyPath: m_Layer
-      value: 29
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5774918878653459098, guid: 6c23431fe0b484119b249ea81083f3f4, type: 3}
       propertyPath: m_SortingLayerID
@@ -3691,11 +3691,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5989778924815089365, guid: 6c23431fe0b484119b249ea81083f3f4, type: 3}
       propertyPath: m_Layer
-      value: 29
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6326556154146113537, guid: 6c23431fe0b484119b249ea81083f3f4, type: 3}
       propertyPath: m_Layer
-      value: 29
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7811491565952768150, guid: 6c23431fe0b484119b249ea81083f3f4, type: 3}
       propertyPath: m_Name
@@ -3703,11 +3703,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7811491565952768150, guid: 6c23431fe0b484119b249ea81083f3f4, type: 3}
       propertyPath: m_Layer
-      value: 29
+      value: 21
+      objectReference: {fileID: 0}
+    - target: {fileID: 7811491565952768150, guid: 6c23431fe0b484119b249ea81083f3f4, type: 3}
+      propertyPath: m_TagString
+      value: House
       objectReference: {fileID: 0}
     - target: {fileID: 8802554862836144448, guid: 6c23431fe0b484119b249ea81083f3f4, type: 3}
       propertyPath: m_Layer
-      value: 29
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c23431fe0b484119b249ea81083f3f4, type: 3}

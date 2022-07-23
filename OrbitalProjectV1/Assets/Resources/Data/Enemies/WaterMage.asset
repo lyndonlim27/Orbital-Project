@@ -64,8 +64,6 @@ MonoBehaviour:
   dashattacks: []
   rangedDatas:
   - {fileID: 11400000, guid: bf8a31cfe9c08424492f57a1db7b243f, type: 2}
-  - {fileID: 11400000, guid: 0e3b9ff1477124f9dbedfe773f489b6a, type: 2}
-  - {fileID: 11400000, guid: 9f12151c4d7864bbf80bc982054b71f0, type: 2}
   bossdamageprops: []
   bossSummonprops: []
   bossdefenceprops: []
@@ -77,5 +75,6 @@ MonoBehaviour:
   enragedColor: {r: 0, g: 0, b: 0, a: 0}
   dashoffset: 0
   jumpheight: 0
-  body: 0
+  body: 1
   story: {fileID: 4900000, guid: 3db02a727594e4a0f95fd8fb9d0af16a, type: 3}
+  teleportable: 0

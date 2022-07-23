@@ -53,6 +53,7 @@ public class _GameManager : MonoBehaviour, IDataPersistence
     #region Player and GameData
     private GameData gameData;
     private Player player;
+    private bool spawned;
     [SerializeField] private int roomIndex = 1;
     #endregion
 
@@ -152,8 +153,12 @@ public class _GameManager : MonoBehaviour, IDataPersistence
     /// <summary>
     /// Spawn player in the first room in the map.
     /// </summary>
-    public void SpawnPlayer()
+    public IEnumerator SpawnPlayer()
     {
+        while (!allTerrainsGenerated)
+        {
+            yield return null;
+        }
         player = FindObjectOfType<Player>(true);
         if (player == null)
         {
@@ -162,7 +167,7 @@ public class _GameManager : MonoBehaviour, IDataPersistence
         }
         RoomManager roommgr = GameObject.Find("Room1").GetComponent<RoomManager>();
         player.SetCurrentRoom(roommgr);
-        player.transform.position = roommgr.transform.position;
+        player.transform.position = roommgr.GetRandomObjectPoint();
         SetUpCamera(player.transform);
     }
 
@@ -170,7 +175,7 @@ public class _GameManager : MonoBehaviour, IDataPersistence
     {
         if (player == null)
         {
-            SpawnPlayer();
+            StartCoroutine(SpawnPlayer());
         }
         RoomManager currRoom = roomManagers[roomIndex - 1];
         player.SetCurrentRoom(currRoom);
@@ -243,9 +248,10 @@ public class _GameManager : MonoBehaviour, IDataPersistence
     private void Start()
     {
         //PlayIntroScene();
-        SpawnPlayer();
-    }
+        StartCoroutine(SpawnPlayer());
 
+    }
+    
     private void LateUpdate()
     {
         allTerrainsGenerated = roomManagers.TrueForAll(room => room.terrainGenerated);

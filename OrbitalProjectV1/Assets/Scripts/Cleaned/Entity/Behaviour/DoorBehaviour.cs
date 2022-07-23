@@ -56,6 +56,7 @@ public class DoorBehaviour : EntityBehaviour
 
     }
 
+    //in case perlin fails, this is fallback check.
     public void RemoveTerrainWalls()
     {
         bool terraingenerated = _GameManager.allTerrainsGenerated;
@@ -357,6 +358,7 @@ public class DoorBehaviour : EntityBehaviour
             Debug.Log("No path found, this is weird");
         } else
         {
+            terrainWallTilemap.SetTile(startingPos, null);
             ClearPavement(currentpos, destination);
 
         }

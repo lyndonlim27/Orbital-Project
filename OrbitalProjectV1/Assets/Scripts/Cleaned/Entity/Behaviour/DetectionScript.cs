@@ -20,7 +20,6 @@ public class DetectionScript : MonoBehaviour
     private void OnEnable()
     {
         playerDetected = false;
-        _dialoguePlayed = false;
     }
 
 
@@ -30,7 +29,6 @@ public class DetectionScript : MonoBehaviour
         if(collision.gameObject.CompareTag("Player"))
         {
             playerDetected = true;
-            StartDialogue();
         }
         
     }
@@ -55,16 +53,16 @@ public class DetectionScript : MonoBehaviour
         }
     }
 
-    private void StartDialogue()
-    {
-        if (!_dialoguePlayed)
-        {
-            if (enemy != null)
-            {
-                enemy.StartDialogue();
-            }
-            _dialoguePlayed = true;
-        }
-    }
+    //private void StartDialogue()
+    //{
+    //    if (!_dialoguePlayed)
+    //    {
+    //        if (enemy != null)
+    //        {
+    //            enemy.StartDialogue();
+    //        }
+    //        _dialoguePlayed = true;
+    //    }
+    //}
 
 }

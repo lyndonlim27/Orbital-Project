@@ -3002,7 +3002,7 @@ MonoBehaviour:
   isDead: 0
   inAnimation: 0
   Debuffed: 0
-  WeaponName: laser
+  WeaponName: Laser
   range: 200
   _bulletPrefab: {fileID: 6102511709532313600, guid: e97f1a76819bb45298a4f96ef5210119, type: 3}
   rangedData: {fileID: 11400000, guid: 75398dae7f8d342ebb59bb380f0d9c65, type: 2}
@@ -3225,8 +3225,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.84, y: 0.8}
+  m_Offset: {x: 0, y: -0.2}
+  m_Size: {x: 0.6, y: 0.6}
   m_Direction: 0
 --- !u!96 &4374332775066565752
 TrailRenderer:
@@ -3588,7 +3588,7 @@ MonoBehaviour:
   isDead: 0
   inAnimation: 0
   Debuffed: 0
-  WeaponName: spazer
+  WeaponName: Spazer
   range: 200
   _bulletPrefab: {fileID: 6102511709532313600, guid: e97f1a76819bb45298a4f96ef5210119, type: 3}
   rangedData: {fileID: 11400000, guid: 777627811b17349c5817772fc9d20515, type: 2}
@@ -3738,7 +3738,7 @@ MonoBehaviour:
   isDead: 0
   inAnimation: 0
   Debuffed: 0
-  WeaponName: cannon
+  WeaponName: Cannon
   range: 200
   _bulletPrefab: {fileID: 6102511709532313600, guid: e97f1a76819bb45298a4f96ef5210119, type: 3}
   rangedData: {fileID: 11400000, guid: 40027b5c9fcc549d7a142481eecf21f0, type: 2}
@@ -4062,7 +4062,7 @@ MonoBehaviour:
   isDead: 0
   inAnimation: 0
   Debuffed: 0
-  WeaponName: machinegun
+  WeaponName: MachineGun
   range: 200
   _bulletPrefab: {fileID: 6102511709532313600, guid: e97f1a76819bb45298a4f96ef5210119, type: 3}
   rangedData: {fileID: 11400000, guid: 1370ad79dc26e46b2b38a8045a76125f, type: 2}
@@ -4103,7 +4103,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4218839421571412974
 Transform:
   m_ObjectHideFlags: 0
