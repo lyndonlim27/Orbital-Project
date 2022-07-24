@@ -75,10 +75,22 @@ public class TorchPuzzle : MonoBehaviour, Puzzle
 
     private void RandomizeTorches()
     {
-        torchLights[0].transform.localPosition = new Vector3(-10f,10f);
-        torchLights[1].transform.localPosition = new Vector3(10f, 10f);
-        torchLights[2].transform.localPosition = new Vector3(-10f, -10f);
-        torchLights[3].transform.localPosition = new Vector3(10f, -10f);
+        //torchLights[0].transform.localPosition = new Vector3(-10f,10f);
+        //torchLights[1].transform.localPosition = new Vector3(10f, 10f);
+        //torchLights[2].transform.localPosition = new Vector3(-10f, -10f);
+        //torchLights[3].transform.localPosition = new Vector3(10f, -10f);
+        List<ItemWithTextBehaviour> doneTorches = new List<ItemWithTextBehaviour>();
+        foreach(ItemWithTextBehaviour torch in torchLights)
+        {
+            Vector2 currpoint;
+            do
+            {
+                currpoint = currRoom.GetRandomObjectPoint();
+            } while (doneTorches.Count > 0 && !doneTorches.TrueForAll(x => Vector3.Distance(x.transform.position, currpoint) >= 10f) && Physics2D.OverlapCircle(currpoint,2));
+
+            torch.transform.position = currpoint;
+            doneTorches.Add(torch);
+        }
 
 
     }

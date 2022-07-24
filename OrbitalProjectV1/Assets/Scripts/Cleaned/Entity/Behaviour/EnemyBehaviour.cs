@@ -590,7 +590,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         }
         if (!reachedEndOfPath)
         {
-            if (body.IsTouchingLayers(LayerMask.GetMask("Obstacles", "enemy", "door")))
+            if (body.IsTouchingLayers(LayerMask.GetMask("Obstacles", "enemy", "door","PassableDeco")))
             {
                 getNewRoamPosition();
             }
@@ -608,7 +608,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         {
             return;
         }
-        if (body.IsTouchingLayers(LayerMask.GetMask("Obstacles", "enemy", "Doors", "Traps")))
+        if (body.IsTouchingLayers(LayerMask.GetMask("Obstacles", "enemy", "Doors", "Traps","PassableDeco")))
         {
             startingpos = currentRoom.GetRandomObjectPoint();
         }

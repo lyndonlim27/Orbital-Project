@@ -38,11 +38,7 @@ public class DoorBehaviour : EntityBehaviour
         audioSource.pitch = 0.6f;
         audioSource.volume = 0.05f;
 
-        //Collider2D col = Physics2D.OverlapCircle(transform.position, 0.01f, LayerMask.GetMask("Obstacles"));
-        //if (col.transform != transform)
-        //{
-        //    //Destroy(this.gameObject);
-        //}
+
     }
 
     protected virtual void Start()
@@ -56,7 +52,13 @@ public class DoorBehaviour : EntityBehaviour
             innerWallTilemap = gridsHolder.GetTilemap("Wall");
             outerWallTilemap = gridsHolder.GetTilemap("Outerwall");
         }
-        
+
+        Collider2D col = Physics2D.OverlapCircle(transform.position, 0.01f, LayerMask.GetMask("Obstacles"));
+        if (col != null && col.CompareTag("Tiles"))
+        {
+            Destroy(this.gameObject);
+        }
+
 
     }
 

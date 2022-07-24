@@ -55,12 +55,11 @@ public class PressurePuzzle1 : MonoBehaviour, Puzzle
         pressureSwitchBehaviours = new List<PressureSwitchBehaviour>();
         pressureSwitchDatas = new List<SwitchData>();
         pushableObjects = new List<ItemWithTextBehaviour>();
-        CreateSwitchDatas();
-        CreatePushableData();
+        
 
     }
 
-    private void CreateSwitchDatas()
+    public void CreateSwitchDatas()
     {
         var pressureSwitchData = Resources.Load("Data/PressurePlates/PSwitchL3") as SwitchData;
 
@@ -73,7 +72,7 @@ public class PressurePuzzle1 : MonoBehaviour, Puzzle
         }
     }
 
-    private void CreatePushableData()
+    public void CreatePushableData()
     {
         var pushableData = Resources.Load("Data/ItemWithText/PushableObjects") as ItemWithTextData;
         var allSprites = pushableData.itemSprites;

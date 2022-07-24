@@ -112,7 +112,18 @@ public class RoomDesign : MonoBehaviour
                 }
                 break;
             case RoomManager.ROOMTYPE.PUZZLE_ROOM:
-                Town(_currRoom);
+            case RoomManager.ROOMTYPE.PUZZLE2_ROOM:
+                int random1= Random.Range(0, 2);
+                switch (random1)
+                {
+                    case 0:
+                        Farm(_currRoom);
+                        break;
+                    case 1:
+                        Plantation(_currRoom);
+                        break;
+
+                }
                 break;
             case RoomManager.ROOMTYPE.BOSSROOM:
                 EntityData entityData = _currRoom.GetBossData();
@@ -200,7 +211,7 @@ public class RoomDesign : MonoBehaviour
     private bool CheckNotOutofBounds(Vector2 size, Vector3 pos, RoomManager currRoom)
     {
 
-        return Physics2D.OverlapBox(pos, size, 0f, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior"));
+        return Physics2D.OverlapBox(pos, size, 0f, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior","PassableDeco"));
     }
 
     private bool CheckDistanceFromStrucs(Vector3 pos, Vector3 roomcenter)

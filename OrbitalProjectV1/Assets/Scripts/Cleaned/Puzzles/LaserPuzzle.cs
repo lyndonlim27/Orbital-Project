@@ -86,7 +86,6 @@ public class LaserPuzzle : MonoBehaviour, Puzzle
             currentRoom.SpawnObject(mirrorData);
         }
         laserBeam = transform.Find("LaserBeam").GetComponent<ItemWithTextBehaviour>();
-        Debug.Log(laserBeam);
         CreatingTarget();
 
     }

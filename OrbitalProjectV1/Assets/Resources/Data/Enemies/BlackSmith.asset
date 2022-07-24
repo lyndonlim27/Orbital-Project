@@ -58,9 +58,8 @@ MonoBehaviour:
   - MultiAttack1
   - JumpAttack
   defends:
-  - Dash
-  rangedtriggers:
-  - ShootLaser
+  - Dashes
+  rangedtriggers: []
   dashattacks: []
   rangedDatas:
   - {fileID: 11400000, guid: fd44465a58f324a7c916d0a7e9e2c9b4, type: 2}
@@ -81,3 +80,5 @@ MonoBehaviour:
   dashoffset: 12
   jumpheight: 0
   body: 0
+  story: {fileID: 0}
+  teleportable: 0

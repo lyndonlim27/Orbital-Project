@@ -63,13 +63,14 @@ MonoBehaviour:
   dashattacks: []
   rangedDatas:
   - {fileID: 11400000, guid: e6c82dc2f078742e09f53515f9205d9e, type: 2}
-  bossdamageprops: []
+  bossdamageprops:
+  - {fileID: 11400000, guid: 144d1b8af70f04d2096af8896dcfd2a2, type: 2}
   bossSummonprops: []
   bossdefenceprops: []
   animatorname: AC_BladeKeeper
-  words: 10
+  words: 100
   rangedcooldown: 15
-  stage2: 0
+  stage2: 1
   healStage: 0
   enragedColor: {r: 0, g: 0, b: 0, a: 0}
   dashoffset: 0

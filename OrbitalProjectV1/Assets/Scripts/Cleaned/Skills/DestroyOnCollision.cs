@@ -15,6 +15,7 @@ public class DestroyOnCollision : MonoBehaviour
         _attackSkill = FindObjectOfType<AttackSkillBehaviour>();
         Player player = FindObjectOfType<Player>();
         attackData = player.GetAttackData();
+        this.gameObject.layer = LayerMask.NameToLayer("PlayerSkill");
     }
 
     // Update is called once per frame

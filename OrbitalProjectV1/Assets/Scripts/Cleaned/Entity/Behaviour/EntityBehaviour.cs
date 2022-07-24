@@ -23,7 +23,6 @@ public abstract class EntityBehaviour : MonoBehaviour
 
     protected virtual void Awake()
     {
-        poolManager = FindObjectOfType<PoolManager>(true);
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.sortingOrder = 1;
         audioSource = GetComponent<AudioSource>();
@@ -31,6 +30,11 @@ public abstract class EntityBehaviour : MonoBehaviour
         Debuffed = false;
         footStep = Resources.Load("Sounds/Player/FootStep") as AudioClip;
    
+    }
+
+    protected virtual void Start()
+    {
+        poolManager = PoolManager.instance;
     }
 
     protected virtual void OnEnable()

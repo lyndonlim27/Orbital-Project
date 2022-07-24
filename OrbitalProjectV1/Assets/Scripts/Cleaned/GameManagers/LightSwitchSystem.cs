@@ -83,11 +83,12 @@ public class LightSwitchSystem : MonoBehaviour, Puzzle
         foreach(int i in currentseq)
         {
             candles[i].intensity = 2f;
-            Color c = candles[i].color;
-            candles[i].color = Color.magenta;
+            Color c = candles[i].GetComponent<SpriteRenderer>().color;
+            //candles[i].color = Color.red;
+            candles[i].GetComponent<SpriteRenderer>().color = Color.red;
             yield return new WaitForSeconds(1.5f);
             candles[i].intensity = 1f;
-            candles[i].color = c;
+            candles[i].GetComponent<SpriteRenderer>().color = c;
             yield return new WaitForSeconds(1.5f);
 
         }

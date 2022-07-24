@@ -25,13 +25,14 @@ MonoBehaviour:
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
-  scale: 5
+  scale: 3
   staggered: 0
   staggerTime: 0
   duration: 0
   defaultcolor: {r: 0, g: 0, b: 0, a: 0}
   floating: 0
   moveable: 1
+  NotURP: 0
   attackAudios:
   - {fileID: 8300000, guid: 8fde594ce881e45b8ae4c17a21032198, type: 3}
   miscellaneousAudios: []
@@ -41,7 +42,9 @@ MonoBehaviour:
   _trigger: 
   item_type: 0
   secondarysprite: {fileID: 0}
+  itemSprites: []
   description: 
+  rangedData: {fileID: 0}
   damageValue: 4
   moveSpeed: 3
   chaseSpeed: 4
@@ -50,8 +53,7 @@ MonoBehaviour:
   maxDist: 25
   meleetriggers:
   - Melee1
-  defends:
-  - Dash
+  defends: []
   rangedtriggers:
   - MH_cast
   dashattacks: []
@@ -66,4 +68,8 @@ MonoBehaviour:
   stage2: 0
   healStage: 0
   enragedColor: {r: 0, g: 0, b: 0, a: 0}
+  dashoffset: 0
+  jumpheight: 0
   body: 0
+  story: {fileID: 0}
+  teleportable: 0

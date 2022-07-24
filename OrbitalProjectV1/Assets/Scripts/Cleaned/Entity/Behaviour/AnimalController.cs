@@ -135,7 +135,7 @@ public class AnimalController : EntityBehaviour
                     continue;
                 }
                 var nextposition = _rb.position + new Vector2(i, j) * (_col.radius + 0.01f);
-                bool hit = Physics2D.OverlapPoint(nextposition, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior"));
+                bool hit = Physics2D.OverlapPoint(nextposition, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior","PassableDeco"));
                 if (!hit)
                 {
                     possibledirs.Add(nextposition + new Vector2(i,j) * 10f);

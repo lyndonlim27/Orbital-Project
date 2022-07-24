@@ -167,6 +167,11 @@ public class _GameManager : MonoBehaviour, IDataPersistence
             Player playerPrefab = Resources.Load<Player>("Player 1") as Player;
             player = Instantiate(playerPrefab);
         }
+        foreach(RoomManager room in roomManagers)
+        {
+            room.GetSpawnablePointsInRoom();
+        }
+
         RoomManager roommgr = GameObject.Find("Room1").GetComponent<RoomManager>();
         player.SetCurrentRoom(roommgr);
         player.transform.position = roommgr.GetRandomObjectPoint();
@@ -244,7 +249,7 @@ public class _GameManager : MonoBehaviour, IDataPersistence
     private void LateUpdate()
     {
         allTerrainsGenerated = roomManagers.TrueForAll(room => room.terrainGenerated);
-        DebugUnwalkableTiles();
+        //DebugUnwalkableTiles();
     }
 
 

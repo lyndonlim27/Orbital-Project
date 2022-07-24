@@ -561,6 +561,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         laser.material = Resources.Load<Material>("Material/Defaultmat");
         gameObject.name = "LaserBeam";
         gameObject.layer = LayerMask.NameToLayer("Laser");
+        spriteRenderer.sortingLayerName = "GroundDecoration";
     }
 
     private void ResetLaser()
@@ -605,7 +606,8 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
             Vector2 reflecteddir = Vector2.Reflect(dir, hit.normal);
             CastLaser(hitpoint, reflecteddir);
 
-        } else
+        }
+        else
         {
             laserPos.Add(hit.point);
             InitializeLaser();
@@ -686,7 +688,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
             con.SetTarget(player.gameObject);
             con.gameObject.SetActive(true);
         }
-        if (currentRoom.roomtype == RoomManager.ROOMTYPE.BOSSROOM && SceneManager.GetActiveScene().name == "PCGMapbackup")
+        if (currentRoom.roomtype == RoomManager.ROOMTYPE.BOSSROOM && SceneManager.GetActiveScene().name == "FinalLevel")
         {
             ConsumableItemBehaviour con = poolManager.GetObject(EntityData.TYPE.CONSUMABLE_ITEM) as ConsumableItemBehaviour;
             con.gameObject.SetActive(false);

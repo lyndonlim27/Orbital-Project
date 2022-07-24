@@ -24,11 +24,20 @@ public class PuzzleRoom_Mgr : RoomManager
     {
         base.Awake();
         //puzzle_type = (PUZZLE_TYPE)Random.Range(0, (int) PUZZLE_TYPE.COUNT);
-        puzzle_type = PUZZLE_TYPE.LASER;
+        puzzle_type = PUZZLE_TYPE.PRESSURE;
     }
     protected override void Start()
     {
         base.Start();
+        StartCoroutine(WaitForTerrainLoad());
+    }
+
+    private IEnumerator WaitForTerrainLoad()
+    {
+        while (pointsInRoomBound == null)
+        {
+            yield return null;
+        }
         LoadPuzzle();
     }
 
@@ -62,7 +71,7 @@ public class PuzzleRoom_Mgr : RoomManager
                 GameObject go = Instantiate(torchprefab);
                 go.name = "TorchLightPuzzle";
                 go.transform.SetParent(this.transform);
-                go.transform.position = transform.position;
+                GetAReasonablePoint(go);
                 var torchPuzzle = go.GetComponent<TorchPuzzle>();
                 torchPuzzle.SetCurrentRoom(this);
                 torchPuzzle.SpawnTorches();
@@ -71,6 +80,8 @@ public class PuzzleRoom_Mgr : RoomManager
                 break;
             case PUZZLE_TYPE.PRESSURE:
                 var pressurePuzzle = gameObject.AddComponent<PressurePuzzle1>();
+                pressurePuzzle.CreatePushableData();
+                pressurePuzzle.CreateSwitchDatas();
                 puzzle = pressurePuzzle;
                 puzzleMono = pressurePuzzle;
                 break;
@@ -78,15 +89,37 @@ public class PuzzleRoom_Mgr : RoomManager
         puzzleMono.enabled = false;
     }
 
+    private void GetAReasonablePoint(GameObject go)
+    {
+        var copy = new List<Vector3Int>(pointsInRoomBound);
+        var hold = new List<Vector3Int>();
+        var startingRad = 5f;
+        int iterations = 100;
+        Vector3Int currpoint;
+        do
+        {
+            currpoint = copy[Random.Range(0, copy.Count)];
+            if (iterations == 1 && startingRad > 0)
+            {
+                startingRad--;
+                iterations = 100;
+                copy = hold;
+            }
+            copy.Remove(currpoint);
+            hold.Add(currpoint);
+        } while (Physics2D.OverlapCircle((Vector2Int)currpoint, startingRad, LayerMask.GetMask("Obstacles", "Doors", "PassableDeco", "Mirror", "HouseExterior", "HouseInterior")) && iterations-- > 0);
+        go.transform.position = currpoint;
+    }
+
     // Update is called once per frame
     protected override void Update()
     {
         base.Update();
-        if (activated && !puzzle.IsActivated())
+        if (activated && puzzle != null && !puzzle.IsActivated())
         {
             puzzleMono.enabled = true;
             puzzle.ActivatePuzzle(Random.Range(3,7));
-        } 
+        }
         RoomChecker();
         CheckRunningEvents();
 
@@ -94,6 +127,15 @@ public class PuzzleRoom_Mgr : RoomManager
 
     protected override bool CanProceed()
     {
-        return puzzle.IsComplete();
+        return puzzle != null && activated && puzzle.IsComplete();
     }
+
+    //protected override void RoomChecker()
+    //{
+    //    if (puzzle == null)
+    //    {
+    //        return;
+    //    }
+    //    base.RoomChecker();
+    //}
 }

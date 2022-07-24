@@ -589,7 +589,7 @@ public class TerrainGenerator : MonoBehaviour
         var radius = Vector3.Distance(bounds.max, bounds.center);
         foreach(Vector3Int vec in map.Keys)
         {
-            if (map[vec] == 0 && !kruskalVisualizer.HasTile(vec) && !Physics2D.OverlapCircle((Vector2Int) vec, 3, LayerMask.GetMask("Doors")))
+            if (map[vec] == 0 && !kruskalVisualizer.HasTile(vec) && !Physics2D.OverlapCircle((Vector2Int) vec, 3, LayerMask.GetMask("Doors")) && !Physics2D.OverlapCircle((Vector2Int) vec, 2, LayerMask.GetMask("Obstacles","HouseExterior","HouseInterior","PassableDeco")))
             {
                 var distancefromcenter = Vector3.Distance(vec, bounds.center);
                 var normalizeddist = distancefromcenter / radius;
@@ -832,7 +832,7 @@ public class TerrainGenerator : MonoBehaviour
 
         foreach (Vector3Int vec in pathing)
         {
-            Collider2D col = Physics2D.OverlapPoint((Vector2Int)vec, LayerMask.GetMask("Obstacles","HouseExterior","HouseInterior"));
+            Collider2D col = Physics2D.OverlapPoint((Vector2Int)vec, LayerMask.GetMask("Obstacles","HouseExterior","HouseInterior","PassableDeco"));
             RemoveWall(vec);
             if (col != null && !col.CompareTag("Tiles") && !col.CompareTag("House"))
             {

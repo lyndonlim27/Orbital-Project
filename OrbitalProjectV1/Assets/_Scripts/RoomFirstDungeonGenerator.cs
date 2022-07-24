@@ -562,26 +562,45 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     /// </summary>
     private void ChangeRoomsToBoss()
     {
-        int i = 2;
-        while (i-- > 0)
+        List<RoomManager> rooms = _GameManager.roomManagers;
+        int i = bosses.Count;
+        Debug.Log(rooms.Count);
+        Debug.Log(i);
+        int breaks = Mathf.CeilToInt((float) rooms.Count / i);
+        Debug.Log(breaks);
+        while (i > 0)
         {
-            List<RoomManager> rooms = _GameManager.roomManagers;
-            int rand;
-            if (i == 1)
-            {
-                rand = Random.Range((int)(0.45f * rooms.Count), (int)(0.6f * rooms.Count));
-            } else
-            {
-                rand = Random.Range((int)(0.8f * rooms.Count), rooms.Count);
-            }
+            var lowerbound = (int) (Mathf.Max(breaks * (i - 1), 3));
+            var upperbound = (int)(Mathf.Min(i * breaks, rooms.Count));
+            int rand = Random.Range(lowerbound, upperbound);
+            Debug.Log(rand);
             ChangeRoom(rand, rooms, RoomManager.ROOMTYPE.BOSSROOM);
             if (rand - 1 >= 0)
             {
                 ChangeRoom(rand - 1, rooms, RoomManager.ROOMTYPE.ROOMBEFOREBOSS);
-
             }
-            
+            i--;
         }
+
+
+        //while (i-- > 0)
+        //{ 
+        //    int rand;
+        //    if (i == 1)
+        //    {
+        //        rand = Random.Range((int)(0.45f * rooms.Count * Mathf.Max(i-1,0)), (int)(0.6f * break));
+        //    } else
+        //    {
+        //        rand = Random.Range((int)(0.8f * rooms.Count), rooms.Count);
+        //    }
+        //    ChangeRoom(rand, rooms, RoomManager.ROOMTYPE.BOSSROOM);
+        //    if (rand - 1 >= 0)
+        //    {
+        //        ChangeRoom(rand - 1, rooms, RoomManager.ROOMTYPE.ROOMBEFOREBOSS);
+
+        //    }
+            
+        //}
         
     }
 
@@ -606,7 +625,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
                     Debug.LogError("Did not allocate any bosses");
                 } else
                 {
-                    EnemyData selectedboss = bosses[UnityEngine.Random.Range(0, bosses.Count - 1)];
+                    EnemyData selectedboss = bosses[UnityEngine.Random.Range(0, bosses.Count)];
                     bosses.Remove(selectedboss);
                     newroom.SetUpEntityData(selectedboss);
                 }

@@ -47,7 +47,7 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
 
     private void DestroyAnyObstacles()
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 2, LayerMask.GetMask("Obstacles"));
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 2, LayerMask.GetMask("Obstacles","PassableDeco"));
         foreach(Collider2D col in colliders)
         {
             if (col.CompareTag("Tiles"))
@@ -64,7 +64,7 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
                 
             }
             else
-            {
+            { 
                 Destroy(col.gameObject);
             }
         }
@@ -72,10 +72,10 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
 
     private static void DestroyTree(Collider2D col)
     {
-        GridsHolder.instance.GetTilemap("TreeBottomLayer").SetTile(Vector3Int.RoundToInt(col.transform.position), null);
-        GridsHolder.instance.GetTilemap("TreeTopLayer1").SetTile(Vector3Int.RoundToInt(col.transform.position) + Vector3Int.up, null);
-        GridsHolder.instance.GetTilemap("TreeTopLayer2").SetTile(Vector3Int.RoundToInt(col.transform.position) + Vector3Int.up, null);
-        GridsHolder.instance.GetTilemap("TreeTopLayer3").SetTile(Vector3Int.RoundToInt(col.transform.position) + Vector3Int.up, null);
+        GridsHolder.instance.GetTilemap("TreesBottomLayer").SetTile(Vector3Int.RoundToInt(col.transform.position), null);
+        GridsHolder.instance.GetTilemap("TreesTopLayer1").SetTile(Vector3Int.RoundToInt(col.transform.position) + Vector3Int.up, null);
+        GridsHolder.instance.GetTilemap("TreesTopLayer2").SetTile(Vector3Int.RoundToInt(col.transform.position) + Vector3Int.up, null);
+        GridsHolder.instance.GetTilemap("TreesTopLayer3").SetTile(Vector3Int.RoundToInt(col.transform.position) + Vector3Int.up, null);
     }
 
     /**

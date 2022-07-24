@@ -49,7 +49,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     public bool terrainGenerated;
     private TerrainGenerator terrainGenerator;
-    private List<Vector3Int> pointsInRoomBound;
+    protected List<Vector3Int> pointsInRoomBound;
     #endregion
 
     #region EntityBehaviours_VAR
@@ -133,6 +133,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         spawnlater = new List<EntityData>();
         GenerateGuid();
         _colour = Color.red;
+        
 
     }
 
@@ -185,7 +186,10 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
             if (_collider != null)
             {
                 activated = true;
-                GetSpawnablePointsInRoom();
+                if (pointsInRoomBound == null)
+                {
+                    GetSpawnablePointsInRoom(); //for level1 and level2;
+                }
                 InitializeAStar();
                 SettingDialogueMgr();
                 SettingUpAudio();
@@ -199,28 +203,28 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         conditionSize = conditions.Count;
     }
 
-    //private void UpdateSpawnablePoints()
-    //{
-    //    List<Vector3Int> newpoints = new List<Vector3Int>(pointsInRoomBound);
-    //    foreach (Vector3Int possiblepoint in pointsInRoomBound)
-    //    {
-    //        if (Physics2D.OverlapCircle((Vector2Int)possiblepoint, 2, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior")))
-    //        {
-    //            newpoints.Remove(possiblepoint);
+    public void UpdateSpawnablePoints()
+    {
+        List<Vector3Int> newpoints = new List<Vector3Int>(pointsInRoomBound);
+        foreach (Vector3Int possiblepoint in pointsInRoomBound)
+        {
+            if (Physics2D.OverlapCircle((Vector2Int)possiblepoint, 2, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior")))
+            {
+                newpoints.Remove(possiblepoint);
 
-    //        }
-    //        else if (terrainGenerator != null)
-    //        {
+            }
+            else if (terrainGenerator != null)
+            {
 
-    //            if (terrainGenerator.unWalkableTiles.Contains(possiblepoint))
-    //            {
-    //                newpoints.Remove(possiblepoint);
-    //            }
+                if (terrainGenerator.unWalkableTiles.Contains(possiblepoint))
+                {
+                    newpoints.Remove(possiblepoint);
+                }
 
-    //        }
-    //    }
-    //    //pointsInRoomBound = newpoints;
-    //}
+            }
+        }
+        //pointsInRoomBound = newpoints;
+    }
 
     private void StartEnemyDialogueIfAny()
     {
@@ -1277,7 +1281,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
             randomPoint = new Vector2(
             Random.Range(minArea.x, maxArea.x),
             Random.Range(minArea.y, maxArea.y));
-        } while (!roomArea.OverlapPoint(randomPoint) && Physics2D.OverlapCircle(randomPoint, 1, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior"))); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
+        } while (!roomArea.OverlapPoint(randomPoint) && Physics2D.OverlapCircle(randomPoint, 1, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior","PassableDeco"))); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
         //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
         return randomPoint;
     }
@@ -1315,7 +1319,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         //return randomPoint;
     }
 
-    private void GetSpawnablePointsInRoom()
+    public void GetSpawnablePointsInRoom()
     {
         pointsInRoomBound = new List<Vector3Int>();
         for (int i = (int)areaminBound.x; i < (int)areamaxBound.x; i++)
@@ -1325,7 +1329,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
                 var possiblepoint = new Vector3Int(i, j);
 
 
-                if (!Physics2D.OverlapCircle((Vector2Int)possiblepoint, 2, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior")))
+                if (!Physics2D.OverlapCircle((Vector2Int)possiblepoint, 2, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior","PassableDeco")))
                 {
                     if (terrainGenerator == null)
                     {
@@ -1360,7 +1364,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
             Random.Range(areaminBound.x + 4f, areamaxBound.x - 4f),
             Random.Range(areaminBound.y + 4f, areamaxBound.y - 4f));
             iterations--;
-        } while (!roomArea.OverlapPoint(randomPoint) && Physics2D.OverlapCircle(randomPoint, size, LayerMask.GetMask("Obstacles")) && iterations > 0); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
+        } while (!roomArea.OverlapPoint(randomPoint) && Physics2D.OverlapCircle(randomPoint, size, LayerMask.GetMask("Obstacles","PassableDeco")) && iterations > 0); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
         //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
         return randomPoint;
 
