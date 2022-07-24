@@ -35,10 +35,19 @@ public class RangedComponent : AttackComponent
         Vector2 dir = (Vector2)(target.transform.position - transform.position).normalized;
         Vector2 pos = selectedAttack._type == RangedData.TYPE.CAST_SELF ? (Vector2) this.transform.position +
             new Vector2(parent.facingRight? selectedAttack.pos.x * -1f : selectedAttack.pos.x, selectedAttack.pos.y)  : (Vector2)this.transform.position + dir;
-        Quaternion quaternion = /*selectedAttack._type == RangedData.TYPE.CAST_SELF ? Quaternion.identity*/ Quaternion.Euler(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+        Quaternion quaternion = selectedAttack.stationary ? Quaternion.identity : Quaternion.Euler(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
         transform.rotation = quaternion;
         SettingUpProjectile(selectedAttack, quaternion, pos);
 
+    }
+
+    public void SpellAttackSelf()
+    {
+        List<RangedData> spells = rangeds.FindAll(ranged => !ranged._type.Equals(EntityData.TYPE.PROJECTILE));
+        int random = Random.Range(0, spells.Count);
+        RangedData selectedAttack = spells[random];
+        SettingUpProjectile(selectedAttack, Quaternion.identity, transform.position);
+        parent.ResetDash(); 
     }
 
     public void SpellAttackMultiple()
@@ -70,7 +79,27 @@ public class RangedComponent : AttackComponent
         StartCoroutine(RadialAttack(selectedAttack));
         
     }
-        
+
+    public void ShootSingleSphereDash1()
+    {
+        List<RangedData> bullets = rangeds.FindAll(ranged => ranged._type.Equals(EntityData.TYPE.PROJECTILE));
+        int random = Random.Range(0, bullets.Count);
+        RangedData selectedAttack = bullets[random];
+        StartCoroutine(RadialAttackSlow(selectedAttack));
+
+    }
+
+    public void ShootSingleSphereDash2()
+    {
+        List<RangedData> bullets = rangeds.FindAll(ranged => ranged._type.Equals(EntityData.TYPE.PROJECTILE));
+        int random = Random.Range(0, bullets.Count);
+        RangedData selectedAttack = bullets[random];
+        StartCoroutine(RadialAttackSlowDoubleProj(selectedAttack));
+
+    }
+
+
+
 
     public void LineProjectile(RangedData selectedAttack)
     {
@@ -103,6 +132,44 @@ public class RangedComponent : AttackComponent
             //yield return new WaitForSeconds(0.2f);
         }
         parent.resetCooldown();
+
+    }
+
+    public IEnumerator RadialAttackSlow(RangedData selectedAttack)
+    {
+        float angle = 0f;
+
+        while (angle < 360f)
+        {
+            Vector2 pos = (Vector2)transform.position;
+            //Vector2 dir = (Vector2)(target.transform.position - transform.position).normalized;
+            //Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg 
+            SettingUpProjectile(selectedAttack, Quaternion.Euler(0, 0, angle), pos);
+            angle += 30f;
+            //yield return null;
+            yield return new WaitForSeconds(0.2f);
+        }
+        parent.ResetDash();
+
+    }
+
+    public IEnumerator RadialAttackSlowDoubleProj(RangedData selectedAttack)
+    {
+        float angle = 0f;
+
+        while (angle < 360f)
+        {
+            Vector2 pos = (Vector2)transform.position;
+            //Vector2 dir = (Vector2)(target.transform.position - transform.position).normalized;
+            //Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg 
+            SettingUpProjectile(selectedAttack, Quaternion.Euler(0, 0, angle), pos);
+            yield return new WaitForSeconds(0.1f);
+            SettingUpProjectile(selectedAttack, Quaternion.Euler(0, 0, angle + 15f), pos);
+            angle += 30f;
+            //yield return null;
+            yield return new WaitForSeconds(0.2f);
+        }
+        parent.ResetDash();
 
     }
 

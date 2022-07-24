@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.Tilemaps;
 
 public class _GameManager : MonoBehaviour, IDataPersistence
 {
@@ -54,6 +55,7 @@ public class _GameManager : MonoBehaviour, IDataPersistence
     private GameData gameData;
     private Player player;
     private bool spawned;
+    private bool painted;
     [SerializeField] private int roomIndex = 1;
     #endregion
 
@@ -228,19 +230,31 @@ public class _GameManager : MonoBehaviour, IDataPersistence
         Debug.Log("Debug Awake");
         allTerrainsGenerated = false;
         GenerateManagers();
-        GenerateMap(-1);
+        //GenerateMap(-1);
     }
 
     private void Start()
     {
+        painted = false;
         //PlayIntroScene();
-        StartCoroutine(SpawnPlayer());
+        //StartCoroutine(SpawnPlayer());
 
     }
     
     private void LateUpdate()
     {
         allTerrainsGenerated = roomManagers.TrueForAll(room => room.terrainGenerated);
+        DebugUnwalkableTiles();
+    }
+
+
+    private void DebugUnwalkableTiles()
+    {
+        if (allTerrainsGenerated && !painted)
+        {
+            painted = true;
+            TerrainGenerator.instance.PaintUnwalkableTiles();
+        }
     }
     #endregion
 

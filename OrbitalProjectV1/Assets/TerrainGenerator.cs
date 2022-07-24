@@ -20,14 +20,14 @@ public class TerrainGenerator : MonoBehaviour
     private int height;
 
     [SerializeField]
-    private Tilemap terrainTilemap,terrainWallTilemap, groundDecoTilemap, wallTilemap, outerwallTilemap, kruskalVisualizer;
+    private Tilemap terrainTilemap,terrainWallTilemap, groundDecoTilemap, wallTilemap, outerwallTilemap, kruskalVisualizer, unwalkableTilemap;
 
     [SerializeField]
     private TileBase horizwall, vertwall, luwall, ldwall, ruwall, rdwall, allardwall, topwall,bottomwall, leftwall, rightwall,
         lucorner,rucorner, ldcorner, rdcorner;
 
     [SerializeField]
-    private TileBase terraintile, grassTile, kruskalTile;
+    private TileBase terraintile, grassTile, kruskalTile, unwalkableTile;
 
     [SerializeField]
     private TileBase[] terrainInteriorDecorations, terrainExteriorDecorations;
@@ -383,7 +383,7 @@ public class TerrainGenerator : MonoBehaviour
                 }
             } else
             {
-                
+                unWalkableTiles.Add(vec);
                 terrainWallTilemap.SetTile(vec, terraintile);
                 
                 
@@ -393,6 +393,7 @@ public class TerrainGenerator : MonoBehaviour
         foreach(Vector3Int vec in changedTiles)
         {
             map[vec] = 1;
+            unWalkableTiles.Add(vec);
         }
     }
 
@@ -721,6 +722,15 @@ public class TerrainGenerator : MonoBehaviour
         }
 
         return map;
+    }
+
+    //for debugging
+    public void PaintUnwalkableTiles()
+    {
+        foreach(Vector3Int vec in unWalkableTiles)
+        {
+            unwalkableTilemap.SetTile(vec, unwalkableTile);
+        }
     }
 
     #endregion

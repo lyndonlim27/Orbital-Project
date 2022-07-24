@@ -88,21 +88,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0
-    functionName: MoveBy
-    data: 1:1
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.6666667
-    functionName: MoveBy
-    data: 1:-1
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 1.25
-    functionName: ResetDash
+    functionName: SpellAttackSingle
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

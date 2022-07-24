@@ -16,8 +16,9 @@ public abstract class AttackComponent : MonoBehaviour
 
     protected virtual void Awake()
     {
-        target = GameObject.FindObjectOfType<Player>();
+        
         poolManager = FindObjectOfType<PoolManager>(true);
+        target = FindObjectOfType<Player>(true);
         detectionScript = GetComponent<DetectionScript>();
         parent = transform.parent.GetComponent<EnemyBehaviour>();
         if (parent != null)
@@ -25,6 +26,11 @@ public abstract class AttackComponent : MonoBehaviour
             enemyData = parent.enemyData;
         }
 
+    }
+    protected void Start()
+    {
+        poolManager = PoolManager.instance;
+        target = Player.instance;
     }
 
     void OnDrawGizmos()

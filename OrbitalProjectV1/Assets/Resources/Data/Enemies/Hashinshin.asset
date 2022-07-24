@@ -44,7 +44,7 @@ MonoBehaviour:
   itemSprites: []
   description: 
   rangedData: {fileID: 0}
-  damageValue: 1
+  damageValue: 3
   moveSpeed: 4
   chaseSpeed: 5
   attackRange: 1
@@ -57,19 +57,20 @@ MonoBehaviour:
   - Melee4
   - Melee5
   defends:
-  - Dash
+  - Dashes
   - Jump
-  - Def
   rangedtriggers: []
   dashattacks: []
-  rangedDatas: []
-  bossdamageprops: []
+  rangedDatas:
+  - {fileID: 11400000, guid: 15f219481d3cf46ddbb622ba588395e6, type: 2}
+  bossdamageprops:
+  - {fileID: 11400000, guid: 256b72be89fb647c684fd03ae5b4de0f, type: 2}
   bossSummonprops: []
   bossdefenceprops: []
   animatorname: AC_Hashinshin
   words: 100
   rangedcooldown: 15
-  stage2: 0
+  stage2: 1
   healStage: 0
   enragedColor: {r: 0, g: 0, b: 0, a: 0}
   dashoffset: 0

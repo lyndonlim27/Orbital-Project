@@ -41,7 +41,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     }
     public ROOMTYPE roomtype;
-    protected AstarPath astarPath;
+    public AstarPath astarPath { get; private set; }
 
     /**
      * Data.
@@ -49,6 +49,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     public bool terrainGenerated;
     private TerrainGenerator terrainGenerator;
+    private List<Vector3Int> pointsInRoomBound;
     #endregion
 
     #region EntityBehaviours_VAR
@@ -150,7 +151,10 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         this.areaminBound = roomArea.bounds.min;
         this.areamaxBound = roomArea.bounds.max;
         terrainGenerated = false;
+        terrainGenerator = TerrainGenerator.instance;
         LightUpLights();
+        
+
     }
 
     private void LightUpLights()
@@ -169,6 +173,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     protected void OnDisable()
     {
         //UnlockDoorsOnThisLevel();
+        DeActivateAStar();
     }
 
     protected virtual void Update()
@@ -180,6 +185,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
             if (_collider != null)
             {
                 activated = true;
+                GetSpawnablePointsInRoom();
                 InitializeAStar();
                 SettingDialogueMgr();
                 SettingUpAudio();
@@ -192,6 +198,29 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
         conditionSize = conditions.Count;
     }
+
+    //private void UpdateSpawnablePoints()
+    //{
+    //    List<Vector3Int> newpoints = new List<Vector3Int>(pointsInRoomBound);
+    //    foreach (Vector3Int possiblepoint in pointsInRoomBound)
+    //    {
+    //        if (Physics2D.OverlapCircle((Vector2Int)possiblepoint, 2, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior")))
+    //        {
+    //            newpoints.Remove(possiblepoint);
+
+    //        }
+    //        else if (terrainGenerator != null)
+    //        {
+
+    //            if (terrainGenerator.unWalkableTiles.Contains(possiblepoint))
+    //            {
+    //                newpoints.Remove(possiblepoint);
+    //            }
+
+    //        }
+    //    }
+    //    //pointsInRoomBound = newpoints;
+    //}
 
     private void StartEnemyDialogueIfAny()
     {
@@ -314,7 +343,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         {
             return;
         }
-        gameObject.AddComponent<AstarPath>();
+        astarPath = gameObject.AddComponent<AstarPath>();
         AstarData astarData = AstarPath.active.data;
         GridGraph gg = astarData.AddGraph(typeof(GridGraph)) as GridGraph;
         gg.center = transform.position;
@@ -411,7 +440,14 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
                 if (_item.multispawns)
                 {
-                    InstantiateMultiPosition(_item);
+                    if (_item.random)
+                    {
+                        InstantiateMultiPositionRandom(_item);
+                    } else
+                    {
+                        InstantiateMultiPosition(_item);
+                    }
+                    
                 }
                 else
                 {
@@ -467,7 +503,8 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
      */
     public void InstantiateEntity(EntityData data)
     {
-        Vector2 pos = data.random ? GetRandomObjectPointGivenSize(data.sprite.bounds.size.magnitude) : data.pos;
+        //Vector2 pos = data.random ? GetRandomObjectPointGivenSize(data.sprite.bounds.size.magnitude) : data.pos;
+        Vector2 pos = data.random ? GetRandomObjectPoint() : data.pos;
         EntityBehaviour entity = poolManager.GetObject(data._type);
         InitializeEntity(data, pos, entity);
 
@@ -502,6 +539,55 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
                 points = pattern.Pattern3();
                 break;
         }
+
+        //points.Sort();
+        if (item.staggered)
+        {
+            StartCoroutine(SpawnStaggered(points, item));
+        }
+        else
+        {
+            SpawnInstant(points, item);
+        }
+
+
+    }
+
+    /**
+   * Instantiate MultiplePositionalsRandom.
+   */
+    protected void InstantiateMultiPositionRandom(EntityData item)
+    {
+        List<Vector2> points = new List<Vector2>();
+        int rand = Random.Range(25, 35);
+        for (int i = 0; i < rand; i++)
+        {
+            points.Add((Vector2) GetRandomObjectPoint());
+        }
+        //points.Sort();
+        //Patterns pattern = Patterns.of(points[0],points[rand-1]);
+        //switch (item.pattern)
+        //{
+        //    default:
+        //    case EntityData.PATTERN.BOX_LINE:
+        //        points = pattern.Box();
+        //        break;
+        //    case EntityData.PATTERN.CROSS:
+        //        points = pattern.Cross();
+        //        break;
+        //    case EntityData.PATTERN.SIMPLE_DIAG:
+        //        points = pattern.Diagonal();
+        //        break;
+        //    case EntityData.PATTERN.PATTERN1:
+        //        points = pattern.Pattern1();
+        //        break;
+        //    case EntityData.PATTERN.PATTERN2:
+        //        points = pattern.Pattern2();
+        //        break;
+        //    case EntityData.PATTERN.PATTERN3:
+        //        points = pattern.Pattern3();
+        //        break;
+        //}
 
         //points.Sort();
         if (item.staggered)
@@ -936,8 +1022,8 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
             }
             DisableTrapBehaviour();
             pointToObjective();
-            SpawnPortal();
-            DeActivateAStar();
+            //SpawnPortal();
+            
             if (textDescription.isActiveAndEnabled)
             {
                 textDescription.StartDescription("You hear a loud creak..");
@@ -1184,6 +1270,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
      */
     public Vector2 GetRandomPoint(Vector2 minArea, Vector2 maxArea)
     {
+        
         Vector2 randomPoint;
         do
         {
@@ -1203,15 +1290,60 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
      */
     public Vector2 GetRandomObjectPoint()
     {
-        Vector2 randomPoint;
-        do
+        if (pointsInRoomBound.Count == 0)
         {
-            randomPoint = new Vector2(
-            Random.Range(areaminBound.x, areamaxBound.x),
-            Random.Range(areaminBound.y, areamaxBound.y));
-        } while (!roomArea.OverlapPoint(randomPoint) || Physics2D.OverlapCircle(randomPoint, 1, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior")) || terrainGenerator.unWalkableTiles.Contains(new Vector3Int((int)randomPoint.x,(int)randomPoint.y))); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
-        //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
-        return randomPoint;
+            Debug.Log("Not enough points");
+            return Vector2.zero;
+        }
+        Vector3Int randomPoint = pointsInRoomBound[Random.Range(0, pointsInRoomBound.Count)];
+        pointsInRoomBound.Remove(randomPoint);
+        return (Vector2Int) randomPoint;
+        //Vector2 randomPoint;
+        //int iterations = 1000;
+        //Debug.Log(terrainGenerator);
+        ////not sure if using randompoint will be computationally cheaper than getting storing all positions of room and filtering out walkable areas. 
+        //do
+        //{
+        //    randomPoint = new Vector2(
+        //    Random.Range(areaminBound.x, areamaxBound.x),
+        //    Random.Range(areaminBound.y, areamaxBound.y));
+        //    Debug.Log(terrainGenerator.unWalkableTiles.Contains(new Vector2(randomPoint.x,randomPoint.y)));
+        //} while (!roomArea.OverlapPoint(randomPoint)
+        //|| Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior"))
+        //|| terrainGenerator == null ? false : terrainGenerator.unWalkableTiles.Contains(new Vector3Int((int)randomPoint.x,(int)randomPoint.y))); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
+        ////} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
+        //return randomPoint;
+    }
+
+    private void GetSpawnablePointsInRoom()
+    {
+        pointsInRoomBound = new List<Vector3Int>();
+        for (int i = (int)areaminBound.x; i < (int)areamaxBound.x; i++)
+        {
+            for (int j = (int)areaminBound.y; j < (int)areamaxBound.y; j++)
+            {
+                var possiblepoint = new Vector3Int(i, j);
+
+
+                if (!Physics2D.OverlapCircle((Vector2Int)possiblepoint, 2, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior")))
+                {
+                    if (terrainGenerator == null)
+                    {
+                        pointsInRoomBound.Add(possiblepoint);
+
+                    } else
+                    {
+                        if (!terrainGenerator.unWalkableTiles.Contains(possiblepoint))
+                        {
+                            pointsInRoomBound.Add(possiblepoint);
+                        }
+
+                    }
+                }
+
+            }
+
+        }
     }
 
 
@@ -1220,7 +1352,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     */
     public Vector2 GetRandomObjectPointGivenSize(float size)
     {
-        Vector2 randomPoint = Vector2.zero;
+        Vector2 randomPoint;
         int iterations = 1000;
         do
         {
@@ -1231,6 +1363,23 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         } while (!roomArea.OverlapPoint(randomPoint) && Physics2D.OverlapCircle(randomPoint, size, LayerMask.GetMask("Obstacles")) && iterations > 0); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
         //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
         return randomPoint;
+
+        //not sure if using randompoint will be computationally cheaper than getting storing all positions of room and filtering out walkable areas. 
+        //Vector3Int randomPoint;
+
+        //do
+        //{
+        //    randomPoint = pointsInRoomBound[Random.Range(0, pointsInRoomBound.Count)];
+        //} while (Physics2D.OverlapCircle((Vector2Int) randomPoint, (int) size, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior"))); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
+        ////} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
+        //if (randomPoint == Vector3Int.zero)
+        //{
+        //    throw new UnityException("No randompoints found");
+        //} else
+        //{
+        //    pointsInRoomBound.Remove(randomPoint);
+        //    return (Vector2Int) randomPoint;
+        //}
     }
 
     /**
@@ -1238,6 +1387,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
      */
     public Vector2Int GetRandomTilePointGivenPoints(Vector2Int minArea, Vector2Int maxArea, bool insideArea, LayerMask layerMask)
     {
+
         Vector2Int randomPoint;
         do
         {
@@ -1247,6 +1397,20 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         } while (insideArea ? !Physics2D.OverlapPoint(randomPoint, layerMask) : Physics2D.OverlapPoint(randomPoint, layerMask));
         //} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
         return randomPoint;
+        //do
+        //{
+        //    randomPoint =  pointsInRoomBound[Random.Range(0, pointsInRoomBound.Count)];
+        //} while (insideArea ? !Physics2D.OverlapPoint((Vector2Int) randomPoint, layerMask) : Physics2D.OverlapPoint((Vector2Int) randomPoint, layerMask)); //&& !Physics2D.OverlapCircle(randomPoint, 2, LayerMask.GetMask("Obstacles"))
+        ////} while (!Physics2D.OverlapCircle(randomPoint, 1, layerMask));
+        //if (randomPoint == Vector3Int.zero)
+        //{
+        //    throw new UnityException("No randompoints found");
+        //}
+        //else
+        //{
+        //    pointsInRoomBound.Remove(randomPoint);
+        //    return (Vector2Int)randomPoint;
+        //}
     }
 
 

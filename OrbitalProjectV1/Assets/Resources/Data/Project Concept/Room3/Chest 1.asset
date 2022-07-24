@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10a1c4479d5574dac908b62726c971cb, type: 3}
+  m_Name: Chest 1
+  m_EditorClassIdentifier: 
+  _name: open
+  minDist: 3
+  sprite: {fileID: 1533358200, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
+  pattern: 0
+  condition: 1
+  _type: 4
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
+  random: 0
+  pos: {x: -25.81, y: 33.55}
+  damageFlicker: {fileID: 0}
+  spawnAtStart: 1
+  scale: 1
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 0
+  NotURP: 1
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios: []
+  itemTextDatas:
+  - {fileID: 11400000, guid: b4b9eec4d520d49f6988182cfc3a23c7, type: 2}
+  ac_name: Chest
+  _trigger: Open
+  item_type: 2
+  secondarysprite: {fileID: 0}
+  itemSprites:
+  - {fileID: 46273474, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
+  - {fileID: 285533140, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
+  - {fileID: 1533358200, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
+  - {fileID: -1034501460, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
+  - {fileID: -332629952, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
+  - {fileID: -630356809, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
+  - {fileID: 1344394444, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
+  - {fileID: -43312740, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
+  - {fileID: -368603544, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
+  - {fileID: 1276740830, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
+  - {fileID: 1876490253, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
+  - {fileID: 54691805, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
+  - {fileID: 2005291930, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
+  - {fileID: 1834389494, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
+  - {fileID: 1616055449, guid: b4fd67289bb924463ae6348b3fa593fa, type: 3}
+  description: 
+  rangedData: {fileID: 0}

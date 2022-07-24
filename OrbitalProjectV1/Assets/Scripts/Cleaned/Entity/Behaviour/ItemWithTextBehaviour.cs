@@ -261,7 +261,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 break;
             case ItemWithTextData.ITEM_TYPE.WEAPON:
                 _rb.bodyType = RigidbodyType2D.Kinematic;
-                light2D.enabled = true;
+                light2D.enabled = SceneManager.GetActiveScene().name == "TutorialLevel" ? false : true;
                 weaponDataDisplay.gameObject.SetActive(true);
                 weaponDataDisplay.SetWeaponPickUp(data.rangedData);
                 weaponDataDisplay.SetCurrWeapon(player.GetWeaponData());
@@ -643,7 +643,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
         {
             return;
         }
-        float rand2 = Random.value;
+        float rand2 = data.itemTextDatas.Length == 1? 1 : Random.value;
         if (rand2 >= 0.4f)
         {
             int rand = Random.Range(0, data.itemTextDatas.Length);

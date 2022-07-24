@@ -51,8 +51,12 @@ public class DoorBehaviour : EntityBehaviour
         unlocked = false;
         removed = false;
         gridsHolder = GridsHolder.instance;
-        innerWallTilemap = gridsHolder.GetTilemap("Wall");
-        outerWallTilemap = gridsHolder.GetTilemap("Outerwall");
+        if (gridsHolder != null)
+        {
+            innerWallTilemap = gridsHolder.GetTilemap("Wall");
+            outerWallTilemap = gridsHolder.GetTilemap("Outerwall");
+        }
+        
 
     }
 

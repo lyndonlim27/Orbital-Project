@@ -181,12 +181,38 @@ public class EnemyBehaviour : ItemWithTextBehaviour
 
     private void DashToEnemy()
     {
-        if (Dashcooldown < 0 && !inAnimation)
+        if (Dashcooldown < 0 && !inAnimation && currentRoom.GetSpawnAreaBound().Contains(player.transform.position))
         {
+            inAnimation = true;
             _transform.position = player.transform.position + Random.insideUnitSphere;
-            animator.SetTrigger(enemyData.defends[Random.Range(0, enemyData.defends.Count)]);
-            ResetDash();
+            var selecteddash = enemyData.defends[Random.Range(0, enemyData.defends.Count)];
+            animator.SetTrigger(selecteddash);
+            if (enemyData.rangedDatas != null)
+            {
+                ranged.gameObject.SetActive(true);
+                ShootAllAround(selecteddash);
+            } else
+            {
+                ResetDash();
+            }
+            
         }
+    }
+
+    public void ShootAllAround(string trigger)
+    {
+        if (trigger == "Dash")
+        {
+            ranged.ShootSingleSphereDash1();
+        } else if (insideStage2 && trigger == "Dash")
+        {
+            ranged.ShootSingleSphereDash2();
+        } else
+        {
+            ResetDash();
+            animator.SetTrigger(enemyData.meleetriggers[Random.Range(0, enemyData.meleetriggers.Count)]);
+        }
+        
     }
 
     /**
@@ -542,9 +568,15 @@ public class EnemyBehaviour : ItemWithTextBehaviour
      */
     public void MoveToTarget(Player player)
     {
+        if (currentRoom.astarPath == null)
+        {
+            return;
+        }
         AStarMove(player.transform.position, enemyData.chaseSpeed);
         //transform.position = Vector3.MoveTowards(transform.position,player.transform.position,steps);
         FlipFace(player.transform.position);
+
+
     }
 
     /**
@@ -552,6 +584,10 @@ public class EnemyBehaviour : ItemWithTextBehaviour
      */
     public void moveToRoam()
     {
+        if (currentRoom.astarPath == null)
+        {
+            return;
+        }
         if (!reachedEndOfPath)
         {
             if (body.IsTouchingLayers(LayerMask.GetMask("Obstacles", "enemy", "door")))
@@ -568,7 +604,11 @@ public class EnemyBehaviour : ItemWithTextBehaviour
      */
     public void MoveToStartPos()
     {
-        if (body.IsTouchingLayers(LayerMask.GetMask("Obstacles", "enemy", "door", "Trap")))
+        if (currentRoom.astarPath == null)
+        {
+            return;
+        }
+        if (body.IsTouchingLayers(LayerMask.GetMask("Obstacles", "enemy", "Doors", "Traps")))
         {
             startingpos = currentRoom.GetRandomObjectPoint();
         }
@@ -860,7 +900,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     {
         // use enemydata.rangedcooldown, nexttime then i add numbers to the enemy datas. for now just use 10.
         this.cooldown = enemyData.rangedcooldown;
-        inAnimation = false;
+        //inAnimation = false;
         stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
 
     }
@@ -928,6 +968,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
             case ANIMATION_CODE.CAST_END:
                 UnlockMovement();
                 resetCooldown();
+                inAnimation = false;
                 break;
             case ANIMATION_CODE.WEAP_TRIGGER:
                 WeapAttack();
@@ -982,6 +1023,11 @@ public class EnemyBehaviour : ItemWithTextBehaviour
             ranged.SpellAttackSingle();
         }
 
+    }
+
+    public void SpellAttackSingle()
+    {
+        ranged.SpellAttackSelf();
     }
 
     /**
@@ -1210,6 +1256,8 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         FlipFace(player.transform.position);
         Vector2 vectorToPlayer = (player.transform.position - transform.position).normalized;
         rb.AddForce(vectorToPlayer * 1000f, ForceMode2D.Impulse);
+
+        
 
     }
 

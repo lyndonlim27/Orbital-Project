@@ -24,7 +24,7 @@ public class PuzzleRoom_Mgr : RoomManager
     {
         base.Awake();
         //puzzle_type = (PUZZLE_TYPE)Random.Range(0, (int) PUZZLE_TYPE.COUNT);
-        puzzle_type = PUZZLE_TYPE.PRESSURE;
+        puzzle_type = PUZZLE_TYPE.LASER;
     }
     protected override void Start()
     {

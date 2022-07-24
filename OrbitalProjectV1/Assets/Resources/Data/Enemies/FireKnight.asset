@@ -62,14 +62,16 @@ MonoBehaviour:
   - Jump
   rangedtriggers: []
   dashattacks: []
-  rangedDatas: []
-  bossdamageprops: []
+  rangedDatas:
+  - {fileID: 11400000, guid: f3e3a7428ed6a44f7a571352d7275f5a, type: 2}
+  bossdamageprops:
+  - {fileID: 11400000, guid: bad760e90df3d409599f37d23e08ad74, type: 2}
   bossSummonprops: []
   bossdefenceprops: []
   animatorname: AC_FireKnight
   words: 100
   rangedcooldown: 15
-  stage2: 0
+  stage2: 1
   healStage: 0
   enragedColor: {r: 0, g: 0, b: 0, a: 0}
   dashoffset: 3

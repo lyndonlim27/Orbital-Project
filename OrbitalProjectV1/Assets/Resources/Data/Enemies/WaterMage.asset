@@ -55,22 +55,24 @@ MonoBehaviour:
   - Melee2
   - Melee3
   - Melee4
+  - Ulti
   defends:
   - Jump
   - Dash
-  rangedtriggers:
-  - Wave
-  - Ulti
+  - Defend
+  rangedtriggers: []
   dashattacks: []
   rangedDatas:
   - {fileID: 11400000, guid: bf8a31cfe9c08424492f57a1db7b243f, type: 2}
-  bossdamageprops: []
+  - {fileID: 11400000, guid: 0e3b9ff1477124f9dbedfe773f489b6a, type: 2}
+  bossdamageprops:
+  - {fileID: 11400000, guid: 1f6ac4f6e8f99449a9c557e88e414291, type: 2}
   bossSummonprops: []
   bossdefenceprops: []
   animatorname: AC_WaterMage
-  words: 1
+  words: 100
   rangedcooldown: 10
-  stage2: 0
+  stage2: 1
   healStage: 0
   enragedColor: {r: 0, g: 0, b: 0, a: 0}
   dashoffset: 0

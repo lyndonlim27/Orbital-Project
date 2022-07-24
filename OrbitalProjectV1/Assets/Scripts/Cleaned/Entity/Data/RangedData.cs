@@ -10,6 +10,7 @@ public class RangedData : EntityData
     public string trigger;
     public bool followTarget;
     public bool loop;
+    public bool stationary;
     public string impact_trigger;
     [TextArea]
     public string weapdescription;

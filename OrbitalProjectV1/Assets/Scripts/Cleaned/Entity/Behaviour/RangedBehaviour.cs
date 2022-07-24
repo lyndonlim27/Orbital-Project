@@ -246,15 +246,15 @@ public class RangedBehaviour : EntityBehaviour, Freezable
      */
     public override void Defeated()
     {
-        if (_firer != null)
-        {
-            EnemyBehaviour enemy = _firer.GetComponent<EnemyBehaviour>();
-            if (!enemy.insideStage2 && enemy.currstate != StateMachine.STATE.RECOVERY)
-            {
-                enemy.resetCooldown();
-            }
+        //if (_firer != null)
+        //{
+        //    EnemyBehaviour enemy = _firer.GetComponent<EnemyBehaviour>();
+        //    if (!enemy.insideStage2 && enemy.currstate != StateMachine.STATE.RECOVERY)
+        //    {
+        //        enemy.resetCooldown();
+        //    }
       
-        }
+        //}
         poolManager.ReleaseObject(this);
 
     }

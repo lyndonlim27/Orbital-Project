@@ -47,17 +47,21 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
 
     private void DestroyAnyObstacles()
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 3, LayerMask.GetMask("Obstacles"));
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 2, LayerMask.GetMask("Obstacles"));
         foreach(Collider2D col in colliders)
         {
             if (col.CompareTag("Tiles"))
             {
-                //col.GetComponent<Tilemap>().SetTile(Vector3Int.RoundToInt(col.transform.position), null);
-                GridsHolder.instance.GetTilemap("GroundDecoTilemap").SetTile(Vector3Int.RoundToInt(col.transform.position), null);
-                GridsHolder.instance.GetTilemap("ExteriorTilemap").SetTile(Vector3Int.RoundToInt(col.transform.position), null);
-                GridsHolder.instance.GetTilemap("InteriorTilemap").SetTile(Vector3Int.RoundToInt(col.transform.position), null);
-                GridsHolder.instance.GetTilemap("NearWallTilemap").SetTile(Vector3Int.RoundToInt(col.transform.position), null);
-                DestroyTree(col);
+                if (GridsHolder.instance != null)
+                {
+                    //col.GetComponent<Tilemap>().SetTile(Vector3Int.RoundToInt(col.transform.position), null);
+                    GridsHolder.instance.GetTilemap("GroundDecoTilemap").SetTile(Vector3Int.RoundToInt(col.transform.position), null);
+                    GridsHolder.instance.GetTilemap("ExteriorTilemap").SetTile(Vector3Int.RoundToInt(col.transform.position), null);
+                    GridsHolder.instance.GetTilemap("InteriorTilemap").SetTile(Vector3Int.RoundToInt(col.transform.position), null);
+                    GridsHolder.instance.GetTilemap("NearWallTilemap").SetTile(Vector3Int.RoundToInt(col.transform.position), null);
+                    DestroyTree(col);
+                }
+                
             }
             else
             {
