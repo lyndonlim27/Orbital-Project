@@ -314,7 +314,9 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
     //When current health reaches 0, character dies and fade out
     public override void Defeated()
     {
-        StartCoroutine("FadeOut");
+        //StartCoroutine("FadeOut");
+        _gameOver.Setup();
+        this.gameObject.SetActive(false);
     }
 
     public override void SetEntityStats(EntityData stats)

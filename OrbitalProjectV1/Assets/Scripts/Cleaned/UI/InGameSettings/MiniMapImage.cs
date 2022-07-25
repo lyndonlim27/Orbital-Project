@@ -46,7 +46,7 @@ public class MiniMapImage : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     private void Zoom()
     {
-        offset = 2 * Input.GetAxis("Mouse ScrollWheel");
+        offset = 4 * Input.GetAxis("Mouse ScrollWheel");
         _miniMapCamera.orthographicSize -= offset;
         foreach(Transform minimapIcon in minimapIcons)
         {

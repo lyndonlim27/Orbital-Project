@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class MiniMap : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class MiniMap : MonoBehaviour
     {
         CheckSize();
     }
+
 
     private void CheckSize()
     {

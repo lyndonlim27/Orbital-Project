@@ -62,8 +62,11 @@ public class DamageApplier : MonoBehaviour
         {
 
             Vector2 direction = ((Vector2)target.transform.position - (Vector2)transform.position).normalized;
-            target.GetComponent<Rigidbody2D>().AddForce(direction * attackSpeed, ForceMode2D.Impulse);
-            target.TakeDamage(damage);
+            if (!target.IsDead())
+            {
+                target.GetComponent<Rigidbody2D>().AddForce(direction * attackSpeed, ForceMode2D.Impulse);
+                target.TakeDamage(damage);
+            }
             if (meleeAudio != null)
             {
                 if (!inAudio && parent.inAnimation)

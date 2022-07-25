@@ -245,6 +245,16 @@ public class _GameManager : MonoBehaviour, IDataPersistence
         _CineCamera.GetComponent<CinemachineVirtualCamera>().Follow = player;
     }
 
+   //public void createcam()
+   // {
+   //     GameObject _CineCamera = GameObject.Find("CineCamera(Clone)");
+   //     if (_CineCamera == null)
+   //     {
+   //         _CineCamera = Instantiate(CineCamera);
+   //     }
+   //     _CineCamera.transform.SetParent(transform);
+   // }
+
 
 
 
