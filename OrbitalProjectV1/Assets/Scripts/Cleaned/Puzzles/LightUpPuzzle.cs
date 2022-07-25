@@ -22,7 +22,6 @@ public class LightUpPuzzle : MonoBehaviour, Puzzle
     private void CreateLightSwitchSystem()
     {
         GameObject lightSwitchSystemPrefab = Resources.Load("PuzzlePrefab/LightSwitchSystem") as GameObject;
-        Debug.Log(lightSwitchSystemPrefab);
         GameObject go = Instantiate(lightSwitchSystemPrefab) as GameObject;
         go.transform.SetParent(currRoom.transform);
         lightSwitchSystem = go.GetComponent<LightSwitchSystem>();

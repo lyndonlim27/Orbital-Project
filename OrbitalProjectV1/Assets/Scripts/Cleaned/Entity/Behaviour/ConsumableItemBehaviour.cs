@@ -26,6 +26,7 @@ public class ConsumableItemBehaviour : EntityBehaviour
     private Animator animator;
     private Transform target;
     private Transform _tf;
+    private Collider2D col;
 
     /**
      * Bounce Physics.
@@ -46,6 +47,7 @@ public class ConsumableItemBehaviour : EntityBehaviour
         animator.keepAnimatorControllerStateOnDisable = false;
         _tf = GetComponent<Transform>();
         wordStorageManager = FindObjectOfType<WordStorageManagerUI>(true);
+        col = GetComponent<Collider2D>();
     }
 
     /**
@@ -111,6 +113,7 @@ public class ConsumableItemBehaviour : EntityBehaviour
         animator.Play(_itemData._name);
         finishedBouncing = false;
         GetComponent<TrailRenderer>().startColor = _itemData.defaultcolor;
+        col.enabled = true;
         SetUpDropArea();
     }
 
@@ -180,6 +183,7 @@ public class ConsumableItemBehaviour : EntityBehaviour
                     player.AddFragments();
                     break;
             }
+            col.enabled = false;
             StartCoroutine(WaitForAwhileBeforeRelease());
 
         }

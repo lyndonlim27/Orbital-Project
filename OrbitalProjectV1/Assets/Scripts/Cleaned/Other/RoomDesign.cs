@@ -149,6 +149,11 @@ public class RoomDesign : MonoBehaviour
         }
 
     }
+
+    public void SetSeed(int currentSeed)
+    {
+        Random.InitState(currentSeed);
+    }
     #endregion
 
     #region InternalMethods

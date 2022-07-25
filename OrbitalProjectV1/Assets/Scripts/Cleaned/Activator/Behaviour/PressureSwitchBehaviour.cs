@@ -42,41 +42,60 @@ public class PressureSwitchBehaviour : ActivatorBehaviour
         SettingUpColliders();
         CheckForURP();
         spriteRenderer.sortingOrder = 1;
-        DestroyAnyObstacles();
+        DestroyAnyObstacles(Vector3Int.RoundToInt(transform.position));
     }
 
-    private void DestroyAnyObstacles()
+    public void DestroyAnyObstacles(Vector3Int currpost)
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 2, LayerMask.GetMask("Obstacles","PassableDeco"));
-        foreach(Collider2D col in colliders)
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 2, LayerMask.GetMask("Obstacles", "PassableDeco"));
+        foreach (Collider2D col in colliders)
         {
+
+            if (col.transform == transform)
+            {
+                continue;
+            }
             if (col.CompareTag("Tiles"))
             {
-                if (GridsHolder.instance != null)
+                var destructable = col.GetComponent<DestructableTilemap>();
+                if (destructable == null)
                 {
-                    //col.GetComponent<Tilemap>().SetTile(Vector3Int.RoundToInt(col.transform.position), null);
-                    GridsHolder.instance.GetTilemap("GroundDecoTilemap").SetTile(Vector3Int.RoundToInt(col.transform.position), null);
-                    GridsHolder.instance.GetTilemap("ExteriorTilemap").SetTile(Vector3Int.RoundToInt(col.transform.position), null);
-                    GridsHolder.instance.GetTilemap("InteriorTilemap").SetTile(Vector3Int.RoundToInt(col.transform.position), null);
-                    GridsHolder.instance.GetTilemap("NearWallTilemap").SetTile(Vector3Int.RoundToInt(col.transform.position), null);
-                    DestroyTree(col);
+                    return;
                 }
-                
+                else
+                {
+                    destructable.DestroyTile(Vector3Int.RoundToInt(currpost));
+                }
+                //if (GridsHolder.instance != null)
+                //{
+                //    //Debug.Log(GridsHolder.instance.GetTilemap("GroundDecoTilemap").HasTile(currpost));
+                //    //Tilemap tilemap = GridsHolder.instance.GetTilemap("GroundDecoTilemap");
+                //    //col.GetComponent<Tilemap>().SetTile(Vector3Int.RoundToInt(col.transform.position), null);
+                //    GridsHolder.instance.GetTilemap("GroundDecoTilemap").SetTile(currpost, null);
+                //    GridsHolder.instance.GetTilemap("ExteriorTilemap").SetTile(currpost, null);
+                //    GridsHolder.instance.GetTilemap("InteriorTilemap").SetTile(currpost, null);
+                //    GridsHolder.instance.GetTilemap("NearWallTilemap").SetTile(currpost, null);
+                //    DestroyTree(currpost);
+                //}
+
             }
             else
-            { 
+            {
                 Destroy(col.gameObject);
             }
         }
     }
 
-    private static void DestroyTree(Collider2D col)
+    protected void DestroyTree(Vector3Int currpost)
     {
-        GridsHolder.instance.GetTilemap("TreesBottomLayer").SetTile(Vector3Int.RoundToInt(col.transform.position), null);
-        GridsHolder.instance.GetTilemap("TreesTopLayer1").SetTile(Vector3Int.RoundToInt(col.transform.position) + Vector3Int.up, null);
-        GridsHolder.instance.GetTilemap("TreesTopLayer2").SetTile(Vector3Int.RoundToInt(col.transform.position) + Vector3Int.up, null);
-        GridsHolder.instance.GetTilemap("TreesTopLayer3").SetTile(Vector3Int.RoundToInt(col.transform.position) + Vector3Int.up, null);
+        Tilemap tilemap = GridsHolder.instance.GetTilemap("GroundDecoTilemap");
+        GridsHolder.instance.GetTilemap("TreesBottomLayer").SetTile(tilemap.WorldToCell(currpost + Vector3Int.one), null);
+        GridsHolder.instance.GetTilemap("TreesTopLayer1").SetTile(tilemap.WorldToCell(currpost + Vector3Int.up), null);
+        GridsHolder.instance.GetTilemap("TreesTopLayer2").SetTile(tilemap.WorldToCell(currpost + Vector3Int.up), null);
+        GridsHolder.instance.GetTilemap("TreesTopLayer3").SetTile(tilemap.WorldToCell(currpost + Vector3Int.up), null);
     }
+
+
 
     /**
      * Checking of URP objects.

@@ -102,7 +102,6 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         _manaBar.SetMaxMana(maxMana);
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
-        Debug.Log(_animator);
         _weaponManager = this.gameObject.GetComponentInChildren<WeaponPickup>();
         _currWeapon = _weaponManager.ActiveWeapon().GetComponent<Weapon>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -476,6 +475,25 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
         _currHealth = maxHealth;
         currMana = maxMana;
         currGold = gameData.currGold;
+        _weaponManager.Swap(gameData.currWeapon);
+        _moveSpeed = gameData.moveSpeed;
+        if (gameData.debuffDataName != "")
+        {
+            _debuffBehaviour.ChangeSkill(gameData.debuffDataName);
+        }
+
+        if (gameData.attackDataName != "")
+        {
+            _attackBehaviour.ChangeSkill(gameData.attackDataName);
+        }
+
+        if (gameData.buffDataName != "")
+        {
+            _buffBehaviour.ChangeSkill(gameData.buffDataName);
+        }
+        ranged = gameData.ranged;
+
+
     }
 
     public bool IncreaseMaxHealth()
@@ -548,7 +566,6 @@ public class Player : EntityBehaviour, IDataPersistence, Freezable
 
     public void SwitchBack()
     {
-        Debug.Log(originalWeapon.WeaponName);
         _weaponManager.Swap(originalWeapon.WeaponName);
     }
 

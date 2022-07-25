@@ -41,14 +41,12 @@ public class VideoManager : MonoBehaviour
 
     public void PlayVideo(string currscene)
     {
-        Debug.Log("Entered play");
         StartCoroutine(WaitForVideo(currscene));
     }
 
     private IEnumerator WaitForVideo(string currscene)
     {
         string urllink = "";
-        Debug.Log("entered");
         AudioSource[] audioSources = FindObjectsOfType<AudioSource>();
         foreach (AudioSource audiosource in audioSources)
         {

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public abstract class EntityBehaviour : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public abstract class EntityBehaviour : MonoBehaviour
 
     protected virtual void Awake()
     {
+        poolManager = FindObjectOfType<PoolManager>(true);
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.sortingOrder = 1;
         audioSource = GetComponent<AudioSource>();
@@ -32,10 +34,6 @@ public abstract class EntityBehaviour : MonoBehaviour
    
     }
 
-    protected virtual void Start()
-    {
-        poolManager = PoolManager.instance;
-    }
 
     protected virtual void OnEnable()
     {
@@ -45,6 +43,9 @@ public abstract class EntityBehaviour : MonoBehaviour
         }
         
     }
+
+    
+
 
     public abstract void SetEntityStats(EntityData stats);
 
@@ -93,7 +94,6 @@ public abstract class EntityBehaviour : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
         //this.gameObject.SetActive(false);
-        Debug.Log("This is " + poolManager);
         poolManager.ReleaseObject(this);
     }
 

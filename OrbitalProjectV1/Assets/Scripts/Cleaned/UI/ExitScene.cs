@@ -24,9 +24,13 @@ public class ExitScene : MonoBehaviour
         _loadScene = FindObjectOfType<LoadScene>();
     }
 
-    private void OnTriggerEnter2D()
+    private void OnTriggerEnter2D(Collider2D collider)
     {
-        StartCoroutine(WaitForCutScene());
+        if (collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            StartCoroutine(WaitForCutScene());
+        }
+            
     }
 
     private IEnumerator WaitForCutScene()

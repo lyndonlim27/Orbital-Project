@@ -14,6 +14,7 @@ public class DamageApplier : MonoBehaviour
     protected float attackSpeed;
     protected int damage;
     protected bool damaging;
+    protected Collider2D col;
     [SerializeField] protected bool inAudio;
 
 
@@ -22,6 +23,7 @@ public class DamageApplier : MonoBehaviour
         parent = transform.parent.GetComponent<EntityBehaviour>();
         inAudio = false;
         audioSource = GetComponent<AudioSource>();
+        col = GetComponent<Collider2D>();
     }
 
     //private void OnEnable()
@@ -47,6 +49,13 @@ public class DamageApplier : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //var destruct = collision.GetComponent<DestructableTilemap>();
+        //if (destruct != null)
+        //{
+        //    Debug.Log("Thhis is destructable tilemap" + destruct);
+        //    var collisionPoint = collision.ClosestPoint(transform.position);
+        //    destruct.DestroyTile(Vector3Int.RoundToInt(collisionPoint));
+        //}
 
         Player target = collision.gameObject.GetComponent<Player>();
         if (target != null && parent.inAnimation && !parent.isDead)

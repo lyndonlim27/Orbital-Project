@@ -8,16 +8,23 @@ using System;
 public class MiniMapImage : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     private bool _hovering;
+    public static MiniMapImage instance { get; private set; }
     [SerializeField] private Camera _miniMapCamera;
 
     [SerializeField]
     private float offset;
 
-    [SerializeField]
-    private Transform minimapIcon;
+    public List<Transform> minimapIcons;
 
     private float originalSize;
 
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -41,23 +48,23 @@ public class MiniMapImage : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         offset = 2 * Input.GetAxis("Mouse ScrollWheel");
         _miniMapCamera.orthographicSize -= offset;
-        var scale = minimapIcon.localScale;
-        scale /=  Mathf.Abs(((originalSize + 2*offset)/originalSize));
-        if (scale.x < 5)
+        foreach(Transform minimapIcon in minimapIcons)
         {
-            minimapIcon.localScale = new Vector2(Mathf.Max(scale.x, 5), Mathf.Max(scale.y, 5));
-        } else if (scale.x > 20)
-        {
-            minimapIcon.localScale = new Vector2(Mathf.Min(scale.x, 20), Mathf.Min(scale.y, 20));
-        } else
-        {
-            minimapIcon.localScale = scale;
-        }
-        
-
-
-            
-        
+            var scale = minimapIcon.localScale;
+            scale /= Mathf.Abs(((originalSize + 2 * offset) / originalSize));
+            if (scale.x < 5)
+            {
+                minimapIcon.localScale = new Vector2(Mathf.Max(scale.x, 5), Mathf.Max(scale.y, 5));
+            }
+            else if (scale.x > 20)
+            {
+                minimapIcon.localScale = new Vector2(Mathf.Min(scale.x, 20), Mathf.Min(scale.y, 20));
+            }
+            else
+            {
+                minimapIcon.localScale = scale;
+            }
+        }     
         
     }
 

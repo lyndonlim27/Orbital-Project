@@ -103,8 +103,14 @@ public class TerrainGenerator : MonoBehaviour
 
     }
 
+    public void SetSeed(int seed)
+    {
+        UnityEngine.Random.InitState(seed);
+    }
+
     public void GenerateTerrain(RoomManager currRoom)
     {
+        
         map = GenerateMap(currRoom);
         PaintWalls(map);
         CreateConnections();
@@ -116,6 +122,7 @@ public class TerrainGenerator : MonoBehaviour
 
     public void GenerateTerrainType2(RoomManager currRoom)
     {
+
         map = GenerateMap(currRoom);
         Paint8DirectWalls();
         CreateConnections();
@@ -133,6 +140,11 @@ public class TerrainGenerator : MonoBehaviour
         //FillTerrainLand(currRoom);
 
 
+    }
+
+    public void ClearUnwalkableTiles()
+    {
+        unWalkableTiles = new HashSet<Vector3Int>();
     }
 
     
@@ -602,7 +614,7 @@ public class TerrainGenerator : MonoBehaviour
 
     }
 
-    private void ClearAllTerrainObjects()
+    public void ClearAllTerrainObjects()
     {
         DestroyImmediate(TerrainObjectHolder);
         terrainTilemap.ClearAllTiles();
@@ -1378,7 +1390,6 @@ public class KDTreeImpl
         {
             if (root == null)
             {
-                Debug.Log("No tree found");
                 return null;
             }
 

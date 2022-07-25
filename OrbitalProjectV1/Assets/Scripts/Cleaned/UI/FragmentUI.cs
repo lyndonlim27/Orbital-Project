@@ -7,9 +7,18 @@ using UnityEngine.UI;
 public class FragmentUI : MonoBehaviour
 {
 
+    public static FragmentUI instance { get; private set; }
     private TextMeshProUGUI _text;
     private Image _image;
     // Start is called before the first frame update
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
     void Start()
     {
         _text = GetComponentInChildren<TextMeshProUGUI>();
@@ -28,4 +37,8 @@ public class FragmentUI : MonoBehaviour
         _image.fillAmount = fragments / 5f;
     }
 
+    public bool IsComplete()
+    {
+        return _image.fillAmount == 1;
+    }
 }

@@ -60,8 +60,6 @@ public class GameData
         rooms["HeadQuarters:0"] = 0;
         rooms["Unusual Room:1"] = 0;
         rooms["Training Room:2"] = 0;
-        
-
         alreadyActive = false;
         
     }

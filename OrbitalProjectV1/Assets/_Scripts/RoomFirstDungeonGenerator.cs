@@ -22,8 +22,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     [SerializeField]
     private bool randomWalkRooms = false;
 
-    [Header("Random Seed")]
-    public int currentSeed = -1;
+    
 
     private static List<Vector2Int> exits = new List<Vector2Int>();
     private static HashSet<Vector2Int> seen = new HashSet<Vector2Int>();
@@ -52,6 +51,8 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     [Header("TrapDatas")]
     [SerializeField]
     private TrapData[] trapDatas;
+    [SerializeField]
+    private ItemWithTextData[] monsterTrapData;
 
     [Header("PressureSwitches")]
     [SerializeField]
@@ -65,6 +66,19 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     [SerializeField]
     private ItemWithTextData portal;
 
+    [Header("SavePoints")]
+    [SerializeField]
+    private ItemWithTextData savePoint;
+
+
+    [Header("Audios")]
+    [SerializeField]
+    private List<AudioClip> bossRoomAudios;
+
+    [SerializeField]
+    private List<AudioClip> beforebossRoomAudios;
+
+
     private _GameManager gameManager;
 
 
@@ -72,6 +86,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     {
         int tempSeed = (int)System.DateTime.Now.Ticks;
         Random.InitState(tempSeed);
+        currentSeed = tempSeed;
     }
 
 
@@ -95,6 +110,8 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         CreateRooms();
         ChangeRoomsToBoss();
         ChangeRoom(0, _GameManager.roomManagers, RoomManager.ROOMTYPE.TREASURE_ROOM);
+        EnterScene enterScene = _GameManager.roomManagers[0].gameObject.AddComponent<EnterScene>();
+        enterScene.SetVidName("LastLevelStartScene");
         _GameManager.roomManagers[0].SetUpEntityDatas(RandomizeTreasureDatas());
     }
 
@@ -538,7 +555,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
             case RoomManager.ROOMTYPE.HYBRID_ROOM:
                 var hybridroom = go.AddComponent<HybridRoom_Mgr>();
                 createdroom = hybridroom;
-                createdroom.SetUpEntityDatas(RandomizeEnemyDatas());
+                createdroom.SetUpEntityDatas(monsterTrapData);
                 break;
             
         }
@@ -564,20 +581,17 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     {
         List<RoomManager> rooms = _GameManager.roomManagers;
         int i = bosses.Count;
-        Debug.Log(rooms.Count);
-        Debug.Log(i);
         int breaks = Mathf.CeilToInt((float) rooms.Count / i);
-        Debug.Log(breaks);
         while (i > 0)
         {
             var lowerbound = (int) (Mathf.Max(breaks * (i - 1), 3));
             var upperbound = (int)(Mathf.Min(i * breaks, rooms.Count));
             int rand = Random.Range(lowerbound, upperbound);
-            Debug.Log(rand);
             ChangeRoom(rand, rooms, RoomManager.ROOMTYPE.BOSSROOM);
             if (rand - 1 >= 0)
             {
                 ChangeRoom(rand - 1, rooms, RoomManager.ROOMTYPE.ROOMBEFOREBOSS);
+
             }
             i--;
         }
@@ -615,8 +629,21 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         switch (rOOMTYPE)
         {
             default:
-            case RoomManager.ROOMTYPE.ROOMBEFOREBOSS:
                 newroom = currroomGameObject.AddComponent<TreasureRoom_Mgr>();
+                break;
+            case RoomManager.ROOMTYPE.ROOMBEFOREBOSS:
+                newroom = currroomGameObject.AddComponent<SaveRoom_Mgr>();
+                newroom.SetUpEntityData(savePoint);
+                if (beforebossRoomAudios.Count < 0)
+                {
+                    Debug.LogError("Did not allocate any bosses");
+                } else
+                {
+                    int rand = Random.Range(0, beforebossRoomAudios.Count);
+                    var selectedAudio = beforebossRoomAudios[rand];
+                    newroom.BeforeBossRoomAudio = selectedAudio;
+                    beforebossRoomAudios.Remove(selectedAudio);
+                }
                 break;
             case RoomManager.ROOMTYPE.BOSSROOM:
                 newroom = currroomGameObject.AddComponent<BossRoom_Mgr>();
@@ -626,6 +653,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
                 } else
                 {
                     EnemyData selectedboss = bosses[UnityEngine.Random.Range(0, bosses.Count)];
+                    SetUpBossAudio(newroom, selectedboss);
                     bosses.Remove(selectedboss);
                     newroom.SetUpEntityData(selectedboss);
                 }
@@ -648,6 +676,36 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         newroom.SetUpRoomSize(roomSize);
         _GameManager.roomManagers[index] = newroom;
 
+
+    }
+
+    private void SetUpBossAudio(RoomManager newroom, EnemyData selectedboss)
+    {
+        int index = -1;
+        switch (selectedboss.name)
+        {
+            case "WaterMage":
+                index = 0;
+                break;
+            case "FireKnight":
+                index = 1;
+                break;
+            case "GroundMonk":
+                index = 2;
+                break;
+            case "Hashinshin":
+                index = 3;
+                break;
+            case "BladeKeeper":
+                index = 4;
+                break;
+
+        }
+
+        if (index != -1)
+        {
+            newroom.BossRoomAudio = bossRoomAudios[index];
+        }
 
     }
 

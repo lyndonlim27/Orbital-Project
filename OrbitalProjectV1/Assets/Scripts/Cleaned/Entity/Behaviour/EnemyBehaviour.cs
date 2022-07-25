@@ -136,7 +136,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     {
         if (enemyData.story != null)
         {
-           // FindObjectOfType<DialogueManager>().EnterDialogue(this);
+           DialogueManager.instance.EnterDialogue(this);
         }
     }
 
@@ -610,7 +610,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         }
         if (body.IsTouchingLayers(LayerMask.GetMask("Obstacles", "enemy", "Doors", "Traps","PassableDeco")))
         {
-            startingpos = currentRoom.GetRandomObjectPoint();
+            startingpos = currentRoom.GetRandomPointMovement();
         }
         AStarMove(startingpos, enemyData.moveSpeed);
         FlipFace(startingpos);
@@ -622,7 +622,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     public void getNewRoamPosition()
     {
         //roamPos = new Vector2(Random.Range(-5f, 5f), Random.Range(-5f, 5f));
-        roamPos = this.currentRoom.GetRandomObjectPoint();
+        roamPos = this.currentRoom.GetRandomPointMovement();
 
 
     }

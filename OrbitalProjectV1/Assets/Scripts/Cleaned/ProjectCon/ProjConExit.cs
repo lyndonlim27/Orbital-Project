@@ -31,6 +31,7 @@ public class ProjConExit : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            FindObjectOfType<WeaponPickup>().Swap("Fists");
             //_player.gameObject.SetActive(false);
             _player.GetComponent<SpriteRenderer>().enabled = false;
             _weaponManager.ActiveWeapon().GetComponent<SpriteRenderer>().enabled = false;

@@ -95,8 +95,8 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     #region Audio_VAR
     private GlobalAudioManager globalAudioManager;
-    [SerializeField] protected AudioClip BossRoomAudio;
-    [SerializeField] protected AudioClip BeforeBossRoomAudio;
+    public AudioClip BossRoomAudio;
+    public AudioClip BeforeBossRoomAudio;
     #endregion
 
     #region RoomComponents_VAR
@@ -228,10 +228,8 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
 
     private void StartEnemyDialogueIfAny()
     {
-        Debug.Log(enemies.Count);
         foreach (EnemyBehaviour enemy in enemies)
         {
-            Debug.Log(enemy);
             enemy.StartDialogue();
             
             
@@ -400,13 +398,15 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     /**
      * Spawn Portal at the end of the round.
      */
-    public void SpawnPortal()
+    public IEnumerator SpawnEndCredit(GameObject go)
     {
-        if (portal != null)
+        while (pointsInRoomBound == null)
         {
-            portal.pos = transform.position;
-            InstantiateEntity(portal);
+            yield return null;
         }
+
+        Transform tr = Instantiate(go, GetRandomObjectPoint(), Quaternion.identity, transform).transform;
+        MiniMapImage.instance.minimapIcons.Add(tr.Find("ShipIcon"));
     }
 
 
@@ -790,7 +790,6 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
                 {
                     if (textDescription != null && textDescription.isActiveAndEnabled)
                     {
-                        Debug.Log(textDescription);
                         textDescription.StartDescription(this.name);
 
                     }
@@ -1286,6 +1285,12 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
         return randomPoint;
     }
 
+    public Vector2 GetRandomPointMovement()
+    {
+        Vector3Int randomPoint = pointsInRoomBound[Random.Range(0, pointsInRoomBound.Count)];
+        return (Vector2Int)randomPoint;
+    }
+
     /** 
      * Get a random position inside the room.
      * @param minBound, maxBound
@@ -1299,8 +1304,13 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
             Debug.Log("Not enough points");
             return Vector2.zero;
         }
-        Vector3Int randomPoint = pointsInRoomBound[Random.Range(0, pointsInRoomBound.Count)];
-        pointsInRoomBound.Remove(randomPoint);
+        Vector3Int randomPoint;
+        do
+        {
+           randomPoint = pointsInRoomBound[Random.Range(0, pointsInRoomBound.Count)];
+           pointsInRoomBound.Remove(randomPoint);
+        } while(!roomArea.OverlapPoint((Vector2Int)randomPoint) || Physics2D.OverlapCircle((Vector2Int)randomPoint, 2, LayerMask.GetMask("Obstacles", "HouseExterior", "HouseInterior", "PassableDeco")));
+
         return (Vector2Int) randomPoint;
         //Vector2 randomPoint;
         //int iterations = 1000;

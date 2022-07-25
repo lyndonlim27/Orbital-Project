@@ -212,6 +212,7 @@ public class Shop : MenuBehaviour
         else if (_player.IncreaseMaxHealth())
         {
             _player.UseGold(20);
+            _audioSource.Play();
             _promptText.text = "Max health increased";
             foreach(StatsDisplay statsDisplay in _statsDisplays)
             {
@@ -237,6 +238,7 @@ public class Shop : MenuBehaviour
         else if (_player.IncreaseMaxMana())
         {
             _player.UseGold(20);
+            _audioSource.Play();
             _promptText.text = "Max mana increased";
             foreach (StatsDisplay statsDisplay in _statsDisplays)
             {
@@ -262,6 +264,7 @@ public class Shop : MenuBehaviour
         else if (_player.IncreaseSpeed())
         {
             _player.UseGold(20);
+            _audioSource.Play();
             _promptText.text = "Speed increased";
             foreach (StatsDisplay statsDisplay in _statsDisplays)
             {

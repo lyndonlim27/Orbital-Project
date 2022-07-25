@@ -25,8 +25,10 @@ public class EnterScene : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if(collider.CompareTag("Player") && this.enabled == true)
-           WaitForCutScene();
+        if ((collider.gameObject.CompareTag("Player") || collider.gameObject.CompareTag("Stealth")) && this.enabled)
+        {
+            WaitForCutScene();
+        }
     }
 
     private void WaitForCutScene()
@@ -38,7 +40,6 @@ public class EnterScene : MonoBehaviour
         }
         else
         {
-            Debug.Log(roomName);
             rooms.TryGetValue(roomName, out int value);
             if (value == 0)
                 PlayVideo();
@@ -50,5 +51,10 @@ public class EnterScene : MonoBehaviour
     {
         VideoManager videoManager = FindObjectOfType<VideoManager>();
         videoManager.PlayVideo(videoName);
+    }
+
+    public void SetVidName(string vidname)
+    {
+        videoName = vidname;
     }
 }

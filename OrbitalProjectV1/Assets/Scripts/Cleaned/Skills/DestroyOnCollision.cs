@@ -7,15 +7,17 @@ public class DestroyOnCollision : MonoBehaviour
     private Collider2D _collider;
     private AttackData attackData;
     private AttackSkillBehaviour _attackSkill;
+    private Player player;
 
     // Start is called before the first frame update
     void Start()
     {
         _collider = GetComponent<Collider2D>();
         _attackSkill = FindObjectOfType<AttackSkillBehaviour>();
-        Player player = FindObjectOfType<Player>();
+        player = FindObjectOfType<Player>();
         attackData = player.GetAttackData();
         this.gameObject.layer = LayerMask.NameToLayer("PlayerSkill");
+        this.gameObject.tag = "PlayerSkill";
     }
 
     // Update is called once per frame

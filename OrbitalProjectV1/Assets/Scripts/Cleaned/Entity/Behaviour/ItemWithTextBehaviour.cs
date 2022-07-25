@@ -254,7 +254,7 @@ public class ItemWithTextBehaviour : EntityBehaviour, Freezable
                 light2D.enabled = true;
                 light2D.pointLightOuterRadius = 5f;
                 _rb.bodyType = RigidbodyType2D.Kinematic;
-                if (data.itemSprites.Length > 0)
+                if (data.itemSprites != null && data.itemSprites.Length > 0)
                 {
                     spriteRenderer.sprite = data.itemSprites[Random.Range(0, data.itemSprites.Length - 1)];
                 }

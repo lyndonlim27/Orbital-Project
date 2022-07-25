@@ -123,7 +123,6 @@ public class QuizPuzzle : MonoBehaviour, Puzzle
     public bool CheckInput()
     {
         int ans = questions[currquestion];
-        Debug.Log(currquestion);
         string guess = "";
         foreach (LetterSlotNoDnD slot in puzzleInputManager.GetCurrentGuess())
         {
@@ -137,7 +136,6 @@ public class QuizPuzzle : MonoBehaviour, Puzzle
         puzzleInputManager.ResetGuess();
         if (guess != "")
         {
-            Debug.Log(guess);
             return int.Parse(guess) == ans;
         } else
         {

@@ -344,7 +344,6 @@ public class TilemapVisualizer : MonoBehaviour
             do
             {
                 vec = paintableTiles[UnityEngine.Random.Range(0, paintableTiles.Count)];
-                Debug.Log(vec);
             } while (Physics2D.OverlapCircleAll(vec, sprite.bounds.size.x).Length > 0 && maxretries-- > 0);
 
             if (vec != Vector2Int.zero && maxretries > 0)

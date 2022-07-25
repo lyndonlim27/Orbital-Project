@@ -23,6 +23,12 @@ public class WeaponDescription : MonoBehaviour
 
     public void SetCurrWeapon(RangedData rangedData)
     {
+        if (rangedData == null)
+        {
+            textMeshProUGUIs[1].text = "";
+            textMeshProUGUIs[1].color = Color.white;
+            return;
+        }
         textMeshProUGUIs[1].text = rangedData.weapdescription;
         textMeshProUGUIs[1].color = rangedData.defaultcolor;
     }

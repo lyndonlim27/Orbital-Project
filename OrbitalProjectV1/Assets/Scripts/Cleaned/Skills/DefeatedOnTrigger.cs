@@ -5,10 +5,12 @@ using UnityEngine;
 public class DefeatedOnTrigger : MonoBehaviour
 {
     private Player player;
+    private Collider2D col;
 
     private void Awake()
     {
         player = FindObjectOfType<Player>(true);
+        col = GetComponent<Collider2D>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

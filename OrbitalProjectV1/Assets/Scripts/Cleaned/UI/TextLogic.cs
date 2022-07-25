@@ -52,7 +52,6 @@ public abstract class TextLogic : MonoBehaviour
         {
             Textdisplayer.enabled = !outOfRange() && !parent.isDead;
             EntityData entityData = parent.GetData();
-            Debug.Log(entityData);
             if (entityData != null)
             {
                 minDist = entityData.minDist;
@@ -160,7 +159,6 @@ public abstract class TextLogic : MonoBehaviour
                 {
                     if (parent.isDead)
                     {
-                        Debug.Log("??? is it dead");
                         return;
                     } else
                     {

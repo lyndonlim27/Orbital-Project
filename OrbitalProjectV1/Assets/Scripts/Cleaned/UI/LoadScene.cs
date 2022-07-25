@@ -57,7 +57,6 @@ public class LoadScene : MonoBehaviour
             yield return null;
         }
 
-
         _dataManager.LoadGame();
         while (!_dataManager.loaded)
         {
@@ -87,6 +86,15 @@ public class LoadScene : MonoBehaviour
             yield return null;
         }
         yield return StartCoroutine(SetPlayerStats());
+        if (_GameManager.instance != null)
+        {
+            while (!_GameManager.instance.playerspawned)
+            {
+                yield return null;
+            }
+        }
+
+        
         _dataManager.SaveGame();
         while (!_dataManager.saved)
         {

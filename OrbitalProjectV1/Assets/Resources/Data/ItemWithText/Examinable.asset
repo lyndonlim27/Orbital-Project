@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: EXAMINE
   minDist: 2
-  sprite: {fileID: 21300000, guid: a99bd4ef1e9644cdd963fc604d10ad90, type: 3}
+  sprite: {fileID: 221189978, guid: 40cc76fdfa03c415ea08bcd8fa3ec591, type: 3}
   pattern: 0
   condition: 1
   _type: 4
@@ -26,9 +26,21 @@ MonoBehaviour:
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
   scale: 1
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 0
+  NotURP: 0
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios: []
   itemTextDatas: []
   ac_name: 
   _trigger: 
   item_type: 3
   secondarysprite: {fileID: 0}
+  itemSprites: []
   description: 
+  rangedData: {fileID: 0}

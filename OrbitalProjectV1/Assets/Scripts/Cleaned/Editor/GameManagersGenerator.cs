@@ -29,7 +29,7 @@ public class GameManagersGenerator : Editor
 
         if (GUILayout.Button("SetPlayerPosition"))
         {
-            generator.SetPlayerPosition();
+            //generator.SetPlayerPosition();
         }
 
     }

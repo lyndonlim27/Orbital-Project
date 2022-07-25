@@ -330,6 +330,7 @@ public class RangedBehaviour : EntityBehaviour, Freezable
     {
 
         //_trailRenderer.enabled = false;
+
         if (!alreadyAttacked)
         {
             DisableAnimation();

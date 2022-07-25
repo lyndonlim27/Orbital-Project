@@ -8,6 +8,9 @@ using UnityEngine.Tilemaps;
 public class _GameManager : MonoBehaviour, IDataPersistence
 {
     #region Variables
+
+    public static _GameManager instance { get; private set; }
+
     #region ManagerPrefabs
     [Header("AudioManager")]
     [SerializeField]
@@ -49,6 +52,10 @@ public class _GameManager : MonoBehaviour, IDataPersistence
     [SerializeField]
     RoomFirstDungeonGenerator mapgenerator;
 
+    [Header("Ship")]
+    [SerializeField]
+    private GameObject ship;
+
     #endregion
 
     #region Player and GameData
@@ -56,6 +63,7 @@ public class _GameManager : MonoBehaviour, IDataPersistence
     private Player player;
     private bool spawned;
     private bool painted;
+    public bool playerspawned;
     [SerializeField] private int roomIndex = 1;
     #endregion
 
@@ -64,7 +72,7 @@ public class _GameManager : MonoBehaviour, IDataPersistence
 
     private DamageFlicker _damageFlickerl;
     private VideoManager _vidManagerl;
-    private GameObject _audioManagerl;
+    private GlobalAudioManager _audioManagerl;
     private WordBank _wordBankl;
     private PuzzleInputManager _puzzleInputManagerl;
     private DialogueManager _dialogueManagerl;
@@ -135,7 +143,7 @@ public class _GameManager : MonoBehaviour, IDataPersistence
         _VideoManager.transform.SetParent(transform);
 
         // local copies.
-        _audioManagerl = _audioManager;
+        _audioManagerl = _audioManager.GetComponentInChildren<GlobalAudioManager>();
         _wordBankl = _wordBank.GetComponent<WordBank>();
         _damageFlickerl = _DamageFlicker.GetComponent<DamageFlicker>();
         _vidManagerl = _VideoManager.GetComponent<VideoManager>();
@@ -170,38 +178,52 @@ public class _GameManager : MonoBehaviour, IDataPersistence
         foreach(RoomManager room in roomManagers)
         {
             room.GetSpawnablePointsInRoom();
+            yield return null;
         }
-
-        RoomManager roommgr = GameObject.Find("Room1").GetComponent<RoomManager>();
-        player.SetCurrentRoom(roommgr);
-        player.transform.position = roommgr.GetRandomObjectPoint();
-        SetUpCamera(player.transform);
-    }
-
-    public void SetPlayerPosition()
-    {
-        if (player == null)
+        if(gameData.currScene != "FinalLevel")
         {
-            StartCoroutine(SpawnPlayer());
+            RoomManager roommgr = GameObject.Find("Room1").GetComponent<RoomManager>();
+            player.SetCurrentRoom(roommgr);
+            player.transform.position = roommgr.GetRandomObjectPoint();
+            
+        } else
+        {
+            player.transform.position = gameData.currPos;
+            
         }
-        RoomManager currRoom = roomManagers[roomIndex - 1];
-        player.SetCurrentRoom(currRoom);
-        player.transform.position = currRoom.transform.position;
+        SetUpCamera(player.transform);
+        yield return null;
+        playerspawned = true;
 
     }
+
+    //public void SetPlayerPosition()
+    //{
+    //    if (player == null)
+    //    {
+    //        StartCoroutine(SpawnPlayer());
+    //    }
+    //    RoomManager currRoom = roomManagers[roomIndex - 1];
+    //    player.SetCurrentRoom(currRoom);
+    //    player.transform.position = currRoom.GetRandomObjectPoint();
+
+    //}
     #endregion
 
     #region Save and Loads
     public void LoadData(GameData data)
     {
-        GenerateMap(data.currentSeed);
-
+        //allTerrainsGenerated = false;
+        //GenerateMap(data.currentSeed);
+        //painted = false;
+        //spawned = false;
+        //playerspawned = true;
     }
-
 
     public void SaveData(ref GameData data)
     {
         data.currentSeed = mapgenerator.currentSeed;
+        data.currPos = player.transform.position;
     }
     #endregion
 
@@ -232,24 +254,60 @@ public class _GameManager : MonoBehaviour, IDataPersistence
     #region Monobehaviour
     private void Awake()
     {
-        Debug.Log("Debug Awake");
-        allTerrainsGenerated = false;
+        if (instance == null)
+        {
+            instance = this;
+        }
         GenerateManagers();
-        //GenerateMap(-1);
+        allTerrainsGenerated = false;
+        playerspawned = false;
+        
     }
 
     private void Start()
     {
+        gameData = DataPersistenceManager.Instance.gameData;
+        _audioManagerl.totalRooms = roomManagers.Count;
+        _audioManagerl.GetComponent<AudioSource>().volume = 0.3f;
+        if (gameData.currentSeed == 0)
+        {
+            //PlayIntroScene();
+            GenerateMap(-1);
+        }
+        else
+        {
+            GenerateMap(gameData.currentSeed);
+            
+        }
+        StartCoroutine(SpawnPlayer());
+        
         painted = false;
-        //PlayIntroScene();
-        //StartCoroutine(SpawnPlayer());
+        spawned = false;
 
     }
-    
+
+    private void Update()
+    {
+        if (roomManagers.Count > 0 && FragmentUI.instance.IsComplete() && !spawned)
+        {
+            spawned = true;
+            UITextDescription.instance.StartDescription("Find the ship!");
+            SpawnShip();
+            
+        }
+
+    }
+
+    private void SpawnShip()
+    {
+        var selectedroom = roomManagers[UnityEngine.Random.Range(0, roomManagers.Count)];
+        StartCoroutine(selectedroom.SpawnEndCredit(ship));
+        
+    }
+
     private void LateUpdate()
     {
         allTerrainsGenerated = roomManagers.TrueForAll(room => room.terrainGenerated);
-        //DebugUnwalkableTiles();
     }
 
 
