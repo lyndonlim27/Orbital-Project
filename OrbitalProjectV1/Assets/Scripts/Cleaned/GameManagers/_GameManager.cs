@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using System.Linq;
 using UnityEngine.Tilemaps;
 
 public class _GameManager : MonoBehaviour, IDataPersistence
@@ -189,12 +190,53 @@ public class _GameManager : MonoBehaviour, IDataPersistence
         } else
         {
             player.transform.position = gameData.currPos;
+            FindAllIncompleteRooms();
             
         }
         SetUpCamera(player.transform);
         yield return null;
+        DisableAllOtherRooms();
         playerspawned = true;
 
+    }
+
+    private void DisableAllOtherRooms()
+    {
+        roomManagers.ForEach(room => room.enabled = false);
+        player.GetCurrentRoom().enabled = true;
+    }
+
+    private void FindAllIncompleteRooms()
+    {
+        if (gameData != null)
+        {
+            List<int> incompleteRooms = new List<int>();
+
+            foreach (string room in gameData.rooms.Keys)
+            {
+                if (gameData.rooms[room] == 0)
+                {
+
+                    int index = room.LastIndexOf(":") + 1;
+                    incompleteRooms.Add(int.Parse(room.Substring(index)));
+                }
+            }
+            incompleteRooms.Sort();
+            var currRoom = roomManagers[incompleteRooms[0]];
+            player.SetCurrentRoom(currRoom);
+        }
+        
+
+
+    }
+
+    public void EnableRoom(int roomIndex)
+    {
+        if (roomIndex >= 0 && roomIndex < roomManagers.Count)
+        {
+            roomManagers[roomIndex].enabled = true;
+        }
+        
     }
 
     //public void SetPlayerPosition()

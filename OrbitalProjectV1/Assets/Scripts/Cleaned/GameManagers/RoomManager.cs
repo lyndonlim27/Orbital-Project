@@ -1025,6 +1025,7 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
             }
             DisableTrapBehaviour();
             pointToObjective();
+            ActivateNextRoom();
             //SpawnPortal();
             
             if (textDescription.isActiveAndEnabled)
@@ -1034,6 +1035,14 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
             this.enabled = false;
         }
 
+    }
+
+    private void ActivateNextRoom()
+    {
+        if (_GameManager.instance != null)
+        {
+            _GameManager.instance.EnableRoom(RoomIndex + 1);
+        }
     }
     #endregion
 
