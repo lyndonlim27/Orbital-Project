@@ -202,8 +202,14 @@ public class _GameManager : MonoBehaviour, IDataPersistence
 
     private void DisableAllOtherRooms()
     {
-        roomManagers.ForEach(room => room.enabled = false);
-        player.GetCurrentRoom().enabled = true;
+        roomManagers.ForEach(room =>
+        {
+            if (room != player.GetCurrentRoom())
+            {
+                room.enabled = false;
+            }
+        });
+        
     }
 
     private void FindAllIncompleteRooms()
