@@ -15,10 +15,10 @@ public class MiniMap : MonoBehaviour
         _camera = GetComponent<Camera>();
     }
 
-    private void Update()
-    {
-        CheckSize();
-    }
+    //private void Update()
+    //{
+    //    CheckSize();
+    //}
 
 
     private void CheckSize()
@@ -35,13 +35,17 @@ public class MiniMap : MonoBehaviour
     }
 
     // Update is called once per frame
-    void LateUpdate()
-    {
-        Vector3 newPos = _player.position;
-        // newPos.y = transform.position.y;
-        newPos.z = -10;
-        transform.position = newPos;
-        transform.rotation = Quaternion.Euler(0f, _player.eulerAngles.y, 0);
+    //void LateUpdate()
+    //{
+    //    if (!MiniMapImage.instance.screencaptured)
+    //    {
+    //        return;
+    //    }
+    //    Vector3 newPos = _player.position;
+    //    // newPos.y = transform.position.y;
+    //    newPos.z = -10;
+    //    transform.position = newPos;
+    //    transform.rotation = Quaternion.Euler(0f, _player.eulerAngles.y, 0);
 
-    }
+    //}
 }

@@ -170,6 +170,16 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         {
             return;
         }
+
+        if (rb != null)
+        {
+            if (rb.velocity != Vector2.zero)
+            {
+                StartCoroutine(FootStepAudio());
+            }
+
+        }
+
         CheckForStage2();
         CheckForHealStage();
         CheckHealStageInteruption();
@@ -214,23 +224,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         }
         
     }
-
-    /**
-     * Check for change in entity movement every frame.
-     */
-    public virtual void FixedUpdate()
-    {
-        if (rb != null)
-        {
-            if (rb.velocity != Vector2.zero)
-            {
-                StartCoroutine(FootStepAudio());
-            }
-
-        }
-
-
-    }
+    
     #endregion
     
     #region Internal Methods
@@ -1057,7 +1051,6 @@ public class EnemyBehaviour : ItemWithTextBehaviour
         _flicker.Flicker(this);
         base.TakeDamage(damage);
         InstantiateHurtAudio();
-        Debug.Log("Health is: " + health);
         _healthBar.SetHealth(health);
         animator.SetTrigger("Hurt");
         prevstate = currstate;
@@ -1265,7 +1258,7 @@ public class EnemyBehaviour : ItemWithTextBehaviour
     {
         if (movePos == "")
         {
-            Debug.LogError("No input position given");
+            //Debug.LogError("No input position given");
         }
         else
         {

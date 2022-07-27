@@ -240,7 +240,7 @@ public class _GameManager : MonoBehaviour, IDataPersistence
     {
         if (roomIndex >= 0 && roomIndex < roomManagers.Count)
         {
-            roomManagers[roomIndex].enabled = true;
+            roomManagers[roomIndex - 1].enabled = true;
         }
         
     }
