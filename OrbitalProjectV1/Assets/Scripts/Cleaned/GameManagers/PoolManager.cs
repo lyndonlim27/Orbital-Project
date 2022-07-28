@@ -50,8 +50,6 @@ public class PoolManager : MonoBehaviour
     {
         foreach (EntityBehaviour entity in entityPrefabs)
         {
-            Debug.Log("This is entity " + entity);
-            Debug.Log("This is entitydata" + entity.GetData());
             if (entity.GetType() == typeof(RangedBehaviour))
             {
                 ObjectPool<EntityBehaviour> pool = new ObjectPool<EntityBehaviour>(() => CreatePooledEntity(entity),

@@ -958,9 +958,6 @@ public abstract class RoomManager : MonoBehaviour, IDataPersistence
     {
         if (activated)
         {
-            Debug.Log("This is entitydata lengt" + _EntityDatas.Length);
-            Debug.Log("this is enemies" + enemies.Count);
-            Debug.Log(CheckEnemiesDead());
             return conditions.Count == 0 && CheckEnemiesDead();
         }
         else

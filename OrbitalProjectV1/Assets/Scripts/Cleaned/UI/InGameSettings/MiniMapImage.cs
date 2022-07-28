@@ -65,7 +65,9 @@ public class MiniMapImage : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     private IEnumerator SnapShotMap()
     {
+        
         yield return null;
+        //UITextDescription.instance.StartDescription("Island of the Wild");
         //int width = Screen.width;
         //int height = Screen.height;
         //Texture2D screenshot = new Texture2D(width, height, TextureFormat.ARGB32, false);
