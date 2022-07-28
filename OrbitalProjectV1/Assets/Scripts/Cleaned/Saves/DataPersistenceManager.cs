@@ -343,9 +343,13 @@ public class DataPersistenceManager : MonoBehaviour
         _promptImage.enabled = true;
         _promptText.gameObject.SetActive(true);
         yield return new WaitForSeconds(1);
-        _promptImage.enabled = false;
-        _promptText.gameObject.SetActive(false);
-        _promptText.text = "";
+        if (_promptImage != null)
+        {
+            _promptImage.enabled = false;
+            _promptText.gameObject.SetActive(false);
+            _promptText.text = "";
+        }
+        
     }
 
     /*

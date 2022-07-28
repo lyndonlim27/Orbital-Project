@@ -12,7 +12,7 @@ public class SimpleRandomWalkDungeonGenerator : AbstractDungeonGenerator
     protected SimpleRandomWalkSO randomWalkParameters;
     [SerializeField]
     [Range(0.1f, 1)]
-    private float noise = 0.8f;
+    protected float noise = 0.8f;
 
     protected override void RunProceduralGeneration()
     {

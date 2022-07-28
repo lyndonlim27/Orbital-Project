@@ -15,7 +15,7 @@ public class PoolManager : MonoBehaviour
     /**
      * ObjectPools
      */
-    private Dictionary<EntityData.TYPE, ObjectPool<EntityBehaviour>> objectPools = new Dictionary<EntityData.TYPE, ObjectPool<EntityBehaviour>>();
+    private Dictionary<EntityData.TYPE, ObjectPool<EntityBehaviour>> objectPools;
 
     #endregion
 
@@ -50,6 +50,8 @@ public class PoolManager : MonoBehaviour
     {
         foreach (EntityBehaviour entity in entityPrefabs)
         {
+            Debug.Log("This is entity " + entity);
+            Debug.Log("This is entitydata" + entity.GetData());
             if (entity.GetType() == typeof(RangedBehaviour))
             {
                 ObjectPool<EntityBehaviour> pool = new ObjectPool<EntityBehaviour>(() => CreatePooledEntity(entity),
@@ -57,6 +59,7 @@ public class PoolManager : MonoBehaviour
                 objectPools.Add(EntityData.TYPE.CAST_ONTARGET, pool);
                 objectPools.Add(EntityData.TYPE.CAST_SELF, pool);
                 objectPools.Add(EntityData.TYPE.PROJECTILE, pool);
+                
             }
             else if (entity.GetType() == typeof(ItemWithTextBehaviour))
             {
@@ -107,6 +110,7 @@ public class PoolManager : MonoBehaviour
     #region Monobehaviour
     private void Awake()
     {
+        objectPools = new Dictionary<EntityData.TYPE, ObjectPool<EntityBehaviour>>();
         InitializePool();
         if (instance == null)
         {
