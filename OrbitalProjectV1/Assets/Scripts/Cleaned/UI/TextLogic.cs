@@ -21,7 +21,7 @@ public abstract class TextLogic : MonoBehaviour
 
    
     protected float minDist;
-    protected int currentcounter = 0;
+    [SerializeField] protected int currentcounter = 0;
     protected EntityBehaviour parent;
     protected Dictionary<KeyCode, AudioSource> audioSources;
     /**
@@ -119,7 +119,12 @@ public abstract class TextLogic : MonoBehaviour
                 return;
             }
 
-
+            if (LetterNotInOrder())
+            {
+                ResetCounter();
+                UpdateRemainingWord(currentword);
+                return;
+            }
 
             for (int i = (int)KeyCode.A; i <= (int)KeyCode.Z; i++)
             {
@@ -134,6 +139,12 @@ public abstract class TextLogic : MonoBehaviour
         }
 
         
+
+    }
+
+    private bool LetterNotInOrder()
+    {
+        return char.IsLower(remainingword[0]) && remainingword.Any(c => char.IsUpper(c));
 
     }
 
