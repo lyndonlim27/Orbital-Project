@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 1614311673580127948}
   - component: {fileID: 6761039687677665213}
   - component: {fileID: 6761039687677665212}
+  - component: {fileID: 5107444404535921188}
   - component: {fileID: 6761039687677665211}
   - component: {fileID: 4685046678121746872}
-  - component: {fileID: 5107444404535921188}
+  - component: {fileID: 1526337683141197778}
   m_Layer: 11
   m_Name: WaterMage
   m_TagString: Enemy
@@ -114,92 +115,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &6761039687677665211
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1614311673580127951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 1
-  drawGizmos: 1
-  detailedGizmos: 0
-  startEndModifier:
-    addPoints: 0
-    exactStartPoint: 3
-    exactEndPoint: 3
-    useRaycasting: 0
-    mask:
-      serializedVersion: 2
-      m_Bits: 4294967295
-    useGraphRaycasting: 0
-  traversableTags: -1
-  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  graphMask:
-    value: -1
---- !u!114 &4685046678121746872
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1614311673580127951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c4d8d1790a5a4d9c94ac6f5e6ecd31d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentRoom: {fileID: 0}
-  audioSource: {fileID: 0}
-  inAudio: 0
-  footStep: {fileID: 8300000, guid: 9c205f45ed8314989b2aa4de7a770260, type: 3}
-  isDead: 0
-  inAnimation: 0
-  Debuffed: 0
-  data: {fileID: 0}
-  consumableItemDatas:
-  - {fileID: 11400000, guid: 9faedf14fbaf146ba91e4c54a6d1b9aa, type: 2}
-  - {fileID: 11400000, guid: 23532790317044ebe8de1e951381e273, type: 2}
-  - {fileID: 11400000, guid: 9dfc85433b9854830bf09b53c8a2b8e6, type: 2}
-  lastvelocity: {x: 0, y: 0}
-  targetHit: 0
-  laser: {fileID: 0}
-  laserPos: []
-  laserHits: []
-  rotSpeed: 0
-  mounted: 0
-  laserActivated: 0
-  enemyData: {fileID: 11400000, guid: 76e0c691568654554bfc82e9d2032455, type: 2}
-  currstate: 0
-  prevstate: 0
-  insideStage2: 0
-  Dashcooldown: 0
-  cooldown: 0
-  healStagecooldown: 0
-  animatorspeed: 0
-  _healthBar: {fileID: 8894199971493354017}
-  detectionScript: {fileID: 1614311673770012032}
-  malesTakeDamageAudio:
-  - {fileID: 8300000, guid: 4b319bd3ed0ee4f05b27ff103f61e523, type: 3}
-  - {fileID: 8300000, guid: b96f63811cd724bebba5d70a631dd63c, type: 3}
-  - {fileID: 8300000, guid: 026c773a715f44cea9981aea7b8837d0, type: 3}
-  malesDoDamageAudio:
-  - {fileID: 8300000, guid: d684c34aecf8e4d18b199282b60626ff, type: 3}
-  - {fileID: 8300000, guid: 9fda7387c8e094798962fd40706cda47, type: 3}
-  femalesTakeDamageAudio:
-  - {fileID: 8300000, guid: 58a40362140df406c908c80af85a3bb2, type: 3}
-  - {fileID: 8300000, guid: f21518d1148cf44cda8ff9d92c27d13c, type: 3}
-  - {fileID: 8300000, guid: e6ff4ef49e66843c490210ea78d7d64f, type: 3}
-  - {fileID: 8300000, guid: e690a2bc308c948588892b2e3bdb9628, type: 3}
-  femalesDoDamageAudio:
-  - {fileID: 8300000, guid: 597a1e01138de4707a9dccca0a7aed79, type: 3}
-  - {fileID: 8300000, guid: 73569683b98974d6aa146e4a9b56fd65, type: 3}
-  nonhumanTakeDamageAudio: []
 --- !u!82 &5107444404535921188
 AudioSource:
   m_ObjectHideFlags: 0
@@ -296,6 +211,87 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6761039687677665211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1614311673580127951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  drawGizmos: 1
+  detailedGizmos: 0
+  startEndModifier:
+    addPoints: 0
+    exactStartPoint: 3
+    exactEndPoint: 3
+    useRaycasting: 0
+    mask:
+      serializedVersion: 2
+      m_Bits: 4294967295
+    useGraphRaycasting: 0
+  traversableTags: -1
+  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  graphMask:
+    value: -1
+--- !u!114 &4685046678121746872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1614311673580127951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c4d8d1790a5a4d9c94ac6f5e6ecd31d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentRoom: {fileID: 0}
+  inAnimation: 0
+  Debuffed: 0
+  data: {fileID: 0}
+  consumableItemDatas:
+  - {fileID: 11400000, guid: 9faedf14fbaf146ba91e4c54a6d1b9aa, type: 2}
+  - {fileID: 11400000, guid: 23532790317044ebe8de1e951381e273, type: 2}
+  - {fileID: 11400000, guid: 9dfc85433b9854830bf09b53c8a2b8e6, type: 2}
+  lastvelocity: {x: 0, y: 0}
+  targetHit: 0
+  laser: {fileID: 0}
+  laserPos: []
+  laserHits: []
+  rotSpeed: 0
+  mounted: 0
+  laserActivated: 0
+  enemyData: {fileID: 11400000, guid: 76e0c691568654554bfc82e9d2032455, type: 2}
+  currstate: 0
+  prevstate: 0
+  insideStage2: 0
+  Dashcooldown: 0
+  cooldown: 0
+  healStagecooldown: 0
+  animatorspeed: 0
+  _healthBar: {fileID: 8894199971493354017}
+  detectionScript: {fileID: 1614311673770012032}
+--- !u!114 &1526337683141197778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1614311673580127951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec69502ecc1e4b9da906c8d0f735542, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioSource: {fileID: 0}
+  inAudio: 0
+  footStep: {fileID: 0}
 --- !u!1 &1614311673770012061
 GameObject:
   m_ObjectHideFlags: 0

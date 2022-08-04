@@ -4,62 +4,65 @@ using UnityEngine;
 
 // this is the CONNECTING state to all other states.
 //we can use this state to decide whether to do a ranged or melee attack, roam or chase or return to position.
-public class C_ChaseState : StateClass
+namespace EntityCores.StateMachines
 {
-    public C_ChaseState(EnemyBehaviour enemy, StateMachine stateMachine) : base(enemy, stateMachine) { }
-    public override void Enter(object stateData)
+    public class C_ChaseState : StateClass
     {
-    }
-
-    public override void Exit()
-    {
-        base.Exit();
-    }
-
-    public override void FixedUpdate()
-    {
-        base.FixedUpdate();
-    }
-
-    public override void Update()
-    {
-        base.Update();
-    }
-
-    public void ChaseEnemy()
-    {
-
-        //if object detected but is not player, 
-        if (!enemy.detectionScript.playerDetected)
+        public C_ChaseState(EnemyBehaviour enemy, StateMachine stateMachine) : base(enemy, stateMachine) { }
+        public override void Enter(object stateData)
         {
-            stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
         }
 
-        else if (Vector2.Distance(enemy.transform.position, enemy.startingpos) >= enemy.maxDist)
+        public override void Exit()
         {
-
-            stateMachine.ChangeState(StateMachine.STATE.STOP, null);
+            base.Exit();
         }
 
-        else if (enemy.ranged.detected() && !enemy.onCooldown())
+        public override void FixedUpdate()
         {
-            stateMachine.ChangeState(StateMachine.STATE.ATTACK2, null);
-
-
-        }
-        else if (enemy.melee.detected())
-        {
-
-            stateMachine.ChangeState(StateMachine.STATE.ATTACK1, null);
-
-        }
-        else
-        {
-            enemy.MoveToTarget(enemy.player);
-
+            base.FixedUpdate();
         }
 
-        enemy.Tick();
+        public override void Update()
+        {
+            base.Update();
+        }
 
+        public void ChaseEnemy()
+        {
+
+            //if object detected but is not player, 
+            if (!enemy.detectionScript.playerDetected)
+            {
+                stateMachine.ChangeState(StateMachine.STATE.IDLE, null);
+            }
+
+            else if (Vector2.Distance(enemy.transform.position, enemy.startingpos) >= enemy.maxDist)
+            {
+
+                stateMachine.ChangeState(StateMachine.STATE.STOP, null);
+            }
+
+            else if (enemy.ranged.detected() && !enemy.onCooldown())
+            {
+                stateMachine.ChangeState(StateMachine.STATE.ATTACK2, null);
+
+
+            }
+            else if (enemy.melee.detected())
+            {
+
+                stateMachine.ChangeState(StateMachine.STATE.ATTACK1, null);
+
+            }
+            else
+            {
+                enemy.MoveToTarget(enemy.player);
+
+            }
+
+            enemy.Tick();
+
+        }
     }
 }
