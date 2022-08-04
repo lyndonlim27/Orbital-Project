@@ -155,7 +155,7 @@ GameObject:
   - component: {fileID: 9204311102352689881}
   - component: {fileID: 9204311102352689880}
   m_Layer: 0
-  m_Name: MeleeComp
+  m_Name: MeleeComponent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -213,6 +213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea68dd1b580324fa494756d64201e353, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inAudio: 0
 --- !u!61 &9204311102352689880
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -417,14 +418,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cf843b8afbd24f09be1cf074fc361ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentRoom: {fileID: 0}
+  audioSource: {fileID: 0}
+  inAudio: 0
+  footStep: {fileID: 0}
   isDead: 0
   inAnimation: 0
+  Debuffed: 0
   data: {fileID: 0}
   consumableItemDatas: []
+  lastvelocity: {x: 0, y: 0}
+  targetHit: 0
+  laser: {fileID: 0}
+  laserPos: []
+  laserHits: []
+  rotSpeed: 0
+  mounted: 0
+  laserActivated: 0
   _healthBar: {fileID: 0}
   enemyData: {fileID: 11400000, guid: 9c0104c17812b4ec6b5216ed966c4c34, type: 2}
-  stage2: 0
+  currstate: 0
+  insideStage2: 0
   detectionScript: {fileID: 9204311101396394200}
+  malesTakeDamageAudio: []
+  malesDoDamageAudio: []
+  femalesTakeDamageAudio: []
+  femalesDoDamageAudio: []
+  nonhumanTakeDamageAudio: []
+  Dashcooldown: 0
+  cooldown: 0
+  healStagecooldown: 0
+  animatorspeed: 0
 --- !u!1001 &9204311102204918187
 PrefabInstance:
   m_ObjectHideFlags: 0

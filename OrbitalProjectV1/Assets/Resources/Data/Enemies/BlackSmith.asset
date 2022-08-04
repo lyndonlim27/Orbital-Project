@@ -32,6 +32,7 @@ MonoBehaviour:
   defaultcolor: {r: 0, g: 0, b: 0, a: 0}
   floating: 0
   moveable: 1
+  NotURP: 0
   attackAudios:
   - {fileID: 8300000, guid: 0c367f8b6ee494311a488a7f93c75481, type: 3}
   miscellaneousAudios: []
@@ -41,7 +42,9 @@ MonoBehaviour:
   _trigger: 
   item_type: 0
   secondarysprite: {fileID: 0}
+  itemSprites: []
   description: 
+  rangedData: {fileID: 0}
   damageValue: 5
   moveSpeed: 4
   chaseSpeed: 5
@@ -51,14 +54,13 @@ MonoBehaviour:
   meleetriggers:
   - NormalAttack
   - SpinAttack
-  defends:
-  - Dash
-  rangedtriggers:
-  - ShootLaser
-  dashattacks:
   - LeapAttack
   - MultiAttack1
   - JumpAttack
+  defends:
+  - Dashes
+  rangedtriggers: []
+  dashattacks: []
   rangedDatas:
   - {fileID: 11400000, guid: fd44465a58f324a7c916d0a7e9e2c9b4, type: 2}
   bossdamageprops:
@@ -71,8 +73,12 @@ MonoBehaviour:
   bossdefenceprops: []
   animatorname: AC_BlackSmith
   words: 100
-  rangedcooldown: 2
+  rangedcooldown: 15
   stage2: 1
   healStage: 0
   enragedColor: {r: 0.5568628, g: 0.32941177, b: 0.32941177, a: 1}
+  dashoffset: 12
+  jumpheight: 0
   body: 0
+  story: {fileID: 0}
+  teleportable: 0

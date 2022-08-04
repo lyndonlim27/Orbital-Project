@@ -32,6 +32,7 @@ MonoBehaviour:
   defaultcolor: {r: 0, g: 0, b: 0, a: 0}
   floating: 0
   moveable: 1
+  NotURP: 0
   attackAudios:
   - {fileID: 8300000, guid: 8fde594ce881e45b8ae4c17a21032198, type: 3}
   miscellaneousAudios: []
@@ -41,7 +42,9 @@ MonoBehaviour:
   _trigger: 
   item_type: 3
   secondarysprite: {fileID: 0}
+  itemSprites: []
   description: 
+  rangedData: {fileID: 0}
   damageValue: 2
   moveSpeed: 2
   chaseSpeed: 3
@@ -64,4 +67,8 @@ MonoBehaviour:
   stage2: 0
   healStage: 0
   enragedColor: {r: 0, g: 0, b: 0, a: 0}
+  dashoffset: 0
+  jumpheight: 0
   body: 0
+  story: {fileID: 0}
+  teleportable: 0

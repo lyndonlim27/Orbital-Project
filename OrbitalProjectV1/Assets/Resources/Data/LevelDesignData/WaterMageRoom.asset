@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 845c6ab78fdba427cba536b1d1e6a84c, type: 3}
+  m_Name: WaterMageRoom
+  m_EditorClassIdentifier: 
+  room_design: 4
+  floorTile: {fileID: 11400000, guid: 429d93ff93fdf48cba50b28584330f7d, type: 2}
+  grassTile: {fileID: 11400000, guid: 73d0344d637b049008d4afb21eccf6b6, type: 2}
+  luwall: {fileID: 11400000, guid: 03a4fa99726024fa792d02df3f1d5b64, type: 2}
+  ldwall: {fileID: 11400000, guid: f9d7bd1479d8542168b405441b21842d, type: 2}
+  ruwall: {fileID: 11400000, guid: 5632ccc11908a41d8a6eee80bd0d62a4, type: 2}
+  rdwall: {fileID: 11400000, guid: 3d02a9a5fc6504137b1072f70e682f1e, type: 2}
+  vertwall: {fileID: 0}
+  horizwall: {fileID: 0}
+  allardwall: {fileID: 11400000, guid: 765391da3aa284b7186148d4b91bc92a, type: 2}
+  topwall: {fileID: 11400000, guid: 69effc350153e4c6b8441a34a09e36c3, type: 2}
+  bottomwall: {fileID: 11400000, guid: 19e21592b8fd44abaa7bb532b3017c33, type: 2}
+  leftwall: {fileID: 11400000, guid: ae47804eb3825426c8b325ac32d6a45e, type: 2}
+  rightwall: {fileID: 11400000, guid: 4df812b17f89b4c23858b9b5d0a7789f, type: 2}
+  lucorner: {fileID: 11400000, guid: d2414f2fb2f7145a99ef847133b2a43f, type: 2}
+  rucorner: {fileID: 11400000, guid: 8293a624836cc40a39213c7caa416be0, type: 2}
+  ldcorner: {fileID: 11400000, guid: 2a72a94482d2b45c19f2903755765eec, type: 2}
+  rdcorner: {fileID: 11400000, guid: dafcb47f3702a42f28ebdaa37b8efa3f, type: 2}
+  terrainObjects: []
+  intterrainDecorations: []
+  extterrainDecorations: []
+  frequency: 89.7
+  offset: 0
+  normalizer: 0.05

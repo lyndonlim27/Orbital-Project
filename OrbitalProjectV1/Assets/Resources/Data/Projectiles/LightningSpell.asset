@@ -15,16 +15,34 @@ MonoBehaviour:
   _name: LightningSpell
   minDist: 0
   sprite: {fileID: 29702762353113097, guid: 1914d95466e3d4341a618c35a56d5f82, type: 3}
+  pattern: 0
   condition: 0
   _type: 0
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
   random: 0
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
-  type: 0
+  spawnAtStart: 0
+  scale: 0
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 0
+  NotURP: 0
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios: []
   damage: 3
   speed: 1
   rotation: 0
   lifetime: 0
   trigger: Cast
-  ac_name: LightningSpell_VFX
-  scale: 0
+  followTarget: 0
+  loop: 0
+  stationary: 1
+  impact_trigger: 
+  weapdescription: 

@@ -32,6 +32,7 @@ MonoBehaviour:
   defaultcolor: {r: 0, g: 0, b: 0, a: 0}
   floating: 0
   moveable: 0
+  NotURP: 0
   attackAudios:
   - {fileID: 8300000, guid: a764377339b869e459f5e53fb9258f73, type: 3}
   miscellaneousAudios: []
@@ -43,4 +44,5 @@ MonoBehaviour:
   trigger: Spikes
   followTarget: 0
   loop: 1
-  impact_trigger: bulletexplode
+  impact_trigger: cannonexplode
+  weapdescription: 

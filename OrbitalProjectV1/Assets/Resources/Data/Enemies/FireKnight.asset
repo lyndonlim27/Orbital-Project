@@ -15,34 +15,67 @@ MonoBehaviour:
   _name: FireKnight
   minDist: 10
   sprite: {fileID: 811172624, guid: 72a4df8bdaf784cdaa49beda12897a62, type: 3}
+  pattern: 0
   condition: 0
   _type: 5
+  multispawns: 0
+  startPos: {x: 0, y: 0}
+  endPos: {x: 0, y: 0}
   random: 1
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
-  scale: 5
+  scale: 3
+  staggered: 0
+  staggerTime: 0
+  duration: 0
+  defaultcolor: {r: 0, g: 0, b: 0, a: 0}
+  floating: 0
+  moveable: 1
+  NotURP: 0
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios: []
   itemTextDatas: []
   ac_name: AC_FKnight
   _trigger: 
-  isAWeapon: 0
-  damageValue: 1
-  moveSpeed: 1
-  chaseSpeed: 1
+  item_type: 0
+  secondarysprite: {fileID: 0}
+  itemSprites: []
+  description: 
+  rangedData: {fileID: 0}
+  damageValue: 5
+  moveSpeed: 3
+  chaseSpeed: 4
   attackRange: 1
   attackSpeed: 1
+  maxDist: 100
   meleetriggers:
   - Melee1
   - Melee2
   - Melee3
   - Melee4
   - Melee5
-  - Melee6
   defends:
-  - Dash
   - Defend
+  - Dash
   - Jump
   rangedtriggers: []
+  dashattacks: []
+  rangedDatas:
+  - {fileID: 11400000, guid: f3e3a7428ed6a44f7a571352d7275f5a, type: 2}
+  bossdamageprops:
+  - {fileID: 11400000, guid: bad760e90df3d409599f37d23e08ad74, type: 2}
+  bossSummonprops: []
+  bossdefenceprops: []
   animatorname: AC_FireKnight
   words: 100
   rangedcooldown: 15
+  stage2: 1
+  healStage: 0
+  enragedColor: {r: 0, g: 0, b: 0, a: 0}
+  dashoffset: 3
+  jumpheight: 0
+  body: 0
+  story: {fileID: 4900000, guid: b2c3e7add593c4f1f94520c5f2c94cf1, type: 3}
+  teleportable: 0

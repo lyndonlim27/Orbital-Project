@@ -25,7 +25,7 @@ MonoBehaviour:
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
-  scale: 4
+  scale: 1.5
   staggered: 0
   staggerTime: 0
   duration: 0
@@ -37,19 +37,17 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 11480d384e82b4cb298ac29157549f04, type: 3}
   miscellaneousAudios: []
   interactionAudios: []
-  damage: 3
+  damage: 6
   speed: 6
   rotation: 200
   lifetime: 0.2
   trigger: laseridle
   followTarget: 1
   loop: 1
+  stationary: 0
   impact_trigger: laserexplode
   weapdescription: 'Laser
 
     Damage : 6
 
-    Rarity : Legendary
-
-    Special :
-    Reduce Enemy Damage For 2s'
+    Rarity : Legendary'

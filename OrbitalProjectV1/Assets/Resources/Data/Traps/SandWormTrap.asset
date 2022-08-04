@@ -21,7 +21,7 @@ MonoBehaviour:
   multispawns: 1
   startPos: {x: -107, y: -106}
   endPos: {x: -80, y: -79}
-  random: 1
+  random: 0
   pos: {x: 0, y: 0}
   damageFlicker: {fileID: 0}
   spawnAtStart: 1
@@ -30,6 +30,12 @@ MonoBehaviour:
   staggerTime: 0
   duration: 4
   defaultcolor: {r: 0.50420856, g: 0.10426309, b: 0.6698113, a: 1}
+  floating: 0
+  moveable: 0
+  NotURP: 0
+  attackAudios: []
+  miscellaneousAudios: []
+  interactionAudios: []
   activatedcolor: {r: 0.21960786, g: 0.21960786, b: 0.21960786, a: 0}
   triggername: FireStepTrap
   ontrigger: 0

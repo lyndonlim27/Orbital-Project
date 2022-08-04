@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 845c6ab78fdba427cba536b1d1e6a84c, type: 3}
+  m_Name: HashinshinRoom
+  m_EditorClassIdentifier: 
+  room_design: 7
+  floorTile: {fileID: 11400000, guid: 830ef65e6cce749029c897f1ab6bc8a3, type: 2}
+  grassTile: {fileID: 11400000, guid: 0cb5c8f21ed9c402baf345734f10408f, type: 2}
+  luwall: {fileID: 11400000, guid: e1f1b9ac43cc74c0990a3e2c8cf0b4c5, type: 2}
+  ldwall: {fileID: 11400000, guid: 27c1f69210bad4372a8a61829c403731, type: 2}
+  ruwall: {fileID: 11400000, guid: bf3e0688d436844958a47dcf7defbdca, type: 2}
+  rdwall: {fileID: 11400000, guid: 8b10825a57cc645be918496a9189d583, type: 2}
+  vertwall: {fileID: 0}
+  horizwall: {fileID: 0}
+  allardwall: {fileID: 0}
+  topwall: {fileID: 11400000, guid: 505d11921134e42378e56d4c6e5c3f1a, type: 2}
+  bottomwall: {fileID: 11400000, guid: edad8c5862cc64bed86bdede1bcec15c, type: 2}
+  leftwall: {fileID: 11400000, guid: 7a3d0f35dc6d94ecea7236e275fcae60, type: 2}
+  rightwall: {fileID: 11400000, guid: d7eec959de20c400fb870c1156f059e6, type: 2}
+  lucorner: {fileID: 11400000, guid: cd3f381056e0749eb958722b8847d51c, type: 2}
+  rucorner: {fileID: 11400000, guid: 99ee0f5631b41461c96226943df24ec8, type: 2}
+  ldcorner: {fileID: 11400000, guid: 6b12b877cd0d44da2ab6cbfe8f0e0a66, type: 2}
+  rdcorner: {fileID: 11400000, guid: f5c50aadf43094375a2363157d971eab, type: 2}
+  terrainObjects: []
+  intterrainDecorations: []
+  extterrainDecorations: []
+  frequency: 90
+  offset: 0
+  normalizer: 0.049
